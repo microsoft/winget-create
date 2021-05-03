@@ -1,0 +1,513 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDescription_HelpText" xml:space="preserve">
+    <value>O utilitário de linha de comando de criação do manifesto gera o manifesto para o envio de aplicativos ao repositório do Gerenciador de pacotes do Windows.</value>
+  </data>
+  <data name="AppMoniker_KeywordDescription" xml:space="preserve">
+    <value>O termo de pacote mais comum</value>
+  </data>
+  <data name="Arch_KeywordDescription" xml:space="preserve">
+    <value>A arquitetura de destino do instalador</value>
+  </data>
+  <data name="Author_KeywordDescription" xml:space="preserve">
+    <value>O autor do pacote</value>
+  </data>
+  <data name="BrowserFailedToLaunch_Error" xml:space="preserve">
+    <value>Falha ao iniciar o navegador da web: {0}</value>
+    <comment>{0} - will be replaced with the exception thrown when the browser fails to launch</comment>
+  </data>
+  <data name="ChangeOutputDirToCurrDir_Message" xml:space="preserve">
+    <value>Diretório de saída alterado para o diretório atual: {0}</value>
+    <comment>{0} - will be replaced with the current directory path</comment>
+  </data>
+  <data name="Channel_KeywordDescription" xml:space="preserve">
+    <value>O canal de distribuição</value>
+  </data>
+  <data name="ClearToken_Message" xml:space="preserve">
+    <value>Limpando cache de token do GitHub</value>
+  </data>
+  <data name="Clear_HelpText" xml:space="preserve">
+    <value>Limpar o token GitHub armazenado em cache</value>
+  </data>
+  <data name="Commands_KeywordDescription" xml:space="preserve">
+    <value>Lista de comandos ou aliases para executar o pacote</value>
+  </data>
+  <data name="ConfirmGitHubSubmitManifest_Message" xml:space="preserve">
+    <value>Você gostaria de enviar seu manifesto para o repositório do Gerenciador de pacotes do Windows?</value>
+  </data>
+  <data name="CopyrightUrl_KeywordDescription" xml:space="preserve">
+    <value>A página de direitos autorais do pacote</value>
+  </data>
+  <data name="Copyright_KeywordDescription" xml:space="preserve">
+    <value>Os direitos autorais do pacote</value>
+  </data>
+  <data name="Custom_KeywordDescription" xml:space="preserve">
+    <value>As opções personalizadas do instalador</value>
+  </data>
+  <data name="Description_KeywordDescription" xml:space="preserve">
+    <value>A descrição completa do pacote</value>
+  </data>
+  <data name="DoneSymbol_String" xml:space="preserve">
+    <value>CONCLUÍDO</value>
+  </data>
+  <data name="DownloadInstaller_Message" xml:space="preserve">
+    <value>Baixando e analisando: {0}...</value>
+    <comment>{0} - will be replaced with the installer URL</comment>
+  </data>
+  <data name="EnterFollowingFields_Message" xml:space="preserve">
+    <value>Insira valores para os seguintes campos:</value>
+  </data>
+  <data name="EnterUserCode_Message" xml:space="preserve">
+    <value>Insira o seguinte código de verificação do usuário quando solicitado: {0}</value>
+    <comment>{0} - will be replaced with the user verification code that must be entered in the GitHub OAuth webpage</comment>
+  </data>
+  <data name="Error_Prefix" xml:space="preserve">
+    <value>ERRO: {0}</value>
+    <comment>{0} - will be replaced by the thrown exception message</comment>
+  </data>
+  <data name="Example_NewCommand_DownloadInstaller" xml:space="preserve">
+    <value>Baixar o instalador e extrair metadados</value>
+    <comment>Describes a usage scenario for the New Command that launches the manifest creation process with the user providing an installer URL to be downloaded and extracted.</comment>
+  </data>
+  <data name="Example_NewCommand_SaveLocallyOrSubmit" xml:space="preserve">
+    <value>Salvar localmente e enviar uma solicitação pull</value>
+    <comment>Describes a usage scenario for the New Command that allows the user to decide where to save the newly-generated manifest locally and whether to submit directly to GitHub for a pull request.</comment>
+  </data>
+  <data name="Example_NewCommand_StartFromScratch" xml:space="preserve">
+    <value>Começar do zero</value>
+    <comment>Describes a usage scenario for the New Command that launches the manifest creation process without any arguments.</comment>
+  </data>
+  <data name="Example_SubmitCommand_SubmitLocalManifest" xml:space="preserve">
+    <value>Enviar arquivo de manifesto local para o repositório do Gerenciador de Pacotes do Windows</value>
+  </data>
+  <data name="Example_UpdateCommand_SaveAndPublish" xml:space="preserve">
+    <value>Salvar e publicar manifesto atualizado</value>
+  </data>
+  <data name="Example_UpdateCommand_SearchAndUpdateInstallerURL" xml:space="preserve">
+    <value>Pesquisar um manifesto existente e atualizar a URL do instalador</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field with the value provided by the user.</comment>
+  </data>
+  <data name="Example_UpdateCommand_SearchAndUpdateVersion" xml:space="preserve">
+    <value>Pesquisar um manifesto existente e atualizar a versão</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the Version field with the value provided by the user.</comment>
+  </data>
+  <data name="FileExtensions_KeywordDescription" xml:space="preserve">
+    <value>Lista de extensões de arquivo às quais o pacote pode dar suporte</value>
+  </data>
+  <data name="PathDoesNotExist_Warning" xml:space="preserve">
+    <value>O caminho não existe</value>
+  </data>
+  <data name="Path_HelpText" xml:space="preserve">
+    <value>Caminho para um arquivo de manifesto ou diretório para enviar ao repositório do Gerenciador de pacotes do Windows</value>
+  </data>
+  <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
+    <value>Falha na autorização do GitHub: {0} - {1}</value>
+    <comment>{0} - will be replaced with error code
+{1} - will be replaced with error description</comment>
+  </data>
+  <data name="GitHubLoginFail_Error" xml:space="preserve">
+    <value>Falha no logon do GitHub.</value>
+  </data>
+  <data name="GitHubToken_HelpText" xml:space="preserve">
+    <value>Token de acesso pessoal do GitHub usado para envio direto ao repositório do Gerenciador de pacotes do Windows. Se nenhum token for fornecido, a ferramenta solicitará as credenciais de logon do GitHub.</value>
+  </data>
+  <data name="Heading" xml:space="preserve">
+    <value>Criador de Manifesto do Windows v{0}</value>
+    <comment>{0} will be replaced with program's semantic version number</comment>
+  </data>
+  <data name="Homepage_KeywordDescription" xml:space="preserve">
+    <value>A página inicial do pacote</value>
+  </data>
+  <data name="Id_HelpText" xml:space="preserve">
+    <value>Identificador do pacote usado para pesquisar o manifesto existente no repositório do Gerenciador de pacotes do Windows. A ID diferencia maiúsculas de minúsculas.</value>
+  </data>
+  <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
+    <value>A arquitetura de destino do instalador</value>
+  </data>
+  <data name="InstallerSha256_KeywordDescription" xml:space="preserve">
+    <value>O hash do instalador SHA256</value>
+  </data>
+  <data name="Installers_KeywordDescription" xml:space="preserve">
+    <value>Conjunto de instaladores</value>
+  </data>
+  <data name="InstallerType_KeywordDescription" xml:space="preserve">
+    <value>O tipo de instalador</value>
+  </data>
+  <data name="InstallerUrl_HelpText" xml:space="preserve">
+    <value>URL do instalador usada para extrair metadados relevantes para a geração de um manifesto</value>
+  </data>
+  <data name="InstallLocation_KeywordDescription" xml:space="preserve">
+    <value>Caminho de redirecionamento do local do instalador</value>
+  </data>
+  <data name="Interactive_KeywordDescription" xml:space="preserve">
+    <value>As opções do instalador interativo</value>
+  </data>
+  <data name="InvalidCachedToken" xml:space="preserve">
+    <value>O token armazenado em cache era inválido, excluindo e iniciando o fluxo OAuth</value>
+  </data>
+  <data name="Language_KeywordDescription" xml:space="preserve">
+    <value>Substitui o idioma padrão</value>
+  </data>
+  <data name="LaunchBrowser_Message" xml:space="preserve">
+    <value>Iniciando o navegador da Web... se o navegador da Web padrão não for iniciado, acesse: {0}</value>
+    <comment>{0} - will be replaced by the verification URI opened by the browser</comment>
+  </data>
+  <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
+    <value>A página de licença</value>
+  </data>
+  <data name="Localization_KeywordDescription" xml:space="preserve">
+    <value>A localidade do instalador do pacote</value>
+  </data>
+  <data name="Log_KeywordDescription" xml:space="preserve">
+    <value>Caminho de redirecionamento do log do instalador</value>
+  </data>
+  <data name="ManifestSaved_Message" xml:space="preserve">
+    <value>Manifesto salvo em {0}</value>
+    <comment>{0} - will be replaced the full path to the newly created manifest file</comment>
+  </data>
+  <data name="ManifestValidationSucceeded_Message" xml:space="preserve">
+    <value>Êxito na validação do manifesto: {0}</value>
+    <comment>{0} - will be replaced with the boolean value indicating whether manifest validation passed or failed.</comment>
+  </data>
+  <data name="ManifestVersion_KeywordDescription" xml:space="preserve">
+    <value>A versão da sintaxe do manifesto</value>
+  </data>
+  <data name="MinOSVersion_KeywordDescription" xml:space="preserve">
+    <value>A versão mínima do sistema operacional do instalador</value>
+  </data>
+  <data name="Moniker_KeywordDescription" xml:space="preserve">
+    <value>O termo de pacote mais comum</value>
+  </data>
+  <data name="NewCommand_Description" xml:space="preserve">
+    <value>Pressione ENTER para enviar o valor para cada pergunta, incluindo aceitar o valor (padrão).</value>
+  </data>
+  <data name="NewCommand_Header" xml:space="preserve">
+    <value>Esta ferramenta orientará você em uma série de perguntas para ajudá-lo a criar o manifesto do pacote.</value>
+  </data>
+  <data name="NewCommand_HelpText" xml:space="preserve">
+    <value>Inicia uma série de perguntas para ajudar a gerar um novo manifesto</value>
+  </data>
+  <data name="OctokitNotFound_Error" xml:space="preserve">
+    <value>Verifique a ortografia e a capitalização do identificador do pacote</value>
+  </data>
+  <data name="OutputDirectory_HelpText" xml:space="preserve">
+    <value>Diretório de saída onde os manifestos recém-criados serão salvos localmente</value>
+  </data>
+  <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
+    <value>O nome da família de pacotes do instalador do MSIX</value>
+  </data>
+  <data name="PackageLocale_KeywordDescription" xml:space="preserve">
+    <value>A localidade de metadados do pacote</value>
+  </data>
+  <data name="PackageUrl_KeywordDescription" xml:space="preserve">
+    <value>A página inicial do pacote.</value>
+  </data>
+  <data name="Platform_KeywordDescription" xml:space="preserve">
+    <value>A plataforma do instalador</value>
+  </data>
+  <data name="PrivacyUrl_KeywordDescription" xml:space="preserve">
+    <value>A página privacidade do fornecedor ou a página de privacidade do pacote</value>
+  </data>
+  <data name="ProductCode_KeywordDescription" xml:space="preserve">
+    <value>A chave desinstalar do registro</value>
+  </data>
+  <data name="Protocols_KeywordDescription" xml:space="preserve">
+    <value>Lista de protocolos para os quais o pacote fornece um manipulador</value>
+  </data>
+  <data name="PublisherSupportUrl_KeywordDescription" xml:space="preserve">
+    <value>A página de suporte do fornecedor</value>
+  </data>
+  <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
+    <value>A página inicial do fornecedor</value>
+  </data>
+  <data name="PullRequestURI_Message" xml:space="preserve">
+    <value>A solicitação de pull pode ser encontrada aqui: {0}</value>
+    <comment>{0} - will be replaced with the pull request URI</comment>
+  </data>
+  <data name="RetrievingManifest_Message" xml:space="preserve">
+    <value>Recuperando o manifesto mais recente para {0}</value>
+  </data>
+  <data name="Scope_KeywordDescription" xml:space="preserve">
+    <value>Esta é uma enumeração de escopo de instalação ("user", "System")</value>
+  </data>
+  <data name="Sha256_KeywordDescription" xml:space="preserve">
+    <value>O hash do instalador SHA256</value>
+  </data>
+  <data name="ShortDescription_KeywordDescription" xml:space="preserve">
+    <value>A descrição resumida do pacote</value>
+  </data>
+  <data name="SignatureSha256_KeywordDescription" xml:space="preserve">
+    <value>O hash de assinatura MSIX SHA256</value>
+  </data>
+  <data name="SilentWithProgress_KeywordDescription" xml:space="preserve">
+    <value>O silencioso com opções de instalação do progresso</value>
+  </data>
+  <data name="Silent_KeywordDescription" xml:space="preserve">
+    <value>As opções do instalador silencioso</value>
+  </data>
+  <data name="StoreToken_Message" xml:space="preserve">
+    <value>Configurando o token GitHub armazenado em cache</value>
+  </data>
+  <data name="Store_HelpText" xml:space="preserve">
+    <value>Defina o token GitHub armazenado em cache. Pode especificar o token para o cache com o parâmetro--token, caso contrário, iniciará o fluxo OAuth.</value>
+  </data>
+  <data name="SkippingPullRequest_Message" xml:space="preserve">
+    <value>Ignorando envio de solicitação pull...</value>
+  </data>
+  <data name="SubmitCommand_HelpText" xml:space="preserve">
+    <value>Envia um manifesto válido diretamente para o repositório do Gerenciador de pacotes do Windows</value>
+  </data>
+  <data name="SubmittingPullRequest_Message" xml:space="preserve">
+    <value>Enviando solicitação pull para o manifesto...</value>
+  </data>
+  <data name="Switches_KeywordDescription" xml:space="preserve">
+    <value>Coleção de opções do instalador</value>
+  </data>
+  <data name="Tags_KeywordDescription" xml:space="preserve">
+    <value>Lista de termos adicionals de pesquisa de pacote</value>
+  </data>
+  <data name="TokenCommand_HelpText" xml:space="preserve">
+    <value>Modifica o cache do token de autenticação do GitHub</value>
+  </data>
+  <data name="TokenExpired_Message" xml:space="preserve">
+    <value>Código de usuário expirado. Gerando novo código de usuário...</value>
+  </data>
+  <data name="UpdateBehavior_KeywordDescription" xml:space="preserve">
+    <value>O método de atualização</value>
+  </data>
+  <data name="UpdateCommand_HelpText" xml:space="preserve">
+    <value>Atualiza campos de um manifesto existente</value>
+  </data>
+  <data name="Update_KeywordDescription" xml:space="preserve">
+    <value>As opções de atualização</value>
+  </data>
+  <data name="Url_KeywordDescription" xml:space="preserve">
+    <value>A URL do instalador</value>
+  </data>
+  <data name="Version_HelpText" xml:space="preserve">
+    <value>Versão a ser usada ao atualizar o campo da versão do pacote.</value>
+  </data>
+  <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
+    <value>Falha ao gravar o token OAuth no cache: {0}</value>
+  </data>
+  <data name="ConfirmManifestCreation_Message" xml:space="preserve">
+    <value>Deseja fazer alterações neste manifesto?</value>
+  </data>
+  <data name="ExecutionPaused_Message" xml:space="preserve">
+    <value>A execução do comando será pausada até que o logon do GitHub seja concluído.  </value>
+  </data>
+  <data name="GenerateManifestPreview_Message" xml:space="preserve">
+    <value>Gerando uma visualização de seus manifestos...</value>
+  </data>
+  <data name="GitHubAccountMustBeLinked_Message" xml:space="preserve">
+    <value>Uma conta do GitHub ou um token de acesso pessoal deve estar vinculado para continuar com este comando.  </value>
+  </data>
+  <data name="InitiatingGitHubLogin_Message" xml:space="preserve">
+    <value>Iniciando logon do GitHub...</value>
+  </data>
+  <data name="ManifestDocumentation_HelpText" xml:space="preserve">
+    <value>Para obter informações sobre as restrições de cada campo, visite {0}</value>
+    <comment>{0} - will be replaced with the url to the manifest documentation.</comment>
+  </data>
+  <data name="NoTokenProvided_Message" xml:space="preserve">
+    <value>Nenhum token fornecido, envio ao GitHub ignorado.</value>
+  </data>
+  <data name="NoTokenResponse_Message" xml:space="preserve">
+    <value>Nenhuma resposta de token do fluxo OAuth GitHub, terminando a execução do comando.</value>
+  </data>
+  <data name="ResumingCommandExecution_Message" xml:space="preserve">
+    <value>Continuando a execução do comando...</value>
+  </data>
+  <data name="UsingTokenFromCache_Message" xml:space="preserve">
+    <value>Usando o token GitHub do cache...</value>
+  </data>
+  <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
+    <value>Visualização do manifesto de localidade padrão:</value>
+  </data>
+  <data name="InstallerManifestPreview_Message" xml:space="preserve">
+    <value>Visualização do manifesto do instalador:</value>
+  </data>
+  <data name="VersionManifestPreview_Message" xml:space="preserve">
+    <value>Visualização da versão do manifesto:</value>
+  </data>
+  <data name="RegexFieldValidation_Error" xml:space="preserve">
+    <value>A entrada não corresponde ao padrão de formato válido para este campo.</value>
+  </data>
+  <data name="AdditionalProperties_KeywordDescription" xml:space="preserve">
+    <value>As propriedades adicionais para a compatibilidade de versão secundária futura</value>
+  </data>
+  <data name="InstallerLocale_KeywordDescription" xml:space="preserve">
+    <value>A localidade do instalador do pacote</value>
+  </data>
+  <data name="InstallerSuccessCodes_KeywordDescription" xml:space="preserve">
+    <value>Lista de códigos de saída de êxito do instalador diferente de zero</value>
+  </data>
+  <data name="InstallerSwitches_KeywordDescription" xml:space="preserve">
+    <value>Coleção de opções do instalador</value>
+  </data>
+  <data name="InstallModes_KeywordDescription" xml:space="preserve">
+    <value>Lista de modos de instalador com suporte</value>
+  </data>
+  <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
+    <value>A versão mínima do sistema operacional do instalador</value>
+  </data>
+  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
+    <value>Várias URLs de instalador distintas encontradas. Tente novamente com uma única URL de instalador.</value>
+  </data>
+  <data name="Upgrade_KeywordDescription" xml:space="preserve">
+    <value>As opções de atualização</value>
+  </data>
+  <data name="Architecture_KeywordDescription" xml:space="preserve">
+    <value>A arquitetura de destino do instalador</value>
+  </data>
+  <data name="Capabilities_KeywordDescription" xml:space="preserve">
+    <value>Lista de recursos MSIX</value>
+  </data>
+  <data name="Dependencies_KeywordDescription" xml:space="preserve">
+    <value>Coleção de dependências do pacote</value>
+  </data>
+  <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
+    <value>Lista de dependências de pacotes externos</value>
+  </data>
+  <data name="ManifestType_KeywordDescription" xml:space="preserve">
+    <value>O tipo de manifesto</value>
+  </data>
+  <data name="MinimumVersion_KeywordDescription" xml:space="preserve">
+    <value>A versão mínima da dependência do pacote</value>
+  </data>
+  <data name="PackageDependencies_KeywordDescription" xml:space="preserve">
+    <value>Lista de dependências do pacote da fonte atual</value>
+  </data>
+  <data name="RestrictedCapabilities_KeywordDescription" xml:space="preserve">
+    <value>Lista de recursos de MSIX restritos</value>
+  </data>
+  <data name="UpgradeBehavior_KeywordDescription" xml:space="preserve">
+    <value>O método de atualização</value>
+  </data>
+  <data name="WindowsFeatures_KeywordDescription" xml:space="preserve">
+    <value>Lista de dependências de recursos do Windows</value>
+  </data>
+  <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
+    <value>Lista de dependências da biblioteca do Windows</value>
+  </data>
+  <data name="PackageParsing_Error" xml:space="preserve">
+    <value>Não é possível analisar o pacote e determinar o tipo do instalador.</value>
+  </data>
+</root>

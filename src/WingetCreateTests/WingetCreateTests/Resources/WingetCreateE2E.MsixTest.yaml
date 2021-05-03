@@ -1,0 +1,28 @@
+﻿PackageIdentifier: WingetCreateE2E.MsixTest
+PackageName: MsixTest
+PackageVersion: 1.2.3.4
+Publisher: WingetCreateE2E
+Author: Microsoft
+License: MIT
+LicenseUrl: https://github.com/microsoft/winget-create
+MinimumOSVersion: 10.0.0.0
+ShortDescription: Testing WingetCreate with an msix installer
+PackageLocale: en-US
+PackageUrl: https://github.com/microsoft/winget-create
+Tags: 
+  - Windows Package Manager
+  - winget create
+  - package manager
+  - utility
+  - tool
+  - test
+InstallerType: msix
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateMsixInstaller.msixbundle
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+    SignatureSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+    InstallerType: msix
+    Scope: user
+ManifestType: singleton
+ManifestVersion: 1.0.0

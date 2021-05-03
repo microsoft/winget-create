@@ -1,0 +1,84 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0-windows10.0.18362.0</TargetFramework>
+    <AssemblyName>WingetCreateCLI</AssemblyName>
+    <RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
+    <Version>0.1.0</Version>
+    <Platforms>x64;x86</Platforms>
+    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>      
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="..\stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="DesktopBridge.Helpers" Version="1.2.2" />
+    <PackageReference Include="Sharprompt" Version="2.2.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.261">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WingetCreateCore\WingetCreateCore.csproj" />
+  </ItemGroup>
+
+  <!--This is to workaround a similar issue as to what's
+  described at https://github.com/dotnet/runtime/issues/3807. When the wapproj is published, the native
+  PDBs in its dependencies are declared in the deps.json file, but the PDBs themselves are stripped away
+  during the build. It'll build without complaint, but at runtime we get a message like:
+
+  Message: Error:
+  An assembly specified in the application dependencies manifest (WingetCreateCLI.deps.json) was not found:
+  package: 'Microsoft.WindowsPackageManager.Utils', version: '0.2.2'
+  path: 'runtimes/win-x64/native/WinGetUtil.pdb'
+
+  This modifies the inputs to GenerateBuildDependencyFile to remove Wingetutil.pdb from the deps.json file when it's generated.
+  -->
+  <Target Name="StripNativePDBFromDepsJson" BeforeTargets="GenerateBuildDependencyFile">
+    <ItemGroup>
+      <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeTargetsCopyLocalItems.Extension)' == '.pdb' AND %(RuntimeTargetsCopyLocalItems.NuGetPackageId) == 'Microsoft.WindowsPackageManager.Utils'" />
+      <NativeCopyLocalItems Remove="@(NativeCopyLocalItems)" Condition="'%(NativeCopyLocalItems.Extension)' == '.pdb' AND %(NativeCopyLocalItems.NuGetPackageId) == 'Microsoft.WindowsPackageManager.Utils'" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The localized resources are dropped in \Localization\Resources as part of the patch file from TouchDown. We can't simply Include them, as they must appear to be under the
+         Properties directory to be properly included. We can fake this by using the <Link> tag which includes them virtually under specified directory -->
+    <EmbeddedResource Include="..\..\Localization\Resources\**\*.resx" LinkBase="Properties">
+      <Link>%(LinkBase)\%(Filename)%(Extension)</Link>
+      <Visible>false</Visible>
+    </EmbeddedResource>
+
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- Workaround for https://github.com/dotnet/msbuild/issues/5981, will no longer be necessary in msbuild v16.10.0-preview-21181-07+ -->
+  <Target Name="FixAL1703Warning" BeforeTargets="GenerateSatelliteAssemblies" Condition="'$(PlatformTarget)' == 'x64'">
+    <Message Text="Adjusting SDK tools directory to use x64 version of AL.EXE" />
+    <PropertyGroup>
+      <TargetFrameworkSDKToolsDirectory>$(TargetFrameworkSDKToolsDirectory)$(PlatformTarget)\</TargetFrameworkSDKToolsDirectory>
+    </PropertyGroup>
+  </Target>
+
+</Project>

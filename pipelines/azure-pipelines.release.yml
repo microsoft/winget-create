@@ -1,0 +1,146 @@
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/dotnet-core
+
+trigger: none
+
+variables:
+  # Solution name
+  solution: "src/WingetCreateCLI.sln"
+
+  # Appx Package Directory
+  appxPackageDir: '$(Build.ArtifactStagingDirectory)\AppxPackages'
+
+  # Agent VM image name
+  vmImageName: "windows-latest"
+
+  # Working Directory
+  workingDirectory: '$(System.DefaultWorkingDirectory)\src'
+
+  # Build configuration
+  buildConfiguration: "Release"
+
+  # Build platform
+  buildPlatform: "x64"
+
+jobs:
+  - job: GetVersion
+    variables:
+      runCodesignValidationInjection: ${{ false }}
+      skipComponentGovernanceDetection: ${{ true }}
+    steps:
+      - powershell: |
+          [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
+          $version = $project.Project.PropertyGroup.Version
+          echo "##vso[task.setvariable variable=majorMinorBuildVersion;isOutput=true]$version"
+        name: GetVersionStep
+        displayName: Get version from CLI project
+
+  - job: Build
+    displayName: Build
+    dependsOn: GetVersion
+    variables:
+      majorMinorBuildVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorBuildVersion']]
+
+      # Only update counter for non-PR builds, otherwise just use 0 for the revision
+      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        revision: 0
+      ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
+        revision: $[counter(variables['majorMinorBuildVersion'], 1)]
+
+      version: "$(majorMinorBuildVersion).$(revision)"
+      appxBundlePath: '$(appxPackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.appxbundle'
+    pool:
+      vmImage: $(vmImageName)
+
+    steps:
+      - checkout: self
+        lfs: "true"
+
+      - powershell: |
+          echo $(version)
+          echo $(appxBundlePath)
+        displayName: Display version and bundle path for diagnosing
+
+      - powershell: |
+          [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
+          $manifest.Package.Identity.Version = "$(version)"
+          $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
+        displayName: "Update package manifest version"
+
+      - task: DeleteFiles@1
+        displayName: "Delete existing stubbed TelemetryEventSources.cs. Not necessary, but will cause build to fail if fetch fails."
+        inputs:
+          Contents: '$(workingDirectory)\WingetCreateCLI\Telemetry\TelemetryEventSource.cs'
+
+      - task: PkgESGitFetch@10
+        displayName: "Fetch TelemetryEventSource.cs from OS repo and overwrite stubbed version"
+        inputs:
+          repository: "https://microsoft.visualstudio.com/os/_git/os.2020"
+          branch: official/rsmaster
+          source: 'minkernel\published\internal\telemetry\TelemetryEventSource.cs'
+          destination: '$(workingDirectory)\WingetCreateCLI\Telemetry\'
+
+      - task: DotNetCoreCLI@2
+        displayName: Restore
+        inputs:
+          command: "restore"
+          feedsToUse: "config"
+          nugetConfigPath: "nuget.config"
+          projects: $(workingDirectory)/**/*.csproj
+
+      - task: MSBuild@1
+        displayName: Build Solution
+        inputs:
+          platform: "$(buildPlatform)"
+          solution: "$(solution)"
+          configuration: "$(buildConfiguration)"
+          msbuildArguments: '/p:AppxBundleOutput="$(appxBundlePath)"
+            /p:AppxBundle=Always
+            /p:UapAppxPackageBuildMode=SideloadOnly
+            /p:AppxPackageSigningEnabled=false'
+
+      - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+        displayName: "ESRP CodeSigning"
+        inputs:
+          ConnectedServiceName: "PeetPackageEs2"
+          FolderPath: $(appxPackageDir)
+          Pattern: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.appxbundle"
+          signConfigType: inlineSignParams
+          inlineOperation: |
+            [
+              {
+                  "KeyCode" : "CP-230012",
+                  "OperationCode" : "SigntoolSign",
+                  "Parameters" : {
+                      "OpusName" : "Microsoft",
+                      "OpusInfo" : "http://www.microsoft.com",
+                      "FileDigest" : "/fd \"SHA256\"",
+                      "PageHash" : "/NPH",
+                      "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                  },
+                  "ToolName" : "sign",
+                  "ToolVersion" : "1.0"
+              },
+              {
+                  "KeyCode" : "CP-230012",
+                  "OperationCode" : "SigntoolVerify",
+                  "Parameters" : {},
+                  "ToolName" : "sign",
+                  "ToolVersion" : "1.0"
+              }
+            ]
+
+      - publish: $(appxBundlePath)
+        artifact: appxbundle
+        displayName: Publish appx bundle
+
+      - task: GitHubRelease@1
+        displayName: Create GitHub release
+        inputs:
+          gitHubConnection: github
+          repositoryName: $(Build.Repository.Name)
+          tagSource: userSpecifiedTag
+          tag: v$(version)-preview
+          isPreRelease: true
+          isDraft: true # After running this step, visit the new draft release, edit, and publish.
+          assets: $(appxBundlePath)

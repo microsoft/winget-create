@@ -1,0 +1,513 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDescription_HelpText" xml:space="preserve">
+    <value>資訊清單建立命令列公用程式會產生資訊清單，以將應用程式提交至 Windows 封裝管理員存放庫。</value>
+  </data>
+  <data name="AppMoniker_KeywordDescription" xml:space="preserve">
+    <value>最常見的封裝術語</value>
+  </data>
+  <data name="Arch_KeywordDescription" xml:space="preserve">
+    <value>安裝程式目標架構</value>
+  </data>
+  <data name="Author_KeywordDescription" xml:space="preserve">
+    <value>封裝作者</value>
+  </data>
+  <data name="BrowserFailedToLaunch_Error" xml:space="preserve">
+    <value>網頁瀏覽器無法啟動：{0}</value>
+    <comment>{0} - will be replaced with the exception thrown when the browser fails to launch</comment>
+  </data>
+  <data name="ChangeOutputDirToCurrDir_Message" xml:space="preserve">
+    <value>輸出目錄已變更為目前的目錄：{0}</value>
+    <comment>{0} - will be replaced with the current directory path</comment>
+  </data>
+  <data name="Channel_KeywordDescription" xml:space="preserve">
+    <value>發佈通道</value>
+  </data>
+  <data name="ClearToken_Message" xml:space="preserve">
+    <value>正在清除 GitHub 權杖快取</value>
+  </data>
+  <data name="Clear_HelpText" xml:space="preserve">
+    <value>清除已快取的 GitHub 權杖</value>
+  </data>
+  <data name="Commands_KeywordDescription" xml:space="preserve">
+    <value>執行封裝的命令或別名清單</value>
+  </data>
+  <data name="ConfirmGitHubSubmitManifest_Message" xml:space="preserve">
+    <value>是否要將您的資訊清單提交至 Windows 封裝管理員存放庫？</value>
+  </data>
+  <data name="CopyrightUrl_KeywordDescription" xml:space="preserve">
+    <value>封裝著作權頁面</value>
+  </data>
+  <data name="Copyright_KeywordDescription" xml:space="preserve">
+    <value>封裝著作權</value>
+  </data>
+  <data name="Custom_KeywordDescription" xml:space="preserve">
+    <value>自訂安裝程式切換</value>
+  </data>
+  <data name="Description_KeywordDescription" xml:space="preserve">
+    <value>完整封裝描述</value>
+  </data>
+  <data name="DoneSymbol_String" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="DownloadInstaller_Message" xml:space="preserve">
+    <value>正在下載和剖析：{0}...</value>
+    <comment>{0} - will be replaced with the installer URL</comment>
+  </data>
+  <data name="EnterFollowingFields_Message" xml:space="preserve">
+    <value>請為下列欄位輸入值：</value>
+  </data>
+  <data name="EnterUserCode_Message" xml:space="preserve">
+    <value>請在出現提示時輸入下列使用者驗證碼： {0}</value>
+    <comment>{0} - will be replaced with the user verification code that must be entered in the GitHub OAuth webpage</comment>
+  </data>
+  <data name="Error_Prefix" xml:space="preserve">
+    <value>錯誤: {0}</value>
+    <comment>{0} - will be replaced by the thrown exception message</comment>
+  </data>
+  <data name="Example_NewCommand_DownloadInstaller" xml:space="preserve">
+    <value>下載安裝程式並解壓縮中繼資料</value>
+    <comment>Describes a usage scenario for the New Command that launches the manifest creation process with the user providing an installer URL to be downloaded and extracted.</comment>
+  </data>
+  <data name="Example_NewCommand_SaveLocallyOrSubmit" xml:space="preserve">
+    <value>在本機儲存並提交提取要求</value>
+    <comment>Describes a usage scenario for the New Command that allows the user to decide where to save the newly-generated manifest locally and whether to submit directly to GitHub for a pull request.</comment>
+  </data>
+  <data name="Example_NewCommand_StartFromScratch" xml:space="preserve">
+    <value>從頭開始</value>
+    <comment>Describes a usage scenario for the New Command that launches the manifest creation process without any arguments.</comment>
+  </data>
+  <data name="Example_SubmitCommand_SubmitLocalManifest" xml:space="preserve">
+    <value>將本機資訊清單檔案提交至 Windows 封裝管理員存放庫</value>
+  </data>
+  <data name="Example_UpdateCommand_SaveAndPublish" xml:space="preserve">
+    <value>儲存並發佈更新的資訊清單</value>
+  </data>
+  <data name="Example_UpdateCommand_SearchAndUpdateInstallerURL" xml:space="preserve">
+    <value>搜尋現有的資訊清單及更新安裝程式 URL</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field with the value provided by the user.</comment>
+  </data>
+  <data name="Example_UpdateCommand_SearchAndUpdateVersion" xml:space="preserve">
+    <value>搜尋現有的資訊清單及更新版本</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the Version field with the value provided by the user.</comment>
+  </data>
+  <data name="FileExtensions_KeywordDescription" xml:space="preserve">
+    <value>封裝可支援的副檔名清單</value>
+  </data>
+  <data name="PathDoesNotExist_Warning" xml:space="preserve">
+    <value>路徑不存在</value>
+  </data>
+  <data name="Path_HelpText" xml:space="preserve">
+    <value>資訊清單檔案或目錄路徑，用以提交至 Windows 封裝管理員存放庫</value>
+  </data>
+  <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
+    <value>GitHub 授權失敗：{0} - {1}</value>
+    <comment>{0} - will be replaced with error code
+{1} - will be replaced with error description</comment>
+  </data>
+  <data name="GitHubLoginFail_Error" xml:space="preserve">
+    <value>GitHub 登入失敗。</value>
+  </data>
+  <data name="GitHubToken_HelpText" xml:space="preserve">
+    <value>GitHub 個人存取權杖，用於直接提交至 Windows 封裝管理員存放庫。如果未提供權杖，工具會提示您輸入 GitHub 登入認證。</value>
+  </data>
+  <data name="Heading" xml:space="preserve">
+    <value>Windows 資訊清單建立器 v{0}</value>
+    <comment>{0} will be replaced with program's semantic version number</comment>
+  </data>
+  <data name="Homepage_KeywordDescription" xml:space="preserve">
+    <value>套件的首頁</value>
+  </data>
+  <data name="Id_HelpText" xml:space="preserve">
+    <value>封裝識別碼，用來在 Windows 封裝管理員庫存放庫中查閱現有資訊清單。識別碼區分大小寫。</value>
+  </data>
+  <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
+    <value>安裝程式目標架構</value>
+  </data>
+  <data name="InstallerSha256_KeywordDescription" xml:space="preserve">
+    <value>SHA256 安裝程式雜湊</value>
+  </data>
+  <data name="Installers_KeywordDescription" xml:space="preserve">
+    <value>安裝程式集合</value>
+  </data>
+  <data name="InstallerType_KeywordDescription" xml:space="preserve">
+    <value>安裝程式類型</value>
+  </data>
+  <data name="InstallerUrl_HelpText" xml:space="preserve">
+    <value>安裝程式 URL，用來解壓縮相關中繼資料以產生顯示清單</value>
+  </data>
+  <data name="InstallLocation_KeywordDescription" xml:space="preserve">
+    <value>安裝程式位置重新導向路徑</value>
+  </data>
+  <data name="Interactive_KeywordDescription" xml:space="preserve">
+    <value>互動式安裝程式切換</value>
+  </data>
+  <data name="InvalidCachedToken" xml:space="preserve">
+    <value>已快取的權杖無效，正在刪除和啟動 OAuth 流程</value>
+  </data>
+  <data name="Language_KeywordDescription" xml:space="preserve">
+    <value>覆蓋預設語言</value>
+  </data>
+  <data name="LaunchBrowser_Message" xml:space="preserve">
+    <value>正在啟動網頁瀏覽器... 如果預設網頁瀏覽器未啟動，請移至： {0}</value>
+    <comment>{0} - will be replaced by the verification URI opened by the browser</comment>
+  </data>
+  <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
+    <value>授權頁面</value>
+  </data>
+  <data name="Localization_KeywordDescription" xml:space="preserve">
+    <value>封裝安裝程式地區設定</value>
+  </data>
+  <data name="Log_KeywordDescription" xml:space="preserve">
+    <value>安裝程式記錄重新導向路徑</value>
+  </data>
+  <data name="ManifestSaved_Message" xml:space="preserve">
+    <value>資訊清單已儲存至 {0}</value>
+    <comment>{0} - will be replaced the full path to the newly created manifest file</comment>
+  </data>
+  <data name="ManifestValidationSucceeded_Message" xml:space="preserve">
+    <value>資訊清單驗證成功: {0}</value>
+    <comment>{0} - will be replaced with the boolean value indicating whether manifest validation passed or failed.</comment>
+  </data>
+  <data name="ManifestVersion_KeywordDescription" xml:space="preserve">
+    <value>顯示資訊清單語法版本</value>
+  </data>
+  <data name="MinOSVersion_KeywordDescription" xml:space="preserve">
+    <value>安裝程式最低作業系統版本</value>
+  </data>
+  <data name="Moniker_KeywordDescription" xml:space="preserve">
+    <value>最常見的封裝術語</value>
+  </data>
+  <data name="NewCommand_Description" xml:space="preserve">
+    <value>按 ENTER 以提交每個問題的值，包括接受 (預設) 值。</value>
+  </data>
+  <data name="NewCommand_Header" xml:space="preserve">
+    <value>此工具會引導您完成一系列的問題，以協助您建立您的封裝資訊清單。</value>
+  </data>
+  <data name="NewCommand_HelpText" xml:space="preserve">
+    <value>啟動一系列問題，協助產生新的資訊清單</value>
+  </data>
+  <data name="OctokitNotFound_Error" xml:space="preserve">
+    <value>請檢查封裝識別碼的拼寫及大小寫</value>
+  </data>
+  <data name="OutputDirectory_HelpText" xml:space="preserve">
+    <value>將在本機儲存新建立的資訊清單的輸出目錄</value>
+  </data>
+  <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
+    <value>MSIX 安裝程式封裝系列名稱</value>
+  </data>
+  <data name="PackageLocale_KeywordDescription" xml:space="preserve">
+    <value>封裝中繼資料地區設定</value>
+  </data>
+  <data name="PackageUrl_KeywordDescription" xml:space="preserve">
+    <value>封裝首頁。</value>
+  </data>
+  <data name="Platform_KeywordDescription" xml:space="preserve">
+    <value>安裝程式平台</value>
+  </data>
+  <data name="PrivacyUrl_KeywordDescription" xml:space="preserve">
+    <value>發行者隱私權頁面或封裝隱私權頁面</value>
+  </data>
+  <data name="ProductCode_KeywordDescription" xml:space="preserve">
+    <value>解除安裝註冊金鑰</value>
+  </data>
+  <data name="Protocols_KeywordDescription" xml:space="preserve">
+    <value>封裝提供處理常式的通訊協定清單</value>
+  </data>
+  <data name="PublisherSupportUrl_KeywordDescription" xml:space="preserve">
+    <value>發行者支援頁面</value>
+  </data>
+  <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
+    <value>發行者首頁</value>
+  </data>
+  <data name="PullRequestURI_Message" xml:space="preserve">
+    <value>提取要求可在這裡找到：{0}</value>
+    <comment>{0} - will be replaced with the pull request URI</comment>
+  </data>
+  <data name="RetrievingManifest_Message" xml:space="preserve">
+    <value>正在擷取{0}的最新資訊清單</value>
+  </data>
+  <data name="Scope_KeywordDescription" xml:space="preserve">
+    <value>這是安裝領域的列舉 ( "User"、"System" )</value>
+  </data>
+  <data name="Sha256_KeywordDescription" xml:space="preserve">
+    <value>SHA256 安裝程式雜湊</value>
+  </data>
+  <data name="ShortDescription_KeywordDescription" xml:space="preserve">
+    <value>簡短封裝描述</value>
+  </data>
+  <data name="SignatureSha256_KeywordDescription" xml:space="preserve">
+    <value>MSIX SHA256 簽章雜湊</value>
+  </data>
+  <data name="SilentWithProgress_KeywordDescription" xml:space="preserve">
+    <value>無訊息進度安裝程式切換</value>
+  </data>
+  <data name="Silent_KeywordDescription" xml:space="preserve">
+    <value>無訊息安裝程式切換</value>
+  </data>
+  <data name="StoreToken_Message" xml:space="preserve">
+    <value>設定快取的 GitHub 權杖</value>
+  </data>
+  <data name="Store_HelpText" xml:space="preserve">
+    <value>設定已快取的 GitHub 權杖。可以使用 --token 參數指定要快取的權杖，否則會初始化 OAuth 流程。</value>
+  </data>
+  <data name="SkippingPullRequest_Message" xml:space="preserve">
+    <value>正在略過提取要求提交...</value>
+  </data>
+  <data name="SubmitCommand_HelpText" xml:space="preserve">
+    <value>將有效的資訊清單直接提交至 Windows 封裝管理員存放庫</value>
+  </data>
+  <data name="SubmittingPullRequest_Message" xml:space="preserve">
+    <value>正在提交資訊清單的提取要求...</value>
+  </data>
+  <data name="Switches_KeywordDescription" xml:space="preserve">
+    <value>安裝程式集合切換</value>
+  </data>
+  <data name="Tags_KeywordDescription" xml:space="preserve">
+    <value>其他封裝搜尋字詞清單</value>
+  </data>
+  <data name="TokenCommand_HelpText" xml:space="preserve">
+    <value>修改 GitHub 驗證權杖快取</value>
+  </data>
+  <data name="TokenExpired_Message" xml:space="preserve">
+    <value>使用者代碼已過期。正在產生新的使用者代碼...</value>
+  </data>
+  <data name="UpdateBehavior_KeywordDescription" xml:space="preserve">
+    <value>升級方法</value>
+  </data>
+  <data name="UpdateCommand_HelpText" xml:space="preserve">
+    <value>更新現有資訊清單的欄位</value>
+  </data>
+  <data name="Update_KeywordDescription" xml:space="preserve">
+    <value>升級切換</value>
+  </data>
+  <data name="Url_KeywordDescription" xml:space="preserve">
+    <value>安裝程式 URL</value>
+  </data>
+  <data name="Version_HelpText" xml:space="preserve">
+    <value>更新套件版本欄位時要使用的版本。</value>
+  </data>
+  <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
+    <value>將 OAuth 權杖寫入到快取失敗： {0}</value>
+  </data>
+  <data name="ConfirmManifestCreation_Message" xml:space="preserve">
+    <value>您要對此資訊清單進行變更嗎？</value>
+  </data>
+  <data name="ExecutionPaused_Message" xml:space="preserve">
+    <value>命令執行會暫停，直到 GitHub 登入完成為止。 </value>
+  </data>
+  <data name="GenerateManifestPreview_Message" xml:space="preserve">
+    <value>正在產生您的資訊清單預覽...</value>
+  </data>
+  <data name="GitHubAccountMustBeLinked_Message" xml:space="preserve">
+    <value>必須連結 GitHub 帳戶或個人存取權杖，才能繼續執行此命令。 </value>
+  </data>
+  <data name="InitiatingGitHubLogin_Message" xml:space="preserve">
+    <value>正在初始化 GitHub 登入...</value>
+  </data>
+  <data name="ManifestDocumentation_HelpText" xml:space="preserve">
+    <value>如需有關每個欄位限制的詳細資訊，請造訪 {0}</value>
+    <comment>{0} - will be replaced with the url to the manifest documentation.</comment>
+  </data>
+  <data name="NoTokenProvided_Message" xml:space="preserve">
+    <value>未提供權杖，已略過提交至 GitHub。</value>
+  </data>
+  <data name="NoTokenResponse_Message" xml:space="preserve">
+    <value>找不到來自 GitHub OAuth 流程的權杖回應，正在結束命令執行。</value>
+  </data>
+  <data name="ResumingCommandExecution_Message" xml:space="preserve">
+    <value>正在繼續命令執行...</value>
+  </data>
+  <data name="UsingTokenFromCache_Message" xml:space="preserve">
+    <value>正在使用來自快取的 GitHub 權杖...</value>
+  </data>
+  <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
+    <value>預設地區設定資訊清單預覽：</value>
+  </data>
+  <data name="InstallerManifestPreview_Message" xml:space="preserve">
+    <value>安裝程式資訊清單預覽：</value>
+  </data>
+  <data name="VersionManifestPreview_Message" xml:space="preserve">
+    <value>版本資訊清單預覽：</value>
+  </data>
+  <data name="RegexFieldValidation_Error" xml:space="preserve">
+    <value>輸入與此欄位的有效格式模式不相符。</value>
+  </data>
+  <data name="AdditionalProperties_KeywordDescription" xml:space="preserve">
+    <value>未來次要版本相容性的其他屬性</value>
+  </data>
+  <data name="InstallerLocale_KeywordDescription" xml:space="preserve">
+    <value>封裝安裝程式地區設定</value>
+  </data>
+  <data name="InstallerSuccessCodes_KeywordDescription" xml:space="preserve">
+    <value>非零安裝程式成功離開代碼的清單</value>
+  </data>
+  <data name="InstallerSwitches_KeywordDescription" xml:space="preserve">
+    <value>安裝程式集合切換</value>
+  </data>
+  <data name="InstallModes_KeywordDescription" xml:space="preserve">
+    <value>支援的安裝程式模式清單</value>
+  </data>
+  <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
+    <value>安裝程式最低作業系統版本</value>
+  </data>
+  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
+    <value>找到多個不同的安裝程式 URL。請以單一安裝程式 URL 再試一次。</value>
+  </data>
+  <data name="Upgrade_KeywordDescription" xml:space="preserve">
+    <value>升級切換</value>
+  </data>
+  <data name="Architecture_KeywordDescription" xml:space="preserve">
+    <value>安裝程式目標架構</value>
+  </data>
+  <data name="Capabilities_KeywordDescription" xml:space="preserve">
+    <value>MSIX 功能清單</value>
+  </data>
+  <data name="Dependencies_KeywordDescription" xml:space="preserve">
+    <value>封裝相依性的集合</value>
+  </data>
+  <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
+    <value>外部封裝相依性清單</value>
+  </data>
+  <data name="ManifestType_KeywordDescription" xml:space="preserve">
+    <value>資訊清單類型</value>
+  </data>
+  <data name="MinimumVersion_KeywordDescription" xml:space="preserve">
+    <value>最低版本封裝相依性</value>
+  </data>
+  <data name="PackageDependencies_KeywordDescription" xml:space="preserve">
+    <value>來自目前來源的封裝相依性清單</value>
+  </data>
+  <data name="RestrictedCapabilities_KeywordDescription" xml:space="preserve">
+    <value>受限制的 MSIX 功能清單</value>
+  </data>
+  <data name="UpgradeBehavior_KeywordDescription" xml:space="preserve">
+    <value>升級方法</value>
+  </data>
+  <data name="WindowsFeatures_KeywordDescription" xml:space="preserve">
+    <value>Windows 功能相依性清單</value>
+  </data>
+  <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
+    <value>Windows Library 相依性清單</value>
+  </data>
+  <data name="PackageParsing_Error" xml:space="preserve">
+    <value>無法成功剖析封裝及判斷安裝程式類型。</value>
+  </data>
+</root>

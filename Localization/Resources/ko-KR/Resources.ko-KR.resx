@@ -1,0 +1,513 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppDescription_HelpText" xml:space="preserve">
+    <value>매니페스트 만들기 명령줄 유틸리티는 Windows 패키지 관리자 리포지토리에 앱을 제출하기 위해 매니페스트를 생성합니다.</value>
+  </data>
+  <data name="AppMoniker_KeywordDescription" xml:space="preserve">
+    <value>가장 일반적인 패키지 용어</value>
+  </data>
+  <data name="Arch_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 대상 아키텍처</value>
+  </data>
+  <data name="Author_KeywordDescription" xml:space="preserve">
+    <value>패키지 작성자</value>
+  </data>
+  <data name="BrowserFailedToLaunch_Error" xml:space="preserve">
+    <value>웹 브라우저 시작에 실패: {0}</value>
+    <comment>{0} - will be replaced with the exception thrown when the browser fails to launch</comment>
+  </data>
+  <data name="ChangeOutputDirToCurrDir_Message" xml:space="preserve">
+    <value>출력 디렉터리가 현재 디렉터리로 변경됨: {0}</value>
+    <comment>{0} - will be replaced with the current directory path</comment>
+  </data>
+  <data name="Channel_KeywordDescription" xml:space="preserve">
+    <value>배포 채널</value>
+  </data>
+  <data name="ClearToken_Message" xml:space="preserve">
+    <value>GitHub 토큰 캐시를 지우는 중</value>
+  </data>
+  <data name="Clear_HelpText" xml:space="preserve">
+    <value>캐시된 GitHub 토큰 지우기</value>
+  </data>
+  <data name="Commands_KeywordDescription" xml:space="preserve">
+    <value>패키지를 실행할 명령 또는 별칭 목록</value>
+  </data>
+  <data name="ConfirmGitHubSubmitManifest_Message" xml:space="preserve">
+    <value>Windows 패키지 관리자 리포지토리에 매니페스트를 제출하시겠습니까?</value>
+  </data>
+  <data name="CopyrightUrl_KeywordDescription" xml:space="preserve">
+    <value>패키지 저작권 페이지</value>
+  </data>
+  <data name="Copyright_KeywordDescription" xml:space="preserve">
+    <value>패키지 저작권</value>
+  </data>
+  <data name="Custom_KeywordDescription" xml:space="preserve">
+    <value>사용자 지정 설치 관리자 스위치</value>
+  </data>
+  <data name="Description_KeywordDescription" xml:space="preserve">
+    <value>전체 패키지 설명</value>
+  </data>
+  <data name="DoneSymbol_String" xml:space="preserve">
+    <value>완료</value>
+  </data>
+  <data name="DownloadInstaller_Message" xml:space="preserve">
+    <value>다운로드 및 구문 분석 중: {0}...</value>
+    <comment>{0} - will be replaced with the installer URL</comment>
+  </data>
+  <data name="EnterFollowingFields_Message" xml:space="preserve">
+    <value>다음 필드에 값을 입력하세요.</value>
+  </data>
+  <data name="EnterUserCode_Message" xml:space="preserve">
+    <value>메시지가 표시되면 다음 사용자 확인 코드를 입력하세요 {0}.</value>
+    <comment>{0} - will be replaced with the user verification code that must be entered in the GitHub OAuth webpage</comment>
+  </data>
+  <data name="Error_Prefix" xml:space="preserve">
+    <value>오류: {0}</value>
+    <comment>{0} - will be replaced by the thrown exception message</comment>
+  </data>
+  <data name="Example_NewCommand_DownloadInstaller" xml:space="preserve">
+    <value>설치 관리자 및 추출 메타데이터 다운로드</value>
+    <comment>Describes a usage scenario for the New Command that launches the manifest creation process with the user providing an installer URL to be downloaded and extracted.</comment>
+  </data>
+  <data name="Example_NewCommand_SaveLocallyOrSubmit" xml:space="preserve">
+    <value>로컬로 저장하고 끌어오기 요청 제출</value>
+    <comment>Describes a usage scenario for the New Command that allows the user to decide where to save the newly-generated manifest locally and whether to submit directly to GitHub for a pull request.</comment>
+  </data>
+  <data name="Example_NewCommand_StartFromScratch" xml:space="preserve">
+    <value>처음부터 시작</value>
+    <comment>Describes a usage scenario for the New Command that launches the manifest creation process without any arguments.</comment>
+  </data>
+  <data name="Example_SubmitCommand_SubmitLocalManifest" xml:space="preserve">
+    <value>로컬 매니페스트 파일을 Windows 패키지 관리자 의도로 전송</value>
+  </data>
+  <data name="Example_UpdateCommand_SaveAndPublish" xml:space="preserve">
+    <value>업데이트된 매니페스트 저장 및 게시</value>
+  </data>
+  <data name="Example_UpdateCommand_SearchAndUpdateInstallerURL" xml:space="preserve">
+    <value>기존 매니페스트 검색 및 설치 관리자 URL 업데이트</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field with the value provided by the user.</comment>
+  </data>
+  <data name="Example_UpdateCommand_SearchAndUpdateVersion" xml:space="preserve">
+    <value>기존 매니페스트를 검색하고 버전을 업데이트합니다.</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the Version field with the value provided by the user.</comment>
+  </data>
+  <data name="FileExtensions_KeywordDescription" xml:space="preserve">
+    <value>패키지가 지원할 수 있는 파일 확장명 목록</value>
+  </data>
+  <data name="PathDoesNotExist_Warning" xml:space="preserve">
+    <value>경로가 존재하지 않습니다</value>
+  </data>
+  <data name="Path_HelpText" xml:space="preserve">
+    <value>Windows 패키지 관리자 리포지토리에 전송할 매니페스트 파일 또는 디렉터리 경로</value>
+  </data>
+  <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
+    <value>GitHub 권한 부여 실패: {0} - {1}</value>
+    <comment>{0} - will be replaced with error code
+{1} - will be replaced with error description</comment>
+  </data>
+  <data name="GitHubLoginFail_Error" xml:space="preserve">
+    <value>GitHub에 로그인하지 못했습니다.</value>
+  </data>
+  <data name="GitHubToken_HelpText" xml:space="preserve">
+    <value>Windows 패키지 관리자의 직접 전송에 사용되는 GitHub 개인 액세스 토큰입니다. 토큰을 제공하지 않으면 GitHub 로그인 자격 증명을 입력하라는 메시지가 나타납니다.</value>
+  </data>
+  <data name="Heading" xml:space="preserve">
+    <value>Windows 매니페스트 작성자 v{0}</value>
+    <comment>{0} will be replaced with program's semantic version number</comment>
+  </data>
+  <data name="Homepage_KeywordDescription" xml:space="preserve">
+    <value>패키지 홈 페이지</value>
+  </data>
+  <data name="Id_HelpText" xml:space="preserve">
+    <value>Windows 패키지 관리자 리포지토리의 기존 매니페스트를 조회하는 데 사용되는 패키지 식별자입니다. ID는 대/소문자를 구분합니다.</value>
+  </data>
+  <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 대상 아키텍처</value>
+  </data>
+  <data name="InstallerSha256_KeywordDescription" xml:space="preserve">
+    <value>SHA256 설치 관리자 해시</value>
+  </data>
+  <data name="Installers_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 모음</value>
+  </data>
+  <data name="InstallerType_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 유형</value>
+  </data>
+  <data name="InstallerUrl_HelpText" xml:space="preserve">
+    <value>매니페스트를 생성하기 위해 관련 메타데이터를 추출하는 데 사용되는 설치 관리자 URL</value>
+  </data>
+  <data name="InstallLocation_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 위치 리디렉션 경로</value>
+  </data>
+  <data name="Interactive_KeywordDescription" xml:space="preserve">
+    <value>대화형 설치 관리자 스위치</value>
+  </data>
+  <data name="InvalidCachedToken" xml:space="preserve">
+    <value>캐시된 토큰이 잘못되었기 때문에 OAuth 흐름을 삭제하고 시작합니다.</value>
+  </data>
+  <data name="Language_KeywordDescription" xml:space="preserve">
+    <value>기본 언어 재정의</value>
+  </data>
+  <data name="LaunchBrowser_Message" xml:space="preserve">
+    <value>기본 웹... 브라우저가 시작되지 않으면 다음 위치에서 {0}.</value>
+    <comment>{0} - will be replaced by the verification URI opened by the browser</comment>
+  </data>
+  <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
+    <value>라이선스 페이지</value>
+  </data>
+  <data name="Localization_KeywordDescription" xml:space="preserve">
+    <value>패키지 설치 관리자 로캘</value>
+  </data>
+  <data name="Log_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 로그 리디렉션 경로</value>
+  </data>
+  <data name="ManifestSaved_Message" xml:space="preserve">
+    <value>{0}에 매니페스트 저장</value>
+    <comment>{0} - will be replaced the full path to the newly created manifest file</comment>
+  </data>
+  <data name="ManifestValidationSucceeded_Message" xml:space="preserve">
+    <value>매니페스트 유효성 검사 성공: {0}</value>
+    <comment>{0} - will be replaced with the boolean value indicating whether manifest validation passed or failed.</comment>
+  </data>
+  <data name="ManifestVersion_KeywordDescription" xml:space="preserve">
+    <value>매니페스트 구문 버전</value>
+  </data>
+  <data name="MinOSVersion_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 최소 운영 체제 버전</value>
+  </data>
+  <data name="Moniker_KeywordDescription" xml:space="preserve">
+    <value>가장 일반적인 패키지 용어</value>
+  </data>
+  <data name="NewCommand_Description" xml:space="preserve">
+    <value>Enter 키를 눌러 (기본) 값 수락을 포함하여 각 질문에 대한 값을 제출합니다.</value>
+  </data>
+  <data name="NewCommand_Header" xml:space="preserve">
+    <value>이 도구는 패키지 매니페스트를 만드는 데 도움을 주는 일련의 질문을 안내합니다.</value>
+  </data>
+  <data name="NewCommand_HelpText" xml:space="preserve">
+    <value>새 매니페스트 생성에 도움이 되는 일련의 질문 시작</value>
+  </data>
+  <data name="OctokitNotFound_Error" xml:space="preserve">
+    <value>패키지 식별자의 맞춤법 및 계단식을 확인하십시오.</value>
+  </data>
+  <data name="OutputDirectory_HelpText" xml:space="preserve">
+    <value>새로 만든 매니페스트가 로컬에 저장되는 출력 디렉터리</value>
+  </data>
+  <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
+    <value>MSIX 설치 관리자 패키지 제품군 이름</value>
+  </data>
+  <data name="PackageLocale_KeywordDescription" xml:space="preserve">
+    <value>패키지 메타데이터 로캘</value>
+  </data>
+  <data name="PackageUrl_KeywordDescription" xml:space="preserve">
+    <value>패키지 홈 페이지입니다.</value>
+  </data>
+  <data name="Platform_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 플랫폼</value>
+  </data>
+  <data name="PrivacyUrl_KeywordDescription" xml:space="preserve">
+    <value>판매자 개인 정보 페이지 또는 패키지 개인 정보 페이지</value>
+  </data>
+  <data name="ProductCode_KeywordDescription" xml:space="preserve">
+    <value>제거 레지스트리 키</value>
+  </data>
+  <data name="Protocols_KeywordDescription" xml:space="preserve">
+    <value>패키지에 대한 처리기를 제공하는 프로토콜 목록</value>
+  </data>
+  <data name="PublisherSupportUrl_KeywordDescription" xml:space="preserve">
+    <value>판매자 지원 페이지</value>
+  </data>
+  <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
+    <value>판매자 홈 페이지</value>
+  </data>
+  <data name="PullRequestURI_Message" xml:space="preserve">
+    <value>끌어오기 요청을 다음에서 찾을 수 있음: {0}</value>
+    <comment>{0} - will be replaced with the pull request URI</comment>
+  </data>
+  <data name="RetrievingManifest_Message" xml:space="preserve">
+    <value>{0}에 대한 최신 매니페스트 검색 중</value>
+  </data>
+  <data name="Scope_KeywordDescription" xml:space="preserve">
+    <value>설치 범위("사용자", "시스템") 열거형입니다.</value>
+  </data>
+  <data name="Sha256_KeywordDescription" xml:space="preserve">
+    <value>SHA256 설치 관리자 해시</value>
+  </data>
+  <data name="ShortDescription_KeywordDescription" xml:space="preserve">
+    <value>간단한 패키지 설명</value>
+  </data>
+  <data name="SignatureSha256_KeywordDescription" xml:space="preserve">
+    <value>MSIX SHA256 서명 해시</value>
+  </data>
+  <data name="SilentWithProgress_KeywordDescription" xml:space="preserve">
+    <value>진행률 설치 관리자 스위치로 자동 설치</value>
+  </data>
+  <data name="Silent_KeywordDescription" xml:space="preserve">
+    <value>자동 설치 관리자 스위치</value>
+  </data>
+  <data name="StoreToken_Message" xml:space="preserve">
+    <value>캐시된 GitHub 토큰 설정 중</value>
+  </data>
+  <data name="Store_HelpText" xml:space="preserve">
+    <value>캐시된 GitHub 토큰을 설정합니다. --token 매개 변수를 사용하여 캐시할 토큰을 지정할 수 있습니다. 그렇지 않으면 OAuth 흐름이 시작됩니다.</value>
+  </data>
+  <data name="SkippingPullRequest_Message" xml:space="preserve">
+    <value>끌어오기 요청 제출을 건너뛰는 중...</value>
+  </data>
+  <data name="SubmitCommand_HelpText" xml:space="preserve">
+    <value>유효한 매니페스트를 Windows 패키지 관리자 리포지토리에 바로 제출</value>
+  </data>
+  <data name="SubmittingPullRequest_Message" xml:space="preserve">
+    <value>매니페스트에 대한 끌어오기 요청 제출 중...</value>
+  </data>
+  <data name="Switches_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 스위치 모음</value>
+  </data>
+  <data name="Tags_KeywordDescription" xml:space="preserve">
+    <value>추가 패키지 검색 용어 목록</value>
+  </data>
+  <data name="TokenCommand_HelpText" xml:space="preserve">
+    <value>GitHub 인증 토큰 캐시 수정</value>
+  </data>
+  <data name="TokenExpired_Message" xml:space="preserve">
+    <value>사용자 코드가 만료되었습니다. 새 사용자 코드를 생성하는 중입니다...</value>
+  </data>
+  <data name="UpdateBehavior_KeywordDescription" xml:space="preserve">
+    <value>업그레이드 방법</value>
+  </data>
+  <data name="UpdateCommand_HelpText" xml:space="preserve">
+    <value>기존 매니페스트 필드 업데이트</value>
+  </data>
+  <data name="Update_KeywordDescription" xml:space="preserve">
+    <value>업그레이드 스위치</value>
+  </data>
+  <data name="Url_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 URL</value>
+  </data>
+  <data name="Version_HelpText" xml:space="preserve">
+    <value>패키지 버전 필드를 업데이트할 때 사용할 버전입니다.</value>
+  </data>
+  <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
+    <value>캐시에 OAuth 토큰을 쓰지 못했습니다. {0}</value>
+  </data>
+  <data name="ConfirmManifestCreation_Message" xml:space="preserve">
+    <value>이 매니페스트를 변경하시겠습니까?</value>
+  </data>
+  <data name="ExecutionPaused_Message" xml:space="preserve">
+    <value>GitHub 로그인이 완료될 때까지 명령 실행이 일시 중지됩니다.  </value>
+  </data>
+  <data name="GenerateManifestPreview_Message" xml:space="preserve">
+    <value>매니페스트 미리 보기 생성 중...</value>
+  </data>
+  <data name="GitHubAccountMustBeLinked_Message" xml:space="preserve">
+    <value>이 명령으로 계속하려면 GitHub 계정 또는 개인 액세스 토큰을 연결해야   합니다.</value>
+  </data>
+  <data name="InitiatingGitHubLogin_Message" xml:space="preserve">
+    <value>GitHub 로그인 초기화 중...</value>
+  </data>
+  <data name="ManifestDocumentation_HelpText" xml:space="preserve">
+    <value>각 필드의 제한 사항에 대한 자세한 내용을 보려면 {0}을(를) 방문하세요</value>
+    <comment>{0} - will be replaced with the url to the manifest documentation.</comment>
+  </data>
+  <data name="NoTokenProvided_Message" xml:space="preserve">
+    <value>제공된 토큰이 없습니다. GitHub에 제출을 건너뛰었습니다.</value>
+  </data>
+  <data name="NoTokenResponse_Message" xml:space="preserve">
+    <value>GitHub OAuth 흐름에서 생성된 토큰 응답이 없어 명령 실행을 종료합니다.</value>
+  </data>
+  <data name="ResumingCommandExecution_Message" xml:space="preserve">
+    <value>명령 실행 다시 시작 중...</value>
+  </data>
+  <data name="UsingTokenFromCache_Message" xml:space="preserve">
+    <value>캐시에서 GitHub 토큰 사용 중...</value>
+  </data>
+  <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
+    <value>기본 로캘 매니페스트 미리 보기:</value>
+  </data>
+  <data name="InstallerManifestPreview_Message" xml:space="preserve">
+    <value>설치 관리자 매니페스트 미리 보기:</value>
+  </data>
+  <data name="VersionManifestPreview_Message" xml:space="preserve">
+    <value>버전 매니페스트 미리 보기:</value>
+  </data>
+  <data name="RegexFieldValidation_Error" xml:space="preserve">
+    <value>입력이 이 필드에 올바른 형식 패턴과 일치하지 않습니다.</value>
+  </data>
+  <data name="AdditionalProperties_KeywordDescription" xml:space="preserve">
+    <value>향후 부 버전 호환성을 위한 추가 속성</value>
+  </data>
+  <data name="InstallerLocale_KeywordDescription" xml:space="preserve">
+    <value>패키지 설치 관리자 로캘</value>
+  </data>
+  <data name="InstallerSuccessCodes_KeywordDescription" xml:space="preserve">
+    <value>0이 아닌 설치 관리자 성공 종료 코드 목록</value>
+  </data>
+  <data name="InstallerSwitches_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 스위치 모음</value>
+  </data>
+  <data name="InstallModes_KeywordDescription" xml:space="preserve">
+    <value>지원되는 설치 관리자 모드 목록</value>
+  </data>
+  <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 최소 운영 체제 버전</value>
+  </data>
+  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
+    <value>여러 고유 설치 관리자 URL이 검색되었습니다. 단일 설치 관리자 URL만 사용하여 다시 시도하십시오.</value>
+  </data>
+  <data name="Upgrade_KeywordDescription" xml:space="preserve">
+    <value>업그레이드 스위치</value>
+  </data>
+  <data name="Architecture_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 대상 아키텍처</value>
+  </data>
+  <data name="Capabilities_KeywordDescription" xml:space="preserve">
+    <value>MSIX 기능 목록</value>
+  </data>
+  <data name="Dependencies_KeywordDescription" xml:space="preserve">
+    <value>패키지 종속성 모음</value>
+  </data>
+  <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
+    <value>외부 패키지 종속성 목록</value>
+  </data>
+  <data name="ManifestType_KeywordDescription" xml:space="preserve">
+    <value>매니페스트 유형</value>
+  </data>
+  <data name="MinimumVersion_KeywordDescription" xml:space="preserve">
+    <value>최소 버전 패키지 종속성</value>
+  </data>
+  <data name="PackageDependencies_KeywordDescription" xml:space="preserve">
+    <value>현재 원본으로부터의 패키지 종속성 목록</value>
+  </data>
+  <data name="RestrictedCapabilities_KeywordDescription" xml:space="preserve">
+    <value>제한된 MSIX 기능 목록</value>
+  </data>
+  <data name="UpgradeBehavior_KeywordDescription" xml:space="preserve">
+    <value>업그레이드 방법</value>
+  </data>
+  <data name="WindowsFeatures_KeywordDescription" xml:space="preserve">
+    <value>Windows 기능 종속성 목록</value>
+  </data>
+  <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
+    <value>Windows 라이브러리 종속성 목록</value>
+  </data>
+  <data name="PackageParsing_Error" xml:space="preserve">
+    <value>패키지를 구문 분석하고 설치 관리자 유형을 확인할 수 없습니다.</value>
+  </data>
+</root>

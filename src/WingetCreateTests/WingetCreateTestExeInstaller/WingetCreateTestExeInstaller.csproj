@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Version>1.2.3.4</Version>
+    <Publisher>Microsoft Corporation</Publisher>
+    <Copyright>Microsoft Copyright</Copyright>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Description>Test exe installer for WingetCreateCLI</Description>
+    <Company>Microsoft Corporation</Company>
+    <Authors>Microsoft Corporation</Authors>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <Platforms>x86;x64</Platforms>
+    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)'=='Release'">
+    <Exec Command="xcopy /y &quot;$(TargetDir)$(TargetName).exe&quot; &quot;$(ProjectDir)..\WingetCreateUnitTests\Resources\&quot;" />
+  </Target>
+
+</Project>

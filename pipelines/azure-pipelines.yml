@@ -1,0 +1,139 @@
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+  - main
+
+# PR triggers
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - pipelines/azure-pipelines.yml
+      - src/*
+
+variables:
+  # Solution name
+  solution: "src/WingetCreateCLI.sln"
+
+  # Appx Package Directory
+  appxPackageDir: '$(Build.ArtifactStagingDirectory)\AppxPackages'
+
+  # Agent VM image name
+  vmImageName: "windows-latest"
+
+  # Working Directory
+  workingDirectory: "src"
+
+  # Build configuration
+  buildConfiguration: "Release"
+
+  # Build platform
+  buildPlatform: "x64"
+
+jobs:
+  - job: GetVersion
+    variables:
+      runCodesignValidationInjection: ${{ false }}
+      skipComponentGovernanceDetection: ${{ true }}
+    steps:
+      - powershell: |
+          [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
+          $version = $project.Project.PropertyGroup.Version
+          echo "##vso[task.setvariable variable=majorMinorBuildVersion;isOutput=true]$version"
+        name: GetVersionStep
+        displayName: Get version from CLI project
+
+  - job: Build
+    displayName: Build
+    dependsOn: GetVersion
+    variables:
+      majorMinorBuildVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorBuildVersion']]
+
+      # Only update counter for non-PR builds, otherwise just use 0 for the revision
+      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        revision: 0
+      ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
+        revision: $[counter(variables['majorMinorBuildVersion'], 1)]
+
+      version: "$(majorMinorBuildVersion).$(revision)"
+      appxBundlePath: '$(appxPackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.appxbundle'
+    pool:
+      vmImage: $(vmImageName)
+
+    steps:
+      - checkout: self
+        lfs: "true"
+
+      - powershell: |
+          echo $(version)
+          echo $(appxBundlePath)
+        displayName: Display version and bundle path for diagnosing
+
+      - powershell: |
+          [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
+          $manifest.Package.Identity.Version = "$(version)"
+          $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
+        displayName: "Update package manifest version"
+
+      - task: DotNetCoreCLI@2
+        displayName: Restore
+        inputs:
+          command: "restore"
+          feedsToUse: "config"
+          nugetConfigPath: "nuget.config"
+          projects: $(workingDirectory)/**/*.csproj
+
+      - task: MSBuild@1
+        displayName: Build Solution
+        inputs:
+          platform: "$(buildPlatform)"
+          solution: "$(solution)"
+          configuration: "$(buildConfiguration)"
+          msbuildArguments: '/p:AppxBundleOutput="$(appxBundlePath)"
+            /p:AppxBundle=Always
+            /p:UapAppxPackageBuildMode=SideloadOnly
+            /p:AppxPackageSigningEnabled=false'
+
+      - publish: $(appxBundlePath)
+        artifact: appxbundle
+        displayName: Publish appx bundle
+
+      - task: ComponentGovernanceComponentDetection@0
+        displayName: Component Governance
+        inputs:
+          scanType: "Register"
+          verbosity: "Verbose"
+          alertWarningLevel: "High"
+
+      - task: notice@0
+        displayName: "NOTICE File Generator"
+        inputs:
+          outputfile: "$(System.DefaultWorkingDirectory)/temp/NOTICE.txt"
+          outputformat: "text"
+
+      - bash: |
+          echo "Diffing existing NOTICE.txt with generated version"
+          diff -w NOTICE.txt temp/NOTICE.txt
+          if [[ $? -ne 0 ]];
+          then
+            echo "Notice file modified"
+            echo "*******************************************************************************************************"
+            echo "Download the updated NOTICE.txt from the build artifacts and update the file in your PR, then re-submit"
+            echo "*******************************************************************************************************"
+            exit 1
+          else
+            echo "Notice file not modified."
+          fi
+        displayName: "Trigger build warning if NOTICE.txt file needs to be modified."
+        continueOnError: "true"
+
+      - task: VSTest@2
+        displayName: Run Tests
+        inputs:
+          testSelector: "testAssemblies"
+          testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\net5.0-windows10.0.18362.0\WingetCreateTests.dll'
+          runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
+          overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'
