@@ -14,7 +14,10 @@ namespace Microsoft.WingetCreateCLI
     {
         private const string ModuleName = "WindowsPackageManagerManifestCreator";
 
-        private static readonly Lazy<string> AppStatePathLazy = new(() => IsRunningAsUwp() ? ApplicationData.Current.LocalFolder.Path : Path.Combine(Path.GetTempPath(), ModuleName));
+        private static readonly Lazy<string> AppStatePathLazy = new(() =>
+            IsRunningAsUwp()
+            ? ApplicationData.Current.LocalFolder.Path
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", ModuleName));
 
         /// <summary>
         /// Gets directory path where app should store local state.

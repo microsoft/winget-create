@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WingetCreateTestExeInstaller\WingetCreateTestExeInstaller.csproj">
+      <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
