@@ -29,7 +29,6 @@ winget install wingetcreate
 | [Submit](doc/submit.md)  | Command for submitting an existing PR  |
 | [Token](doc/token.md)   | Command for creating a new manifest from scratch |
 | [-?](doc/help.md)      | Displays command line help |
-| [Settings](doc/settings.md) | Coming soon... |
 
 Click on the individual commands to learn more.
 
@@ -72,7 +71,8 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com. More 
+information is available in our [CONTRIBUTING.md](/CONTRIBUTING.md) file.
 
 When you submit a pull request, a CLA bot will automatically determine whether you need to provide
 a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
