@@ -52,3 +52,8 @@ Please use this section to describe your issue.   This could be a repeat of the 
 # Environment
 
 <!-- A description of the environment that this tool is running in. -->
+```none
+Windows Package Manager Manifest Creator version? (wingetcreate.exe -?)
+
+Any other software?
+```
