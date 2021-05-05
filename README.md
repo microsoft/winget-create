@@ -29,7 +29,6 @@ winget install wingetcreate
 | [Submit](doc/submit.md)  | Command for submitting an existing PR  |
 | [Token](doc/token.md)   | Command for creating a new manifest from scratch |
 | [-?](doc/help.md)      | Displays command line help |
-| [Settings](doc/settings.md) | Coming soon... |
 
 Click on the individual commands to learn more.
 
