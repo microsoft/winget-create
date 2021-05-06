@@ -925,7 +925,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Path to a manifest file or directory to submit to the Windows Package Manager repo.
+        ///   Looks up a localized string similar to Path to a manifest file or directory containing the manifests that you want to submit to the Windows Package Manager repo.
         /// </summary>
         public static string Path_HelpText {
             get {
