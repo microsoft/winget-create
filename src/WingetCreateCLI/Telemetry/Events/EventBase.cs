@@ -51,7 +51,7 @@ namespace Microsoft.WingetCreateCLI.Telemetry.Events
         /// <summary>
         /// Gets or sets a value indicating whether the event was successful.
         /// </summary>
-        public bool IsSuccessful { get; set; }
+        public bool IsSuccessful { get; set; } = false;
 
         /// <summary>
         /// Gets the privacy datatype tag for the telemetry event.
