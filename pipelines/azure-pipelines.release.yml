@@ -8,7 +8,7 @@ variables:
   solution: "src/WingetCreateCLI.sln"
 
   # Appx Package Directory
-  appxPackageDir: '$(Build.ArtifactStagingDirectory)\AppxPackages'
+  appxPackageDir: '$(System.DefaultWorkingDirectory)\AppxPackages'
 
   # Agent VM image name
   vmImageName: "windows-latest"
@@ -40,15 +40,12 @@ jobs:
     dependsOn: GetVersion
     variables:
       majorMinorBuildVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorBuildVersion']]
-
-      # Only update counter for non-PR builds, otherwise just use 0 for the revision
-      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        revision: 0
-      ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        revision: $[counter(variables['majorMinorBuildVersion'], 1)]
+      revision: $[counter(format('{0}.{1}', '0', variables['majorMinorBuildVersion']), 1)]
 
       version: "$(majorMinorBuildVersion).$(revision)"
-      appxBundlePath: '$(appxPackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.appxbundle'
+      appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.appxbundle"
+      appxBundlePath: '$(appxPackageDir)\$(appxBundleFile)'
+      exePath: '$(appxPackageDir)\WingetCreateCLI\wingetcreate.exe'
     pool:
       vmImage: $(vmImageName)
 
@@ -59,13 +56,20 @@ jobs:
       - powershell: |
           echo $(version)
           echo $(appxBundlePath)
-        displayName: Display version and bundle path for diagnosing
+          echo $(exePath)
+          echo "##vso[task.setvariable variable=manifestVersion;isOutput=true]$(version)"
+        name: OutputVersionStep
+        displayName: Display version and paths for diagnosing
 
       - powershell: |
           [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
           $manifest.Package.Identity.Version = "$(version)"
           $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
-        displayName: "Update package manifest version"
+
+          [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
+          $project.Project.PropertyGroup.Version = "$(version)"
+          $project.save("$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj")
+        displayName: "Update cli and package manifest version"
 
       - task: DeleteFiles@1
         displayName: "Delete existing stubbed TelemetryEventSources.cs. Not necessary, but will cause build to fail if fetch fails."
@@ -76,17 +80,26 @@ jobs:
         displayName: "Fetch TelemetryEventSource.cs from OS repo and overwrite stubbed version"
         inputs:
           repository: "https://microsoft.visualstudio.com/os/_git/os.2020"
-          branch: official/rsmaster
+          branch: official/main
           source: 'minkernel\published\internal\telemetry\TelemetryEventSource.cs'
           destination: '$(workingDirectory)\WingetCreateCLI\Telemetry\'
 
       - task: DotNetCoreCLI@2
         displayName: Restore
         inputs:
-          command: "restore"
-          feedsToUse: "config"
+          command: restore
+          feedsToUse: config
           nugetConfigPath: "nuget.config"
           projects: $(workingDirectory)/**/*.csproj
+
+      - task: DotNetCoreCLI@2
+        displayName: Build standalone exe
+        inputs:
+          command: publish
+          publishWebProjects: false
+          zipAfterPublish: false
+          projects: $(workingDirectory)/**/WingetCreateCLI.csproj
+          arguments: "--configuration Release --runtime=win-x64 --output $(appxPackageDir) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
 
       - task: MSBuild@1
         displayName: Build Solution
@@ -104,7 +117,9 @@ jobs:
         inputs:
           ConnectedServiceName: "PeetPackageEs2"
           FolderPath: $(appxPackageDir)
-          Pattern: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.appxbundle"
+          Pattern: |
+            $(appxBundleFile),
+            "WingetCreateCLI.exe"
           signConfigType: inlineSignParams
           inlineOperation: |
             [
@@ -130,9 +145,26 @@ jobs:
               }
             ]
 
-      - publish: $(appxBundlePath)
-        artifact: appxbundle
-        displayName: Publish appx bundle
+      - powershell: |
+          ren "$(appxPackageDir)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
+          (Get-FileHash -Algorithm SHA256 -Path $(exePath)).Hash > "$(exePath).txt"
+          (Get-FileHash -Algorithm SHA256 -Path $(appxBundlePath)).Hash > "$(appxBundlePath).txt"
+        displayName: "Create hash files"
+
+      - task: CopyFiles@2
+        displayName: Copy files to be published to staging directory
+        inputs:
+          targetFolder: $(Build.ArtifactStagingDirectory)
+          flattenFolders: true
+          contents: |
+            $(exePath)
+            $(exePath).txt
+            $(appxBundlePath)
+            $(appxBundlePath).txt
+
+      - publish: $(Build.ArtifactStagingDirectory)
+        artifact: wingetcreate
+        displayName: Publish appx, exe, and hash files
 
       - task: GitHubRelease@1
         displayName: Create GitHub release
@@ -143,4 +175,34 @@ jobs:
           tag: v$(version)-preview
           isPreRelease: true
           isDraft: true # After running this step, visit the new draft release, edit, and publish.
-          assets: $(appxBundlePath)
+          assets: $(Build.ArtifactStagingDirectory)/*
+
+  - job: Wait
+    displayName: Wait for vanity URL to be manually updated
+    dependsOn: Build
+    pool: server
+    timeoutInMinutes: 1440 # job times out in 1 day
+    steps:
+      - task: ManualValidation@0
+        timeoutInMinutes: 1440 # task times out in 1 day
+        inputs:
+          instructions: "Please update aka.ms vanity URLs for latest release"
+
+  - job: UpdateManifest
+    dependsOn:
+      - Build
+      - Wait
+    variables:
+      runCodesignValidationInjection: ${{ false }}
+      skipComponentGovernanceDetection: ${{ true }}
+      manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
+      packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)-preview/Microsoft.WindowsPackageManagerManifestCreator_$(manifestVersion)_8wekyb3d8bbwe.appxbundle"
+    steps:
+      - powershell: |
+          # These are the steps you'd run in your CD pipeline to update your OWC manifest using wingetcreate
+
+          # https://aka.ms/wingetcreate/latest points to latest version of wingetcreate.exe
+          # https://aka.ms/wingetcreate/1x points to latest 1.x version of wingetcreate.exe
+          iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+          wingetcreate.exe update -i Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT)
+        displayName: Update package manifest in the OWC
