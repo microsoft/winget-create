@@ -198,11 +198,14 @@ jobs:
       manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
       packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)-preview/Microsoft.WindowsPackageManagerManifestCreator_$(manifestVersion)_8wekyb3d8bbwe.appxbundle"
     steps:
+      - checkout: none
+
       - powershell: |
           # These are the steps you'd run in your CD pipeline to update your OWC manifest using wingetcreate
 
           # https://aka.ms/wingetcreate/latest points to latest version of wingetcreate.exe
           # https://aka.ms/wingetcreate/1x points to latest 1.x version of wingetcreate.exe
+
           iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
           wingetcreate.exe update -i Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT)
         displayName: Update package manifest in the OWC
