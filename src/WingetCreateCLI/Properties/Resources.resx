@@ -221,7 +221,7 @@
     <value>Path does not exist</value>
   </data>
   <data name="Path_HelpText" xml:space="preserve">
-    <value>Path to a manifest file or directory to submit to the Windows Package Manager repo</value>
+    <value>Path to a manifest file or directory containing the manifests that you want to submit to the Windows Package Manager repo</value>
   </data>
   <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
     <value>GitHub authorization failed: {0} - {1}</value>
