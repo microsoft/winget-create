@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateCLI.Telemetry.Events
 {
+    using System.Collections.Generic;
     using System.Diagnostics.Tracing;
     using Microsoft.Diagnostics.Telemetry.Internal;
 
@@ -25,7 +26,7 @@ namespace Microsoft.WingetCreateCLI.Telemetry.Events
         /// <summary>
         /// Gets or sets the user provided installer URL.
         /// </summary>
-        public string InstallerUrl { get; set; }
+        public IEnumerable<string> InstallerUrls { get; set; }
 
         /// <summary>
         /// Gets or sets the user provided package ID.

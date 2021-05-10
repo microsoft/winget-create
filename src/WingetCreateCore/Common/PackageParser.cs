@@ -170,16 +170,16 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerManifest"><see cref="InstallerManifest"/> to update.</param>
         /// <param name="installerUrl">InstallerUrl where installer can be downloaded.</param>
         /// <param name="packageFile">Path to package to extract metadata from.</param>
-        public static void UpdateInstallerNodes(InstallerManifest installerManifest, string installerUrl, string packageFile)
+        public static void UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrl, List<string> packageFile)
         {
-            string installerSha256 = PackageParser.GetFileHash(packageFile);
-            foreach (var installer in installerManifest.Installers)
-            {
-                installer.InstallerSha256 = installerSha256;
-                installer.InstallerUrl = installerUrl;
-            }
+            //string installerSha256 = PackageParser.GetFileHash(packageFile);
+            //foreach (var installer in installerManifest.Installers)
+            //{
+            //    installer.InstallerSha256 = installerSha256;
+            //    installer.InstallerUrl = installerUrl;
+            //}
 
-            GetAppxMetadataAndSetInstallerProperties(packageFile, installerManifest);
+            //GetAppxMetadataAndSetInstallerProperties(packageFile, installerManifest);
         }
 
         /// <summary>

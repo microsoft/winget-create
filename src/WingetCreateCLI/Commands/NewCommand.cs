@@ -79,7 +79,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             CommandExecutedEvent commandEvent = new CommandExecutedEvent
             {
                 Command = "new",
-                InstallerUrl = this.InstallerUrl,
+                InstallerUrls = new string[] { this.InstallerUrl },
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
             };
 

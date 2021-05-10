@@ -29,6 +29,11 @@ namespace Microsoft.WingetCreateCLI.Commands
     public class UpdateCommand : BaseCommand
     {
         /// <summary>
+        /// Gets or sets the package files used for parsing and extracting relevant installer metadata.
+        /// </summary>
+        private List<string> packageFiles = new();
+
+        /// <summary>
         /// Gets the usage examples for the update command.
         /// </summary>
         [Usage(ApplicationAlias = ProgramApplicationAlias)]
@@ -37,7 +42,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             get
             {
                 yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateVersion, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>" });
-                yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateInstallerURL, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrl = "<InstallerUrl>" });
+                yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateInstallerURL, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>" } });
                 yield return new Example(Resources.Example_UpdateCommand_SaveAndPublish, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>", OutputDir = "<OutputDirectory>", GitHubToken = "<GitHubPersonalAccessToken>" });
             }
         }
@@ -55,12 +60,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the new value used to update the manifest installer url element.
-        /// </summary>
-        [Option('u', "url", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]
-        public string InstallerUrl { get; set; }
-
-        /// <summary>
         /// Gets or sets the outputPath where the generated manifest file should be saved to.
         /// </summary>
         [Option('o', "out", Required = false, HelpText = "OutputDirectory_HelpText", ResourceType = typeof(Resources))]
@@ -73,9 +72,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         public bool SubmitToGitHub { get; set; }
 
         /// <summary>
-        /// Gets or sets the package file used for parsing and extracting relevant installer metadata.
+        /// Gets or sets the new value(s) used to update the manifest installer url elements.
         /// </summary>
-        private string PackageFile { get; set; }
+        [Option('u', "urls", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]
+        public IEnumerable<string> InstallerUrls { get; set; }
 
         /// <summary>
         /// Executes the update command flow.
@@ -86,7 +86,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             CommandExecutedEvent commandEvent = new CommandExecutedEvent
             {
                 Command = "update",
-                InstallerUrl = this.InstallerUrl,
+                InstallerUrls = this.InstallerUrls,
                 Id = this.Id,
                 Version = this.Version,
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
@@ -210,25 +210,29 @@ namespace Microsoft.WingetCreateCLI.Commands
                 UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
             }
 
-            if (string.IsNullOrEmpty(this.InstallerUrl))
+            if (this.InstallerUrls == null)
             {
-                if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
+                //if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
+                //{
+                //    Logger.Error(Resources.MultipleInstallerUrlFound_Error);
+                //    return false;
+                //}
+
+                //this.InstallerUrls = installerManifest.Installers.First().InstallerUrl;
+            }
+
+            foreach (var url in this.InstallerUrls)
+            {
+                string packageFile = await DownloadPackageFile(url);
+                if (string.IsNullOrEmpty(packageFile))
                 {
-                    Logger.Error(Resources.MultipleInstallerUrlFound_Error);
                     return false;
                 }
 
-                this.InstallerUrl = installerManifest.Installers.First().InstallerUrl;
+                this.packageFiles.Add(packageFile);
             }
 
-            this.PackageFile = await DownloadPackageFile(this.InstallerUrl);
-
-            if (string.IsNullOrEmpty(this.PackageFile))
-            {
-                return false;
-            }
-
-            PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrl, this.PackageFile);
+            PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, this.packageFiles);
 
             return true;
         }

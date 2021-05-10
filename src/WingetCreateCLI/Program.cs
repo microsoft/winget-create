@@ -4,6 +4,8 @@
 namespace Microsoft.WingetCreateCLI
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -32,7 +34,7 @@ namespace Microsoft.WingetCreateCLI
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
             if (command == null)
             {
-                DisplayHelp(parserResult);
+                DisplayHelp(parserResult as NotParsed<object>);
                 return 1;
             }
 
@@ -54,7 +56,7 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
-        private static int DisplayHelp(ParserResult<object> result)
+        private static void DisplayHelp(NotParsed<object> result)
         {
             var helpText = HelpText.AutoBuild(
                 result,
@@ -75,7 +77,35 @@ namespace Microsoft.WingetCreateCLI
                 e => e,
                 verbsIndex: true);
             Console.WriteLine(helpText);
-            return -1;
+            Console.WriteLine();
+
+            foreach (var error in result.Errors)
+            {
+                if (error is SetValueExceptionError e)
+                {
+                    Utils.WriteLineColored(ConsoleColor.Red, $"{e.NameInfo.LongName}: {e.Exception.Message}");
+                    if (e.Exception.InnerException != null)
+                    {
+                        Utils.WriteLineColored(ConsoleColor.Red, $"{e.Exception.InnerException.Message}");
+                    }
+
+                    if (e.Value is IEnumerable<object> list)
+                    {
+                        foreach (var val in list)
+                        {
+                            Utils.WriteLineColored(ConsoleColor.Red, $"\t{val}");
+                        }
+                    }
+                    else
+                    {
+                        Utils.WriteLineColored(ConsoleColor.Red, $"\t{e.Value}");
+                    }
+                }
+                else
+                {
+                    Utils.WriteLineColored(ConsoleColor.Red, $"{error.Tag}");
+                }
+            }
         }
     }
 }
