@@ -201,10 +201,12 @@ jobs:
       - checkout: none
 
       - powershell: |
-          # These are the steps you'd run in your CD pipeline to update your OWC manifest using wingetcreate
+          # These are the steps you'd run in your CI/CD pipeline to update your OWC manifest using wingetcreate.
+          # The update update command only supports a single installer URL, if you have multiple URLs you'll have to manually modify
+          # your manifests as described here https://github.com/microsoft/winget-create#using-windows-package-manager-manifest-creator-in-a-cicd-pipeline
 
           # https://aka.ms/wingetcreate/latest points to latest version of wingetcreate.exe
-          # https://aka.ms/wingetcreate/1x points to latest 1.x version of wingetcreate.exe
+          # https://aka.ms/wingetcreate/preview points to latest preview version of wingetcreate.exe
 
           iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
           wingetcreate.exe update -i Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT)

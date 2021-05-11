@@ -322,8 +322,33 @@ namespace Microsoft.WingetCreateCore
             defaultLocaleManifest.PackageVersion = metadata.Version?.ToString();
             defaultLocaleManifest.PackageName ??= metadata.DisplayName;
             defaultLocaleManifest.Publisher ??= metadata.PublisherDisplayName;
+            defaultLocaleManifest.ShortDescription ??= GetApplicationProperty(metadata, "Description");
 
             return true;
+        }
+
+        private static string GetApplicationProperty(AppxMetadata appxMetadata, string propertyName)
+        {
+            IAppxManifestApplicationsEnumerator enumerator = appxMetadata.AppxReader.GetManifest().GetApplications();
+
+            while (enumerator.GetHasCurrent())
+            {
+                IAppxManifestApplication application = enumerator.GetCurrent();
+
+                try
+                {
+                    application.GetStringValue(propertyName, out string value);
+                    return value;
+                }
+                catch (ArgumentException)
+                {
+                    // Property not found on this node, continue
+                }
+
+                enumerator.MoveNext();
+            }
+
+            return null;
         }
 
         private static Installer CloneInstaller(Installer installer)
