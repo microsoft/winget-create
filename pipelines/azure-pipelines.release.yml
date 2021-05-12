@@ -43,7 +43,7 @@ jobs:
       revision: $[counter(format('{0}.{1}', '1', variables['majorMinorBuildVersion']), 1)]
 
       version: "$(majorMinorBuildVersion).$(revision)"
-      appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.appxbundle"
+      appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle"
       appxBundlePath: '$(appxPackageDir)\$(appxBundleFile)'
       exePath: '$(appxPackageDir)\WingetCreateCLI\wingetcreate.exe'
     pool:
@@ -192,11 +192,13 @@ jobs:
     dependsOn:
       - Build
       - Wait
+    pool:
+      vmImage: $(vmImageName)
     variables:
       runCodesignValidationInjection: ${{ false }}
       skipComponentGovernanceDetection: ${{ true }}
       manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
-      packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)-preview/Microsoft.WindowsPackageManagerManifestCreator_$(manifestVersion)_8wekyb3d8bbwe.appxbundle"
+      packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)-preview/$(appxBundleFile)"
     steps:
       - checkout: none
 

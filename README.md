@@ -12,10 +12,10 @@ Developers will use this tool to submit their applications for use with the [Win
 For your convenience, **WingetCreate** can be acquired a number of ways.
 
 ### Install from the github repo ###
-The **Windows Package Manager Manifest Creator** is available for download from the [Winget-Create](https://github.com/microsoft/winget-create/releases) repository.  To install the package, simply click the the MSIX file in your browser.  Once it has downloaded, click open.
+The **Windows Package Manager Manifest Creator** is available for download from the [winget-create](https://github.com/microsoft/winget-create/releases) repository.  To install the package, simply click the the MSIX file in your browser.  Once it has downloaded, click open.
 
 ### Install with Windows Package Manager ###
-winget install wingetcreate
+`winget install wingetcreate`
  
 ## Using Windows Package Manager Manifest Creator
 
@@ -35,7 +35,7 @@ Click on the individual commands to learn more.
 
 You can use WingetCreate to update your existing app manifest as part of your CI/CD pipeline. For reference, see the final task in this repo's [release Azure pipeline](https://github.com/microsoft/winget-create/blob/main/pipelines/azure-pipelines.release.yml).
 
-Unfortunately we can't use the appxbundle in a standard Azure Pipeline pool. Instead, use the standalone exe, the latest version of which can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview.
+Unfortunately we can't use the msixbundle in a standard Azure Pipeline pool. Instead, use the standalone exe, the latest version of which can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview.
 
 Then simply add a new powershell task to download the exe, and run it to update your manifest. It's recommended to not hardcode your PAT in your script, but instead use a [secret pipeline variable](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables)
 
@@ -61,7 +61,7 @@ The CLI only supports a single installer URL. If you have a more complex manifes
 
 ### Building
 
-We currently only build using the solution; command line methods of building a VS solution should work as well.
+Open `winget-create\src\WingetCreateCLI.sln` in Visual Studio and build. We currently only build using the solution; command line methods of building a VS solution should work as well.
 
 ## Testing the client
 
@@ -72,14 +72,16 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 ### Testing Prerequisites
 
 * Fork the [winget-pkgs-submission-test repository](https://github.com/microsoft/winget-pkgs-submission-test)
-* Fill out the test parameters in the WingetCreateTests/Test.runsettings file
-    *  __**WingetPkgsTestRepoOwner**__: The repository owner of the winget-pkgs-submission-test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
-    *  __**WingetPkgsTestRepo**__: The winget-pkgs test repository. (winget-pkgs-submission-test)
-    *  __**GitHubApiKey**__: GitHub personal access token for testing. 
-        * Instructions on [how to generate your own GitHubApiKey](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+* Fill out the test parameters in the `WingetCreateTests/Test.runsettings` file
+    *  `WingetPkgsTestRepoOwner`: The repository owner of the winget-pkgs-submission-test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
+    *  `WingetPkgsTestRepo`: The winget-pkgs test repository. (winget-pkgs-submission-test)
+    *  `GitHubApiKey`: GitHub personal access token for testing.
+       *  Instructions on [how to generate your own GitHubApiKey](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+       *  Direct link to GitHub [Personal Access Tokens page](https://github.com/settings/tokens).
+   * `GitHubAppPrivateKey`: Leave blank, this is only used by the build server.
 
 * Set the solution wide runsettings file for the tests
-    * Go to TestExplorer -> Settings -> Configure Run Settings -> Select Solution-Wide runsettings file -> Choose your configured runsettings file
+    * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
 ## Contributing
 
