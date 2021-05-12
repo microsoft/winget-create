@@ -713,9 +713,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---------------------------------------------------------
 
-Sharprompt 2.1.2 - MIT
+Sharprompt 2.2.1 - MIT
 
 
+(c) 2008 VeriSign, Inc.
 
 MIT License
 

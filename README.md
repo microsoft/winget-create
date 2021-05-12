@@ -15,7 +15,7 @@ For your convenience, **WingetCreate** can be acquired a number of ways.
 The **Windows Package Manager Manifest Creator** is available for download from the [winget-create](https://github.com/microsoft/winget-create/releases) repository.  To install the package, simply click the the MSIX file in your browser.  Once it has downloaded, click open.
 
 ### Install with Windows Package Manager ###
-winget install wingetcreate
+`winget install wingetcreate`
  
 ## Using Windows Package Manager Manifest Creator
 
@@ -61,7 +61,7 @@ The CLI only supports a single installer URL. If you have a more complex manifes
 
 ### Building
 
-We currently only build using the solution; command line methods of building a VS solution should work as well.
+Open `winget-create\src\WingetCreateCLI.sln` in Visual Studio and build. We currently only build using the solution; command line methods of building a VS solution should work as well.
 
 ## Testing the client
 
@@ -72,14 +72,16 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 ### Testing Prerequisites
 
 * Fork the [winget-pkgs-submission-test repository](https://github.com/microsoft/winget-pkgs-submission-test)
-* Fill out the test parameters in the WingetCreateTests/Test.runsettings file
-    *  __**WingetPkgsTestRepoOwner**__: The repository owner of the winget-pkgs-submission-test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
-    *  __**WingetPkgsTestRepo**__: The winget-pkgs test repository. (winget-pkgs-submission-test)
-    *  __**GitHubApiKey**__: GitHub personal access token for testing. 
-        * Instructions on [how to generate your own GitHubApiKey](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+* Fill out the test parameters in the `WingetCreateTests/Test.runsettings` file
+    *  `WingetPkgsTestRepoOwner`: The repository owner of the winget-pkgs-submission-test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
+    *  `WingetPkgsTestRepo`: The winget-pkgs test repository. (winget-pkgs-submission-test)
+    *  `GitHubApiKey`: GitHub personal access token for testing.
+       *  Instructions on [how to generate your own GitHubApiKey](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+       *  Direct link to GitHub [Personal Access Tokens page](https://github.com/settings/tokens).
+   * `GitHubAppPrivateKey`: Leave blank, this is only used by the build server.
 
 * Set the solution wide runsettings file for the tests
-    * Go to TestExplorer -> Settings -> Configure Run Settings -> Select Solution-Wide runsettings file -> Choose your configured runsettings file
+    * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
 ## Contributing
 
