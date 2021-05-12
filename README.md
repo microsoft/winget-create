@@ -12,7 +12,7 @@ Developers will use this tool to submit their applications for use with the [Win
 For your convenience, **WingetCreate** can be acquired a number of ways.
 
 ### Install from the github repo ###
-The **Windows Package Manager Manifest Creator** is available for download from the [Winget-Create](https://github.com/microsoft/winget-create/releases) repository.  To install the package, simply click the the MSIX file in your browser.  Once it has downloaded, click open.
+The **Windows Package Manager Manifest Creator** is available for download from the [winget-create](https://github.com/microsoft/winget-create/releases) repository.  To install the package, simply click the the MSIX file in your browser.  Once it has downloaded, click open.
 
 ### Install with Windows Package Manager ###
 winget install wingetcreate
@@ -35,7 +35,7 @@ Click on the individual commands to learn more.
 
 You can use WingetCreate to update your existing app manifest as part of your CI/CD pipeline. For reference, see the final task in this repo's [release Azure pipeline](https://github.com/microsoft/winget-create/blob/main/pipelines/azure-pipelines.release.yml).
 
-Unfortunately we can't use the appxbundle in a standard Azure Pipeline pool. Instead, use the standalone exe, the latest version of which can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview.
+Unfortunately we can't use the msixbundle in a standard Azure Pipeline pool. Instead, use the standalone exe, the latest version of which can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview.
 
 Then simply add a new powershell task to download the exe, and run it to update your manifest. It's recommended to not hardcode your PAT in your script, but instead use a [secret pipeline variable](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables)
 
