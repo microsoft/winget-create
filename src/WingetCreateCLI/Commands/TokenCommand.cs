@@ -36,7 +36,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             CommandExecutedEvent commandEvent = new CommandExecutedEvent
             {
-                Command = "Token",
+                Command = nameof(TokenCommand),
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
             };
 

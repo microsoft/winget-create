@@ -32,7 +32,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// The url path to the manifest documentation site.
         /// </summary>
-        public const string ManifestDocumentationUrl = "https://github.com/microsoft/winget-cli/blob/master/doc/ManifestSpecv1.0.md";
+        private const string ManifestDocumentationUrl = "https://github.com/microsoft/winget-cli/blob/master/doc/ManifestSpecv1.0.md";
+
+        /// <summary>
+        /// Installer types for which we can trust that the detected architecture is correct, so don't need to prompt the user to confirm.
+        /// </summary>
+        private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msi, InstallerType.Msix, InstallerType.Appx };
 
         /// <summary>
         /// Gets the usage examples for the New command.
@@ -78,7 +83,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             CommandExecutedEvent commandEvent = new CommandExecutedEvent
             {
-                Command = "new",
+                Command = nameof(NewCommand),
                 InstallerUrl = this.InstallerUrl,
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
             };
@@ -219,10 +224,12 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 var currentValue = requiredProperty.GetValue(singleInstaller);
 
-                if (currentValue == null)
+                // Only prompt if the value isn't already set, or if it's the Architecture property and we don't trust the parser to have gotten it correct for this InstallerType.
+                if (currentValue == null ||
+                    (requiredProperty.Name == nameof(Installer.Architecture) && !ReliableArchitectureInstallerTypes.Contains(singleInstaller.InstallerType.Value)))
                 {
                     var result = PromptProperty(singleInstaller, currentValue, requiredProperty.Name);
-                    requiredProperty.SetValue(requiredProperty, result);
+                    requiredProperty.SetValue(singleInstaller, result);
                 }
 
                 // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
