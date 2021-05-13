@@ -399,9 +399,10 @@ namespace Microsoft.WingetCreateCore
                     IAppxFile signatureFile = bundle.AppxBundleReader.GetFootprintFile(APPX_BUNDLE_FOOTPRINT_FILE_TYPE.APPX_BUNDLE_FOOTPRINT_FILE_TYPE_SIGNATURE);
                     signatureSha256 = HashAppxFile(signatureFile);
 
-                    foreach (var appxName in bundle.InternalAppxPackagesRelativePaths)
+                    // Only create installer nodes for non-resource packages
+                    foreach (var childPackage in bundle.ChildAppxPackages.Where(p => p.PackageType == PackageType.Application))
                     {
-                        var appxFile = bundle.AppxBundleReader.GetPayloadPackage(appxName);
+                        var appxFile = bundle.AppxBundleReader.GetPayloadPackage(childPackage.RelativeFilePath);
                         appxMetadatas.Add(new AppxMetadata(appxFile.GetStream()));
                     }
                 }
