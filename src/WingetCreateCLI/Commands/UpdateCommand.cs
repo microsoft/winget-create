@@ -210,14 +210,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                 UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
             }
 
+            if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
+            {
+                Logger.Error(Resources.MultipleInstallerUrlFound_Error);
+                return false;
+            }
+
             if (string.IsNullOrEmpty(this.InstallerUrl))
             {
-                if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
-                {
-                    Logger.Error(Resources.MultipleInstallerUrlFound_Error);
-                    return false;
-                }
-
                 this.InstallerUrl = installerManifest.Installers.First().InstallerUrl;
             }
 

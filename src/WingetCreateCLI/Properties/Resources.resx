@@ -496,7 +496,7 @@
     <value>The installer minimum operating system version</value>
   </data>
   <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>Multiple distinct installer urls found. Please try again with only a single installer url.</value>
+    <value>Updating an existing manifest with multiple distinct installer urls is currently not supported.</value>
   </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>The upgrade switches</value>

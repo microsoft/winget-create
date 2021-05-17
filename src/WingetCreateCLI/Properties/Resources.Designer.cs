@@ -772,7 +772,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple distinct installer urls found. Please try again with only a single installer url..
+        ///   Looks up a localized string similar to Updating an existing manifest with multiple distinct installer urls is currently not supported..
         /// </summary>
         public static string MultipleInstallerUrlFound_Error {
             get {
