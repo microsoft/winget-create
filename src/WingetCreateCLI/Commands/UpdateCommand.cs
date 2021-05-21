@@ -113,42 +113,53 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                Manifests manifests = new Manifests();
-
-                DeserializeManifestContents(latestManifestContent, manifests);
-
-                if (manifests.SingletonManifest != null)
-                {
-                    manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
-                }
-
-                if (!await this.UpdateManifest(manifests))
-                {
-                    return false;
-                }
-
-                DisplayManifestPreview(manifests);
-
-                if (string.IsNullOrEmpty(this.OutputDir))
-                {
-                    this.OutputDir = Directory.GetCurrentDirectory();
-                }
-
-                string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
-
-                if (ValidateManifest(manifestDirectoryPath))
-                {
-                    return commandEvent.IsSuccessful = !this.SubmitToGitHub
-                        || await this.GitHubSubmitManifests(manifests, this.GitHubToken);
-                }
-                else
-                {
-                    return false;
-                }
+                return await this.ExecuteManifestUpdate(latestManifestContent, commandEvent);
             }
             finally
             {
                 TelemetryManager.Log.WriteEvent(commandEvent);
+            }
+        }
+
+        /// <summary>
+        /// Executes the main update logic on the manifests to be updated.
+        /// </summary>
+        /// <param name="latestManifestContent">List of manifests to be updated.</param>
+        /// <param name="commandEvent">Command telemetry event.</param>
+        /// <returns>Boolean value indicating whether the update execution was successful.</returns>
+        public async Task<bool> ExecuteManifestUpdate(List<string> latestManifestContent, CommandExecutedEvent commandEvent)
+        {
+            Manifests manifests = new Manifests();
+
+            DeserializeManifestContents(latestManifestContent, manifests);
+
+            if (manifests.SingletonManifest != null)
+            {
+                manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
+            }
+
+            if (!await this.UpdateManifest(manifests))
+            {
+                return false;
+            }
+
+            DisplayManifestPreview(manifests);
+
+            if (string.IsNullOrEmpty(this.OutputDir))
+            {
+                this.OutputDir = Directory.GetCurrentDirectory();
+            }
+
+            string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
+
+            if (ValidateManifest(manifestDirectoryPath))
+            {
+                return commandEvent.IsSuccessful = !this.SubmitToGitHub
+                    || await this.GitHubSubmitManifests(manifests, this.GitHubToken);
+            }
+            else
+            {
+                return false;
             }
         }
 
