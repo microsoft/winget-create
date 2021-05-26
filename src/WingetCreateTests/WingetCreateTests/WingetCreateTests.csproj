@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\WingetCreateCLI\WingetCreateCLI.csproj" />
+    <ProjectReference Include="..\..\WingetCreateCore\WingetCreateCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -15,6 +15,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -45,7 +46,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets or sets the id used for looking up an existing manifest in the Windows Package Manager repository.
         /// </summary>
-        [Option('i', "id", Required = true, HelpText = "Id_HelpText", ResourceType = typeof(Resources))]
+        [Value(0, MetaName = "PackageIdentifier", Required = true, HelpText = "PackageIdentifier_HelpText", ResourceType = typeof(Resources))]
         public string Id { get; set; }
 
         /// <summary>
@@ -94,17 +95,13 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                if (!await this.SetAndCheckGitHubToken())
-                {
-                    return false;
-                }
-
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
                 List<string> latestManifestContent;
 
                 try
                 {
-                    latestManifestContent = await this.GitHubClient.GetLatestManifestContentAsync(this.Id);
+                    GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
+                    latestManifestContent = await client.GetLatestManifestContentAsync(this.Id);
                 }
                 catch (Octokit.NotFoundException e)
                 {
@@ -154,8 +151,14 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             if (ValidateManifest(manifestDirectoryPath))
             {
-                return commandEvent.IsSuccessful = !this.SubmitToGitHub
-                    || await this.GitHubSubmitManifests(manifests, this.GitHubToken);
+                if (this.SubmitToGitHub)
+                {
+                    return await this.SetAndCheckGitHubToken()
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken))
+                        : false;
+                }
+
+                return commandEvent.IsSuccessful = true;
             }
             else
             {

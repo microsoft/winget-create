@@ -125,7 +125,7 @@ namespace Microsoft.WingetCreateCore
         {
             var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
-            if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.Redirect)
             {
                 string message = await response.Content.ReadAsStringAsync();
                 throw new HttpRequestException(message, null, response.StatusCode);

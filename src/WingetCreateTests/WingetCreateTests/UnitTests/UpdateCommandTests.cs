@@ -55,8 +55,6 @@ namespace Microsoft.WingetCreateUnitTests
             Logger.Initialize();
 
             string tempPath = Path.GetTempPath();
-
-            Logger.Initialize();
             UpdateCommand command = this.GetUpdateCommand(TestConstants.TestInvalidPackageIdentifier, null, tempPath);
             Assert.IsFalse(await command.Execute(), "Command should have failed");
             string result = sw.ToString();

@@ -241,7 +241,7 @@
   <data name="Homepage_KeywordDescription" xml:space="preserve">
     <value>The home page for the package</value>
   </data>
-  <data name="Id_HelpText" xml:space="preserve">
+  <data name="PackageIdentifier_HelpText" xml:space="preserve">
     <value>Package identifier used to lookup the existing manifest on the Windows Package Manager repo. Id is case-sensitive.</value>
   </data>
   <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">

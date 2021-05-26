@@ -98,4 +98,16 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 For more information, please refer to the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
+## Data/Telemetry
+
+The wingetcreate.exe client is instrumented to collect usage and diagnostic (error) data and sends it to Microsoft to help improve the product. 
+
+If you build the client yourself the instrumentation will not be enabled and no data will be sent to Microsoft.
+
+The wingetcreate.exe client respects machine wide privacy settings and users can opt-out on their device, as documented in the Microsoft Windows privacy statement [here](https://support.microsoft.com/en-us/help/4468236/diagnostics-feedback-and-privacy-in-windows-10-microsoft-privacy).
+
+In short to opt-out, go to `Start`, then select `Settings` > `Privacy` > `Diagnostics & feedback`, and select `Basic`. 
+
+See the [privacy statement](/PRIVACY.md) for more details.
+
 ## Known Issues
