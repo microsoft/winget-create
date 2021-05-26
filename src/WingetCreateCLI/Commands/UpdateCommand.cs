@@ -86,7 +86,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             CommandExecutedEvent commandEvent = new CommandExecutedEvent
             {
-                Command = "update",
+                Command = nameof(UpdateCommand),
                 InstallerUrl = this.InstallerUrl,
                 Id = this.Id,
                 Version = this.Version,

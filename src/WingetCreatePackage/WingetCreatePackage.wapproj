@@ -28,7 +28,7 @@
   <PropertyGroup>
     <ProjectGuid>ac37dfd2-1332-4282-b373-8dcf8bb4e3ba</ProjectGuid>
     <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <EntryPointProjectUniqueName>..\WingetCreateCLI\WingetCreateCLI.csproj</EntryPointProjectUniqueName>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>

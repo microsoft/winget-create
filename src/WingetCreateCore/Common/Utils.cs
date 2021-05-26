@@ -17,8 +17,7 @@ namespace Microsoft.WingetCreateCore.Common
         public static string GetEntryAssemblyVersion()
         {
             var assembly = System.Reflection.Assembly.GetEntryAssembly();
-            var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
-            return fvi.FileVersion;
+            return assembly.GetName().Version.ToString();
         }
 
         /// <summary>
