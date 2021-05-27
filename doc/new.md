@@ -1,6 +1,6 @@
  # new command (Winget-Create)
  
-The **new** command of the [Winget-Create](../README.md) tool begins the process of generating a manifest file.  This command is used if you need to create a [manifest file](https://docs.microsoft.com/en-us/windows/package-manager/package/manifest) for submitting software to the **Microsoft Community Package Manifest Repository** on GitHub.  
+The **new** command of the [Winget-Create](../README.md) tool begins the process of generating a manifest file.  This command is used if you need to create a [manifest file](https://docs.microsoft.com/windows/package-manager/package/manifest) for submitting software to the **Microsoft Community Package Manifest Repository** on GitHub.  
 
 ## Usage
 
