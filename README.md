@@ -26,7 +26,7 @@ The **Windows Package Manager Manifest Creator** is available for download from 
 | [New](doc/new.md)      | Command for creating a new manifest from scratch |
 | [Update](doc/update.md)  | Command for updating an existing manifest |
 | [Submit](doc/submit.md)  | Command for submitting an existing PR  |
-| [Token](doc/token.md)   | Command for creating a new manifest from scratch |
+| [Token](doc/token.md)   | Command for managing cached GitHub personal access tokens |
 | [-?](doc/help.md)      | Displays command line help |
 
 Click on the individual commands to learn more.
