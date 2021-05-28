@@ -118,13 +118,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        /// <summary>
-        /// Executes the main update logic on the manifests to be updated.
-        /// </summary>
-        /// <param name="latestManifestContent">List of manifests to be updated.</param>
-        /// <param name="commandEvent">Command telemetry event.</param>
-        /// <returns>Boolean value indicating whether the update execution was successful.</returns>
-        public async Task<bool> ExecuteManifestUpdate(List<string> latestManifestContent, CommandExecutedEvent commandEvent)
+        private async Task<bool> ExecuteManifestUpdate(List<string> latestManifestContent, CommandExecutedEvent commandEvent)
         {
             Manifests manifests = new Manifests();
 
