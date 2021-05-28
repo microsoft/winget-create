@@ -18,6 +18,30 @@ namespace Microsoft.WingetCreateUnitTests
     /// </summary>
     public class UpdateCommandTests : GitHubTestsBase
     {
+        private readonly string tempPath = Path.GetTempPath();
+
+        private StringWriter sw;
+
+        /// <summary>
+        /// Setup method for the update command unit tests.
+        /// </summary>
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            this.sw = new StringWriter();
+            Console.SetOut(this.sw);
+            Logger.Initialize();
+        }
+
+        /// <summary>
+        /// Teardown method for the update command unit tests.
+        /// </summary>
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            this.sw.Dispose();
+        }
+
         /// <summary>
         /// Verifies that the update command modifies the manifest's version field
         /// when a "Version" argument is provided.
@@ -26,16 +50,12 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateVersion()
         {
-            using StringWriter sw = new StringWriter();
-            Console.SetOut(sw);
-            Logger.Initialize();
             string version = "1.2.3.4";
-            string tempPath = Path.GetTempPath();
-            UpdateCommand command = this.GetUpdateCommand(TestConstants.TestPackageIdentifier, version, tempPath);
+            UpdateCommand command = this.GetUpdateCommand(TestConstants.TestPackageIdentifier, version, this.tempPath);
             Assert.IsTrue(await command.Execute(), "Command should have succeeded");
 
             string manifestDir = Utils.GetAppManifestDirPath(TestConstants.TestPackageIdentifier, version);
-            string fullOutputPath = Path.Combine(tempPath, manifestDir, $"{TestConstants.TestPackageIdentifier}.yaml");
+            string fullOutputPath = Path.Combine(this.tempPath, manifestDir, $"{TestConstants.TestPackageIdentifier}.yaml");
 
             Assert.IsTrue(File.Exists(fullOutputPath), "Updated manifest was not created successfully");
             string result = File.ReadAllText(fullOutputPath);
@@ -50,15 +70,24 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateWithInvalidPackageIdentifier()
         {
-            using StringWriter sw = new StringWriter();
-            Console.SetOut(sw);
-            Logger.Initialize();
-
             string tempPath = Path.GetTempPath();
-            UpdateCommand command = this.GetUpdateCommand(TestConstants.TestInvalidPackageIdentifier, null, tempPath);
+            UpdateCommand command = this.GetUpdateCommand(TestConstants.TestInvalidPackageIdentifier, null, this.tempPath);
             Assert.IsFalse(await command.Execute(), "Command should have failed");
-            string result = sw.ToString();
+            string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.OctokitNotFound_Error), "Octokit.NotFoundException should be thrown");
+        }
+
+        /// <summary>
+        /// Tests the update command to ensure that updating a multiple installer manifests should throw an error.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateWithMultipleInstallers()
+        {
+            UpdateCommand command = this.GetUpdateCommand(TestConstants.TestMultipleInstallerPackageIdentifier, null, this.tempPath);
+            Assert.IsFalse(await command.Execute(), "Command should have failed");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.MultipleInstallerUrlFound_Error), "Multiple installer url error should be thrown");
         }
 
         private UpdateCommand GetUpdateCommand(string id, string version, string outputDir)

@@ -125,7 +125,7 @@ namespace Microsoft.WingetCreateCore
         {
             var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
-            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.Redirect)
+            if (!response.IsSuccessStatusCode)
             {
                 string message = await response.Content.ReadAsStringAsync();
                 throw new HttpRequestException(message, null, response.StatusCode);
@@ -172,7 +172,7 @@ namespace Microsoft.WingetCreateCore
         /// <param name="packageFile">Path to package to extract metadata from.</param>
         public static void UpdateInstallerNodes(InstallerManifest installerManifest, string installerUrl, string packageFile)
         {
-            string installerSha256 = PackageParser.GetFileHash(packageFile);
+            string installerSha256 = GetFileHash(packageFile);
             foreach (var installer in installerManifest.Installers)
             {
                 installer.InstallerSha256 = installerSha256;
