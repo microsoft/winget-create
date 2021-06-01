@@ -117,8 +117,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                string hash = manifests.InstallerManifest.Installers.FirstOrDefault().InstallerSha256;
-
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
                 Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
