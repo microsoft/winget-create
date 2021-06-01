@@ -17,6 +17,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -116,6 +117,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
+                string hash = manifests.InstallerManifest.Installers.FirstOrDefault().InstallerSha256;
+
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
                 Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
@@ -138,6 +141,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (string.IsNullOrEmpty(this.OutputDir))
                 {
                     this.OutputDir = Directory.GetCurrentDirectory();
+                }
+
+                GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
+                if (await client.CheckDuplicatePackageId(manifests.VersionManifest.PackageIdentifier))
+                {
+                    Console.WriteLine();
+                    Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
+                    return false;
                 }
 
                 string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);

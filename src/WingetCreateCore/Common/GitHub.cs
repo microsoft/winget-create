@@ -105,7 +105,7 @@ namespace Microsoft.WingetCreateCore.Common
             var packageContents = (await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, version))
                 .Where(c => c.Type != ContentType.Dir);
 
-            // If all contents of version directory are directories themselves, user must've provided an invalid packageId.
+            // If all contents of version directory are directories themselves, user must've provided an invalid packageId. 
             if (!packageContents.Any())
             {
                 throw new NotFoundException(nameof(packageId), System.Net.HttpStatusCode.NotFound);
@@ -203,6 +203,17 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
+        /// Recursively searches the repository for the provided package identifer to determine if it already exists.
+        /// </summary>
+        /// <param name="packageId">The package identifier.</param>
+        /// <returns>Boolean value indicating if a duplicate manifest exists.</returns>
+        public async Task<bool> CheckDuplicatePackageId(string packageId)
+        {
+            string path = Constants.WingetManifestRoot + '/' + $"{char.ToLowerInvariant(packageId[0])}";
+            return await this.CheckDuplicatePackageIdRecursive(packageId.Split('.'), path, 0);
+        }
+
+        /// <summary>
         /// Generate a signed-JWT token for specified GitHub app, per instructions here: https://docs.github.com/en/developers/apps/authenticating-with-github-apps#authenticating-as-an-installation.
         /// </summary>
         /// <param name="gitHubAppPrivateKeyPem">The private key for the GitHub app in PEM format.</param>
@@ -226,6 +237,28 @@ namespace Microsoft.WingetCreateCore.Common
             };
 
             return Jose.JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
+        }
+
+        private async Task<bool> CheckDuplicatePackageIdRecursive(string[] packageId, string path, int index)
+        {
+            if (index == packageId.Length)
+            {
+                return true;
+            }
+
+            var contents = await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, path);
+
+            foreach (RepositoryContent content in contents)
+            {
+                if (string.Equals(packageId[index].ToLowerInvariant(), content.Name.ToLowerInvariant()))
+                {
+                    path = path + '/' + content.Name;
+                    index++;
+                    return await this.CheckDuplicatePackageIdRecursive(packageId, path, index);
+                }
+            }
+
+            return false;
         }
 
         private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork)

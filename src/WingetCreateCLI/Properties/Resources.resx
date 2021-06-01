@@ -553,4 +553,7 @@
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>Unable to successfully parse the package and determine the installer type.</value>
   </data>
+  <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
+    <value>We have detected that this package identifier already exists. If you intend to update an existing package, please use the update command.</value>
+  </data>
 </root>
