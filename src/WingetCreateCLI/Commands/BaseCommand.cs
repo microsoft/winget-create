@@ -43,7 +43,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Program name and version to be used at the header of generated manifest files.
         /// </summary>
-        public static readonly string ProducedBy = string.Join(" ", ProgramName, Utils.GetEntryAssemblyVersion());
+        public static readonly string ProgramHeader = string.Join(" ", ProgramName, Utils.GetEntryAssemblyVersion());
 
         /// <summary>
         /// Program name of the app.
@@ -220,14 +220,14 @@ namespace Microsoft.WingetCreateCLI.Commands
             string installerManifestFileName = $"{packageId}.installer.yaml";
             string defaultLocaleManifestFileName = $"{packageId}.locale.{defaultPackageLocale}.yaml";
 
-            File.WriteAllText(Path.Combine(fullDirPath, versionManifestFileName), versionManifest.ToYaml(ProducedBy));
-            File.WriteAllText(Path.Combine(fullDirPath, installerManifestFileName), installerManifest.ToYaml(ProducedBy));
-            File.WriteAllText(Path.Combine(fullDirPath, defaultLocaleManifestFileName), defaultLocaleManifest.ToYaml(ProducedBy));
+            File.WriteAllText(Path.Combine(fullDirPath, versionManifestFileName), versionManifest.ToYaml(ProgramHeader));
+            File.WriteAllText(Path.Combine(fullDirPath, installerManifestFileName), installerManifest.ToYaml(ProgramHeader));
+            File.WriteAllText(Path.Combine(fullDirPath, defaultLocaleManifestFileName), defaultLocaleManifest.ToYaml(ProgramHeader));
 
             foreach (LocaleManifest localeManifest in localeManifests)
             {
                 string localeManifestFileName = $"{packageId}.locale.{localeManifest.PackageLocale}.yaml";
-                File.WriteAllText(Path.Combine(fullDirPath, localeManifestFileName), localeManifest.ToYaml(ProducedBy));
+                File.WriteAllText(Path.Combine(fullDirPath, localeManifestFileName), localeManifest.ToYaml(ProgramHeader));
             }
 
             Console.WriteLine();
@@ -368,11 +368,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             Logger.Debug(Resources.GenerateManifestPreview_Message);
             Logger.Info(Resources.VersionManifestPreview_Message);
-            Console.WriteLine(manifests.VersionManifest.ToYaml(ProducedBy));
+            Console.WriteLine(manifests.VersionManifest.ToYaml(ProgramHeader));
             Logger.Info(Resources.InstallerManifestPreview_Message);
-            Console.WriteLine(manifests.InstallerManifest.ToYaml(ProducedBy));
+            Console.WriteLine(manifests.InstallerManifest.ToYaml(ProgramHeader));
             Logger.Info(Resources.DefaultLocaleManifestPreview_Message);
-            Console.WriteLine(manifests.DefaultLocaleManifest.ToYaml(ProducedBy));
+            Console.WriteLine(manifests.DefaultLocaleManifest.ToYaml(ProgramHeader));
         }
 
         /// <summary>
@@ -394,7 +394,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, ProducedBy, this.SubmitPRToFork);
+                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, ProgramHeader, this.SubmitPRToFork);
                 this.PullRequestNumber = pullRequest.Number;
                 PullRequestEvent pullRequestEvent = new PullRequestEvent { IsSuccessful = true, PullRequestNumber = pullRequest.Number };
                 TelemetryManager.Log.WriteEvent(pullRequestEvent);
