@@ -232,6 +232,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrl, this.PackageFile);
+            File.Delete(this.PackageFile);
 
             return true;
         }

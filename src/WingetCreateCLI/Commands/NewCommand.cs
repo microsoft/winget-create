@@ -116,6 +116,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
+                File.Delete(this.PackageFile);
+
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
                 Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
