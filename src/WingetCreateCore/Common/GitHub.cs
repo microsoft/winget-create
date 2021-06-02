@@ -105,7 +105,7 @@ namespace Microsoft.WingetCreateCore.Common
             var packageContents = (await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, version))
                 .Where(c => c.Type != ContentType.Dir);
 
-            // If all contents of version directory are directories themselves, user must've provided an invalid packageId. 
+            // If all contents of version directory are directories themselves, user must've provided an invalid packageId.
             if (!packageContents.Any())
             {
                 throw new NotFoundException(nameof(packageId), System.Net.HttpStatusCode.NotFound);
