@@ -144,6 +144,7 @@ namespace Microsoft.WingetCreateCore
 
             if (!File.Exists(targetFile) || new FileInfo(targetFile).Length != downloadSize)
             {
+                File.Delete(targetFile);
                 using var targetFileStream = File.OpenWrite(targetFile);
                 var contentStream = await response.Content.ReadAsStreamAsync();
                 await contentStream.CopyToAsync(targetFileStream);
