@@ -1,0 +1,18 @@
+﻿PackageIdentifier: TestPublisher.MultipleInstallerApp
+PackageVersion: 0.1.2
+PackageName: Multiple installer app
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used for testing with multiple installers.
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v-0.2.10771-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle
+    InstallerType: msix
+    InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  - Architecture: x86
+    InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v-0.3.11102-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle
+    InstallerType: msix
+    InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.0.0

@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateTests
 {
+    using System;
     using System.IO;
     using System.Net;
     using System.Net.Http;
@@ -55,6 +56,16 @@ namespace Microsoft.WingetCreateTests
             content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             httpResponseMessage.Content = content;
             PackageParser.SetHttpMessageHandler(httpMessageHandler);
+        }
+
+        /// <summary>
+        /// Obtains the relative filepath of the resources test data directory.
+        /// </summary>
+        /// <param name="fileName">File name of the test file.</param>
+        /// <returns>Full path of the test file.</returns>
+        public static string GetTestFile(string fileName)
+        {
+            return Path.Combine(Environment.CurrentDirectory, @"Resources\", fileName);
         }
     }
 }
