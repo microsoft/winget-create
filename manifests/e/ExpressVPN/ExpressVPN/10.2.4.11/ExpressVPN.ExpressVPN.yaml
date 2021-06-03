@@ -1,7 +1,0 @@
-# Created using wingetcreate
-
-PackageIdentifier: ExpressVPN.ExpressVPN
-PackageVersion: 10.2.4.11
-DefaultLocale: en-US
-ManifestType: version
-ManifestVersion: 1.0.0
