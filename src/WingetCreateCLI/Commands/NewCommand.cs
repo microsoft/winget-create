@@ -206,8 +206,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     var currentValue = property.GetValue(manifest);
                     var result = PromptProperty(manifest, currentValue, property.Name);
                     property.SetValue(manifest, result);
-                    string formattedResult = result.ToString().Replace("{", string.Empty).Replace("}", string.Empty);
-                    Logger.Trace($"Property [{property.Name}] set to the value [{formattedResult}]");
+                    Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
                 }
             }
         }
