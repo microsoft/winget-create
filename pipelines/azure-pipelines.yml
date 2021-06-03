@@ -78,12 +78,17 @@ jobs:
           $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
         displayName: "Update package manifest version"
 
+      - task: NuGetCommand@2
+        displayName: Restore Packages
+        inputs:
+          restoreSolution: "$(solution)"
+
       - task: DotNetCoreCLI@2
         displayName: Restore
         inputs:
           command: "restore"
           feedsToUse: "config"
-          nugetConfigPath: "nuget.config"
+          nugetConfigPath: "NuGet.config"
           projects: $(workingDirectory)/**/*.csproj
 
       - task: MSBuild@1
