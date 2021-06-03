@@ -14,7 +14,7 @@ namespace Microsoft.WingetCreateUnitTests
     /// <summary>
     /// Test cases for verifying that the "new" command is working as expected.
     /// </summary>
-    public class NewCommandTests : GitHubTestsBase
+    public class NewCommandTests
     {
         /// <summary>
         /// Verifies that the CLI errors out on an invalid installer URL.
@@ -27,7 +27,7 @@ namespace Microsoft.WingetCreateUnitTests
             Console.SetOut(sw);
 
             Logger.Initialize();
-            NewCommand command = new NewCommand { InstallerUrl = "invalidUrl", GitHubToken = this.GitHubApiKey };
+            NewCommand command = new NewCommand { InstallerUrl = "invalidUrl" };
             Assert.IsFalse(await command.Execute(), "Command should have failed");
             string actual = sw.ToString();
             Assert.That(actual, Does.Contain(Resources.DownloadFile_Error), "Failed to catch invalid URL");

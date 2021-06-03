@@ -65,7 +65,7 @@ namespace Microsoft.WingetCreateTests
         /// <returns>Full path of the test file.</returns>
         public static string GetTestFile(string fileName)
         {
-            return Path.Combine(Environment.CurrentDirectory, @"Resources\", fileName);
+            return Path.Combine(Environment.CurrentDirectory, @"Resources", fileName);
         }
     }
 }
