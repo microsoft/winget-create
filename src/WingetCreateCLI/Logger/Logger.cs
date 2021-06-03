@@ -130,7 +130,7 @@ namespace Microsoft.WingetCreateCLI.Logging
         /// <param name="args">Arguments to replace formatted items in message.</param>
         private static void Log(LogLevel level, string format, params object[] args)
         {
-            string message = string.Format(format, args);
+            string message = args.Length > 0 ? string.Format(format, args) : format;
 
             LogEventInfo logEventFile = new LogEventInfo(level, loggerFile.Name, message);
             loggerFile.Log(typeof(Logger), logEventFile);
