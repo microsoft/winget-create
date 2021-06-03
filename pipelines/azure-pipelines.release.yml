@@ -209,6 +209,7 @@ jobs:
 
           # https://aka.ms/wingetcreate/latest points to latest version of wingetcreate.exe
           # https://aka.ms/wingetcreate/preview points to latest preview version of wingetcreate.exe
+          # requires .NET to be installed on the build machine to operate correctly
 
           iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
           wingetcreate.exe update -i Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit
