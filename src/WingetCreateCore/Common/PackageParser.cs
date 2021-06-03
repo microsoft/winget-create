@@ -322,8 +322,33 @@ namespace Microsoft.WingetCreateCore
             defaultLocaleManifest.PackageVersion = metadata.Version?.ToString();
             defaultLocaleManifest.PackageName ??= metadata.DisplayName;
             defaultLocaleManifest.Publisher ??= metadata.PublisherDisplayName;
+            defaultLocaleManifest.ShortDescription ??= GetApplicationProperty(metadata, "Description");
 
             return true;
+        }
+
+        private static string GetApplicationProperty(AppxMetadata appxMetadata, string propertyName)
+        {
+            IAppxManifestApplicationsEnumerator enumerator = appxMetadata.AppxReader.GetManifest().GetApplications();
+
+            while (enumerator.GetHasCurrent())
+            {
+                IAppxManifestApplication application = enumerator.GetCurrent();
+
+                try
+                {
+                    application.GetStringValue(propertyName, out string value);
+                    return value;
+                }
+                catch (ArgumentException)
+                {
+                    // Property not found on this node, continue
+                }
+
+                enumerator.MoveNext();
+            }
+
+            return null;
         }
 
         private static Installer CloneInstaller(Installer installer)
@@ -374,9 +399,10 @@ namespace Microsoft.WingetCreateCore
                     IAppxFile signatureFile = bundle.AppxBundleReader.GetFootprintFile(APPX_BUNDLE_FOOTPRINT_FILE_TYPE.APPX_BUNDLE_FOOTPRINT_FILE_TYPE_SIGNATURE);
                     signatureSha256 = HashAppxFile(signatureFile);
 
-                    foreach (var appxName in bundle.InternalAppxPackagesRelativePaths)
+                    // Only create installer nodes for non-resource packages
+                    foreach (var childPackage in bundle.ChildAppxPackages.Where(p => p.PackageType == PackageType.Application))
                     {
-                        var appxFile = bundle.AppxBundleReader.GetPayloadPackage(appxName);
+                        var appxFile = bundle.AppxBundleReader.GetPayloadPackage(childPackage.RelativeFilePath);
                         appxMetadatas.Add(new AppxMetadata(appxFile.GetStream()));
                     }
                 }

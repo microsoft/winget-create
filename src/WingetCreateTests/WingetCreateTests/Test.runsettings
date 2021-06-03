@@ -12,6 +12,8 @@
     <Parameter name="WingetPkgsTestRepoOwner" value="" />
     <Parameter name="WingetPkgsTestRepo" value="winget-pkgs-submission-test" />
     <Parameter name="GitHubApiKey" value="" />
+    
+    <!-- Leave blank, this is only used by the build server. -->
     <Parameter name="GitHubAppPrivateKey" value="" />
   </TestRunParameters>
 
