@@ -142,7 +142,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
-                if (await client.CheckDuplicatePackageId(manifests.VersionManifest.PackageIdentifier))
+
+                if ((await client.CheckDuplicatePackageId(manifests.VersionManifest.PackageIdentifier)).IsMatch)
                 {
                     Console.WriteLine();
                     Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));

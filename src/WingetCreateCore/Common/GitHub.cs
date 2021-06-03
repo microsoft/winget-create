@@ -206,11 +206,12 @@ namespace Microsoft.WingetCreateCore.Common
         /// Recursively searches the repository for the provided package identifer to determine if it already exists.
         /// </summary>
         /// <param name="packageId">The package identifier.</param>
-        /// <returns>Boolean value indicating if a duplicate manifest exists.</returns>
-        public async Task<bool> CheckDuplicatePackageId(string packageId)
+        /// <returns>Tuple value with T1 being a boolean that represents whether the inputted packageId matches an existing one
+        /// and T2 as the string of the matching, (case-sensitive) exact packageId. </returns>
+        public async Task<(bool IsMatch, string ExactId)> CheckDuplicatePackageId(string packageId)
         {
             string path = Constants.WingetManifestRoot + '/' + $"{char.ToLowerInvariant(packageId[0])}";
-            return await this.CheckDuplicatePackageIdRecursive(packageId.Split('.'), path, 0);
+            return await this.CheckDuplicatePackageIdRecursive(packageId.Split('.'), path, string.Empty, 0);
         }
 
         /// <summary>
@@ -236,29 +237,31 @@ namespace Microsoft.WingetCreateCore.Common
                 iss = gitHubAppId,
             };
 
-            return Jose.JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
+            return JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
         }
 
-        private async Task<bool> CheckDuplicatePackageIdRecursive(string[] packageId, string path, int index)
+        private async Task<(bool IsMatch, string ExactId)> CheckDuplicatePackageIdRecursive(string[] packageId, string path, string exactPackageId, int index)
         {
             if (index == packageId.Length)
             {
-                return true;
+                return (true, exactPackageId.Trim('.'));
             }
 
             var contents = await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, path);
+            string packageIdToken = packageId[index].ToLowerInvariant();
 
             foreach (RepositoryContent content in contents)
             {
-                if (string.Equals(packageId[index].ToLowerInvariant(), content.Name.ToLowerInvariant()))
+                if (string.Equals(packageIdToken, content.Name.ToLowerInvariant()))
                 {
                     path = path + '/' + content.Name;
+                    exactPackageId = string.Join(".", exactPackageId, content.Name);
                     index++;
-                    return await this.CheckDuplicatePackageIdRecursive(packageId, path, index);
+                    return await this.CheckDuplicatePackageIdRecursive(packageId, path, exactPackageId, index);
                 }
             }
 
-            return false;
+            return (false, string.Empty);
         }
 
         private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork)

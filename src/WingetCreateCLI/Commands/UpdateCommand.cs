@@ -96,11 +96,19 @@ namespace Microsoft.WingetCreateCLI.Commands
             try
             {
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
+
+                GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
+                var (isMatch, exactId) = await client.CheckDuplicatePackageId(this.Id);
+
+                if (isMatch)
+                {
+                    this.Id = exactId;
+                }
+
                 List<string> latestManifestContent;
 
                 try
                 {
-                    GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
                     latestManifestContent = await client.GetLatestManifestContentAsync(this.Id);
                 }
                 catch (Octokit.NotFoundException e)
