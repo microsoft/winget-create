@@ -126,10 +126,9 @@ namespace Microsoft.WingetCreateCore.Common
         /// Submits a pull request on behalf of the user.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be submitted in the PR.</param>
-        /// <param name="producedBy">String comment to be added to the header of the manifest file.</param>
         /// <param name="submitToFork">Bool indicating whether or not to submit the PR via a fork.</param>
         /// <returns>Pull request object.</returns>
-        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, string producedBy, bool submitToFork)
+        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork)
         {
             Dictionary<string, string> contents = new Dictionary<string, string>();
             string id;
@@ -139,18 +138,18 @@ namespace Microsoft.WingetCreateCore.Common
             {
                 id = manifests.SingletonManifest.PackageIdentifier;
                 version = manifests.SingletonManifest.PackageVersion;
-                contents.Add(manifests.SingletonManifest.PackageIdentifier, manifests.SingletonManifest.ToYaml(producedBy));
+                contents.Add(manifests.SingletonManifest.PackageIdentifier, manifests.SingletonManifest.ToYaml());
             }
             else
             {
                 id = manifests.VersionManifest.PackageIdentifier;
                 version = manifests.VersionManifest.PackageVersion;
 
-                contents = manifests.LocaleManifests.ToDictionary(locale => $"{id}.locale.{locale.PackageLocale}", locale => locale.ToYaml(producedBy));
+                contents = manifests.LocaleManifests.ToDictionary(locale => $"{id}.locale.{locale.PackageLocale}", locale => locale.ToYaml());
 
-                contents.Add(id, manifests.VersionManifest.ToYaml(producedBy));
-                contents.Add($"{id}.installer", manifests.InstallerManifest.ToYaml(producedBy));
-                contents.Add($"{id}.locale.{manifests.DefaultLocaleManifest.PackageLocale}", manifests.DefaultLocaleManifest.ToYaml(producedBy));
+                contents.Add(id, manifests.VersionManifest.ToYaml());
+                contents.Add($"{id}.installer", manifests.InstallerManifest.ToYaml());
+                contents.Add($"{id}.locale.{manifests.DefaultLocaleManifest.PackageLocale}", manifests.DefaultLocaleManifest.ToYaml());
             }
 
             return this.SubmitPRAsync(id, version, contents, submitToFork);

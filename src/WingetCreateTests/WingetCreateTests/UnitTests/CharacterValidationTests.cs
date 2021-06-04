@@ -34,12 +34,11 @@ namespace Microsoft.WingetCreateUnitTests
         public void VerifyTextSupport()
         {
             string testManifestFilePath = Path.Combine(Path.GetTempPath(), "TestManifest.yaml");
-            string producedByName = "WingetCreateUnitTests";
 
             foreach (string testString in this.testStrings)
             {
                 SingletonManifest manifest = new SingletonManifest { Description = testString };
-                File.WriteAllText(testManifestFilePath, manifest.ToYaml(producedByName));
+                File.WriteAllText(testManifestFilePath, manifest.ToYaml());
 
                 SingletonManifest testManifest = Serialization.DeserializeFromPath<SingletonManifest>(testManifestFilePath);
                 Assert.AreEqual(
