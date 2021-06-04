@@ -202,6 +202,17 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
+        /// Recursively searches the repository for the provided package identifer to determine if it already exists.
+        /// </summary>
+        /// <param name="packageId">The package identifier.</param>
+        /// <returns>The exact matching package identifier or null if no match was found.</returns>
+        public async Task<string> FindPackageId(string packageId)
+        {
+            string path = Constants.WingetManifestRoot + '/' + $"{char.ToLowerInvariant(packageId[0])}";
+            return await this.FindPackageIdRecursive(packageId.Split('.'), path, string.Empty, 0);
+        }
+
+        /// <summary>
         /// Generate a signed-JWT token for specified GitHub app, per instructions here: https://docs.github.com/en/developers/apps/authenticating-with-github-apps#authenticating-as-an-installation.
         /// </summary>
         /// <param name="gitHubAppPrivateKeyPem">The private key for the GitHub app in PEM format.</param>
@@ -224,7 +235,31 @@ namespace Microsoft.WingetCreateCore.Common
                 iss = gitHubAppId,
             };
 
-            return Jose.JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
+            return JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
+        }
+
+        private async Task<string> FindPackageIdRecursive(string[] packageId, string path, string exactPackageId, int index)
+        {
+            if (index == packageId.Length)
+            {
+                return exactPackageId.Trim('.');
+            }
+
+            var contents = await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, path);
+            string packageIdToken = packageId[index].ToLowerInvariant();
+
+            foreach (RepositoryContent content in contents)
+            {
+                if (string.Equals(packageIdToken, content.Name.ToLowerInvariant()))
+                {
+                    path = path + '/' + content.Name;
+                    exactPackageId = string.Join(".", exactPackageId, content.Name);
+                    index++;
+                    return await this.FindPackageIdRecursive(packageId, path, exactPackageId, index);
+                }
+            }
+
+            return null;
         }
 
         private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork)

@@ -43,7 +43,7 @@ namespace Microsoft.WingetCreateCLI
 
             try
             {
-                WingetCreateCore.Serialization.ProducedBy = ProgramName;
+                WingetCreateCore.Serialization.ProducedBy = string.Join(" ", ProgramName, Utils.GetEntryAssemblyVersion());
                 return await command.Execute() ? 0 : 1;
             }
             catch (Exception ex)

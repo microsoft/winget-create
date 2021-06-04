@@ -48,6 +48,18 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies the ability to identify matching package identifiers.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task FindMatchingPackageIdentifierAsync()
+        {
+            string exactMatch = await this.gitHub.FindPackageId(TestConstants.TestPackageIdentifier);
+            StringAssert.AreEqualIgnoringCase(TestConstants.TestPackageIdentifier, exactMatch, "Failed to find existing package identifier");
+        }
+
+
+        /// <summary>
         /// Verifies that the GitHub client is able to submit a PR by verifying that the generated PR url matches the correct pattern.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>

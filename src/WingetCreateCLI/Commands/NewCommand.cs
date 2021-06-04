@@ -17,6 +17,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -127,6 +128,13 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 do
                 {
+                    if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
+                    {
+                        Console.WriteLine();
+                        Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
+                        return false;
+                    }
+
                     PromptRequiredProperties(manifests.VersionManifest);
                     PromptRequiredProperties(manifests.InstallerManifest, manifests.VersionManifest);
                     PromptRequiredProperties(manifests.DefaultLocaleManifest, manifests.VersionManifest);
@@ -180,14 +188,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 else if (property.PropertyType.IsValueType || property.PropertyType == typeof(string))
                 {
-                    if (property.Name == nameof(VersionManifest.ManifestType) || property.Name == nameof(VersionManifest.ManifestVersion))
+                    if (property.Name == nameof(VersionManifest.PackageIdentifier) ||
+                        property.Name == nameof(VersionManifest.ManifestType) ||
+                        property.Name == nameof(VersionManifest.ManifestVersion))
                     {
-                        continue;
-                    }
-
-                    if ((property.Name == nameof(VersionManifest.PackageIdentifier)) && versionManifest != null)
-                    {
-                        property.SetValue(manifest, versionManifest.PackageIdentifier);
                         continue;
                     }
 
@@ -289,6 +293,32 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 var promptResult = Prompt.Input<T>(message, property, new[] { FieldValidation.ValidateProperty(model, memberName, property) });
                 return promptResult is string str ? (T)(object)str.Trim() : promptResult;
+            }
+        }
+
+        /// <summary>
+        /// Prompts for the package identifier and checks if the package identifier already exists.
+        /// If the package identifier is valid, the value is applied to the other manifests.
+        /// </summary>
+        /// <param name="manifests">Manifests object model.</param>
+        /// <returns>Boolean value indicating whether the package identifier is valid.</returns>
+        private async Task<bool> PromptPackageIdentifierAndCheckDuplicates(Manifests manifests)
+        {
+            VersionManifest versionManifest = manifests.VersionManifest;
+            versionManifest.PackageIdentifier = PromptProperty(versionManifest, versionManifest.PackageIdentifier, nameof(versionManifest.PackageIdentifier));
+
+            GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
+
+            string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
+            if (!string.IsNullOrEmpty(exactMatch))
+            {
+                return false;
+            }
+            else
+            {
+                manifests.InstallerManifest.PackageIdentifier = versionManifest.PackageIdentifier;
+                manifests.DefaultLocaleManifest.PackageIdentifier = versionManifest.PackageIdentifier;
+                return true;
             }
         }
     }
