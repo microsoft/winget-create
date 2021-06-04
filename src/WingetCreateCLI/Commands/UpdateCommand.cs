@@ -98,9 +98,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
                 GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
-                var (isMatch, exactId) = await client.CheckDuplicatePackageId(this.Id);
+                string exactId = await client.FindPackageId(this.Id);
 
-                if (isMatch)
+                if (!string.IsNullOrEmpty(exactId))
                 {
                     this.Id = exactId;
                 }
