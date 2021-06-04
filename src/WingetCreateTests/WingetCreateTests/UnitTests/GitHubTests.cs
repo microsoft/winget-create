@@ -38,6 +38,16 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Tests exception handling for the GitHub repo manifest lookup functionality.
+        /// Passes an invalid package identifier. Expected to throw an Octokit Not Found Exception.
+        /// </summary>
+        [Test]
+        public void InvalidPackageIdentifier()
+        {
+            Assert.ThrowsAsync<NotFoundException>(async () => await this.gitHub.GetLatestManifestContentAsync(TestConstants.TestInvalidPackageIdentifier), "Octokit.NotFoundException should be thrown");
+        }
+
+        /// <summary>
         /// Verifies that the GitHub client is able to submit a PR by verifying that the generated PR url matches the correct pattern.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>

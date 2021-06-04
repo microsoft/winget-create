@@ -14,9 +14,14 @@ namespace Microsoft.WingetCreateTests
         public const string TestPackageIdentifier = "TestPublisher.TestApp";
 
         /// <summary>
-        /// Valid PackageIdentifier to be used in test cases.
+        /// Invalid PackageIdentifier to be used in test cases.
         /// </summary>
         public const string TestInvalidPackageIdentifier = "testpublisher.testapp";
+
+        /// <summary>
+        /// PackageIdentifier with multiple installers to be used in test cases.
+        /// </summary>
+        public const string TestMultipleInstallerPackageIdentifier = "TestPublisher.MultipleInstallerApp";
 
         /// <summary>
         /// File name of the test EXE installer.
