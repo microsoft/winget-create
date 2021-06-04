@@ -19,6 +19,11 @@ namespace Microsoft.WingetCreateCLI
     /// </summary>
     internal class Program
     {
+        /// <summary>
+        /// Program name of the app.
+        /// </summary>
+        private const string ProgramName = "wingetcreate";
+
         private static async Task<int> Main(string[] args)
         {
             Logger.Initialize();
@@ -38,6 +43,7 @@ namespace Microsoft.WingetCreateCLI
 
             try
             {
+                WingetCreateCore.Serialization.ProducedBy = string.Join(" ", ProgramName, Utils.GetEntryAssemblyVersion());
                 return await command.Execute() ? 0 : 1;
             }
             catch (Exception ex)

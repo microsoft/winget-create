@@ -34,6 +34,7 @@ namespace Microsoft.WingetCreateUnitTests
         public void Setup()
         {
             this.gitHub = new GitHub(this.GitHubApiKey, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
+            Serialization.ProducedBy = "WingetCreateUnitTests";
         }
 
         /// <summary>
@@ -47,6 +48,18 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies the ability to identify matching package identifiers.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task FindMatchingPackageIdentifierAsync()
+        {
+            string exactMatch = await this.gitHub.FindPackageId(TestConstants.TestPackageIdentifier);
+            StringAssert.AreEqualIgnoringCase(TestConstants.TestPackageIdentifier, exactMatch, "Failed to find existing package identifier");
+        }
+
+
+        /// <summary>
         /// Verifies that the GitHub client is able to submit a PR by verifying that the generated PR url matches the correct pattern.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
@@ -58,7 +71,7 @@ namespace Microsoft.WingetCreateUnitTests
             manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(latestManifest.First());
             Assert.That(manifests.SingletonManifest.PackageIdentifier, Is.EqualTo(TestConstants.TestPackageIdentifier), FailedToRetrieveManifestFromId);
 
-            PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, "Winget-CLI Testing", this.SubmitPRToFork);
+            PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork);
             await this.gitHub.ClosePullRequest(pullRequest.Number);
             StringAssert.StartsWith(string.Format(GitHubPullRequestBaseUrl, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo), pullRequest.HtmlUrl, PullRequestFailedToGenerate);
         }

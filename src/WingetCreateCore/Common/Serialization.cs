@@ -9,6 +9,7 @@ namespace Microsoft.WingetCreateCore
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
+    using System.Text;
     using Newtonsoft.Json;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
@@ -20,6 +21,11 @@ namespace Microsoft.WingetCreateCore
     /// </summary>
     public static class Serialization
     {
+        /// <summary>
+        /// Gets or sets the application that produced the manifest, will be added to comment header.
+        /// </summary>
+        public static string ProducedBy { get; set; }
+
         /// <summary>
         /// Helper to build a YAML serializer.
         /// </summary>
@@ -75,16 +81,41 @@ namespace Microsoft.WingetCreateCore
         /// Serialize an object to a YAML string.
         /// </summary>
         /// <param name="value">Object to serialize to YAML.</param>
-        /// <param name="producedBy">Application that produced the manifest, will be added to comment header.</param>
         /// <typeparam name="T">Type of object to serialize.</typeparam>
         /// <returns>Manifest in string value.</returns>
-        public static string ToYaml<T>(this T value, string producedBy)
+        public static string ToYaml<T>(this T value)
             where T : new()
         {
             var serializer = CreateSerializer();
             string manifestYaml = serializer.Serialize(value);
-            string headerComment = $"# Created using {producedBy}";
-            return $"{headerComment}{Environment.NewLine}{Environment.NewLine}{manifestYaml}";
+            StringBuilder serialized = new StringBuilder();
+            serialized.AppendLine($"# Created using {ProducedBy}");
+
+            string schemaTemplate = "# yaml-language-server: $schema=https://aka.ms/winget-manifest.{0}.{1}.schema.json";
+
+            switch (value)
+            {
+                case Models.Singleton.SingletonManifest singletonManifest:
+                    serialized.AppendLine(string.Format(schemaTemplate, singletonManifest.ManifestType, singletonManifest.ManifestVersion));
+                    break;
+                case Models.Version.VersionManifest versionManifest:
+                    serialized.AppendLine(string.Format(schemaTemplate, versionManifest.ManifestType, versionManifest.ManifestVersion));
+                    break;
+                case Models.Installer.InstallerManifest installerManifest:
+                    serialized.AppendLine(string.Format(schemaTemplate, installerManifest.ManifestType, installerManifest.ManifestVersion));
+                    break;
+                case Models.Locale.LocaleManifest localeManifest:
+                    serialized.AppendLine(string.Format(schemaTemplate, localeManifest.ManifestType, localeManifest.ManifestVersion));
+                    break;
+                case Models.DefaultLocale.DefaultLocaleManifest defaultLocaleManifest:
+                    serialized.AppendLine(string.Format(schemaTemplate, defaultLocaleManifest.ManifestType, defaultLocaleManifest.ManifestVersion));
+                    break;
+            }
+
+            serialized.AppendLine();
+            serialized.AppendLine(manifestYaml);
+
+            return serialized.ToString();
         }
 
         /// <summary>
