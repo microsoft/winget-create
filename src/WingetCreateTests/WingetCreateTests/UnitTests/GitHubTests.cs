@@ -34,6 +34,7 @@ namespace Microsoft.WingetCreateUnitTests
         public void Setup()
         {
             this.gitHub = new GitHub(this.GitHubApiKey, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
+            Serialization.ProducedBy = "WingetCreateUnitTests";
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace Microsoft.WingetCreateUnitTests
             manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(latestManifest.First());
             Assert.That(manifests.SingletonManifest.PackageIdentifier, Is.EqualTo(TestConstants.TestPackageIdentifier), FailedToRetrieveManifestFromId);
 
-            PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, "Winget-CLI Testing", this.SubmitPRToFork);
+            PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork);
             await this.gitHub.ClosePullRequest(pullRequest.Number);
             StringAssert.StartsWith(string.Format(GitHubPullRequestBaseUrl, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo), pullRequest.HtmlUrl, PullRequestFailedToGenerate);
         }
