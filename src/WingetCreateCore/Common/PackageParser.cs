@@ -173,7 +173,7 @@ namespace Microsoft.WingetCreateCore
         /// <param name="packageFile">Path to package to extract metadata from.</param>
         public static void UpdateInstallerNodes(InstallerManifest installerManifest, string installerUrl, string packageFile)
         {
-            string installerSha256 = PackageParser.GetFileHash(packageFile);
+            string installerSha256 = GetFileHash(packageFile);
             foreach (var installer in installerManifest.Installers)
             {
                 installer.InstallerSha256 = installerSha256;

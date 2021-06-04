@@ -46,7 +46,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets or sets the id used for looking up an existing manifest in the Windows Package Manager repository.
         /// </summary>
-        [Option('i', "id", Required = true, HelpText = "Id_HelpText", ResourceType = typeof(Resources))]
+        [Value(0, MetaName = "PackageIdentifier", Required = true, HelpText = "PackageIdentifier_HelpText", ResourceType = typeof(Resources))]
         public string Id { get; set; }
 
         /// <summary>
@@ -118,48 +118,59 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                Manifests manifests = new Manifests();
-
-                DeserializeManifestContents(latestManifestContent, manifests);
-
-                if (manifests.SingletonManifest != null)
-                {
-                    manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
-                }
-
-                if (!await this.UpdateManifest(manifests))
-                {
-                    return false;
-                }
-
-                DisplayManifestPreview(manifests);
-
-                if (string.IsNullOrEmpty(this.OutputDir))
-                {
-                    this.OutputDir = Directory.GetCurrentDirectory();
-                }
-
-                string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
-
-                if (ValidateManifest(manifestDirectoryPath))
-                {
-                    if (this.SubmitToGitHub)
-                    {
-                        return await this.SetAndCheckGitHubToken()
-                            ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken))
-                            : false;
-                    }
-
-                    return commandEvent.IsSuccessful = true;
-                }
-                else
-                {
-                    return false;
-                }
+                return await this.ExecuteManifestUpdate(latestManifestContent, commandEvent);
             }
             finally
             {
                 TelemetryManager.Log.WriteEvent(commandEvent);
+            }
+        }
+
+        /// <summary>
+        /// Executes the manifest update flow.
+        /// </summary>
+        /// <param name="latestManifestContent">List of manifests to be updated.</param>
+        /// <param name="commandEvent">CommandExecuted telemetry event.</param>
+        /// <returns>Boolean representing whether the manifest was updated successfully or not.</returns>
+        public async Task<bool> ExecuteManifestUpdate(List<string> latestManifestContent, CommandExecutedEvent commandEvent)
+        {
+            Manifests manifests = new Manifests();
+
+            DeserializeManifestContents(latestManifestContent, manifests);
+
+            if (manifests.SingletonManifest != null)
+            {
+                manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
+            }
+
+            if (!await this.UpdateManifest(manifests))
+            {
+                return false;
+            }
+
+            DisplayManifestPreview(manifests);
+
+            if (string.IsNullOrEmpty(this.OutputDir))
+            {
+                this.OutputDir = Directory.GetCurrentDirectory();
+            }
+
+            string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
+
+            if (ValidateManifest(manifestDirectoryPath))
+            {
+                if (this.SubmitToGitHub)
+                {
+                    return await this.SetAndCheckGitHubToken()
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken))
+                        : false;
+                }
+
+                return commandEvent.IsSuccessful = true;
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -221,14 +232,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                 UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
             }
 
+            if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
+            {
+                Logger.Error(Resources.MultipleInstallerUrlFound_Error);
+                return false;
+            }
+
             if (string.IsNullOrEmpty(this.InstallerUrl))
             {
-                if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
-                {
-                    Logger.Error(Resources.MultipleInstallerUrlFound_Error);
-                    return false;
-                }
-
                 this.InstallerUrl = installerManifest.Installers.First().InstallerUrl;
             }
 
