@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCLI
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -37,7 +38,7 @@ namespace Microsoft.WingetCreateCLI
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
             if (command == null)
             {
-                DisplayHelp(parserResult);
+                DisplayHelp(parserResult as NotParsed<object>);
                 return 1;
             }
 
@@ -60,7 +61,7 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
-        private static int DisplayHelp(ParserResult<object> result)
+        private static void DisplayHelp(NotParsed<object> result)
         {
             var helpText = HelpText.AutoBuild(
                 result,
@@ -81,7 +82,39 @@ namespace Microsoft.WingetCreateCLI
                 e => e,
                 verbsIndex: true);
             Console.WriteLine(helpText);
-            return -1;
+            Console.WriteLine();
+
+            foreach (var error in result.Errors)
+            {
+                if (error is SetValueExceptionError sve)
+                {
+                    Utils.WriteLineColored(ConsoleColor.Red, $"{sve.NameInfo.LongName}: {sve.Exception.Message}");
+                    if (sve.Exception.InnerException != null)
+                    {
+                        Utils.WriteLineColored(ConsoleColor.Red, $"{sve.Exception.InnerException.Message}");
+                    }
+
+                    if (sve.Value is IEnumerable<object> list)
+                    {
+                        foreach (var val in list)
+                        {
+                            Utils.WriteLineColored(ConsoleColor.Red, $"\t{val}");
+                        }
+                    }
+                    else
+                    {
+                        Utils.WriteLineColored(ConsoleColor.Red, $"\t{sve.Value}");
+                    }
+                }
+                else if (error is UnknownOptionError uoe)
+                {
+                    Utils.WriteLineColored(ConsoleColor.Red, $"Unknown option: {uoe.Token}");
+                }
+                else
+                {
+                    Utils.WriteLineColored(ConsoleColor.Red, $"Command line parsing error: {error.Tag}");
+                }
+            }
         }
     }
 }
