@@ -178,6 +178,13 @@ namespace Microsoft.WingetCreateCore
             {
                 installer.InstallerSha256 = installerSha256;
                 installer.InstallerUrl = installerUrl;
+
+                // If installer is an MSI, update its ProductCode
+                var updatedInstaller = new Installer();
+                if (ParseMsi(packageFile, updatedInstaller, null))
+                {
+                    installer.ProductCode = updatedInstaller.ProductCode;
+                }
             }
 
             GetAppxMetadataAndSetInstallerProperties(packageFile, installerManifest);
@@ -260,9 +267,7 @@ namespace Microsoft.WingetCreateCore
 
         private static bool ParseMsi(string path, Installer installer, Manifests manifests)
         {
-            VersionManifest versionManifest = manifests.VersionManifest;
-            InstallerManifest installerManifest = manifests.InstallerManifest;
-            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
+            DefaultLocaleManifest defaultLocaleManifest = manifests?.DefaultLocaleManifest;
 
             try
             {
@@ -271,9 +276,14 @@ namespace Microsoft.WingetCreateCore
                     installer.InstallerType = InstallerType.Msi;
 
                     var properties = database.Properties.ToList();
-                    defaultLocaleManifest.PackageVersion ??= properties.FirstOrDefault(p => p.Property == "ProductVersion")?.Value;
-                    defaultLocaleManifest.PackageName ??= properties.FirstOrDefault(p => p.Property == "ProductName")?.Value;
-                    defaultLocaleManifest.Publisher ??= properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value;
+
+                    if (defaultLocaleManifest != null)
+                    {
+                        defaultLocaleManifest.PackageVersion ??= properties.FirstOrDefault(p => p.Property == "ProductVersion")?.Value;
+                        defaultLocaleManifest.PackageName ??= properties.FirstOrDefault(p => p.Property == "ProductName")?.Value;
+                        defaultLocaleManifest.Publisher ??= properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value;
+                    }
+
                     installer.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
 
                     string archString = database.SummaryInfo.Template.Split(';').First();
@@ -308,7 +318,6 @@ namespace Microsoft.WingetCreateCore
 
         private static bool ParseMsix(string path, Manifests manifests)
         {
-            VersionManifest versionManifest = manifests.VersionManifest;
             InstallerManifest installerManifest = manifests.InstallerManifest;
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
 

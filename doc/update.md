@@ -5,7 +5,7 @@ The **update** command of the [Winget-Create](../README.md) tool is designed to 
 
 ## Usage
 
-`WingetCreateCLI.exe update [<url>] [\<options>]`
+`WingetCreateCLI.exe update <id> [-u <url>] [-v <version>] [-s] [-t <token>] [-o <output directory>]`
 
 The **update** command can be called with the optional URL.  If the URL is provided, **Winget-Create** will download the installer as it begins.  If the URL is not included, the user will need to add it when prompted.
 
@@ -15,9 +15,9 @@ The following arguments are available:
 
 | Argument  | Description |
 |--------------|-------------|
-| **-i, --id** |  Required. Package identifier used to lookup the existing manifest on the Windows Package Manager repo. Id is case-sensitive.
-| **-v, --version** |  Version to be used when updating the package version field.
+| **id** |  Required. Package identifier used to lookup the existing manifest on the Windows Package Manager repo.
 | **-u, --url** |  Installer Url used to extract relevant metadata for generating a manifest  
+| **-v, --version** |  Version to be used when updating the package version field.
 | **-o, --out** |  The output directory where the newly created manifests will be saved locally
 | **-s, --submit** |  Boolean value for submitting to the Windows Package Manager repo. If true, updated manifest will be submitted directly using the provided GitHub Token
 | **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
@@ -28,7 +28,7 @@ The update command allows you to quickly and easily update your manifest and sub
 1) publish your installer to known URL
 2) call the WingetCreateCLI.exe
 
-`WingetCreateCLI.exe update --id <PackageIdentifier> --url <InstallerUrl> --token <token> --version <version>`
+`WingetCreateCLI.exe update <PackageIdentifier> --url <InstallerUrl> --token <token> --version <version>`
 
 ### PackageIdentifier  
 
