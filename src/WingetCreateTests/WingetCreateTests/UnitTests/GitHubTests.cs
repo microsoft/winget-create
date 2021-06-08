@@ -58,7 +58,6 @@ namespace Microsoft.WingetCreateUnitTests
             StringAssert.AreEqualIgnoringCase(TestConstants.TestPackageIdentifier, exactMatch, "Failed to find existing package identifier");
         }
 
-
         /// <summary>
         /// Verifies that the GitHub client is able to submit a PR by verifying that the generated PR url matches the correct pattern.
         /// </summary>

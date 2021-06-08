@@ -20,7 +20,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Locale;
-    using Microsoft.WingetCreateCore.Models.Singleton;
     using Microsoft.WingetCreateCore.Models.Version;
     using Octokit;
     using RestSharp;
@@ -314,40 +313,6 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             Console.WriteLine();
             return true;
-        }
-
-        /// <summary>
-        /// Deserializes a list of manifest strings into their appropriate object models.
-        /// </summary>
-        /// <param name="manifestContents">List of manifest string contents.</param>
-        /// <param name="manifests">Wrapper object for manifest object models.</param>
-        protected static void DeserializeManifestContents(List<string> manifestContents, Manifests manifests)
-        {
-            foreach (string content in manifestContents)
-            {
-                ManifestTypeBase baseType = Serialization.DeserializeFromString<ManifestTypeBase>(content);
-
-                if (baseType.ManifestType == "singleton")
-                {
-                    manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(content);
-                }
-                else if (baseType.ManifestType == "version")
-                {
-                    manifests.VersionManifest = Serialization.DeserializeFromString<VersionManifest>(content);
-                }
-                else if (baseType.ManifestType == "defaultLocale")
-                {
-                    manifests.DefaultLocaleManifest = Serialization.DeserializeFromString<DefaultLocaleManifest>(content);
-                }
-                else if (baseType.ManifestType == "locale")
-                {
-                    manifests.LocaleManifests.Add(Serialization.DeserializeFromString<LocaleManifest>(content));
-                }
-                else if (baseType.ManifestType == "installer")
-                {
-                    manifests.InstallerManifest = Serialization.DeserializeFromString<InstallerManifest>(content);
-                }
-            }
         }
 
         /// <summary>
