@@ -83,7 +83,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 List<string> manifestContents = Directory.GetFiles(this.Path).Select(f => File.ReadAllText(f)).ToList();
 
-                DeserializeManifestContents(manifestContents, manifests);
+                Serialization.DeserializeManifestContents(manifestContents, manifests);
                 return await this.GitHubSubmitManifests(manifests, this.GitHubToken);
             }
             else

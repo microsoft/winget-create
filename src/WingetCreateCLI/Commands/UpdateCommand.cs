@@ -127,6 +127,64 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
+        /// Convert list of yaml contents to Manifests object model, and then update them.
+        /// </summary>
+        /// <param name="latestManifestContent">List of manifests to be updated.</param>
+        /// <returns>Manifests object representing the updates manifest content, or null if the update failed.</returns>
+        public async Task<Manifests> DeserializeExistingManifestsAndUpdate(List<string> latestManifestContent)
+        {
+            Manifests manifests = new Manifests();
+
+            Serialization.DeserializeManifestContents(latestManifestContent, manifests);
+
+            if (manifests.SingletonManifest != null)
+            {
+                manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
+            }
+
+            VersionManifest versionManifest = manifests.VersionManifest;
+            InstallerManifest installerManifest = manifests.InstallerManifest;
+            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
+            List<LocaleManifest> localeManifests = manifests.LocaleManifests;
+
+            // Ensure that capitalization matches between folder structure and package ID
+            versionManifest.PackageIdentifier = this.Id;
+            installerManifest.PackageIdentifier = this.Id;
+            defaultLocaleManifest.PackageIdentifier = this.Id;
+            UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageIdentifier), this.Id, localeManifests);
+
+            if (!string.IsNullOrEmpty(this.Version))
+            {
+                versionManifest.PackageVersion = this.Version;
+                installerManifest.PackageVersion = this.Version;
+                defaultLocaleManifest.PackageVersion = this.Version;
+                UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
+            }
+
+            if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
+            {
+                Logger.Error(Resources.MultipleInstallerUrlFound_Error);
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(this.InstallerUrl))
+            {
+                this.InstallerUrl = installerManifest.Installers.First().InstallerUrl;
+            }
+
+            this.PackageFile = await DownloadPackageFile(this.InstallerUrl);
+
+            if (string.IsNullOrEmpty(this.PackageFile))
+            {
+                return null;
+            }
+
+            PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrl, this.PackageFile);
+
+            return manifests;
+        }
+
+        /// <summary>
         /// Executes the manifest update flow.
         /// </summary>
         /// <param name="latestManifestContent">List of manifests to be updated.</param>
@@ -134,16 +192,8 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Boolean representing whether the manifest was updated successfully or not.</returns>
         public async Task<bool> ExecuteManifestUpdate(List<string> latestManifestContent, CommandExecutedEvent commandEvent)
         {
-            Manifests manifests = new Manifests();
-
-            DeserializeManifestContents(latestManifestContent, manifests);
-
-            if (manifests.SingletonManifest != null)
-            {
-                manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
-            }
-
-            if (!await this.UpdateManifest(manifests))
+            Manifests manifests = await this.DeserializeExistingManifestsAndUpdate(latestManifestContent);
+            if (manifests == null)
             {
                 return false;
             }
@@ -209,50 +259,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 manifest.GetType().GetProperty(propertyName).SetValue(manifest, value);
             }
-        }
-
-        private async Task<bool> UpdateManifest(Manifests manifests)
-        {
-            VersionManifest versionManifest = manifests.VersionManifest;
-            InstallerManifest installerManifest = manifests.InstallerManifest;
-            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
-            List<LocaleManifest> localeManifests = manifests.LocaleManifests;
-
-            // Ensure that capitalization matches between folder structure and package ID
-            versionManifest.PackageIdentifier = this.Id;
-            installerManifest.PackageIdentifier = this.Id;
-            defaultLocaleManifest.PackageIdentifier = this.Id;
-            UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageIdentifier), this.Id, localeManifests);
-
-            if (!string.IsNullOrEmpty(this.Version))
-            {
-                versionManifest.PackageVersion = this.Version;
-                installerManifest.PackageVersion = this.Version;
-                defaultLocaleManifest.PackageVersion = this.Version;
-                UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
-            }
-
-            if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
-            {
-                Logger.Error(Resources.MultipleInstallerUrlFound_Error);
-                return false;
-            }
-
-            if (string.IsNullOrEmpty(this.InstallerUrl))
-            {
-                this.InstallerUrl = installerManifest.Installers.First().InstallerUrl;
-            }
-
-            this.PackageFile = await DownloadPackageFile(this.InstallerUrl);
-
-            if (string.IsNullOrEmpty(this.PackageFile))
-            {
-                return false;
-            }
-
-            PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrl, this.PackageFile);
-
-            return true;
         }
     }
 }

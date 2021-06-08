@@ -6,12 +6,15 @@ namespace Microsoft.WingetCreateUnitTests
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
+    using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
+    using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateTests;
     using NUnit.Framework;
 
@@ -43,28 +46,29 @@ namespace Microsoft.WingetCreateUnitTests
         public void TearDown()
         {
             this.sw.Dispose();
+            PackageParser.SetHttpMessageHandler(null);
         }
 
         /// <summary>
-        /// Verifies that the update command modifies the manifest's version field
-        /// when a "Version" argument is provided.
+        /// Verifies that the update command succeeds and outputs manifests to the directory.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task UpdateVersion()
+        public async Task UpdateCommandTest()
         {
             string version = "1.2.3.4";
-            UpdateCommand command = this.GetUpdateCommand(TestConstants.TestPackageIdentifier, version, this.tempPath);
-            string testFilePath = TestUtils.GetTestFile($"{TestConstants.TestPackageIdentifier}.yaml");
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestPackageIdentifier, version, this.tempPath);
+            var initialManifestContent = GetInitialManifestContent($"{TestConstants.TestPackageIdentifier}.yaml");
 
-            Assert.IsTrue(await command.ExecuteManifestUpdate(new List<string> { File.ReadAllText(testFilePath) }, this.testCommandEvent), "Command should have succeeded");
+            var updatedManifests = await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
 
             string manifestDir = Utils.GetAppManifestDirPath(TestConstants.TestPackageIdentifier, version);
-            string fullOutputPath = Path.Combine(this.tempPath, manifestDir, $"{TestConstants.TestPackageIdentifier}.yaml");
-
-            Assert.IsTrue(File.Exists(fullOutputPath), "Updated manifest was not created successfully");
-            string result = File.ReadAllText(fullOutputPath);
-            Assert.That(result, Does.Contain("PackageVersion: 1.2.3.4"), $"Failed to update version of {TestConstants.TestPackageIdentifier}");
+            var updatedManifestContents = Directory.GetFiles(Path.Combine(this.tempPath, manifestDir)).Select(f => File.ReadAllText(f));
+            Assert.IsTrue(updatedManifestContents.Any(), "Updated manifests were not created successfully");
+            var manifestsToValidate = new Manifests();
+            Serialization.DeserializeManifestContents(updatedManifestContents, manifestsToValidate);
+            Assert.AreEqual(version, manifestsToValidate.VersionManifest.PackageVersion, $"Failed to update version of {TestConstants.TestPackageIdentifier}");
         }
 
         /// <summary>
@@ -74,14 +78,47 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateWithMultipleInstallers()
         {
-            UpdateCommand command = this.GetUpdateCommand(TestConstants.TestMultipleInstallerPackageIdentifier, null, this.tempPath);
-            string testFilePath = TestUtils.GetTestFile($"{TestConstants.TestMultipleInstallerPackageIdentifier}.yaml");
-            Assert.IsFalse(await command.ExecuteManifestUpdate(new List<string> { File.ReadAllText(testFilePath) }, this.testCommandEvent), "Command should have failed");
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestMultipleInstallerPackageIdentifier, null, this.tempPath);
+            var initialManifestContent = GetInitialManifestContent($"{TestConstants.TestMultipleInstallerPackageIdentifier}.yaml");
+            Assert.IsFalse(await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent), "Command should have failed");
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.MultipleInstallerUrlFound_Error), "Multiple installer url error should be thrown");
         }
 
-        private UpdateCommand GetUpdateCommand(string id, string version, string outputDir)
+        /// <summary>
+        /// Tests the <see cref="UpdateCommand.DeserializeExistingManifestsAndUpdate"/> command, ensuring that it updates properties as expected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateAndVerifyUpdatedProperties()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestMsiInstaller);
+
+            string version = "1.2.3.4";
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsiPackageIdentifier, version, this.tempPath);
+            List<string> initialManifestContent = GetInitialManifestContent(TestConstants.TestMsiManifest);
+            var initialManifests = new Manifests();
+            Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+
+            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
+
+            Assert.AreEqual(version, updatedManifests.VersionManifest.PackageVersion, "Version should be updated");
+            Assert.AreNotEqual(initialInstaller.ProductCode, updatedInstaller.ProductCode, "ProductCode should be updated");
+            Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
+        private static List<string> GetInitialManifestContent(string manifestFileName)
+        {
+            string testFilePath = TestUtils.GetTestFile(manifestFileName);
+            var initialManifestContent = new List<string> { File.ReadAllText(testFilePath) };
+            return initialManifestContent;
+        }
+
+        private static UpdateCommand GetUpdateCommand(string id, string version, string outputDir)
         {
             return new UpdateCommand
             {

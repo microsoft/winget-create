@@ -10,6 +10,12 @@ namespace Microsoft.WingetCreateCore
     using System.Reflection;
     using System.Runtime.Serialization;
     using System.Text;
+    using Microsoft.WingetCreateCore.Models;
+    using Microsoft.WingetCreateCore.Models.DefaultLocale;
+    using Microsoft.WingetCreateCore.Models.Installer;
+    using Microsoft.WingetCreateCore.Models.Locale;
+    using Microsoft.WingetCreateCore.Models.Singleton;
+    using Microsoft.WingetCreateCore.Models.Version;
     using Newtonsoft.Json;
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
@@ -129,6 +135,40 @@ namespace Microsoft.WingetCreateCore
             using var reader = new StringReader(yaml);
             var yamlObject = deserializer.Deserialize(reader);
             return JsonConvert.SerializeObject(yamlObject);
+        }
+
+        /// <summary>
+        /// Deserializes a list of manifest strings into their appropriate object models.
+        /// </summary>
+        /// <param name="manifestContents">List of manifest string contents.</param>
+        /// <param name="manifests">Wrapper object for manifest object models.</param>
+        public static void DeserializeManifestContents(IEnumerable<string> manifestContents, Manifests manifests)
+        {
+            foreach (string content in manifestContents)
+            {
+                ManifestTypeBase baseType = Serialization.DeserializeFromString<ManifestTypeBase>(content);
+
+                if (baseType.ManifestType == "singleton")
+                {
+                    manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(content);
+                }
+                else if (baseType.ManifestType == "version")
+                {
+                    manifests.VersionManifest = Serialization.DeserializeFromString<VersionManifest>(content);
+                }
+                else if (baseType.ManifestType == "defaultLocale")
+                {
+                    manifests.DefaultLocaleManifest = Serialization.DeserializeFromString<DefaultLocaleManifest>(content);
+                }
+                else if (baseType.ManifestType == "locale")
+                {
+                    manifests.LocaleManifests.Add(Serialization.DeserializeFromString<LocaleManifest>(content));
+                }
+                else if (baseType.ManifestType == "installer")
+                {
+                    manifests.InstallerManifest = Serialization.DeserializeFromString<InstallerManifest>(content);
+                }
+            }
         }
 
         private class YamlStringEnumConverter : IYamlTypeConverter
