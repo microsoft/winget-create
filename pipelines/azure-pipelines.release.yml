@@ -84,6 +84,11 @@ jobs:
           source: 'minkernel\published\internal\telemetry\TelemetryEventSource.cs'
           destination: '$(workingDirectory)\WingetCreateCLI\Telemetry\'
 
+      - task: NuGetCommand@2
+        displayName: Restore Packages
+        inputs:
+          restoreSolution: "$(solution)"
+
       - task: DotNetCoreCLI@2
         displayName: Restore
         inputs:
