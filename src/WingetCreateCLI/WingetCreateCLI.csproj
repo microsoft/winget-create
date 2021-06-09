@@ -73,12 +73,4 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <!-- Workaround for https://github.com/dotnet/msbuild/issues/5981, will no longer be necessary in msbuild v16.10.0-preview-21181-07+ -->
-  <Target Name="FixAL1703Warning" BeforeTargets="GenerateSatelliteAssemblies" Condition="'$(PlatformTarget)' == 'x64'">
-    <Message Text="Adjusting SDK tools directory to use x64 version of AL.EXE" />
-    <PropertyGroup>
-      <TargetFrameworkSDKToolsDirectory>$(TargetFrameworkSDKToolsDirectory)$(PlatformTarget)\</TargetFrameworkSDKToolsDirectory>
-    </PropertyGroup>
-  </Target>
-
 </Project>
