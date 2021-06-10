@@ -8,14 +8,17 @@
     <Version>0.2.0</Version>
     <Platforms>x64;x86</Platforms>
     <PlatformTargets>x64;x86</PlatformTargets>
-    <!--<RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>-->
+    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <RuntimeIdentifier Condition="'$(PlatformTarget)' == 'x64'">win-x64</RuntimeIdentifier>
-    <RuntimeIdentifier Condition="'$(PlatformTarget)' == 'x86'">win-x86</RuntimeIdentifier>
+  <PropertyGroup Condition="'$(PlatformTarget)' == 'x64' or '$(Platform)' == 'x64'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PlatformTarget)' == 'x86' or '$(Platform)' == 'x86'">
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
