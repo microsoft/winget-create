@@ -161,11 +161,17 @@
   <data name="Custom_KeywordDescription" xml:space="preserve">
     <value>사용자 지정 설치 관리자 스위치</value>
   </data>
+  <data name="DefaultLocale_KeywordDescription" xml:space="preserve">
+    <value>패키지 메타데이터 기본 로캘 |예: ko-KR|</value>
+  </data>
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>전체 패키지 설명</value>
   </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>완료</value>
+  </data>
+  <data name="DownloadFile_Error" xml:space="preserve">
+    <value>설치 관리자를 다운로드하지 못했습니다.</value>
   </data>
   <data name="DownloadInstaller_Message" xml:space="preserve">
     <value>다운로드 및 구문 분석 중: {0}...</value>
@@ -215,7 +221,7 @@
     <value>경로가 존재하지 않습니다</value>
   </data>
   <data name="Path_HelpText" xml:space="preserve">
-    <value>Windows 패키지 관리자 리포지토리에 전송할 매니페스트 파일 또는 디렉터리 경로</value>
+    <value>Windows 패키지 관리자 리포지토리에 전송할 매니페스트 파일이나 디렉터리 경로</value>
   </data>
   <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
     <value>GitHub 권한 부여 실패: {0} - {1}</value>
@@ -235,8 +241,11 @@
   <data name="Homepage_KeywordDescription" xml:space="preserve">
     <value>패키지 홈 페이지</value>
   </data>
-  <data name="Id_HelpText" xml:space="preserve">
+  <data name="PackageIdentifier_HelpText" xml:space="preserve">
     <value>Windows 패키지 관리자 리포지토리의 기존 매니페스트를 조회하는 데 사용되는 패키지 식별자입니다. ID는 대/소문자를 구분합니다.</value>
+  </data>
+  <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">
+    <value>패키지 고유 식별자 |e.g. Microsoft.VisualStudio|</value>
   </data>
   <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
     <value>설치 관리자 대상 아키텍처</value>
@@ -272,6 +281,9 @@
   <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
     <value>라이선스 페이지</value>
   </data>
+  <data name="License_KeywordDescription" xml:space="preserve">
+    <value>패키지 라이선스 |예: MIT 라이선스|</value>
+  </data>
   <data name="Localization_KeywordDescription" xml:space="preserve">
     <value>패키지 설치 관리자 로캘</value>
   </data>
@@ -294,6 +306,9 @@
   </data>
   <data name="Moniker_KeywordDescription" xml:space="preserve">
     <value>가장 일반적인 패키지 용어</value>
+  </data>
+  <data name="Name_KeywordDescription" xml:space="preserve">
+    <value>패키지 이름 |예: Visual Studio|</value>
   </data>
   <data name="NewCommand_Description" xml:space="preserve">
     <value>Enter 키를 눌러 (기본) 값 수락을 포함하여 각 질문에 대한 값을 제출합니다.</value>
@@ -337,6 +352,9 @@
   <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
     <value>판매자 홈 페이지</value>
   </data>
+  <data name="Publisher_KeywordDescription" xml:space="preserve">
+    <value>판매자 이름 |예: Microsoft|</value>
+  </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>끌어오기 요청을 다음에서 찾을 수 있음: {0}</value>
     <comment>{0} - will be replaced with the pull request URI</comment>
@@ -377,6 +395,9 @@
   <data name="SubmittingPullRequest_Message" xml:space="preserve">
     <value>매니페스트에 대한 끌어오기 요청 제출 중...</value>
   </data>
+  <data name="SubmitToWinget_HelpText" xml:space="preserve">
+    <value>Windows 패키지 관리자 리포지토리로 전송하기 위한 부울 값입니다. true일 경우 제공된 GitHub 토큰을 사용하여 직접 업데이트된 매니페스트가 직접 전송됩니다. 기본값은 false입니다.</value>
+  </data>
   <data name="Switches_KeywordDescription" xml:space="preserve">
     <value>설치 관리자 스위치 모음</value>
   </data>
@@ -403,6 +424,9 @@
   </data>
   <data name="Version_HelpText" xml:space="preserve">
     <value>패키지 버전 필드를 업데이트할 때 사용할 버전입니다.</value>
+  </data>
+  <data name="PackageVersion_KeywordDescription" xml:space="preserve">
+    <value>패키지 버전이 |예: 1.2.3.4|</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
     <value>캐시에 OAuth 토큰을 쓰지 못했습니다. {0}</value>
@@ -438,6 +462,9 @@
   <data name="UsingTokenFromCache_Message" xml:space="preserve">
     <value>캐시에서 GitHub 토큰 사용 중...</value>
   </data>
+  <data name="PackageName_KeywordDescription" xml:space="preserve">
+    <value>패키지 이름 |예: Visual Studio|</value>
+  </data>
   <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
     <value>기본 로캘 매니페스트 미리 보기:</value>
   </data>
@@ -469,7 +496,7 @@
     <value>설치 관리자 최소 운영 체제 버전</value>
   </data>
   <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>여러 고유 설치 관리자 URL이 검색되었습니다. 단일 설치 관리자 URL만 사용하여 다시 시도하십시오.</value>
+    <value>다중 개별 설치 관리자 URL을 가진 기존 매니페스트는 현재 지원되지 않습니다.</value>
   </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>업그레이드 스위치</value>
@@ -485,6 +512,9 @@
   </data>
   <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
     <value>외부 패키지 종속성 목록</value>
+  </data>
+  <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 URL |예로 https://microsoft.com/downloads|.</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>매니페스트 유형</value>
@@ -506,6 +536,19 @@
   </data>
   <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
     <value>Windows 라이브러리 종속성 목록</value>
+  </data>
+  <data name="MoreHelp_HelpText" xml:space="preserve">
+    <value>자세한 도움말은 https://aka.ms/winget-create에서 찾을 수 있습니다.</value>
+  </data>
+  <data name="PrivacyStatement_HelpText" xml:space="preserve">
+    <value>개인정보처리방침: https://aka.ms/winget-create-privacy</value>
+  </data>
+  <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
+    <value>HTTP 응답에 실패했습니다. 상태 코드: {0}</value>
+    <comment>{0} - will be replaced with the HTTP response status code</comment>
+  </data>
+  <data name="InvalidUrl_Error" xml:space="preserve">
+    <value>잘못된 URL이 제공되었습니다. URL을 확인하고 다시 시도하세요.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>패키지를 구문 분석하고 설치 관리자 유형을 확인할 수 없습니다.</value>

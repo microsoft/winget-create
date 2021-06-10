@@ -161,11 +161,17 @@
   <data name="Custom_KeywordDescription" xml:space="preserve">
     <value>Gli switch del programma di installazione personalizzati</value>
   </data>
+  <data name="DefaultLocale_KeywordDescription" xml:space="preserve">
+    <value>Le impostazioni locali predefinite dei metadati del pacchetto [es. en-US]</value>
+  </data>
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>La descrizione completa del pacchetto</value>
   </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>FINE</value>
+  </data>
+  <data name="DownloadFile_Error" xml:space="preserve">
+    <value>Download del programma di installazione non riuscito.</value>
   </data>
   <data name="DownloadInstaller_Message" xml:space="preserve">
     <value>Download e analisi: {0}...</value>
@@ -215,7 +221,7 @@
     <value>Il percorso non esiste</value>
   </data>
   <data name="Path_HelpText" xml:space="preserve">
-    <value>Percorso a un file manifesto o una directory da inviare al repository di Gestione pacchetti Windows</value>
+    <value>Percorso di un file manifesto o una directory contenente i manifesti che si desidera inviare al Gestione pacchetti Windows</value>
   </data>
   <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
     <value>Autorizzazione GitHub non riuscita: {0} - {1}</value>
@@ -235,8 +241,11 @@
   <data name="Homepage_KeywordDescription" xml:space="preserve">
     <value>La home page del pacchetto</value>
   </data>
-  <data name="Id_HelpText" xml:space="preserve">
-    <value>Identificatore del pacchetto usato per cercare il manifesto esistente nel Gestione pacchetti di Windows. ID con distinzione tra maiuscole e minuscole.</value>
+  <data name="PackageIdentifier_HelpText" xml:space="preserve">
+    <value>Identificatore del pacchetto usato per cercare il manifesto esistente nel repository Gestione pacchetti Windows. L'ID fa distinzione tra maiuscole e minuscole.</value>
+  </data>
+  <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">
+    <value>Identificatore univoco del pacchetto | ad esempio Microsoft. VisualStudio |</value>
   </data>
   <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
     <value>L'architettura di destinazione del programma di installazione</value>
@@ -272,6 +281,9 @@
   <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
     <value>La pagina della licenza</value>
   </data>
+  <data name="License_KeywordDescription" xml:space="preserve">
+    <value>La licenza del pacchetto |ad es. licenza MIT|</value>
+  </data>
   <data name="Localization_KeywordDescription" xml:space="preserve">
     <value>Le impostazioni locali del programma di installazione del pacchetto</value>
   </data>
@@ -294,6 +306,9 @@
   </data>
   <data name="Moniker_KeywordDescription" xml:space="preserve">
     <value>Il termine più comune del pacchetto</value>
+  </data>
+  <data name="Name_KeywordDescription" xml:space="preserve">
+    <value>Il nome del pacchetto [es. Visual Studio]</value>
   </data>
   <data name="NewCommand_Description" xml:space="preserve">
     <value>Premi invio per inviare il valore di ogni domanda, incluso il valore (predefinito).</value>
@@ -337,6 +352,9 @@
   <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
     <value>L'home page dell'editore</value>
   </data>
+  <data name="Publisher_KeywordDescription" xml:space="preserve">
+    <value>Il nome dell'editore [es. Microsoft]</value>
+  </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>La richiesta pull è disponibile qui: {0}</value>
     <comment>{0} - will be replaced with the pull request URI</comment>
@@ -377,6 +395,9 @@
   <data name="SubmittingPullRequest_Message" xml:space="preserve">
     <value>Invio della richiesta pull per il manifesto...</value>
   </data>
+  <data name="SubmitToWinget_HelpText" xml:space="preserve">
+    <value>Valore booleano per l'invio al repository di Gestione pacchetti Windows. Se Vero, il manifesto aggiornato sarà inviato direttamente mediante il token GitHub fornito. L'impostazione predefinita è false.</value>
+  </data>
   <data name="Switches_KeywordDescription" xml:space="preserve">
     <value>Raccolta di switch del programma di installazione</value>
   </data>
@@ -403,6 +424,9 @@
   </data>
   <data name="Version_HelpText" xml:space="preserve">
     <value>Versione da utilizzare per l'aggiornamento del campo della versione del pacchetto.</value>
+  </data>
+  <data name="PackageVersion_KeywordDescription" xml:space="preserve">
+    <value>Versione del pacchetto | es. 1.2.3.4 |</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
     <value>Scrittura del token OAuth nella cache non riuscita: {0}</value>
@@ -438,6 +462,9 @@
   <data name="UsingTokenFromCache_Message" xml:space="preserve">
     <value>Utilizzo del token GitHub dalla cache...</value>
   </data>
+  <data name="PackageName_KeywordDescription" xml:space="preserve">
+    <value>Il nome del pacchetto [es. Visual Studio]</value>
+  </data>
   <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
     <value>Anteprima del manifesto delle impostazioni locali predefinite:</value>
   </data>
@@ -469,7 +496,7 @@
     <value>La versione del sistema operativo minima per il programma di installazione</value>
   </data>
   <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>Trovati più URL di programma di installazione distinti. Riprovare con un solo URL di programma di installazione.</value>
+    <value>L'aggiornamento di un manifesto esistente con più URL distinti del programma di installazione non è attualmente supportato.</value>
   </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>Gli switch di aggiornamento</value>
@@ -485,6 +512,9 @@
   </data>
   <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
     <value>Elenco delle dipendenze esterne del pacchetto</value>
+  </data>
+  <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
+    <value>URL del programma di installazione | ad esempio https://microsoft.com/downloads|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>Il tipo di manifesto</value>
@@ -506,6 +536,19 @@
   </data>
   <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
     <value>Elenco delle dipendenze della libreria di Windows</value>
+  </data>
+  <data name="MoreHelp_HelpText" xml:space="preserve">
+    <value>Altre informazioni sono disponibili all'indirizzo: https://aka.ms/winget-create</value>
+  </data>
+  <data name="PrivacyStatement_HelpText" xml:space="preserve">
+    <value>Informativa sulla privacy: https://aka.ms/winget-create-privacy</value>
+  </data>
+  <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
+    <value>Risposta HTTP non riuscita. Codice di stato: {0}</value>
+    <comment>{0} - will be replaced with the HTTP response status code</comment>
+  </data>
+  <data name="InvalidUrl_Error" xml:space="preserve">
+    <value>L'URL fornito non è valido. Controllare l'URL e riprovare.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>Impossibile analizzare correttamente il pacchetto e determinare il tipo di programma di installazione.</value>

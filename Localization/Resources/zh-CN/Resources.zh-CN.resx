@@ -161,11 +161,17 @@
   <data name="Custom_KeywordDescription" xml:space="preserve">
     <value>自定义安装程序开关</value>
   </data>
+  <data name="DefaultLocale_KeywordDescription" xml:space="preserve">
+    <value>程序包元数据默认区域设置 |例如 en-US|</value>
+  </data>
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>完整程序包说明</value>
   </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>完成</value>
+  </data>
+  <data name="DownloadFile_Error" xml:space="preserve">
+    <value>未能下载安装程序。</value>
   </data>
   <data name="DownloadInstaller_Message" xml:space="preserve">
     <value>正在下载和分析: {0}...</value>
@@ -215,7 +221,7 @@
     <value>路径不存在</value>
   </data>
   <data name="Path_HelpText" xml:space="preserve">
-    <value>要提交到 Windows 程序包管理器存储库的清单文件或目录的路径</value>
+    <value>指向包含要提交到 Windows 程序包管理器 重新po 的清单文件或目录路径</value>
   </data>
   <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
     <value>GitHub 授权失败: {0} - {1}</value>
@@ -235,8 +241,11 @@
   <data name="Homepage_KeywordDescription" xml:space="preserve">
     <value>程序包的主页</value>
   </data>
-  <data name="Id_HelpText" xml:space="preserve">
+  <data name="PackageIdentifier_HelpText" xml:space="preserve">
     <value>用于在 Windows 程序包管理器存储库中查找现有清单的程序包标识符。ID 区分大小写。</value>
+  </data>
+  <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">
+    <value>程序包唯一标识符 |例如 Microsoft.VisualStudio|</value>
   </data>
   <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
     <value>安装程序目标体系结构</value>
@@ -272,6 +281,9 @@
   <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
     <value>许可证页面</value>
   </data>
+  <data name="License_KeywordDescription" xml:space="preserve">
+    <value>程序包许可证 |e.g. MIT License|</value>
+  </data>
   <data name="Localization_KeywordDescription" xml:space="preserve">
     <value>程序包安装程序区域设置</value>
   </data>
@@ -294,6 +306,9 @@
   </data>
   <data name="Moniker_KeywordDescription" xml:space="preserve">
     <value>最常见的程序包术语</value>
+  </data>
+  <data name="Name_KeywordDescription" xml:space="preserve">
+    <value>程序包名 |例如 Visual Studio|</value>
   </data>
   <data name="NewCommand_Description" xml:space="preserve">
     <value>按 ENTER 提交每个问题的值，包括接受 (默认) 值。</value>
@@ -337,6 +352,9 @@
   <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
     <value>发布者主页</value>
   </data>
+  <data name="Publisher_KeywordDescription" xml:space="preserve">
+    <value>发布者名 |例如 Microsoft|</value>
+  </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>可在以下位置找到拉取请求: {0}</value>
     <comment>{0} - will be replaced with the pull request URI</comment>
@@ -377,6 +395,9 @@
   <data name="SubmittingPullRequest_Message" xml:space="preserve">
     <value>正在提交清单的拉取请求...</value>
   </data>
+  <data name="SubmitToWinget_HelpText" xml:space="preserve">
+    <value>用于提交到 Windows 程序包管理器存储库的布尔值。如果为 true，则将使用所提供的 GitHub 令牌直接提交更新的清单。默认为 false。</value>
+  </data>
   <data name="Switches_KeywordDescription" xml:space="preserve">
     <value>安装程序开关集合</value>
   </data>
@@ -403,6 +424,9 @@
   </data>
   <data name="Version_HelpText" xml:space="preserve">
     <value>更新包版本字段时要使用的版本。</value>
+  </data>
+  <data name="PackageVersion_KeywordDescription" xml:space="preserve">
+    <value>程序包版本 |例如 1.2.3.4|</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
     <value>无法将 OAuth 令牌写入缓存： {0}</value>
@@ -438,6 +462,9 @@
   <data name="UsingTokenFromCache_Message" xml:space="preserve">
     <value>正在使用来自缓存的 GitHub 令牌...</value>
   </data>
+  <data name="PackageName_KeywordDescription" xml:space="preserve">
+    <value>程序包名 |例如 Visual Studio|</value>
+  </data>
   <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
     <value>默认区域设置清单预览:</value>
   </data>
@@ -469,7 +496,7 @@
     <value>安装程序最低操作系统版本</value>
   </data>
   <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>找到多个不同的安装程序 url。请只使用一个安装程序 url 重试。</value>
+    <value>当前不支持使用多个不同的安装程序 url 更新现有清单。</value>
   </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>升级开关</value>
@@ -485,6 +512,9 @@
   </data>
   <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
     <value>外部程序包依赖项列表</value>
+  </data>
+  <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
+    <value>安装程序 URL | 例如 https://microsoft.com/downloads|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>清单类型</value>
@@ -506,6 +536,19 @@
   </data>
   <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
     <value>Windows 库依赖项列表</value>
+  </data>
+  <data name="MoreHelp_HelpText" xml:space="preserve">
+    <value>可在以下位置找到更多帮助： https://aka.ms/winget-create</value>
+  </data>
+  <data name="PrivacyStatement_HelpText" xml:space="preserve">
+    <value>隐私声明：https://aka.ms/winget-create-privacy</value>
+  </data>
+  <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
+    <value>HTTP 响应失败。状态代码: {0}</value>
+    <comment>{0} - will be replaced with the HTTP response status code</comment>
+  </data>
+  <data name="InvalidUrl_Error" xml:space="preserve">
+    <value>提供的 URL 无效。请检查 URL，然后重试。</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>无法成功分析包并确定安装程序类型。</value>
