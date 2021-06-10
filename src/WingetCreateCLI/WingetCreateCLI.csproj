@@ -9,7 +9,7 @@
     <Platforms>x64;x86</Platforms>
     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>      
+    <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
