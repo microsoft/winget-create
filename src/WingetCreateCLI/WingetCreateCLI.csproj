@@ -7,18 +7,9 @@
     <RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
     <Version>0.2.0</Version>
     <Platforms>x64;x86</Platforms>
-    <PlatformTargets>x64;x86</PlatformTargets>
     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(PlatformTarget)' == 'x64' or '$(Platform)' == 'x64'">
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(PlatformTarget)' == 'x86' or '$(Platform)' == 'x86'">
-    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
@@ -82,6 +73,7 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <!-- Workaround for https://github.com/dotnet/msbuild/issues/5981, will no longer be necessary in msbuild v16.10.0-preview-21181-07+ -->
   <Target Name="FixAL1703Warning" BeforeTargets="GenerateSatelliteAssemblies" Condition="'$(PlatformTarget)' == 'x64'">
     <Message Text="Adjusting SDK tools directory to use x64 version of AL.EXE" />
     <PropertyGroup>

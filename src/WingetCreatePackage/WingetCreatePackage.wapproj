@@ -46,6 +46,8 @@
   <ItemGroup>
     <ProjectReference Include="..\WingetCreateCLI\WingetCreateCLI.csproj">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
+      <PublishProfile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Properties\PublishProfiles\x64ReleasePublishProfile.pubxml</PublishProfile>
+      <PublishProfile Condition="'$(Configuration)|$(Platform)'=='Release|x86'">Properties\PublishProfiles\x86ReleasePublishProfile.pubxml</PublishProfile>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
