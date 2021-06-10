@@ -110,6 +110,10 @@ namespace Microsoft.WingetCreateCLI
                 {
                     Utils.WriteLineColored(ConsoleColor.Red, $"Unknown option: {uoe.Token}");
                 }
+                else if (error is NoVerbSelectedError)
+                {
+                    continue;
+                }
                 else
                 {
                     Utils.WriteLineColored(ConsoleColor.Red, $"Command line parsing error: {error.Tag}");
