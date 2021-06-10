@@ -6,8 +6,8 @@
     <AssemblyName>WingetCreateCLI</AssemblyName>
     <RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
     <Version>0.2.0</Version>
-    <Platforms>x64;x86</Platforms>
-    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
   </PropertyGroup>

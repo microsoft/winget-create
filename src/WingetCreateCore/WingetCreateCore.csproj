@@ -5,8 +5,8 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <RootNamespace>Microsoft.WingetCreateCore</RootNamespace>
     <TargetFramework>net5.0</TargetFramework>
-    <Platforms>x86;x64</Platforms>
-    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
