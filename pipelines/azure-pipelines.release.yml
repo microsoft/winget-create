@@ -117,6 +117,7 @@ jobs:
             /p:AppxBundle=Always
             /p:UapAppxPackageBuildMode=SideloadOnly
             /p:AppxPackageSigningEnabled=false
+            /v:diag
             /bl:$(workingDirectory)\MSBuild.binlog'
 
       - publish: $(workingDirectory)\MSBuild.binlog
