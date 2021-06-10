@@ -161,11 +161,17 @@
   <data name="Custom_KeywordDescription" xml:space="preserve">
     <value>自訂安裝程式切換</value>
   </data>
+  <data name="DefaultLocale_KeywordDescription" xml:space="preserve">
+    <value>封裝中繼資料預設地區設定 |例如 en-US|</value>
+  </data>
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>完整封裝描述</value>
   </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>完成</value>
+  </data>
+  <data name="DownloadFile_Error" xml:space="preserve">
+    <value>無法下載安裝程式。</value>
   </data>
   <data name="DownloadInstaller_Message" xml:space="preserve">
     <value>正在下載和剖析：{0}...</value>
@@ -215,7 +221,7 @@
     <value>路徑不存在</value>
   </data>
   <data name="Path_HelpText" xml:space="preserve">
-    <value>資訊清單檔案或目錄路徑，用以提交至 Windows 封裝管理員存放庫</value>
+    <value>包含您要提交至 Windows 封裝管理員存放庫之資訊清單的資訊清單檔案或目錄路徑</value>
   </data>
   <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
     <value>GitHub 授權失敗：{0} - {1}</value>
@@ -235,8 +241,11 @@
   <data name="Homepage_KeywordDescription" xml:space="preserve">
     <value>套件的首頁</value>
   </data>
-  <data name="Id_HelpText" xml:space="preserve">
+  <data name="PackageIdentifier_HelpText" xml:space="preserve">
     <value>封裝識別碼，用來在 Windows 封裝管理員庫存放庫中查閱現有資訊清單。識別碼區分大小寫。</value>
+  </data>
+  <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">
+    <value>封裝唯一識別碼 |例如 Microsoft.VisualStudio|</value>
   </data>
   <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
     <value>安裝程式目標架構</value>
@@ -272,6 +281,9 @@
   <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
     <value>授權頁面</value>
   </data>
+  <data name="License_KeywordDescription" xml:space="preserve">
+    <value>套件授權 |e.g. MIT 授權|</value>
+  </data>
   <data name="Localization_KeywordDescription" xml:space="preserve">
     <value>封裝安裝程式地區設定</value>
   </data>
@@ -294,6 +306,9 @@
   </data>
   <data name="Moniker_KeywordDescription" xml:space="preserve">
     <value>最常見的封裝術語</value>
+  </data>
+  <data name="Name_KeywordDescription" xml:space="preserve">
+    <value>封裝名稱 |例如 Visual Studio|</value>
   </data>
   <data name="NewCommand_Description" xml:space="preserve">
     <value>按 ENTER 以提交每個問題的值，包括接受 (預設) 值。</value>
@@ -337,6 +352,9 @@
   <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
     <value>發行者首頁</value>
   </data>
+  <data name="Publisher_KeywordDescription" xml:space="preserve">
+    <value>發行者名稱 |例如 Microsoft|</value>
+  </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>提取要求可在這裡找到：{0}</value>
     <comment>{0} - will be replaced with the pull request URI</comment>
@@ -377,6 +395,9 @@
   <data name="SubmittingPullRequest_Message" xml:space="preserve">
     <value>正在提交資訊清單的提取要求...</value>
   </data>
+  <data name="SubmitToWinget_HelpText" xml:space="preserve">
+    <value>布林值，用以提交至 Windows 封裝管理員存放庫。如果為 True，更新的資訊清單將會使用提供的 GitHub 權杖直接提交。預設為 False。</value>
+  </data>
   <data name="Switches_KeywordDescription" xml:space="preserve">
     <value>安裝程式集合切換</value>
   </data>
@@ -403,6 +424,9 @@
   </data>
   <data name="Version_HelpText" xml:space="preserve">
     <value>更新套件版本欄位時要使用的版本。</value>
+  </data>
+  <data name="PackageVersion_KeywordDescription" xml:space="preserve">
+    <value>封裝版本 |例如 1.2.3.4|</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
     <value>將 OAuth 權杖寫入到快取失敗： {0}</value>
@@ -438,6 +462,9 @@
   <data name="UsingTokenFromCache_Message" xml:space="preserve">
     <value>正在使用來自快取的 GitHub 權杖...</value>
   </data>
+  <data name="PackageName_KeywordDescription" xml:space="preserve">
+    <value>封裝名稱 |例如 Visual Studio|</value>
+  </data>
   <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
     <value>預設地區設定資訊清單預覽：</value>
   </data>
@@ -468,9 +495,6 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>安裝程式最低作業系統版本</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>找到多個不同的安裝程式 URL。請以單一安裝程式 URL 再試一次。</value>
-  </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>升級切換</value>
   </data>
@@ -485,6 +509,9 @@
   </data>
   <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
     <value>外部封裝相依性清單</value>
+  </data>
+  <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
+    <value>安裝程式 URL | 例如 https://microsoft.com/downloads|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>資訊清單類型</value>
@@ -506,6 +533,19 @@
   </data>
   <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
     <value>Windows Library 相依性清單</value>
+  </data>
+  <data name="MoreHelp_HelpText" xml:space="preserve">
+    <value>您可以在此處找到更多說明：https://aka.ms/winget-create</value>
+  </data>
+  <data name="PrivacyStatement_HelpText" xml:space="preserve">
+    <value>隱私權聲明：https://aka.ms/winget-create-privacy</value>
+  </data>
+  <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
+    <value>HTTP 回應失敗。狀態碼：{0}</value>
+    <comment>{0} - will be replaced with the HTTP response status code</comment>
+  </data>
+  <data name="InvalidUrl_Error" xml:space="preserve">
+    <value>提供的 URL 無效。請檢查 URL，然後再試一次。</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>無法成功剖析封裝及判斷安裝程式類型。</value>

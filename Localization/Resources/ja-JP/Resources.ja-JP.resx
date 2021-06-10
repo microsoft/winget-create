@@ -161,11 +161,17 @@
   <data name="Custom_KeywordDescription" xml:space="preserve">
     <value>カスタム インストーラーの切り替え</value>
   </data>
+  <data name="DefaultLocale_KeywordDescription" xml:space="preserve">
+    <value>パッケージ メタ データの既定 ロケール | 例: en-US|</value>
+  </data>
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>完全なパッケージの説明</value>
   </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>完了</value>
+  </data>
+  <data name="DownloadFile_Error" xml:space="preserve">
+    <value>インストーラーをダウンロードできませんでした。</value>
   </data>
   <data name="DownloadInstaller_Message" xml:space="preserve">
     <value>ダウンロードして解析しています:  {0}...</value>
@@ -215,7 +221,7 @@
     <value>パスが存在しません</value>
   </data>
   <data name="Path_HelpText" xml:space="preserve">
-    <value>Windows パッケージ マネージャー リポジトリに送信するマニフェスト ファイルまたはディレクトリへのパス</value>
+    <value>Windows パッケージマネージャーのリポジトリに送信するマニフェストが格納されているマニフェストファイルまたはディレクトリへのパス</value>
   </data>
   <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
     <value>GitHub 認証に失敗しました: {0} - {1}</value>
@@ -235,8 +241,11 @@
   <data name="Homepage_KeywordDescription" xml:space="preserve">
     <value>パッケージのホームページ</value>
   </data>
-  <data name="Id_HelpText" xml:space="preserve">
+  <data name="PackageIdentifier_HelpText" xml:space="preserve">
     <value>Windows パッケージ マネージャー リポジトリで既存のマニフェストを検索するために使用されるパッケージ識別子。 ID では大文字と小文字が区別されます。</value>
+  </data>
+  <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">
+    <value>パッケージの一意の識別子 | 例: Microsoft VisualStudio |</value>
   </data>
   <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
     <value>インストーラー のターゲット アーキテクチャ</value>
@@ -272,6 +281,9 @@
   <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
     <value>ライセンス ページ</value>
   </data>
+  <data name="License_KeywordDescription" xml:space="preserve">
+    <value>パッケージ ライセンス |例: MIT ライセンス|</value>
+  </data>
   <data name="Localization_KeywordDescription" xml:space="preserve">
     <value>パッケージ インストーラーのロケール</value>
   </data>
@@ -294,6 +306,9 @@
   </data>
   <data name="Moniker_KeywordDescription" xml:space="preserve">
     <value>最も一般的なパッケージ用語</value>
+  </data>
+  <data name="Name_KeywordDescription" xml:space="preserve">
+    <value>パッケージ名 | 例: Visual Studio|</value>
   </data>
   <data name="NewCommand_Description" xml:space="preserve">
     <value>ENTER を押して、 (既定の) 値の受け入れを含む各質問の値を送信します。</value>
@@ -337,6 +352,9 @@
   <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
     <value>発行元のホームページ</value>
   </data>
+  <data name="Publisher_KeywordDescription" xml:space="preserve">
+    <value>発行元名 | 例: Microsoft|</value>
+  </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>プル要求はここにあります: {0}</value>
     <comment>{0} - will be replaced with the pull request URI</comment>
@@ -377,6 +395,9 @@
   <data name="SubmittingPullRequest_Message" xml:space="preserve">
     <value>マニフェストのプル要求を送信しています...</value>
   </data>
+  <data name="SubmitToWinget_HelpText" xml:space="preserve">
+    <value>Windows パッケージマネージャーのリポジトリに送信するためのブール値。True の場合、更新されたマニフェストは、提供された GitHub トークンを使用して直接送信されます。既定値は false です。</value>
+  </data>
   <data name="Switches_KeywordDescription" xml:space="preserve">
     <value>インストーラー スイッチのコレクション</value>
   </data>
@@ -403,6 +424,9 @@
   </data>
   <data name="Version_HelpText" xml:space="preserve">
     <value>パッケージバージョンフィールドを更新するときに使用するバージョンです。</value>
+  </data>
+  <data name="PackageVersion_KeywordDescription" xml:space="preserve">
+    <value>パッケージのバージョン | 例: 1.2.3.4 |</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
     <value>キャッシュする OAuth トークンの書き込みに失敗しました: {0}</value>
@@ -438,6 +462,9 @@
   <data name="UsingTokenFromCache_Message" xml:space="preserve">
     <value>キャッシュから GitHub トークンを使用しています...</value>
   </data>
+  <data name="PackageName_KeywordDescription" xml:space="preserve">
+    <value>パッケージ名 | 例: Visual Studio|</value>
+  </data>
   <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
     <value>既定のロケール マニフェストのプレビュー:</value>
   </data>
@@ -468,9 +495,6 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>インストーラー の最小オペレーティング システム バージョン</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>複数の異なるインストーラー URL が見つかりました。単一のインストーラー URL のみで再試行してください。</value>
-  </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>アップグレード スイッチ</value>
   </data>
@@ -485,6 +509,9 @@
   </data>
   <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
     <value>外部パッケージの依存関係の一覧</value>
+  </data>
+  <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
+    <value>インストーラーの URL | 例: https://microsoft.com/downloads|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>マニフェストの種類</value>
@@ -506,6 +533,19 @@
   </data>
   <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
     <value>Windows ライブラリの依存関係の一覧</value>
+  </data>
+  <data name="MoreHelp_HelpText" xml:space="preserve">
+    <value>詳細については、次の場所を参照してください: https://aka.ms/winget-create</value>
+  </data>
+  <data name="PrivacyStatement_HelpText" xml:space="preserve">
+    <value>プライバシーに関する声明: https://aka.ms/winget-create-privacy</value>
+  </data>
+  <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
+    <value>HTTP 応答が失敗しました。状態コード: {0}</value>
+    <comment>{0} - will be replaced with the HTTP response status code</comment>
+  </data>
+  <data name="InvalidUrl_Error" xml:space="preserve">
+    <value>無効な URL が指定されました。URL を確認して、もう一度お試しください。</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>パッケージを正しく解析できませんでした。インストーラーの種類を確認できません。</value>

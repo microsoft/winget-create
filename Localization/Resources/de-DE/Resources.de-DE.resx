@@ -161,11 +161,17 @@
   <data name="Custom_KeywordDescription" xml:space="preserve">
     <value>Die benutzerdefinierte Installer-Schalter</value>
   </data>
+  <data name="DefaultLocale_KeywordDescription" xml:space="preserve">
+    <value>Das Standardgebietsschema der Paket-Metadaten |z. B. en-US|</value>
+  </data>
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>Die vollständige Paketbeschreibung</value>
   </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>FERTIG</value>
+  </data>
+  <data name="DownloadFile_Error" xml:space="preserve">
+    <value>Das Installationsprogramm konnte nicht heruntergeladen werden.</value>
   </data>
   <data name="DownloadInstaller_Message" xml:space="preserve">
     <value>Herunterladen und analysieren: {0}...</value>
@@ -215,7 +221,7 @@
     <value>Der Pfad ist nicht vorhanden</value>
   </data>
   <data name="Path_HelpText" xml:space="preserve">
-    <value>Pfad zu einer Manifestdatei oder einem Verzeichnis, das an das Windows-Paket-Manager-Repository übermittelt werden soll</value>
+    <value>Pfad zu einer Manifestdatei oder einem Verzeichnis, das die Manifeste enthält, die Sie an das Windows-Paket-Manager-Repository übermitteln wollen</value>
   </data>
   <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
     <value>GitHub-Autorisierung fehlgeschlagen: {0} - {1}</value>
@@ -235,8 +241,11 @@
   <data name="Homepage_KeywordDescription" xml:space="preserve">
     <value>Die Homepage für das Paket</value>
   </data>
-  <data name="Id_HelpText" xml:space="preserve">
+  <data name="PackageIdentifier_HelpText" xml:space="preserve">
     <value>Paket-Identifikator, der zum Nachschlagen des vorhandenen Manifests im Windows-Paket-Manager-Repository verwendet wird. Bei der ID wird zwischen Groß- und Kleinschreibung unterschieden.</value>
+  </data>
+  <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">
+    <value>Die eindeutige Paket Kennung | z. b. Microsoft.....</value>
   </data>
   <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
     <value>Die Zielarchitektur des Installationsprogramms</value>
@@ -272,6 +281,9 @@
   <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
     <value>Die Lizenzseite</value>
   </data>
+  <data name="License_KeywordDescription" xml:space="preserve">
+    <value>Die Paketlizenz |z. B. MIT-Lizenz|</value>
+  </data>
   <data name="Localization_KeywordDescription" xml:space="preserve">
     <value>Das Gebietsschema des Paketinstallationsprogramms</value>
   </data>
@@ -294,6 +306,9 @@
   </data>
   <data name="Moniker_KeywordDescription" xml:space="preserve">
     <value>Der häufigste Paketbegriff</value>
+  </data>
+  <data name="Name_KeywordDescription" xml:space="preserve">
+    <value>Der Paketname |z. B. Visual Studio|</value>
   </data>
   <data name="NewCommand_Description" xml:space="preserve">
     <value>Drücken Sie die EINGABETASTE, um den Wert für jede Frage abzusenden, einschließlich der Übernahme des (Standard-)Wertes.</value>
@@ -337,6 +352,9 @@
   <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
     <value>Die Homepage des Herausgebers</value>
   </data>
+  <data name="Publisher_KeywordDescription" xml:space="preserve">
+    <value>Der Name des Herausgebers |z. B. Microsoft|</value>
+  </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>Der Pull-Request kann hier gefunden werden: {0}</value>
     <comment>{0} - will be replaced with the pull request URI</comment>
@@ -377,6 +395,9 @@
   <data name="SubmittingPullRequest_Message" xml:space="preserve">
     <value>Pull-Request für Manifest einreichen...</value>
   </data>
+  <data name="SubmitToWinget_HelpText" xml:space="preserve">
+    <value>Boolescher Wert für die Übermittlung an das Windows-Paket-Manager-Repository. Bei true wird das aktualisierte Manifest direkt mit dem angegebenen GitHub-Token übermittelt. Der Standardwert ist false.</value>
+  </data>
   <data name="Switches_KeywordDescription" xml:space="preserve">
     <value>Sammlung von Installer-Schaltern</value>
   </data>
@@ -403,6 +424,9 @@
   </data>
   <data name="Version_HelpText" xml:space="preserve">
     <value>Version, die beim Aktualisieren des Feldes für die Paketversion verwendet werden soll.</value>
+  </data>
+  <data name="PackageVersion_KeywordDescription" xml:space="preserve">
+    <value>Die Paket Version | z. b. 1.2.3.4 |</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
     <value>Das Schreiben des OAuth-Tokens in den Cache ist fehlgeschlagen: {0}</value>
@@ -438,6 +462,9 @@
   <data name="UsingTokenFromCache_Message" xml:space="preserve">
     <value>GitHub-Token aus dem Cache verwenden...</value>
   </data>
+  <data name="PackageName_KeywordDescription" xml:space="preserve">
+    <value>Der Paketname |z. B. Visual Studio|</value>
+  </data>
   <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
     <value>Vorschau des Standardgebietsschema-Manifests:</value>
   </data>
@@ -468,9 +495,6 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>Die minimale Betriebssystemversion des Installers</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>Mehrere unterschiedliche Installer-URLs gefunden. Bitte versuchen Sie es erneut mit nur einer Installer-URL.</value>
-  </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>Die Upgrade-Schalter</value>
   </data>
@@ -485,6 +509,9 @@
   </data>
   <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
     <value>Liste der Abhängigkeiten von externen Paketen</value>
+  </data>
+  <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
+    <value>Die Installations-URL | z. b. https://microsoft.com/downloads|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>Der Manifesttyp</value>
@@ -506,6 +533,19 @@
   </data>
   <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
     <value>Liste der Abhängigkeiten von Windows-Bibliotheken</value>
+  </data>
+  <data name="MoreHelp_HelpText" xml:space="preserve">
+    <value>Weitere Hilfe finden Sie unter: https://aka.ms/winget-create</value>
+  </data>
+  <data name="PrivacyStatement_HelpText" xml:space="preserve">
+    <value>Datenschutzbestimmungen: https://aka.ms/winget-create-privacy</value>
+  </data>
+  <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
+    <value>Die HTTP-Antwort war nicht erfolgreich. Status Code: {0}</value>
+    <comment>{0} - will be replaced with the HTTP response status code</comment>
+  </data>
+  <data name="InvalidUrl_Error" xml:space="preserve">
+    <value>Ungültige URL angegeben. Über prüfen Sie die URL, und versuchen Sie es erneut.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>Das Paket kann nicht erfolgreich analysiert werden, und der Installer-Typ konnte nicht ermittelt werden.</value>
