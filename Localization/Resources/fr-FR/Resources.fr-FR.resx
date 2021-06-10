@@ -161,11 +161,17 @@
   <data name="Custom_KeywordDescription" xml:space="preserve">
     <value>Les commutateurs du programme d’installation personnalisés</value>
   </data>
+  <data name="DefaultLocale_KeywordDescription" xml:space="preserve">
+    <value>Les paramètres régionaux par défaut des métadonnées du package |par ex. en-US|</value>
+  </data>
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>La description complète de package</value>
   </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>TERMINÉ</value>
+  </data>
+  <data name="DownloadFile_Error" xml:space="preserve">
+    <value>Échec du téléchargement du programme d’installation.</value>
   </data>
   <data name="DownloadInstaller_Message" xml:space="preserve">
     <value>Téléchargement et analyse : {0}...</value>
@@ -215,7 +221,7 @@
     <value>Le chemin d’accès n’existe pas</value>
   </data>
   <data name="Path_HelpText" xml:space="preserve">
-    <value>Chemin d’accès à un fichier manifeste ou à un répertoire à soumettre au gestionnaire de package Windows repo</value>
+    <value>Chemin d’accès à un fichier manifeste ou à un répertoire contenant les manifestes que vous voulez soumettre au gestionnaire de package Windows repo</value>
   </data>
   <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
     <value>Échec de l’autorisation GitHub : {0} – {1}</value>
@@ -235,8 +241,11 @@
   <data name="Homepage_KeywordDescription" xml:space="preserve">
     <value>La page d’accueil du package</value>
   </data>
-  <data name="Id_HelpText" xml:space="preserve">
-    <value>Identificateur de package utilisé pour rechercher le manifeste existant dans le gestionnaire de package Windows repo. L’ID est sensible à la casse.</value>
+  <data name="PackageIdentifier_HelpText" xml:space="preserve">
+    <value>Identificateur de package utilisé pour rechercher le manifeste existant sur le dépôt Gestionnaire de package Windows. L’ID respecte la casse.</value>
+  </data>
+  <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">
+    <value>L’identificateur unique du package | par exemple, Microsoft. VisualStudio |</value>
   </data>
   <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
     <value>L’architecture cible du programme d’installation</value>
@@ -272,6 +281,9 @@
   <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
     <value>La page de licence</value>
   </data>
+  <data name="License_KeywordDescription" xml:space="preserve">
+    <value>La licence du package |par exemple, licence MIT|</value>
+  </data>
   <data name="Localization_KeywordDescription" xml:space="preserve">
     <value>Les paramètres régionaux du programme d’installation du package</value>
   </data>
@@ -294,6 +306,9 @@
   </data>
   <data name="Moniker_KeywordDescription" xml:space="preserve">
     <value>Le terme de package le plus courant</value>
+  </data>
+  <data name="Name_KeywordDescription" xml:space="preserve">
+    <value>Le nom du package |par exemple, Visual Studio|</value>
   </data>
   <data name="NewCommand_Description" xml:space="preserve">
     <value>Appuyez sur entrée pour envoyer la valeur de chaque question, y compris l’acceptation de la valeur (par défaut).</value>
@@ -337,6 +352,9 @@
   <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
     <value>La page d’accueil de l’éditeur</value>
   </data>
+  <data name="Publisher_KeywordDescription" xml:space="preserve">
+    <value>Le nom de l’éditeur |par exemple, Microsoft|</value>
+  </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>La demande d’extraction est disponible ici : {0}</value>
     <comment>{0} - will be replaced with the pull request URI</comment>
@@ -377,6 +395,9 @@
   <data name="SubmittingPullRequest_Message" xml:space="preserve">
     <value>Envoi de la demande d’extraction pour le manifeste...</value>
   </data>
+  <data name="SubmitToWinget_HelpText" xml:space="preserve">
+    <value>Valeur booléenne pour l’envoi au gestionnaire de packages Windows repo. Si la valeur est true, le manifeste mis à jour sera envoyé directement à l’aide du jeton GitHub fourni. La valeur par défaut est false.</value>
+  </data>
   <data name="Switches_KeywordDescription" xml:space="preserve">
     <value>Collection des commutateurs du programme d’installation</value>
   </data>
@@ -403,6 +424,9 @@
   </data>
   <data name="Version_HelpText" xml:space="preserve">
     <value>Version à utiliser lors de la mise à jour du champ de version du package.</value>
+  </data>
+  <data name="PackageVersion_KeywordDescription" xml:space="preserve">
+    <value>La version du package | par exemple, 1.2.3.4 |</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
     <value>Échec de l’écriture du jeton OAuth dans le cache : {0}</value>
@@ -438,6 +462,9 @@
   <data name="UsingTokenFromCache_Message" xml:space="preserve">
     <value>Utilisation du jeton GitHub à partir du cache...</value>
   </data>
+  <data name="PackageName_KeywordDescription" xml:space="preserve">
+    <value>Le nom du package |par exemple, Visual Studio|</value>
+  </data>
   <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
     <value>Aperçu du manifeste de paramètres régionaux par défaut :</value>
   </data>
@@ -468,9 +495,6 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>La version minimale du système d’exploitation du programme d’installation</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>Plusieurs URL de programme d’installation distinctes ont été trouvées. Veuillez réessayer avec une seule URL d’installation.</value>
-  </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>Les commutateurs de mise à niveau</value>
   </data>
@@ -485,6 +509,9 @@
   </data>
   <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
     <value>Liste des dépendances de package externe</value>
+  </data>
+  <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
+    <value>L’URL du programme d’installation (par exemple, https://microsoft.com/downloads|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>Le type de manifeste</value>
@@ -506,6 +533,19 @@
   </data>
   <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
     <value>Liste des dépendances de bibliothèque Windows</value>
+  </data>
+  <data name="MoreHelp_HelpText" xml:space="preserve">
+    <value>Vous trouverez plus d’aide sur : https://aka.ms/winget-create</value>
+  </data>
+  <data name="PrivacyStatement_HelpText" xml:space="preserve">
+    <value>Déclaration de confidentialité : https://aka.ms/winget-create-privacy</value>
+  </data>
+  <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
+    <value>La réponse HTTP a échoué. Code d’État : {0}</value>
+    <comment>{0} - will be replaced with the HTTP response status code</comment>
+  </data>
+  <data name="InvalidUrl_Error" xml:space="preserve">
+    <value>URL non valide spécifiée. Vérifiez l’URL et réessayez.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>Impossible d’analyser le package avec succès et de déterminer le type du programme d’installation.</value>

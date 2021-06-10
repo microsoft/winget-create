@@ -161,11 +161,17 @@
   <data name="Custom_KeywordDescription" xml:space="preserve">
     <value>Modificadores de instalador personalizadas</value>
   </data>
+  <data name="DefaultLocale_KeywordDescription" xml:space="preserve">
+    <value>La configuración regional predeterminada de los metadatos del paquete |por ejemplo, en-US|</value>
+  </data>
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>Descripción completa del paquete</value>
   </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>LISTO</value>
+  </data>
+  <data name="DownloadFile_Error" xml:space="preserve">
+    <value>Error al descargar el instalador.</value>
   </data>
   <data name="DownloadInstaller_Message" xml:space="preserve">
     <value>Descargando y analizando: {0}...</value>
@@ -215,7 +221,7 @@
     <value>La ruta de acceso no existe</value>
   </data>
   <data name="Path_HelpText" xml:space="preserve">
-    <value>Ruta de acceso a un archivo o directorio de manifiesto que se enviará al repositorio del Administrador de paquetes de Windows</value>
+    <value>Ruta de acceso a un archivo de manifiesto o directorio que contiene los manifiestos que desea enviar al repositorio del administrador de paquetes de Windows</value>
   </data>
   <data name="GitHubFailedAuthorization_Message" xml:space="preserve">
     <value>Error de autorización de GitHub: {0} - {1}</value>
@@ -235,8 +241,11 @@
   <data name="Homepage_KeywordDescription" xml:space="preserve">
     <value>Página principal del paquete</value>
   </data>
-  <data name="Id_HelpText" xml:space="preserve">
+  <data name="PackageIdentifier_HelpText" xml:space="preserve">
     <value>Identificador del paquete usado para buscar el manifiesto existente en el repositorio del administrador de paquetes de Windows. El identificador distingue entre mayúsculas y minúsculas.</value>
+  </data>
+  <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">
+    <value>El identificador único del paquete | por ejemplo, Microsoft. VisualStudio |</value>
   </data>
   <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
     <value>Arquitectura de destino del instalador</value>
@@ -272,6 +281,9 @@
   <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
     <value>Página de licencia</value>
   </data>
+  <data name="License_KeywordDescription" xml:space="preserve">
+    <value>La licencia del paquete |por ejemplo, licencia MIT|</value>
+  </data>
   <data name="Localization_KeywordDescription" xml:space="preserve">
     <value>Configuración regional del instalador de paquetes</value>
   </data>
@@ -294,6 +306,9 @@
   </data>
   <data name="Moniker_KeywordDescription" xml:space="preserve">
     <value>El término de paquete más común</value>
+  </data>
+  <data name="Name_KeywordDescription" xml:space="preserve">
+    <value>El nombre del paquete |por ejemplo, Visual Studio|</value>
   </data>
   <data name="NewCommand_Description" xml:space="preserve">
     <value>Presione Entrar para enviar el valor de cada pregunta, incluida la aceptación del valor (predeterminado).</value>
@@ -337,6 +352,9 @@
   <data name="PublisherUrl_KeywordDescription" xml:space="preserve">
     <value>Página principal del editor</value>
   </data>
+  <data name="Publisher_KeywordDescription" xml:space="preserve">
+    <value>El nombre del editor |por ejemplo, Microsoft|</value>
+  </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>La solicitud de incorporación de cambios se puede encontrar aquí: {0}</value>
     <comment>{0} - will be replaced with the pull request URI</comment>
@@ -377,6 +395,9 @@
   <data name="SubmittingPullRequest_Message" xml:space="preserve">
     <value>Enviando solicitud de incorporación de cambios para el manifiesto...</value>
   </data>
+  <data name="SubmitToWinget_HelpText" xml:space="preserve">
+    <value>Valor booleano para enviar al repositorio del administrador de paquetes de Windows. Si es true, el manifiesto actualizado se enviará directamente mediante el token de GitHub proporcionado. El valor predeterminado es false.</value>
+  </data>
   <data name="Switches_KeywordDescription" xml:space="preserve">
     <value>Colección de modificadores del instalador</value>
   </data>
@@ -403,6 +424,9 @@
   </data>
   <data name="Version_HelpText" xml:space="preserve">
     <value>Versión que se usará al actualizar el campo versión del paquete.</value>
+  </data>
+  <data name="PackageVersion_KeywordDescription" xml:space="preserve">
+    <value>La versión del paquete | p. ej. 1.2.3.4 |</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
     <value>Error al escribir el token de OAuth en la caché: {0}</value>
@@ -438,6 +462,9 @@
   <data name="UsingTokenFromCache_Message" xml:space="preserve">
     <value>Usando token de GitHub de la memoria caché...</value>
   </data>
+  <data name="PackageName_KeywordDescription" xml:space="preserve">
+    <value>El nombre del paquete |por ejemplo, Visual Studio|</value>
+  </data>
   <data name="DefaultLocaleManifestPreview_Message" xml:space="preserve">
     <value>Vista previa de manifiesto de configuración regional predeterminada:</value>
   </data>
@@ -468,9 +495,6 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>Versión mínima del sistema operativo del instalador</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>Se encontraron varias direcciones URL del instalador distintas. Vuelva a intentarlo con una sola dirección URL de instalador.</value>
-  </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>Modificadores de actualización</value>
   </data>
@@ -485,6 +509,9 @@
   </data>
   <data name="ExternalDependencies_KeywordDescription" xml:space="preserve">
     <value>Lista de dependencias de paquetes externos</value>
+  </data>
+  <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
+    <value>La dirección URL del instalador |por ejemplo, https://microsoft.com/downloads|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>El tipo de manifiesto</value>
@@ -506,6 +533,19 @@
   </data>
   <data name="WindowsLibraries_KeywordDescription" xml:space="preserve">
     <value>Lista de dependencias de la biblioteca de Windows</value>
+  </data>
+  <data name="MoreHelp_HelpText" xml:space="preserve">
+    <value>Encontrará más ayuda en: https://aka.ms/winget-create</value>
+  </data>
+  <data name="PrivacyStatement_HelpText" xml:space="preserve">
+    <value>Declaración de privacidad: https://aka.ms/winget-create-privacy</value>
+  </data>
+  <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
+    <value>La respuesta HTTP no se realizó correctamente. Código de estado: {0}</value>
+    <comment>{0} - will be replaced with the HTTP response status code</comment>
+  </data>
+  <data name="InvalidUrl_Error" xml:space="preserve">
+    <value>La dirección URL proporcionada no es válida. Compruebe la dirección URL e inténtelo de nuevo.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>No se puede analizar el paquete correctamente y determinar el tipo de instalador.</value>
