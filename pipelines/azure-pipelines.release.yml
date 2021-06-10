@@ -116,7 +116,16 @@ jobs:
           msbuildArguments: '/p:AppxBundleOutput="$(appxBundlePath)"
             /p:AppxBundle=Always
             /p:UapAppxPackageBuildMode=SideloadOnly
-            /p:AppxPackageSigningEnabled=false'
+            /p:AppxPackageSigningEnabled=false
+            /bl:$(workingDirectory)\MSBuild.binlog'
+
+      - publish: $(workingDirectory)\MSBuild.binlog
+        artifact: binlog
+        displayName: Publish binlog
+
+      - publish: $(appxBundlePath)
+        artifact: wingetcreate_unsigned
+        displayName: Publish unsigned appx
 
       - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
         displayName: "ESRP CodeSigning"
