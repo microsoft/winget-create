@@ -67,7 +67,7 @@ jobs:
           $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
 
           [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
-          $project.Project.PropertyGroup.Version = "$(version)"
+          $project.Project.PropertyGroup[0].Version = "$(version)"
           $project.save("$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj")
         displayName: "Update cli and package manifest version"
 
