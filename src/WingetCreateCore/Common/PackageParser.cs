@@ -38,7 +38,6 @@ namespace Microsoft.WingetCreateCore
         private static readonly string[] KnownInstallerResourceNames = new[]
         {
             "inno",
-            "wix",
             "nullsoft",
         };
 
@@ -254,7 +253,20 @@ namespace Microsoft.WingetCreateCore
                     .Split(' ').First()
                     .ToLowerInvariant();
 
-                installer.InstallerType = KnownInstallerResourceNames.Contains(installerType) ? installerType.ToEnumOrDefault<InstallerType>() : InstallerType.Exe;
+                if (installerType.EqualsIC("wix"))
+                {
+                    // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
+                    installer.InstallerType = InstallerType.Burn;
+                }
+                else if (KnownInstallerResourceNames.Contains(installerType))
+                {
+                    // If it's a known exe installer type, set as appropriately
+                    installer.InstallerType = installerType.ToEnumOrDefault<InstallerType>();
+                }
+                else
+                {
+                    installer.InstallerType = InstallerType.Exe;
+                }
 
                 return true;
             }
