@@ -35,8 +35,9 @@ Click on the individual commands to learn more.
 
 You can use WingetCreate to update your existing app manifest as part of your CI/CD pipeline. For reference, see the final task in this repo's [release Azure pipeline](https://github.com/microsoft/winget-create/blob/main/pipelines/azure-pipelines.release.yml).
 
-Unfortunately we can't use the msixbundle in a standard Azure Pipeline pool. Instead, use the standalone exe, the latest version of which can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview. Note
-that currently, the standalone exe requires .NET to be installed on the build machine.
+Unfortunately we can't use the msixbundle in a standard Azure Pipeline pool. Instead, use the standalone exe, the latest version of which can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview, both of these require .NET to be installed on the build machine.
+
+If .NET isn't already installed, you can use https://aka.ms/wingetcreate/latest/self-contained or https://aka.ms/wingetcreate/preview/self-contained, which has .NET built-in, but is a larger download.
 
 Then simply add a new powershell task to download the exe, and run it to update your manifest. It's recommended to not hardcode your PAT in your script, but instead use a [secret pipeline variable](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables)
 
