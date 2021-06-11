@@ -5,11 +5,11 @@
     <TargetFramework>net5.0-windows10.0.17763.0</TargetFramework>
     <AssemblyName>WingetCreateCLI</AssemblyName>
     <RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Platforms>x64;x86</Platforms>
     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>      
+    <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -77,7 +77,7 @@
   <Target Name="FixAL1703Warning" BeforeTargets="GenerateSatelliteAssemblies" Condition="'$(PlatformTarget)' == 'x64'">
     <Message Text="Adjusting SDK tools directory to use x64 version of AL.EXE" />
     <PropertyGroup>
-      <TargetFrameworkSDKToolsDirectory>$(TargetFrameworkSDKToolsDirectory)$(PlatformTarget)\</TargetFrameworkSDKToolsDirectory>
+      <SdkToolsPathMaybeWithx64Architecture>$(TargetFrameworkSDKToolsDirectory)$(PlatformTarget)\</SdkToolsPathMaybeWithx64Architecture>
     </PropertyGroup>
   </Target>
 

@@ -38,7 +38,6 @@ namespace Microsoft.WingetCreateCore
         private static readonly string[] KnownInstallerResourceNames = new[]
         {
             "inno",
-            "wix",
             "nullsoft",
         };
 
@@ -144,6 +143,7 @@ namespace Microsoft.WingetCreateCore
 
             if (!File.Exists(targetFile) || new FileInfo(targetFile).Length != downloadSize)
             {
+                File.Delete(targetFile);
                 using var targetFileStream = File.OpenWrite(targetFile);
                 var contentStream = await response.Content.ReadAsStreamAsync();
                 await contentStream.CopyToAsync(targetFileStream);
@@ -172,12 +172,19 @@ namespace Microsoft.WingetCreateCore
         /// <param name="packageFile">Path to package to extract metadata from.</param>
         public static void UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrl, List<string> packageFile)
         {
-            //string installerSha256 = PackageParser.GetFileHash(packageFile);
-            //foreach (var installer in installerManifest.Installers)
-            //{
-            //    installer.InstallerSha256 = installerSha256;
-            //    installer.InstallerUrl = installerUrl;
-            //}
+            string installerSha256 = GetFileHash(packageFile);
+            foreach (var installer in installerManifest.Installers)
+            {
+                installer.InstallerSha256 = installerSha256;
+                installer.InstallerUrl = installerUrl;
+
+                // If installer is an MSI, update its ProductCode
+                var updatedInstaller = new Installer();
+                if (ParseMsi(packageFile, updatedInstaller, null))
+                {
+                    installer.ProductCode = updatedInstaller.ProductCode;
+                }
+            }
 
             //GetAppxMetadataAndSetInstallerProperties(packageFile, installerManifest);
         }
@@ -246,7 +253,20 @@ namespace Microsoft.WingetCreateCore
                     .Split(' ').First()
                     .ToLowerInvariant();
 
-                installer.InstallerType = KnownInstallerResourceNames.Contains(installerType) ? installerType.ToEnumOrDefault<InstallerType>() : InstallerType.Exe;
+                if (installerType.EqualsIC("wix"))
+                {
+                    // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
+                    installer.InstallerType = InstallerType.Burn;
+                }
+                else if (KnownInstallerResourceNames.Contains(installerType))
+                {
+                    // If it's a known exe installer type, set as appropriately
+                    installer.InstallerType = installerType.ToEnumOrDefault<InstallerType>();
+                }
+                else
+                {
+                    installer.InstallerType = InstallerType.Exe;
+                }
 
                 return true;
             }
@@ -259,9 +279,7 @@ namespace Microsoft.WingetCreateCore
 
         private static bool ParseMsi(string path, Installer installer, Manifests manifests)
         {
-            VersionManifest versionManifest = manifests.VersionManifest;
-            InstallerManifest installerManifest = manifests.InstallerManifest;
-            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
+            DefaultLocaleManifest defaultLocaleManifest = manifests?.DefaultLocaleManifest;
 
             try
             {
@@ -270,9 +288,14 @@ namespace Microsoft.WingetCreateCore
                     installer.InstallerType = InstallerType.Msi;
 
                     var properties = database.Properties.ToList();
+
+                    if (defaultLocaleManifest != null)
+                    {
                     defaultLocaleManifest.PackageVersion ??= properties.FirstOrDefault(p => p.Property == "ProductVersion")?.Value;
                     defaultLocaleManifest.PackageName ??= properties.FirstOrDefault(p => p.Property == "ProductName")?.Value;
                     defaultLocaleManifest.Publisher ??= properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value;
+                    }
+
                     installer.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
 
                     string archString = database.SummaryInfo.Template.Split(';').First();
@@ -307,7 +330,6 @@ namespace Microsoft.WingetCreateCore
 
         private static bool ParseMsix(string path, Manifests manifests)
         {
-            VersionManifest versionManifest = manifests.VersionManifest;
             InstallerManifest installerManifest = manifests.InstallerManifest;
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
 

@@ -126,10 +126,9 @@ namespace Microsoft.WingetCreateCore.Common
         /// Submits a pull request on behalf of the user.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be submitted in the PR.</param>
-        /// <param name="producedBy">String comment to be added to the header of the manifest file.</param>
         /// <param name="submitToFork">Bool indicating whether or not to submit the PR via a fork.</param>
         /// <returns>Pull request object.</returns>
-        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, string producedBy, bool submitToFork)
+        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork)
         {
             Dictionary<string, string> contents = new Dictionary<string, string>();
             string id;
@@ -139,18 +138,18 @@ namespace Microsoft.WingetCreateCore.Common
             {
                 id = manifests.SingletonManifest.PackageIdentifier;
                 version = manifests.SingletonManifest.PackageVersion;
-                contents.Add(manifests.SingletonManifest.PackageIdentifier, manifests.SingletonManifest.ToYaml(producedBy));
+                contents.Add(manifests.SingletonManifest.PackageIdentifier, manifests.SingletonManifest.ToYaml());
             }
             else
             {
                 id = manifests.VersionManifest.PackageIdentifier;
                 version = manifests.VersionManifest.PackageVersion;
 
-                contents = manifests.LocaleManifests.ToDictionary(locale => $"{id}.locale.{locale.PackageLocale}", locale => locale.ToYaml(producedBy));
+                contents = manifests.LocaleManifests.ToDictionary(locale => $"{id}.locale.{locale.PackageLocale}", locale => locale.ToYaml());
 
-                contents.Add(id, manifests.VersionManifest.ToYaml(producedBy));
-                contents.Add($"{id}.installer", manifests.InstallerManifest.ToYaml(producedBy));
-                contents.Add($"{id}.locale.{manifests.DefaultLocaleManifest.PackageLocale}", manifests.DefaultLocaleManifest.ToYaml(producedBy));
+                contents.Add(id, manifests.VersionManifest.ToYaml());
+                contents.Add($"{id}.installer", manifests.InstallerManifest.ToYaml());
+                contents.Add($"{id}.locale.{manifests.DefaultLocaleManifest.PackageLocale}", manifests.DefaultLocaleManifest.ToYaml());
             }
 
             return this.SubmitPRAsync(id, version, contents, submitToFork);
@@ -203,6 +202,17 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
+        /// Recursively searches the repository for the provided package identifer to determine if it already exists.
+        /// </summary>
+        /// <param name="packageId">The package identifier.</param>
+        /// <returns>The exact matching package identifier or null if no match was found.</returns>
+        public async Task<string> FindPackageId(string packageId)
+        {
+            string path = Constants.WingetManifestRoot + '/' + $"{char.ToLowerInvariant(packageId[0])}";
+            return await this.FindPackageIdRecursive(packageId.Split('.'), path, string.Empty, 0);
+        }
+
+        /// <summary>
         /// Generate a signed-JWT token for specified GitHub app, per instructions here: https://docs.github.com/en/developers/apps/authenticating-with-github-apps#authenticating-as-an-installation.
         /// </summary>
         /// <param name="gitHubAppPrivateKeyPem">The private key for the GitHub app in PEM format.</param>
@@ -225,7 +235,31 @@ namespace Microsoft.WingetCreateCore.Common
                 iss = gitHubAppId,
             };
 
-            return Jose.JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
+            return JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
+        }
+
+        private async Task<string> FindPackageIdRecursive(string[] packageId, string path, string exactPackageId, int index)
+        {
+            if (index == packageId.Length)
+            {
+                return exactPackageId.Trim('.');
+            }
+
+            var contents = await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, path);
+            string packageIdToken = packageId[index].ToLowerInvariant();
+
+            foreach (RepositoryContent content in contents)
+            {
+                if (string.Equals(packageIdToken, content.Name.ToLowerInvariant()))
+                {
+                    path = path + '/' + content.Name;
+                    exactPackageId = string.Join(".", exactPackageId, content.Name);
+                    index++;
+                    return await this.FindPackageIdRecursive(packageId, path, exactPackageId, index);
+                }
+            }
+
+            return null;
         }
 
         private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork)

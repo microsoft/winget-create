@@ -19,9 +19,6 @@ namespace Microsoft.WingetCreateE2ETests
     [TestFixture]
     public class E2ETests : GitHubTestsBase
     {
-        private const string TestExeManifest = "WingetCreateE2E.ExeTest.yaml";
-        private const string TestMsiManifest = "WingetCreateE2E.MsiTest.yaml";
-        private const string TestMsixManifest = "WingetCreateE2E.MsixTest.yaml";
         private const string PackageVersion = "1.2.3.4";
         private GitHub gitHub;
 
@@ -43,9 +40,9 @@ namespace Microsoft.WingetCreateE2ETests
         /// <param name="manifestName">Manifest to convert and submit.</param>
         /// <param name="installerName">The installar package associated with the manifest.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous test.</returns>
-        [TestCase("WingetCreateE2E.ExeTest", TestExeManifest, TestConstants.TestExeInstaller)]
-        [TestCase("WingetCreateE2E.MsiTest", TestMsiManifest, TestConstants.TestMsiInstaller)]
-        [TestCase("WingetCreateE2E.MsixTest", TestMsixManifest, TestConstants.TestMsixInstaller)]
+        [TestCase(TestConstants.TestExePackageIdentifier, TestConstants.TestExeManifest, TestConstants.TestExeInstaller)]
+        [TestCase(TestConstants.TestMsiPackageIdentifier, TestConstants.TestMsiManifest, TestConstants.TestMsiInstaller)]
+        [TestCase(TestConstants.TestMsixPackageIdentifier, TestConstants.TestMsixManifest, TestConstants.TestMsixInstaller)]
         public async Task SubmitAndUpdateInstaller(string packageId, string manifestName, string installerName)
         {
             await this.RunSubmitAndUpdateFlow(packageId, Path.Combine("Resources", manifestName), installerName);

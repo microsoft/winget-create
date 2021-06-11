@@ -475,15 +475,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Package identifier used to lookup the existing manifest on the Windows Package Manager repo. Id is case-sensitive..
-        /// </summary>
-        public static string Id_HelpText {
-            get {
-                return ResourceManager.GetString("Id_HelpText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Initiating GitHub login....
         /// </summary>
         public static string InitiatingGitHubLogin_Message {
@@ -772,7 +763,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple distinct installer urls found. Please try again with only a single installer url..
+        ///   Looks up a localized string similar to Updating an existing manifest with multiple distinct installer urls is currently not supported..
         /// </summary>
         public static string MultipleInstallerUrlFound_Error {
             get {
@@ -871,6 +862,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to We have detected that this package identifier already exists. If you intend to update an existing package, please use the update command..
+        /// </summary>
+        public static string PackageIdAlreadyExists_Error {
+            get {
+                return ResourceManager.GetString("PackageIdAlreadyExists_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Package identifier used to lookup the existing manifest on the Windows Package Manager repo. Id is case-sensitive..
+        /// </summary>
+        public static string PackageIdentifier_HelpText {
+            get {
+                return ResourceManager.GetString("PackageIdentifier_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package unique identifier |e.g. Microsoft.VisualStudio|.
         /// </summary>
         public static string PackageIdentifier_KeywordDescription {
@@ -952,7 +961,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Privacy statement: https://aka.ms/winget-create-privacy.
+        ///   Looks up a localized string similar to Privacy statement: https://aka.ms/privacy.
         /// </summary>
         public static string PrivacyStatement_HelpText {
             get {

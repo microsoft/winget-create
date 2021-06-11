@@ -30,7 +30,7 @@ jobs:
     steps:
       - powershell: |
           [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
-          $version = $project.Project.PropertyGroup.Version
+          $version = @($project.Project.PropertyGroup)[0].Version
           echo "##vso[task.setvariable variable=majorMinorBuildVersion;isOutput=true]$version"
         name: GetVersionStep
         displayName: Get version from CLI project
@@ -45,7 +45,10 @@ jobs:
       version: "$(majorMinorBuildVersion).$(revision)"
       appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle"
       appxBundlePath: '$(appxPackageDir)\$(appxBundleFile)'
-      exePath: '$(appxPackageDir)\WingetCreateCLI\wingetcreate.exe'
+      exeDirSelfContained: '$(appxPackageDir)\selfcontained'
+      exeDirFrameworkDependent: '$(appxPackageDir)\dependent'
+      exePathSelfContained: '$(exeDirSelfContained)\WingetCreateCLI\wingetcreate-self-contained.exe'
+      exePathFrameworkDependent: '$(exeDirFrameworkDependent)\WingetCreateCLI\wingetcreate.exe'
     pool:
       vmImage: $(vmImageName)
 
@@ -56,7 +59,8 @@ jobs:
       - powershell: |
           echo $(version)
           echo $(appxBundlePath)
-          echo $(exePath)
+          echo $(exePathSelfContained)
+          echo $(exePathFrameworkDependent)
           echo "##vso[task.setvariable variable=manifestVersion;isOutput=true]$(version)"
         name: OutputVersionStep
         displayName: Display version and paths for diagnosing
@@ -67,7 +71,7 @@ jobs:
           $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
 
           [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
-          $project.Project.PropertyGroup.Version = "$(version)"
+          @($project.Project.PropertyGroup)[0].Version = "$(version)"
           $project.save("$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj")
         displayName: "Update cli and package manifest version"
 
@@ -84,6 +88,12 @@ jobs:
           source: 'minkernel\published\internal\telemetry\TelemetryEventSource.cs'
           destination: '$(workingDirectory)\WingetCreateCLI\Telemetry\'
 
+      # NuGetCommand task, but since there are two duplicate tasks by this name in the org, must refer to it by GUID
+      - task: 333b11bd-d341-40d9-afcf-b32d5ce6f23b@2
+        displayName: Restore Packages
+        inputs:
+          restoreSolution: "$(solution)"
+
       - task: DotNetCoreCLI@2
         displayName: Restore
         inputs:
@@ -93,13 +103,22 @@ jobs:
           projects: $(workingDirectory)/**/*.csproj
 
       - task: DotNetCoreCLI@2
-        displayName: Build standalone exe
+        displayName: Build standalone, framework-dependent exe
         inputs:
           command: publish
           publishWebProjects: false
           zipAfterPublish: false
           projects: $(workingDirectory)/**/WingetCreateCLI.csproj
-          arguments: "--configuration Release --runtime=win-x64 --output $(appxPackageDir) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
+          arguments: "--configuration Release --runtime=win-x64 --output $(exeDirFrameworkDependent) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
+
+      - task: DotNetCoreCLI@2
+        displayName: Build standalone, self-contained exe
+        inputs:
+          command: publish
+          publishWebProjects: false
+          zipAfterPublish: false
+          projects: $(workingDirectory)/**/WingetCreateCLI.csproj
+          arguments: "--configuration Release --runtime=win-x64 --output $(exeDirSelfContained) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=true"
 
       - task: MSBuild@1
         displayName: Build Solution
@@ -146,8 +165,10 @@ jobs:
             ]
 
       - powershell: |
-          ren "$(appxPackageDir)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
-          (Get-FileHash -Algorithm SHA256 -Path $(exePath)).Hash > "$(exePath).txt"
+          ren "$(exeDirFrameworkDependent)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
+          ren "$(exeDirSelfContained)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate-self-contained.exe
+          (Get-FileHash -Algorithm SHA256 -Path $(exePathFrameworkDependent)).Hash > "$(exePathFrameworkDependent).txt"
+          (Get-FileHash -Algorithm SHA256 -Path $(exePathSelfContained)).Hash > "$(exePathSelfContained).txt"
           (Get-FileHash -Algorithm SHA256 -Path $(appxBundlePath)).Hash > "$(appxBundlePath).txt"
         displayName: "Create hash files"
 
@@ -157,8 +178,10 @@ jobs:
           targetFolder: $(Build.ArtifactStagingDirectory)
           flattenFolders: true
           contents: |
-            $(exePath)
-            $(exePath).txt
+            $(exePathFrameworkDependent)
+            $(exePathSelfContained)
+            $(exePathFrameworkDependent).txt
+            $(exePathSelfContained).txt
             $(appxBundlePath)
             $(appxBundlePath).txt
 
@@ -209,6 +232,11 @@ jobs:
 
           # https://aka.ms/wingetcreate/latest points to latest version of wingetcreate.exe
           # https://aka.ms/wingetcreate/preview points to latest preview version of wingetcreate.exe
+          # requires .NET to be installed on the build machine to operate correctly, but is a smaller download
+
+          # https://aka.ms/wingetcreate/latest/self-contained points to latest self-contained version of wingetcreate.exe
+          # https://aka.ms/wingetcreate/preview/self-contained points to latest self-contained preview version of wingetcreate.exe
+          # does not require .NET to be installed on the build machine to operate correctly, but is a larger download
 
           iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
           wingetcreate.exe update -i Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit

@@ -5,7 +5,6 @@ namespace Microsoft.WingetCreateCLI
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -21,6 +20,11 @@ namespace Microsoft.WingetCreateCLI
     /// </summary>
     internal class Program
     {
+        /// <summary>
+        /// Program name of the app.
+        /// </summary>
+        private const string ProgramName = "wingetcreate";
+
         private static async Task<int> Main(string[] args)
         {
             Logger.Initialize();
@@ -40,6 +44,7 @@ namespace Microsoft.WingetCreateCLI
 
             try
             {
+                WingetCreateCore.Serialization.ProducedBy = string.Join(" ", ProgramName, Utils.GetEntryAssemblyVersion());
                 return await command.Execute() ? 0 : 1;
             }
             catch (Exception ex)
@@ -81,15 +86,15 @@ namespace Microsoft.WingetCreateCLI
 
             foreach (var error in result.Errors)
             {
-                if (error is SetValueExceptionError e)
+                if (error is SetValueExceptionError sve)
                 {
-                    Utils.WriteLineColored(ConsoleColor.Red, $"{e.NameInfo.LongName}: {e.Exception.Message}");
-                    if (e.Exception.InnerException != null)
+                    Utils.WriteLineColored(ConsoleColor.Red, $"{sve.NameInfo.LongName}: {sve.Exception.Message}");
+                    if (sve.Exception.InnerException != null)
                     {
-                        Utils.WriteLineColored(ConsoleColor.Red, $"{e.Exception.InnerException.Message}");
+                        Utils.WriteLineColored(ConsoleColor.Red, $"{sve.Exception.InnerException.Message}");
                     }
 
-                    if (e.Value is IEnumerable<object> list)
+                    if (sve.Value is IEnumerable<object> list)
                     {
                         foreach (var val in list)
                         {
@@ -98,12 +103,20 @@ namespace Microsoft.WingetCreateCLI
                     }
                     else
                     {
-                        Utils.WriteLineColored(ConsoleColor.Red, $"\t{e.Value}");
+                        Utils.WriteLineColored(ConsoleColor.Red, $"\t{sve.Value}");
                     }
+                }
+                else if (error is UnknownOptionError uoe)
+                {
+                    Utils.WriteLineColored(ConsoleColor.Red, $"Unknown option: {uoe.Token}");
+                }
+                else if (error is NoVerbSelectedError)
+                {
+                    continue;
                 }
                 else
                 {
-                    Utils.WriteLineColored(ConsoleColor.Red, $"{error.Tag}");
+                    Utils.WriteLineColored(ConsoleColor.Red, $"Command line parsing error: {error.Tag}");
                 }
             }
         }

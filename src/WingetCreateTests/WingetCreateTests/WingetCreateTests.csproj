@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows10.0.18362.0</TargetFramework>
+    <TargetFramework>net5.0-windows10.0.17763.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Platforms>x64;x86</Platforms>
@@ -45,7 +45,12 @@
     </None>
     <None Update="Resources\WingetCreateE2E.MsixTest.yaml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>      
+    </None>
+    <None Update="Resources\TestPublisher.TestApp.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TestPublisher.MultipleInstallerApp.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>     
   </ItemGroup>
-
 </Project>
