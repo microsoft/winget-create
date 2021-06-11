@@ -45,7 +45,10 @@ jobs:
       version: "$(majorMinorBuildVersion).$(revision)"
       appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle"
       appxBundlePath: '$(appxPackageDir)\$(appxBundleFile)'
-      exePath: '$(appxPackageDir)\WingetCreateCLI\wingetcreate.exe'
+      exeDirSelfContained: '$(appxPackageDir)\selfcontained'
+      exeDirFrameworkDependent: '$(appxPackageDir)\dependent'
+      exePathSelfContained: '$(exeDirSelfContained)\WingetCreateCLI\wingetcreate-self-contained.exe'
+      exePathFrameworkDependent: '$(exeDirFrameworkDependent)\WingetCreateCLI\wingetcreate.exe'
     pool:
       vmImage: $(vmImageName)
 
@@ -56,7 +59,8 @@ jobs:
       - powershell: |
           echo $(version)
           echo $(appxBundlePath)
-          echo $(exePath)
+          echo $(exePathSelfContained)
+          echo $(exePathFrameworkDependent)
           echo "##vso[task.setvariable variable=manifestVersion;isOutput=true]$(version)"
         name: OutputVersionStep
         displayName: Display version and paths for diagnosing
@@ -99,13 +103,22 @@ jobs:
           projects: $(workingDirectory)/**/*.csproj
 
       - task: DotNetCoreCLI@2
-        displayName: Build standalone exe
+        displayName: Build standalone, framework-dependent exe
         inputs:
           command: publish
           publishWebProjects: false
           zipAfterPublish: false
           projects: $(workingDirectory)/**/WingetCreateCLI.csproj
-          arguments: "--configuration Release --runtime=win-x64 --output $(appxPackageDir) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
+          arguments: "--configuration Release --runtime=win-x64 --output $(exeDirFrameworkDependent) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
+
+      - task: DotNetCoreCLI@2
+        displayName: Build standalone, self-contained exe
+        inputs:
+          command: publish
+          publishWebProjects: false
+          zipAfterPublish: false
+          projects: $(workingDirectory)/**/WingetCreateCLI.csproj
+          arguments: "--configuration Release --runtime=win-x64 --output $(exeDirSelfContained) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=true"
 
       - task: MSBuild@1
         displayName: Build Solution
@@ -153,7 +166,8 @@ jobs:
 
       - powershell: |
           ren "$(appxPackageDir)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
-          (Get-FileHash -Algorithm SHA256 -Path $(exePath)).Hash > "$(exePath).txt"
+          (Get-FileHash -Algorithm SHA256 -Path $(exePathFrameworkDependent)).Hash > "$(exePathFrameworkDependent).txt"
+          (Get-FileHash -Algorithm SHA256 -Path $(exePathSelfContained)).Hash > "$(exePathSelfContained).txt"
           (Get-FileHash -Algorithm SHA256 -Path $(appxBundlePath)).Hash > "$(appxBundlePath).txt"
         displayName: "Create hash files"
 
@@ -163,8 +177,10 @@ jobs:
           targetFolder: $(Build.ArtifactStagingDirectory)
           flattenFolders: true
           contents: |
-            $(exePath)
-            $(exePath).txt
+            $(exePathFrameworkDependent)
+            $(exePathSelfContained)
+            $(exePathFrameworkDependent).txt
+            $(exePathSelfContained).txt
             $(appxBundlePath)
             $(appxBundlePath).txt
 
