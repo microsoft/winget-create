@@ -165,7 +165,8 @@ jobs:
             ]
 
       - powershell: |
-          ren "$(appxPackageDir)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
+          ren "$(exeDirFrameworkDependent)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
+          ren "$(exeDirSelfContained)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate-self-contained.exe
           (Get-FileHash -Algorithm SHA256 -Path $(exePathFrameworkDependent)).Hash > "$(exePathFrameworkDependent).txt"
           (Get-FileHash -Algorithm SHA256 -Path $(exePathSelfContained)).Hash > "$(exePathSelfContained).txt"
           (Get-FileHash -Algorithm SHA256 -Path $(appxBundlePath)).Hash > "$(appxBundlePath).txt"
