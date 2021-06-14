@@ -32,7 +32,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets or sets the package files used for parsing and extracting relevant installer metadata.
         /// </summary>
-        private List<string> packageFiles = new();
+        private readonly List<string> packageFiles = new();
 
         /// <summary>
         /// Gets the usage examples for the update command.
@@ -73,7 +73,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         public bool SubmitToGitHub { get; set; }
 
         /// <summary>
-        /// Gets or sets the new value(s) used to update the manifest installer url elements.
+        /// Gets or sets the new value(s) used to update the manifest installer elements.
         /// </summary>
         [Option('u', "urls", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]
         public IEnumerable<string> InstallerUrls { get; set; }
@@ -133,14 +133,14 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Manifests object representing the updates manifest content, or null if the update failed.</returns>
         public async Task<Manifests> DeserializeExistingManifestsAndUpdate(List<string> latestManifestContent)
         {
-                Manifests manifests = new Manifests();
+            Manifests manifests = new Manifests();
 
             Serialization.DeserializeManifestContents(latestManifestContent, manifests);
 
-                if (manifests.SingletonManifest != null)
-                {
-                    manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
-                }
+            if (manifests.SingletonManifest != null)
+            {
+                manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
+            }
 
             VersionManifest versionManifest = manifests.VersionManifest;
             InstallerManifest installerManifest = manifests.InstallerManifest;
@@ -154,32 +154,30 @@ namespace Microsoft.WingetCreateCLI.Commands
             UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageIdentifier), this.Id, localeManifests);
 
             if (!string.IsNullOrEmpty(this.Version))
-                {
+            {
                 versionManifest.PackageVersion = this.Version;
                 installerManifest.PackageVersion = this.Version;
                 defaultLocaleManifest.PackageVersion = this.Version;
                 UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
             }
 
-            if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
+            if (!this.InstallerUrls.Any())
             {
-                Logger.Error(Resources.MultipleInstallerUrlFound_Error);
-                return null;
+                this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).ToArray();
             }
 
-            if (string.IsNullOrEmpty(this.InstallerUrl))
+            foreach (var url in this.InstallerUrls)
             {
-                this.InstallerUrl = installerManifest.Installers.First().InstallerUrl;
+                string packageFile = await DownloadPackageFile(url);
+                if (string.IsNullOrEmpty(packageFile))
+                {
+                    return null;
+                }
+
+                this.packageFiles.Add(packageFile);
             }
 
-            this.PackageFile = await DownloadPackageFile(this.InstallerUrl);
-
-            if (string.IsNullOrEmpty(this.PackageFile))
-            {
-                return null;
-            }
-
-            PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrl, this.PackageFile);
+            PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, this.packageFiles);
 
             return manifests;
         }
@@ -195,34 +193,34 @@ namespace Microsoft.WingetCreateCLI.Commands
             Manifests manifests = await this.DeserializeExistingManifestsAndUpdate(latestManifestContent);
             if (manifests == null)
             {
-                    return false;
-                }
-
-                DisplayManifestPreview(manifests);
-
-                if (string.IsNullOrEmpty(this.OutputDir))
-                {
-                    this.OutputDir = Directory.GetCurrentDirectory();
-                }
-
-                string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
-
-                if (ValidateManifest(manifestDirectoryPath))
-                {
-                    if (this.SubmitToGitHub)
-                    {
-                        return await this.SetAndCheckGitHubToken()
-                            ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken))
-                            : false;
-                }
-
-                    return commandEvent.IsSuccessful = true;
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
+
+            DisplayManifestPreview(manifests);
+
+            if (string.IsNullOrEmpty(this.OutputDir))
+            {
+                this.OutputDir = Directory.GetCurrentDirectory();
+            }
+
+            string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
+
+            if (ValidateManifest(manifestDirectoryPath))
+            {
+                if (this.SubmitToGitHub)
+                {
+                    return await this.SetAndCheckGitHubToken()
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken))
+                        : false;
+                }
+
+                return commandEvent.IsSuccessful = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         private static Manifests ConvertSingletonToMultifileManifest(SingletonManifest singletonManifest)
         {
@@ -259,34 +257,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 manifest.GetType().GetProperty(propertyName).SetValue(manifest, value);
             }
-        }
-            }
-
-            if (this.InstallerUrls == null)
-            {
-                //if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
-                //{
-                //    Logger.Error(Resources.MultipleInstallerUrlFound_Error);
-                //    return false;
-                //}
-
-                //this.InstallerUrls = installerManifest.Installers.First().InstallerUrl;
-            }
-
-            foreach (var url in this.InstallerUrls)
-            {
-                string packageFile = await DownloadPackageFile(url);
-                if (string.IsNullOrEmpty(packageFile))
-                {
-                    return false;
-                }
-
-                this.packageFiles.Add(packageFile);
-            }
-
-            PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, this.packageFiles);
-
-            return true;
         }
     }
 }

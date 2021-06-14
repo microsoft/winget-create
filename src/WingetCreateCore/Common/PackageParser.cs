@@ -60,6 +60,37 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
+        /// Parses packages for available metadata including Version, Publisher, Name, Descripion, License, etc.
+        /// </summary>
+        /// <param name="paths">Path(s) to package files. </param>
+        /// <param name="urls">Installer urls. </param>
+        /// <param name="manifests">Wrapper object for manifest object models.</param>
+        /// <returns>True if packages were successfully parsed and metadata extracted, false otherwise.</returns>
+        public static bool ParsePackages(
+            IEnumerable<string> paths,
+            IEnumerable<string> urls,
+            Manifests manifests)
+        {
+            VersionManifest versionManifest = manifests.VersionManifest = new VersionManifest();
+
+            // TODO: Remove once default is set in schema
+            versionManifest.DefaultLocale = "en-US";
+
+            InstallerManifest installerManifest = manifests.InstallerManifest = new InstallerManifest();
+            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest = new DefaultLocaleManifest();
+
+            foreach (var package in paths.Zip(urls, (path, url) => (path, url)))
+            {
+                if (!ParsePackage(package.path, package.url, manifests))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Parses a package for available metadata including Version, Publisher, Name, Descripion, License, etc.
         /// </summary>
         /// <param name="path">Path to package file. </param>
@@ -71,13 +102,9 @@ namespace Microsoft.WingetCreateCore
             string url,
             Manifests manifests)
         {
-            VersionManifest versionManifest = manifests.VersionManifest = new VersionManifest();
-
-            // TODO: Remove once default is set in schema
-            versionManifest.DefaultLocale = "en-US";
-
-            InstallerManifest installerManifest = manifests.InstallerManifest = new InstallerManifest();
-            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest = new DefaultLocaleManifest();
+            VersionManifest versionManifest = manifests.VersionManifest;
+            InstallerManifest installerManifest = manifests.InstallerManifest;
+            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
 
             var versionInfo = FileVersionInfo.GetVersionInfo(path);
 
@@ -104,7 +131,7 @@ namespace Microsoft.WingetCreateCore
 
                 string packageIdPublisher = defaultLocaleManifest.Publisher?.Remove(" ").Trim('.') ?? $"<{nameof(defaultLocaleManifest.Publisher)}>";
                 string packageIdName = defaultLocaleManifest.PackageName?.Remove(" ").Trim('.') ?? $"<{nameof(defaultLocaleManifest.PackageName)}>";
-                versionManifest.PackageIdentifier = $"{RemoveInvalidCharsFromString(packageIdPublisher)}.{RemoveInvalidCharsFromString(packageIdName)}";
+                versionManifest.PackageIdentifier ??= $"{RemoveInvalidCharsFromString(packageIdPublisher)}.{RemoveInvalidCharsFromString(packageIdName)}";
                 installerManifest.PackageIdentifier = defaultLocaleManifest.PackageIdentifier = versionManifest.PackageIdentifier;
                 return true;
             }
@@ -168,25 +195,29 @@ namespace Microsoft.WingetCreateCore
         /// Update InstallerManifest's Installer nodes based on specified package file path.
         /// </summary>
         /// <param name="installerManifest"><see cref="InstallerManifest"/> to update.</param>
-        /// <param name="installerUrl">InstallerUrl where installer can be downloaded.</param>
-        /// <param name="packageFile">Path to package to extract metadata from.</param>
-        public static void UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrl, List<string> packageFile)
+        /// <param name="installerUrls">InstallerUrl where installer can be downloaded.</param>
+        /// <param name="paths">Path to package to extract metadata from.</param>
+        public static void UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrls, List<string> paths)
         {
-            string installerSha256 = GetFileHash(packageFile);
-            foreach (var installer in installerManifest.Installers)
+            foreach (var package in paths.Zip(installerUrls, (path, url) => (path, url)))
             {
-                installer.InstallerSha256 = installerSha256;
-                installer.InstallerUrl = installerUrl;
+                string installerSha256 = GetFileHash(package.path);
 
-                // If installer is an MSI, update its ProductCode
-                var updatedInstaller = new Installer();
-                if (ParseMsi(packageFile, updatedInstaller, null))
+                foreach (var installer in installerManifest.Installers)
                 {
-                    installer.ProductCode = updatedInstaller.ProductCode;
+                    installer.InstallerSha256 = installerSha256;
+                    installer.InstallerUrl = installerUrls;
+
+                    // If installer is an MSI, update its ProductCode
+                    var updatedInstaller = new Installer();
+                    if (ParseMsi(paths, updatedInstaller, null))
+                    {
+                        installer.ProductCode = updatedInstaller.ProductCode;
+                    }
                 }
             }
 
-            //GetAppxMetadataAndSetInstallerProperties(packageFile, installerManifest);
+            GetAppxMetadataAndSetInstallerProperties(packageFile, installerManifest);
         }
 
         /// <summary>
@@ -291,14 +322,17 @@ namespace Microsoft.WingetCreateCore
 
                     if (defaultLocaleManifest != null)
                     {
-                    defaultLocaleManifest.PackageVersion ??= properties.FirstOrDefault(p => p.Property == "ProductVersion")?.Value;
-                    defaultLocaleManifest.PackageName ??= properties.FirstOrDefault(p => p.Property == "ProductName")?.Value;
-                    defaultLocaleManifest.Publisher ??= properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value;
+                        defaultLocaleManifest.PackageVersion ??= properties.FirstOrDefault(p => p.Property == "ProductVersion")?.Value;
+                        defaultLocaleManifest.PackageName ??= properties.FirstOrDefault(p => p.Property == "ProductName")?.Value;
+                        defaultLocaleManifest.Publisher ??= properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value;
                     }
 
                     installer.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
 
                     string archString = database.SummaryInfo.Template.Split(';').First();
+
+                    archString = archString.EqualsIC("Intel") ? "x86" : archString.EqualsIC("Intel64") ? "x64" : archString;
+
                     installer.Architecture = archString.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
 
                     if (installer.InstallerLocale == null)

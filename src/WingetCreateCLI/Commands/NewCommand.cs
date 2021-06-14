@@ -41,6 +41,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msi, InstallerType.Msix, InstallerType.Appx };
 
         /// <summary>
+        /// Gets or sets the package file(s) used for parsing and extracting relevant installer metadata.
+        /// </summary>
+        private readonly List<string> packageFiles = new();
+
+        /// <summary>
         /// Gets the usage examples for the New command.
         /// </summary>
         [Usage(ApplicationAlias = ProgramApplicationAlias)]
@@ -49,10 +54,10 @@ namespace Microsoft.WingetCreateCLI.Commands
             get
             {
                 yield return new Example(Resources.Example_NewCommand_StartFromScratch, new NewCommand { });
-                yield return new Example(Resources.Example_NewCommand_DownloadInstaller, new NewCommand { InstallerUrl = "<installerURL>" });
+                yield return new Example(Resources.Example_NewCommand_DownloadInstaller, new NewCommand { InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>, .." } });
                 yield return new Example(Resources.Example_NewCommand_SaveLocallyOrSubmit, new NewCommand
                 {
-                    InstallerUrl = "<InstallerUrl>",
+                    InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>, .." },
                     OutputDir = "<OutputDirectory>",
                     GitHubToken = "<GitHubPersonalAccessToken>",
                 });
@@ -60,21 +65,16 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Gets or sets the installer URL used for downloading and parsing the installer file.
+        /// Gets or sets the installer URL(s) used for downloading and parsing the installer file(s).
         /// </summary>
-        [Value(0, MetaName = "InstallerUrl", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]
-        public string InstallerUrl { get; set; }
+        [Value(0, MetaName = "urls", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]
+        public IEnumerable<string> InstallerUrls { get; set; }
 
         /// <summary>
         /// Gets or sets the outputPath where the generated manifest file should be saved to.
         /// </summary>
         [Option('o', "out", Required = false, HelpText = "OutputDirectory_HelpText", ResourceType = typeof(Resources))]
         public string OutputDir { get; set; }
-
-        /// <summary>
-        /// Gets or sets the package file used for parsing and extracting relevant installer metadata.
-        /// </summary>
-        public string PackageFile { get; set; }
 
         /// <summary>
         /// Executes the new command flow.
@@ -85,7 +85,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             CommandExecutedEvent commandEvent = new CommandExecutedEvent
             {
                 Command = nameof(NewCommand),
-                InstallerUrls = new string[] { this.InstallerUrl },
+                InstallerUrls = this.InstallerUrls,
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
             };
 
@@ -96,22 +96,26 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Manifests manifests = new Manifests();
 
-                if (string.IsNullOrEmpty(this.InstallerUrl))
+                if (!this.InstallerUrls.Any())
                 {
-                    this.InstallerUrl = PromptProperty(
+                    this.InstallerUrls = PromptProperty(
                         new Installer(),
-                        this.InstallerUrl,
+                        this.InstallerUrls,
                         nameof(Installer.InstallerUrl));
                 }
 
-                this.PackageFile = await DownloadPackageFile(this.InstallerUrl);
-
-                if (string.IsNullOrEmpty(this.PackageFile))
+                foreach (var url in this.InstallerUrls)
                 {
-                    return false;
+                    string packageFile = await DownloadPackageFile(url);
+                    if (string.IsNullOrEmpty(packageFile))
+                    {
+                        return false;
+                    }
+
+                    this.packageFiles.Add(packageFile);
                 }
 
-                if (!PackageParser.ParsePackage(this.PackageFile, this.InstallerUrl, manifests))
+                if (!PackageParser.ParsePackages(this.packageFiles, this.InstallerUrls, manifests))
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                     return false;
@@ -218,30 +222,42 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static void PromptInstallerProperties<T>(T manifest, PropertyInfo property)
         {
             List<Installer> installers = new List<Installer>((ICollection<Installer>)property.GetValue(manifest));
-            Installer singleInstaller = installers.FirstOrDefault();
-            var installerProperties = singleInstaller.GetType().GetProperties().ToList();
-
-            var requiredInstallerProperties = installerProperties
-                .Where(p => Attribute.IsDefined(p, typeof(RequiredAttribute))).ToList();
-
-            foreach (var requiredProperty in requiredInstallerProperties)
+            foreach (var installer in installers)
             {
-                var currentValue = requiredProperty.GetValue(singleInstaller);
+                var installerProperties = installer.GetType().GetProperties().ToList();
 
-                // Only prompt if the value isn't already set, or if it's the Architecture property and we don't trust the parser to have gotten it correct for this InstallerType.
-                if (currentValue == null ||
-                    (requiredProperty.Name == nameof(Installer.Architecture) && !ReliableArchitectureInstallerTypes.Contains(singleInstaller.InstallerType.Value)))
-                {
-                    var result = PromptProperty(singleInstaller, currentValue, requiredProperty.Name);
-                    requiredProperty.SetValue(singleInstaller, result);
-                }
+                var requiredInstallerProperties = installerProperties
+                    .Where(p => Attribute.IsDefined(p, typeof(RequiredAttribute)) || p.Name == nameof(InstallerType)).ToList();
+
+                bool prompted = false;
 
                 // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
-                if (requiredProperty.Name == nameof(Installer.InstallerType))
+                if (installer.InstallerType == InstallerType.Exe)
                 {
-                    if ((InstallerType)currentValue == InstallerType.Exe)
+                    Console.WriteLine();
+                    Logger.Debug($"Additional metadata needed for installer from {installer.InstallerUrl}");
+                    prompted = true;
+
+                    PromptInstallerSwitchesForExe(manifest);
+                }
+
+                foreach (var requiredProperty in requiredInstallerProperties)
+                {
+                    var currentValue = requiredProperty.GetValue(installer);
+
+                    // Only prompt if the value isn't already set, or if it's the Architecture property and we don't trust the parser to have gotten it correct for this InstallerType.
+                    if (currentValue == null ||
+                        (requiredProperty.Name == nameof(Installer.Architecture) && !ReliableArchitectureInstallerTypes.Contains(installer.InstallerType.Value)))
                     {
-                        PromptInstallerSwitchesForExe(manifest);
+                        if (!prompted)
+                        {
+                            Console.WriteLine();
+                            Logger.Debug($"Additional metadata needed for installer from {installer.InstallerUrl}");
+                            prompted = true;
+                        }
+
+                        var result = PromptProperty(installer, currentValue, requiredProperty.Name);
+                        requiredProperty.SetValue(installer, result);
                     }
                 }
             }
