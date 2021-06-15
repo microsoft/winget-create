@@ -27,7 +27,7 @@ namespace Microsoft.WingetCreateUnitTests
             Console.SetOut(sw);
 
             Logger.Initialize();
-            NewCommand command = new NewCommand { InstallerUrls = "invalidUrl" };
+            NewCommand command = new NewCommand { InstallerUrls = new[] { "invalidUrl" } };
             Assert.IsFalse(await command.Execute(), "Command should have failed");
             string actual = sw.ToString();
             Assert.That(actual, Does.Contain(Resources.DownloadFile_Error), "Failed to catch invalid URL");

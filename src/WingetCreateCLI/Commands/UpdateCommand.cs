@@ -166,11 +166,21 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).ToArray();
             }
 
+            bool previousManifestHasMultipleUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().Count() > 1;
+            bool updatingManifestWithMultipleUrls = this.InstallerUrls.Distinct().Count() > 1;
+
             foreach (var url in this.InstallerUrls)
             {
                 string packageFile = await DownloadPackageFile(url);
                 if (string.IsNullOrEmpty(packageFile))
                 {
+                    return null;
+                }
+
+                // Updating an msixbundle is only supported when specifying a single distinct URL
+                if (updatingManifestWithMultipleUrls && PackageParser.IsPackageMsixBundle(packageFile))
+                {
+                    Logger.Error(Resources.MultipleInstallerUrlFound_Error);
                     return null;
                 }
 

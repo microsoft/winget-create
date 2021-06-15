@@ -95,6 +95,35 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.AreEqual(2, manifests.InstallerManifest.Installers.Count);
         }
 
+        /// <summary>
+        /// Validates that multiple installer URLs works.
+        /// </summary>
+        [Test]
+        public void ParseMultipleInstallers()
+        {
+            var testMsiInstallerPath = MockDownloadFile(TestConstants.TestMsiInstaller);
+            Assert.That(testMsiInstallerPath, Is.Not.Null.And.Not.Empty);
+            var testExeInstallerPath = MockDownloadFile(TestConstants.TestExeInstaller);
+            Assert.That(testExeInstallerPath, Is.Not.Null.And.Not.Empty);
+
+            Manifests manifests = new Manifests();
+
+            Assert.IsTrue(PackageParser.ParsePackages(
+                new[] { testExeInstallerPath, testMsiInstallerPath },
+                new[] { TestConstants.TestExeInstaller, TestConstants.TestMsiInstaller },
+                manifests));
+
+            // Shared properties will be parsed from all installers, with priority given to the first-parsed value.
+            Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
+            Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
+            Assert.AreEqual("1.2.3.4", manifests.VersionManifest.PackageVersion);
+            Assert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
+
+            Assert.AreEqual(2, manifests.InstallerManifest.Installers.Count);
+            Assert.AreEqual(InstallerType.Exe, manifests.InstallerManifest.Installers.First().InstallerType);
+            Assert.AreEqual(InstallerType.Msi, manifests.InstallerManifest.Installers.Skip(1).First().InstallerType);
+        }
+
         private static string MockDownloadFile(string filename)
         {
             string url = $"https://fakedomain.com/{filename}";

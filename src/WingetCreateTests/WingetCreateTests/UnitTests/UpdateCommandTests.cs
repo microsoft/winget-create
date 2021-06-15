@@ -78,9 +78,10 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateWithMultipleInstallers()
         {
-            UpdateCommand command = GetUpdateCommand(TestConstants.TestMultipleInstallerPackageIdentifier, null, this.tempPath);
-            var initialManifestContent = GetInitialManifestContent($"{TestConstants.TestMultipleInstallerPackageIdentifier}.yaml");
-            Assert.IsFalse(await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent), "Command should have failed");
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsixInstaller, null, this.tempPath);
+            var initialManifestContent = GetInitialManifestContent($"{TestConstants.TestMsixInstaller}.yaml");
+            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.MultipleInstallerUrlFound_Error), "Multiple installer url error should be thrown");
         }

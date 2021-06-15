@@ -199,25 +199,25 @@ namespace Microsoft.WingetCreateCore
         /// <param name="paths">Path to package to extract metadata from.</param>
         public static void UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrls, List<string> paths)
         {
-            foreach (var package in paths.Zip(installerUrls, (path, url) => (path, url)))
-            {
-                string installerSha256 = GetFileHash(package.path);
+            //foreach (var package in paths.Zip(installerUrls, (path, url) => (path, url)))
+            //{
+            //    string installerSha256 = GetFileHash(package.path);
 
-                foreach (var installer in installerManifest.Installers)
-                {
-                    installer.InstallerSha256 = installerSha256;
-                    installer.InstallerUrl = installerUrls;
+            //    foreach (var installer in installerManifest.Installers)
+            //    {
+            //        installer.InstallerSha256 = installerSha256;
+            //        installer.InstallerUrl = installerUrls;
 
-                    // If installer is an MSI, update its ProductCode
-                    var updatedInstaller = new Installer();
-                    if (ParseMsi(paths, updatedInstaller, null))
-                    {
-                        installer.ProductCode = updatedInstaller.ProductCode;
-                    }
-                }
-            }
+            //        // If installer is an MSI, update its ProductCode
+            //        var updatedInstaller = new Installer();
+            //        if (ParseMsi(paths, updatedInstaller, null))
+            //        {
+            //            installer.ProductCode = updatedInstaller.ProductCode;
+            //        }
+            //    }
+            //}
 
-            GetAppxMetadataAndSetInstallerProperties(packageFile, installerManifest);
+            //GetAppxMetadataAndSetInstallerProperties(packageFile, installerManifest);
         }
 
         /// <summary>
@@ -437,6 +437,20 @@ namespace Microsoft.WingetCreateCore
         private static List<T> SetInstallerListPropertyIfNeeded<T>(List<T> rootProperty, List<T> valueToSet)
         {
             return rootProperty != null && new HashSet<T>(rootProperty).SetEquals(valueToSet) ? null : valueToSet;
+        }
+
+        public static bool IsPackageMsixBundle(string path)
+        {
+            try
+            {
+                // Check if package is an MsixBundle
+                var bundle = new AppxBundleMetadata(path);
+                return true;
+            }
+            catch (COMException)
+            {
+                return false;
+            }
         }
 
         private static AppxMetadata GetAppxMetadataAndSetInstallerProperties(string path, InstallerManifest installerManifest)
