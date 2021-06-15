@@ -138,7 +138,7 @@ jobs:
           FolderPath: $(appxPackageDir)
           Pattern: |
             $(appxBundleFile),
-            "WingetCreateCLI.exe"
+            **/WingetCreateCLI.exe
           signConfigType: inlineSignParams
           inlineOperation: |
             [
