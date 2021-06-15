@@ -139,6 +139,7 @@ jobs:
           Pattern: |
             $(appxBundleFile),
             */WingetCreateCLI.exe
+          UseMinimatch: true
           signConfigType: inlineSignParams
           inlineOperation: |
             [
