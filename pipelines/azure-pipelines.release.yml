@@ -137,7 +137,7 @@ jobs:
           ConnectedServiceName: "PeetPackageEs2"
           FolderPath: $(appxPackageDir)
           Pattern: |
-            $(appxBundleFile),
+            **/$(appxBundleFile),
             **/WingetCreateCLI.exe
           UseMinimatch: true
           signConfigType: inlineSignParams
