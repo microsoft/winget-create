@@ -8,6 +8,7 @@ namespace Microsoft.WingetCreateCLI
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
+    using Microsoft.Diagnostics.Telemetry;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
@@ -27,6 +28,9 @@ namespace Microsoft.WingetCreateCLI
 
         private static async Task<int> Main(string[] args)
         {
+            Common.FirstRunTelemetryConsent();
+            TelemetryEventListener.EventListener.IsTelemetryEnabled();
+
             Logger.Initialize();
 
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
@@ -34,7 +38,7 @@ namespace Microsoft.WingetCreateCLI
 
             Parser myParser = new Parser(config => config.HelpWriter = null);
 
-            var parserResult = myParser.ParseArguments<NewCommand, UpdateCommand, SubmitCommand, TokenCommand>(args);
+            var parserResult = myParser.ParseArguments<NewCommand, UpdateCommand, SubmitCommand, TokenCommand, SettingsCommand>(args);
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
             if (command == null)
             {
