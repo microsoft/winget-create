@@ -59,11 +59,13 @@ jobs:
       - powershell: |
           echo $(version)
           echo $(appxBundlePath)
+          echo $(appxBundleFile)
           echo $(exePathSelfContained)
           echo $(exePathFrameworkDependent)
           echo "##vso[task.setvariable variable=manifestVersion;isOutput=true]$(version)"
+          echo "##vso[task.setvariable variable=appxBundleFile;isOutput=true]$(appxBundleFile)"
         name: OutputVersionStep
-        displayName: Display version and paths for diagnosing
+        displayName: Set output variables for UpdateManifest job
 
       - powershell: |
           [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
@@ -137,7 +139,7 @@ jobs:
           ConnectedServiceName: "PeetPackageEs2"
           FolderPath: $(appxPackageDir)
           Pattern: |
-            **/$(appxBundleFile)
+            $(appxBundleFile)
             **/WingetCreateCLI.exe
           UseMinimatch: true
           signConfigType: inlineSignParams
@@ -222,6 +224,7 @@ jobs:
       runCodesignValidationInjection: ${{ false }}
       skipComponentGovernanceDetection: ${{ true }}
       manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
+      appxBundleFile: $[dependencies.Build.outputs['OutputVersionStep.appxBundleFile']]
       packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)-preview/$(appxBundleFile)"
     steps:
       - checkout: none
@@ -240,5 +243,5 @@ jobs:
           # does not require .NET to be installed on the build machine to operate correctly, but is a larger download
 
           iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
-          wingetcreate.exe update -i Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit
+          .\wingetcreate.exe update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit
         displayName: Update package manifest in the OWC
