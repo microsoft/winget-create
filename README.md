@@ -43,7 +43,7 @@ Then simply add a new powershell task to download the exe, and run it to update 
 
     - powershell: |
         iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
-        wingetcreate.exe update -i Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT)
+        .\wingetcreate.exe update <packageId> -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT)
       displayName: Update package manifest in the OWC
 
 The CLI only supports a single installer URL. If you have a more complex manifest with multiple installer URLs, you'll need to update the manifests manually, and then you can use `wingetcreate submit` to submit the updated manifests to GitHub.
