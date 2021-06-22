@@ -11,7 +11,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
-    using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Models.Settings;
     using Newtonsoft.Json;
 
@@ -21,9 +20,32 @@ namespace Microsoft.WingetCreateCLI.Commands
     [Verb("settings", HelpText = "TokenCommand_HelpText", ResourceType = typeof(Resources))]
     public class SettingsCommand : BaseCommand
     {
-        private string SettingsJsonPath => Path.Combine(Common.LocalAppStatePath, "settings.json");
+        /// <summary>
+        /// Gets the static instance of the settings model used for Winget-Create.
+        /// </summary>
+        public static SettingsManifest SettingsManifest
+        {
+            get
+            {
+                InitializeSettingsFiles();
+                using (StreamReader r = new StreamReader(Common.SettingsJsonPath))
+                {
+                    string json = r.ReadToEnd();
+                    return JsonConvert.DeserializeObject<SettingsManifest>(json);
+                }
+            }
+        }
 
-        private string BackupSettingsJsonPath => Path.Combine(Common.LocalAppStatePath, "settings.backup.json");
+        /// <summary>
+        /// Recreates a settings json file using the default values from the settings schema model;
+        /// </summary>
+        public static void GenerateDefaultSettingsFile()
+        {
+            SettingsManifest defaultSettings = new SettingsManifest { Telemetry = new Telemetry() };
+            string output = JsonConvert.SerializeObject(defaultSettings, Formatting.Indented);
+            File.WriteAllText(Common.SettingsJsonPath, output);
+            File.WriteAllText(Common.SettingsBackupJsonPath, output);
+        }
 
         /// <summary>
         /// Executes the token command flow.
@@ -38,18 +60,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                string settingsPath = Path.Combine(Common.LocalAppStatePath, "settings.json");
-
-                if (!File.Exists(settingsPath))
-                {
-                    File.Create(settingsPath);
-                }
-                //else
-                //{
-                //    Process.Start(settingsPath);
-                //}
-                this.GenerateSettingsFile();
-
+                InitializeSettingsFiles();
+                this.OpenJsonFile(Common.SettingsJsonPath);
                 return await Task.FromResult(commandEvent.IsSuccessful = true);
             }
             finally
@@ -58,18 +70,46 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        // Checks to verify that both the settings and backup settings file are created.
-        private void GenerateSettingsFile()
+        private static void InitializeSettingsFiles()
         {
-            SettingsManifest settingsModel = new SettingsManifest { Telemetry = new Telemetry() };
-            settingsModel.Telemetry = new Telemetry();
-            string output = JsonConvert.SerializeObject(settingsModel);
-            File.WriteAllText(this.BackupSettingsJsonPath, output);
-
-            if (!File.Exists(this.SettingsJsonPath))
+            if (File.Exists(Common.SettingsJsonPath) && IsValidSettingsJson(Common.SettingsJsonPath))
             {
-                File.WriteAllText(this.SettingsJsonPath, output);
+                File.Copy(Common.SettingsJsonPath, Common.SettingsBackupJsonPath, true);
             }
+            else if (File.Exists(Common.SettingsBackupJsonPath) && IsValidSettingsJson(Common.SettingsBackupJsonPath))
+            {
+                File.Copy(Common.SettingsBackupJsonPath, Common.SettingsJsonPath, true);
+            }
+            else
+            {
+                GenerateDefaultSettingsFile();
+            }
+        }
+
+        private static bool IsValidSettingsJson(string path)
+        {
+            SettingsManifest settingsManifest;
+
+            try
+            {
+                using (StreamReader r = new StreamReader(path))
+                {
+                    string json = r.ReadToEnd();
+                    settingsManifest = JsonConvert.DeserializeObject<SettingsManifest>(json);
+                }
+            }
+            catch (JsonException)
+            {
+                Logger.Error($"Unable to parse {path}");
+                return false;
+            }
+
+            return settingsManifest != null;
+        }
+
+        private void OpenJsonFile(string path)
+        {
+            Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = path });
         }
     }
 }

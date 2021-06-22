@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCLI.Telemetry
 {
     using System.Diagnostics.Tracing;
+    using Microsoft.WingetCreateCLI.Commands;
 
     /// <summary>
     /// Telemetry Event Listener class for WingetCreate
@@ -28,7 +29,10 @@ namespace Microsoft.WingetCreateCLI.Telemetry
         /// </summary>
         public void IsTelemetryEnabled()
         {
-            this.DisableEvents(new EventSource("Microsoft.PackageManager.Create"));
+            if (!SettingsCommand.SettingsManifest.Telemetry.Disable)
+            {
+                this.DisableEvents(new EventSource("Microsoft.PackageManager.Create"));
+            }
         }
     }
 }
