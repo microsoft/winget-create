@@ -41,10 +41,10 @@ namespace Microsoft.WingetCreateCLI
                 File.Create(firstRunFilePath);
                 Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
                 Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
-                Console.WriteLine("Welcome to Winget-Create!");
+                Console.WriteLine("Welcome to Winget-Create!");  // Welcome message
                 Console.WriteLine();
-                Console.WriteLine("Telemetry Settings");
-                Console.WriteLine("------------------");
+                Console.WriteLine("Telemetry Settings"); // Telemetry Settings
+                Console.WriteLine("------------------"); // Telemetry divider
                 Console.WriteLine("The Windows Package Manager Manifest Creator collects usage data in order to improve your experience.");
                 Console.WriteLine("The data is collected by Microsoft and is anonymous.");
                 Prompt.Confirm("Would you like to enable telemetry?");
