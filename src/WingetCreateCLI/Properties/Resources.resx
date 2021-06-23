@@ -556,4 +556,10 @@
   <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
     <value>We have detected that this package identifier already exists. If you intend to update an existing package, please use the update command.</value>
   </data>
+  <data name="EnableTelemetryFirstRun_Message" xml:space="preserve">
+    <value>Would you like to enable telemetry to allow Microsoft to collect usage data to help make improvements to this tool?</value>
+  </data>
+  <data name="SettingsCommand_HelpText" xml:space="preserve">
+    <value>Open settings</value>
+  </data>
 </root>

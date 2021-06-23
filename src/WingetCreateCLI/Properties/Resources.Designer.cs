@@ -286,6 +286,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to enable telemetry to allow Microsoft to collect usage data to help make improvements to this tool?.
+        /// </summary>
+        public static string EnableTelemetryFirstRun_Message {
+            get {
+                return ResourceManager.GetString("EnableTelemetryFirstRun_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter values for the following fields:.
         /// </summary>
         public static string EnterFollowingFields_Message {
@@ -1074,6 +1083,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Scope_KeywordDescription {
             get {
                 return ResourceManager.GetString("Scope_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open settings.
+        /// </summary>
+        public static string SettingsCommand_HelpText {
+            get {
+                return ResourceManager.GetString("SettingsCommand_HelpText", resourceCulture);
             }
         }
         

@@ -4,15 +4,14 @@
 namespace Microsoft.WingetCreateCLI.Telemetry
 {
     using System.Diagnostics.Tracing;
-    using Microsoft.WingetCreateCLI.Commands;
 
     /// <summary>
-    /// Telemetry Event Listener class for WingetCreate
+    /// Telemetry Event Listener class mainly used to disable telemetry events.
     /// </summary>
     public class TelemetryEventListener : EventListener
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TelemetryEventListener"/> class
+        /// Initializes a new instance of the <see cref="TelemetryEventListener"/> class.
         /// </summary>
         public TelemetryEventListener()
             : base()
@@ -25,11 +24,11 @@ namespace Microsoft.WingetCreateCLI.Telemetry
         public static TelemetryEventListener EventListener { get; } = new TelemetryEventListener();
 
         /// <summary>
-        /// Checks if the Telemetry field of the settings file is and toggles telemetry based on that value
+        /// Checks if the Telemetry field of the settings file is and toggles telemetry based on that value.
         /// </summary>
         public void IsTelemetryEnabled()
         {
-            if (!SettingsCommand.SettingsManifest.Telemetry.Disable)
+            if (!UserSettings.TelemetryDisabled)
             {
                 this.DisableEvents(new EventSource("Microsoft.PackageManager.Create"));
             }

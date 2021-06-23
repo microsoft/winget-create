@@ -6,7 +6,6 @@ namespace Microsoft.WingetCreateCLI
     using System;
     using System.Diagnostics.Tracing;
     using System.IO;
-    using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Sharprompt;
     using Windows.Storage;
@@ -25,24 +24,10 @@ namespace Microsoft.WingetCreateCLI
             ? ApplicationData.Current.LocalFolder.Path
             : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", ModuleName));
 
-        private static readonly Lazy<string> SettingsPathLazy = new(() => Path.Combine(LocalAppStatePath, "settings.json"));
-
-        private static readonly Lazy<string> SettingsBackupPathLazy = new(() => Path.Combine(LocalAppStatePath, "settings.backup.json"));
-
         /// <summary>
         /// Gets directory path where app should store local state.
         /// </summary>
         public static string LocalAppStatePath => AppStatePathLazy.Value;
-
-        /// <summary>
-        /// Gets the path to the settings json file.
-        /// </summary>
-        public static string SettingsJsonPath => SettingsPathLazy.Value;
-
-        /// <summary>
-        /// Gets the path to the backup settings json file.
-        /// </summary>
-        public static string SettingsBackupJsonPath => SettingsBackupPathLazy.Value;
 
         /// <summary>
         /// Checks if the tool is being launched for the first time.
@@ -54,13 +39,21 @@ namespace Microsoft.WingetCreateCLI
             if (!File.Exists(firstRunFilePath))
             {
                 File.Create(firstRunFilePath);
-                SettingsCommand.GenerateDefaultSettingsFile();
-                Prompt.Confirm("We've detected that this is your first run. Would you like to enable telemetry to collect data for " +
-                    "Microsoft to make improvements to this tool?");
+                Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
+                Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
+                Console.WriteLine("Welcome to Winget-Create!");
+                Console.WriteLine();
+                Console.WriteLine("Telemetry Settings");
+                Console.WriteLine("------------------");
+                Console.WriteLine("The Windows Package Manager Manifest Creator collects usage data in order to improve your experience.");
+                Console.WriteLine("The data is collected by Microsoft and is anonymous.");
+                Prompt.Confirm("Would you like to enable telemetry?");
+                UserSettings.TelemetryDisabled = !Prompt.Confirm(Properties.Resources.EnableTelemetryFirstRun_Message);
 
-                // Handle confirmation for telemetry.
-                var eventListener = new TelemetryEventListener();
-                eventListener.DisableEvents(new EventSource("Microsoft.PackageManager.Create"));
+                // Write docs for command
+                // Submit PR for review
+                // Address bugs assigned to me by Arjun (2 bugs, temp files and character printing)
+
             }
         }
 

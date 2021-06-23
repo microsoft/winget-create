@@ -28,10 +28,10 @@ namespace Microsoft.WingetCreateCLI
 
         private static async Task<int> Main(string[] args)
         {
+            Logger.Initialize();
+
             Common.FirstRunTelemetryConsent();
             TelemetryEventListener.EventListener.IsTelemetryEnabled();
-
-            Logger.Initialize();
 
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
             Logger.Trace($"Command line args: {arguments}");
