@@ -112,6 +112,28 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
         }
 
+        [Test]
+        public async Task UpdateMultipleUrlManifests()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestMsiInstaller);
+
+            string version = "1.2.3.4";
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsiPackageIdentifier, version, this.tempPath);
+            List<string> initialManifestContent = GetInitialManifestContent(TestConstants.TestMsiManifest);
+            var initialManifests = new Manifests();
+            Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+
+            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
+
+            Assert.AreEqual(version, updatedManifests.VersionManifest.PackageVersion, "Version should be updated");
+            Assert.AreNotEqual(initialInstaller.ProductCode, updatedInstaller.ProductCode, "ProductCode should be updated");
+            Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
         private static List<string> GetInitialManifestContent(string manifestFileName)
         {
             string testFilePath = TestUtils.GetTestFile(manifestFileName);

@@ -105,12 +105,14 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.That(testMsiInstallerPath, Is.Not.Null.And.Not.Empty);
             var testExeInstallerPath = MockDownloadFile(TestConstants.TestExeInstaller);
             Assert.That(testExeInstallerPath, Is.Not.Null.And.Not.Empty);
+            var testMsixInstallerPath = MockDownloadFile(TestConstants.TestMsixInstaller);
+            Assert.That(testMsixInstallerPath, Is.Not.Null.And.Not.Empty);
 
             Manifests manifests = new Manifests();
 
             Assert.IsTrue(PackageParser.ParsePackages(
-                new[] { testExeInstallerPath, testMsiInstallerPath },
-                new[] { TestConstants.TestExeInstaller, TestConstants.TestMsiInstaller },
+                new[] { testExeInstallerPath, testMsiInstallerPath, testMsixInstallerPath },
+                new[] { TestConstants.TestExeInstaller, TestConstants.TestMsiInstaller, TestConstants.TestMsixInstaller },
                 manifests));
 
             // Shared properties will be parsed from all installers, with priority given to the first-parsed value.
@@ -119,9 +121,11 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.AreEqual("1.2.3.4", manifests.VersionManifest.PackageVersion);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
 
-            Assert.AreEqual(2, manifests.InstallerManifest.Installers.Count);
+            Assert.AreEqual(4, manifests.InstallerManifest.Installers.Count);
             Assert.AreEqual(InstallerType.Exe, manifests.InstallerManifest.Installers.First().InstallerType);
             Assert.AreEqual(InstallerType.Msi, manifests.InstallerManifest.Installers.Skip(1).First().InstallerType);
+            Assert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(2).First().InstallerType);
+            Assert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(3).First().InstallerType);
         }
 
         private static string MockDownloadFile(string filename)

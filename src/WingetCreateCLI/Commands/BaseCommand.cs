@@ -356,7 +356,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (this.OpenPRInBrowser)
                 {
-                    Process.Start(new ProcessStartInfo(pullRequest.HtmlUrl) { UseShellExecute = true });
+                    GitHubOAuth.OpenWebPage(pullRequest.HtmlUrl);
                 }
 
                 Logger.InfoLocalized(nameof(Resources.PullRequestURI_Message), pullRequest.HtmlUrl);
