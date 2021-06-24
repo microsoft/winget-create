@@ -28,7 +28,6 @@ namespace Microsoft.WingetCreateCLI
         private static async Task<int> Main(string[] args)
         {
             Logger.Initialize();
-
             Common.FirstRunTelemetryConsent();
             TelemetryEventListener.EventListener.IsTelemetryEnabled();
 
