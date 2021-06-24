@@ -48,7 +48,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             Manifests manifests = new Manifests();
 
-            Assert.IsTrue(PackageParser.ParsePackage(testExeInstallerPath, TestConstants.TestExeInstaller, manifests));
+            Assert.IsTrue(PackageParser.ParsePackages(new[] { testExeInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests));
             Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
@@ -67,7 +67,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             Manifests manifests = new Manifests();
 
-            Assert.IsTrue(PackageParser.ParsePackage(testMsiInstallerPath, TestConstants.TestExeInstaller, manifests));
+            Assert.IsTrue(PackageParser.ParsePackages(new[] { testMsiInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests));
             Assert.AreEqual("WingetCreateTestMsiInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestMsiInstaller", manifests.VersionManifest.PackageIdentifier);
@@ -86,7 +86,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             Manifests manifests = new Manifests();
 
-            Assert.IsTrue(PackageParser.ParsePackage(testMsixInstallerPath, TestConstants.TestMsixInstaller, manifests));
+            Assert.IsTrue(PackageParser.ParsePackages(new[] { testMsixInstallerPath }, new[] { TestConstants.TestMsixInstaller }, manifests));
             Assert.AreEqual("WingetCreateTestMsixInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("1.0.1.0", manifests.VersionManifest.PackageVersion);

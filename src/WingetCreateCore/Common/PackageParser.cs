@@ -97,7 +97,7 @@ namespace Microsoft.WingetCreateCore
         /// <param name="url">Installer url. </param>
         /// <param name="manifests">Wrapper object for manifest object models.</param>
         /// <returns>True if package was successfully parsed and metadata extracted, false otherwise.</returns>
-        public static bool ParsePackage(
+        private static bool ParsePackage(
             string path,
             string url,
             Manifests manifests)
@@ -105,12 +105,8 @@ namespace Microsoft.WingetCreateCore
             VersionManifest versionManifest = manifests.VersionManifest;
             InstallerManifest installerManifest = manifests.InstallerManifest;
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
-            
+
             var versionInfo = FileVersionInfo.GetVersionInfo(path);
-
-            var installers = ParsePackageAndGenerateInstallerNodes(path, url, manifests);
-
-            installerManifest.Installers.Add(installer);
 
             defaultLocaleManifest.PackageVersion ??= versionInfo.FileVersion?.Trim() ?? versionInfo.ProductVersion?.Trim();
             defaultLocaleManifest.Publisher ??= versionInfo.CompanyName?.Trim();
@@ -118,9 +114,9 @@ namespace Microsoft.WingetCreateCore
             defaultLocaleManifest.ShortDescription ??= versionInfo.FileDescription?.Trim();
             defaultLocaleManifest.License ??= versionInfo.LegalCopyright?.Trim();
 
-            if (ParseExeInstallerType(path, installer) ||
-                ParseMsix(path, manifests, installer) ||
-                ParseMsi(path, installer, manifests))
+            var installers = ParsePackageAndGenerateInstallerNodes(path, url, manifests);
+
+            if (installers.Any())
             {
                 if (!string.IsNullOrEmpty(defaultLocaleManifest.PackageVersion))
                 {
@@ -150,20 +146,16 @@ namespace Microsoft.WingetCreateCore
                 ParseMsix(path, manifests, installer) ||
                 ParseMsi(path, installer, manifests))
             {
-                if (!string.IsNullOrEmpty(defaultLocaleManifest.PackageVersion))
+                if (!manifests.InstallerManifest.Installers.Any())
                 {
-                    versionManifest.PackageVersion = installerManifest.PackageVersion = RemoveInvalidCharsFromString(defaultLocaleManifest.PackageVersion);
+                    manifests.InstallerManifest.Installers.Add(installer);
                 }
 
-                string packageIdPublisher = defaultLocaleManifest.Publisher?.Remove(" ").Trim('.') ?? $"<{nameof(defaultLocaleManifest.Publisher)}>";
-                string packageIdName = defaultLocaleManifest.PackageName?.Remove(" ").Trim('.') ?? $"<{nameof(defaultLocaleManifest.PackageName)}>";
-                versionManifest.PackageIdentifier ??= $"{RemoveInvalidCharsFromString(packageIdPublisher)}.{RemoveInvalidCharsFromString(packageIdName)}";
-                installerManifest.PackageIdentifier = defaultLocaleManifest.PackageIdentifier = versionManifest.PackageIdentifier;
-                return true;
+                return manifests.InstallerManifest.Installers;
             }
             else
             {
-                return false;
+                return null;
             }
         }
 
@@ -237,9 +229,9 @@ namespace Microsoft.WingetCreateCore
             {
                 string installerSha256 = GetFileHash(package.Path);
 
-                ParsePackage(package.Path, package.Url, null);
+                var installers = ParsePackageAndGenerateInstallerNodes(package.Path, package.Url, null);
 
-                foreach (var installer in installerManifest.Installers)
+                foreach (var installer in installers)
                 {
                     installer.InstallerSha256 = installerSha256;
                     installer.InstallerUrl = package.Url;
@@ -250,10 +242,12 @@ namespace Microsoft.WingetCreateCore
                     {
                         installer.ProductCode = updatedInstaller.ProductCode;
                     }
-                }
 
-                //GetAppxMetadataAndSetInstallerProperties(package.Path, installerManifest, installer);
+                    GetAppxMetadataAndSetInstallerProperties(package.Path, installerManifest, installer);
+                }
             }
+
+            return true;
         }
 
         /// <summary>
@@ -474,7 +468,7 @@ namespace Microsoft.WingetCreateCore
             return rootProperty != null && new HashSet<T>(rootProperty).SetEquals(valueToSet) ? null : valueToSet;
         }
 
-        public static bool IsPackageMsixBundle(string path)
+        private static bool IsPackageMsixBundle(string path)
         {
             try
             {
