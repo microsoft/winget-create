@@ -43,13 +43,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     (bool isSettingsValid, List<string> settingsFileErrors) = UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath);
 
-                    if (!isSettingsValid)
+                    if (isSettingsValid)
                     {
-                        this.DisplayParsingErrors(settingsFileErrors, UserSettings.SettingsJsonPath);
+                        File.Copy(UserSettings.SettingsJsonPath, UserSettings.SettingsBackupJsonPath, true);
                     }
                     else
                     {
-                        File.Copy(UserSettings.SettingsJsonPath, UserSettings.SettingsBackupJsonPath, true);
+                        this.DisplayParsingErrors(settingsFileErrors, UserSettings.SettingsJsonPath);
                     }
                 }
 

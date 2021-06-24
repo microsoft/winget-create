@@ -10,10 +10,6 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <WarningLevel>0</WarningLevel>
-  </PropertyGroup>
-
   <ItemGroup>
     <AdditionalFiles Include="..\stylecop.json" />
   </ItemGroup>
@@ -64,4 +60,5 @@
 
     <Exec Command="$(NSwagExe) jsonschema2csclient /name:%(ModelName)Manifest /namespace:Microsoft.WingetCreateCore.Models.%(SchemaFiles.ModelName) /input:%(FullPath) /output:$(ProjectDir)Models\%(ModelName)ManifestModels.cs /InlineNamedArrays:true /RequiredPropertiesMustBeDefined:false /ArrayType:System.Collections.Generic.List /ArrayInstanceType:System.Collections.Generic.List" />
   </Target>
+
 </Project>

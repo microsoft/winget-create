@@ -8,7 +8,6 @@ namespace Microsoft.WingetCreateCLI
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
-    using Microsoft.Diagnostics.Telemetry;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;

@@ -30,7 +30,7 @@ namespace Microsoft.WingetCreateCLI.Telemetry
         {
             if (!UserSettings.TelemetryDisable)
             {
-                this.DisableEvents(new EventSource("Microsoft.PackageManager.Create"));
+                this.DisableEvents(new EventSource(TelemetryManager.EventSourceName));
             }
         }
     }
