@@ -4,9 +4,11 @@
 namespace Microsoft.WingetCreateCLI
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using Microsoft.WingetCreateCLI.Logging;
-    using Microsoft.WingetCreateCore.Models.Settings;
+    using Microsoft.WingetCreateCLI.Models.Settings;
+    using Microsoft.WingetCreateCLI.Properties;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -53,14 +55,37 @@ namespace Microsoft.WingetCreateCLI
         private static SettingsManifest Settings { get; set; }
 
         /// <summary>
-        /// Recreates a settings json file using the default values from the settings schema model.
+        /// Attempts to parse a settings json file to determine if the file is valid based on the settings schema.
         /// </summary>
-        public static void GenerateDefaultSettingsFile()
+        /// <param name="path">Path to settings json file.</param>
+        /// <returns>A boolean IsValid that indicates if the file was parsed successfully and a List of error strings if the parsing fails.</returns>
+        public static (bool IsValid, List<string> Errors) ParseJsonFile(string path)
         {
-            SettingsManifest defaultSettings = new SettingsManifest { Telemetry = new WingetCreateCore.Models.Settings.Telemetry() };
-            string output = JsonConvert.SerializeObject(defaultSettings, Formatting.Indented);
-            File.WriteAllText(SettingsJsonPath, output);
-            File.WriteAllText(SettingsBackupJsonPath, output);
+            SettingsManifest settingsManifest;
+            List<string> errors = new List<string>();
+
+            using (StreamReader r = new StreamReader(path))
+            {
+                string json = r.ReadToEnd();
+                settingsManifest = JsonConvert.DeserializeObject<SettingsManifest>(
+                    json,
+                    new JsonSerializerSettings
+                    {
+                        Error = (sender, args) =>
+                        {
+                            errors.Add(args.ErrorContext.Error.Message);
+                            args.ErrorContext.Handled = true;
+                        },
+                    });
+            }
+
+            if (settingsManifest == null)
+            {
+                errors.Add("Manifest cannot be empty.");
+            }
+
+            bool isValid = errors.Count == 0 && settingsManifest != null;
+            return (isValid, errors);
         }
 
         /// <summary>
@@ -81,49 +106,23 @@ namespace Microsoft.WingetCreateCLI
         /// </summary>
         private static void LoadSettings()
         {
-            if (File.Exists(SettingsJsonPath) && IsValidSettingsJson(SettingsJsonPath))
+            if (File.Exists(SettingsJsonPath) && ParseJsonFile(SettingsJsonPath).IsValid)
             {
-                Logger.Trace("Using configurations from settings file.");
                 File.Copy(SettingsJsonPath, SettingsBackupJsonPath, true);
                 Settings = LoadJsonFile(SettingsJsonPath);
             }
-            else if (File.Exists(SettingsBackupJsonPath) && IsValidSettingsJson(SettingsBackupJsonPath))
+            else if (File.Exists(SettingsBackupJsonPath) && ParseJsonFile(SettingsBackupJsonPath).IsValid)
             {
-                Logger.Trace("Unable to find settings file, using configurations from backup file.");
+                Logger.WarnLocalized(nameof(Resources.UnexpectedErrorLoadSettings_Message));
+                Logger.WarnLocalized(nameof(Resources.LoadSettingsFromBackup_Message));
                 Settings = LoadJsonFile(SettingsBackupJsonPath);
             }
             else
             {
-                Logger.Trace("Both the settings and backup settings files are missing or invalid. Regenerating factory setting files.");
-                Settings = new SettingsManifest { Telemetry = new WingetCreateCore.Models.Settings.Telemetry() };
+                Logger.WarnLocalized(nameof(Resources.UnexpectedErrorLoadSettings_Message));
+                Logger.WarnLocalized(nameof(Resources.LoadSettingsFromDefault_Message));
+                Settings = new SettingsManifest { Telemetry = new Models.Settings.Telemetry() };
             }
-        }
-
-        /// <summary>
-        /// Returns a bool indicating whether the json is able to be successfully parsed using the model from the Settings schema.
-        /// </summary>
-        /// <param name="path">Path to settings json file.</param>
-        /// <returns>Boolean value.</returns>
-        private static bool IsValidSettingsJson(string path)
-        {
-            SettingsManifest settingsManifest;
-
-            try
-            {
-                using (StreamReader r = new StreamReader(path))
-                {
-                    string json = r.ReadToEnd();
-                    settingsManifest = JsonConvert.DeserializeObject<SettingsManifest>(json);
-                }
-            }
-            catch (JsonException e)
-            {
-                Logger.Warn("Unexpected error while loading settings. Please verify your settings by running the settings command.");
-                Logger.Warn($"The following failures were found validating the settings: {e.Message}");
-                return false;
-            }
-
-            return settingsManifest != null;
         }
 
         private static void SaveSettings()

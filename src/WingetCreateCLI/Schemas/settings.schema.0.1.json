@@ -1,0 +1,24 @@
+{
+  "$id": "https://aka.ms/winget-settings.schema.json",
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "title": "Microsoft's Windows Package Manager Manifest Creator Settings Profile Schema",
+  "definitions": {
+    "Telemetry": {
+      "description": "Telemetry settings",
+      "type": "object",
+      "properties": {
+        "disable": {
+          "description": "Controls whether telemetry events are written",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "type": "object",
+  "properties": {
+    "telemetry": { "$ref": "#/definitions/Telemetry" }
+  },
+  "additionalProperties": false
+}

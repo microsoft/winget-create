@@ -3,6 +3,8 @@
 
 namespace Microsoft.WingetCreateCLI.Commands
 {
+    using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
@@ -34,7 +36,25 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 if (!File.Exists(UserSettings.SettingsJsonPath))
                 {
+                    Logger.WarnLocalized(nameof(Resources.GenerateNewSettingsFile_Message));
                     UserSettings.GenerateFileFromLoadedSettings(UserSettings.SettingsJsonPath);
+                }
+
+                (bool isSettingsValid, List<string> settingsFileErrors) = UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath);
+
+                if (!isSettingsValid)
+                {
+                    this.DisplayParsingErrors(settingsFileErrors, UserSettings.SettingsJsonPath);
+                }
+
+                if (File.Exists(UserSettings.SettingsBackupJsonPath))
+                {
+                    (bool isBackupValid, List<string> backupFileErrors) = UserSettings.ParseJsonFile(UserSettings.SettingsBackupJsonPath);
+
+                    if (!isBackupValid)
+                    {
+                        this.DisplayParsingErrors(backupFileErrors, UserSettings.SettingsBackupJsonPath);
+                    }
                 }
 
                 return Task.FromResult(commandEvent.IsSuccessful = this.OpenJsonFile(UserSettings.SettingsJsonPath));
@@ -42,6 +62,17 @@ namespace Microsoft.WingetCreateCLI.Commands
             finally
             {
                 TelemetryManager.Log.WriteEvent(commandEvent);
+            }
+        }
+
+        private void DisplayParsingErrors(List<string> errors, string path)
+        {
+            Logger.WarnLocalized(nameof(Resources.ErrorParsingSettingsFile_Message), Path.GetFileName(path));
+
+            Console.WriteLine();
+            foreach (string e in errors)
+            {
+                Logger.Warn(e);
             }
         }
 

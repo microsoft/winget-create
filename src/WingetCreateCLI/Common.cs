@@ -4,9 +4,8 @@
 namespace Microsoft.WingetCreateCLI
 {
     using System;
-    using System.Diagnostics.Tracing;
     using System.IO;
-    using Microsoft.WingetCreateCLI.Telemetry;
+    using Microsoft.WingetCreateCLI.Properties;
     using Sharprompt;
     using Windows.Storage;
 
@@ -41,19 +40,11 @@ namespace Microsoft.WingetCreateCLI
                 File.Create(firstRunFilePath);
                 Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
                 Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
-                Console.WriteLine("Welcome to Winget-Create!");  // Welcome message
-                Console.WriteLine();
-                Console.WriteLine("Telemetry Settings"); // Telemetry Settings
-                Console.WriteLine("------------------"); // Telemetry divider
-                Console.WriteLine("The Windows Package Manager Manifest Creator collects usage data in order to improve your experience.");
-                Console.WriteLine("The data is collected by Microsoft and is anonymous.");
-                Prompt.Confirm("Would you like to enable telemetry?");
-                UserSettings.TelemetryDisabled = !Prompt.Confirm(Properties.Resources.EnableTelemetryFirstRun_Message);
-
-                // Write docs for command
-                // Submit PR for review
-                // Address bugs assigned to me by Arjun (2 bugs, temp files and character printing)
-
+                Console.WriteLine(Resources.TelemetrySettings_Message);
+                Console.WriteLine("------------------");
+                Console.WriteLine(Resources.TelemetryJustification_Message);
+                Console.WriteLine(Resources.TelemetryAnonymous_Message);
+                UserSettings.TelemetryDisabled = !Prompt.Confirm(Resources.EnableTelemetryFirstRun_Message);
             }
         }
 
