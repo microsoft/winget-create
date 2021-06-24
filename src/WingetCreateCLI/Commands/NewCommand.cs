@@ -307,7 +307,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             VersionManifest versionManifest = manifests.VersionManifest;
             versionManifest.PackageIdentifier = PromptProperty(versionManifest, versionManifest.PackageIdentifier, nameof(versionManifest.PackageIdentifier));
 
-            GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
+            GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
 
             string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
             if (!string.IsNullOrEmpty(exactMatch))
