@@ -97,7 +97,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
-                GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
+                GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
                 string exactId = await client.FindPackageId(this.Id);
 
                 if (!string.IsNullOrEmpty(exactId))

@@ -146,29 +146,42 @@ namespace Microsoft.WingetCreateCore
         {
             foreach (string content in manifestContents)
             {
-                ManifestTypeBase baseType = Serialization.DeserializeFromString<ManifestTypeBase>(content);
+                string trimmedContent = RemoveBom(content);
+
+                ManifestTypeBase baseType = Serialization.DeserializeFromString<ManifestTypeBase>(trimmedContent);
 
                 if (baseType.ManifestType == "singleton")
                 {
-                    manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(content);
+                    manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(trimmedContent);
                 }
                 else if (baseType.ManifestType == "version")
                 {
-                    manifests.VersionManifest = Serialization.DeserializeFromString<VersionManifest>(content);
+                    manifests.VersionManifest = Serialization.DeserializeFromString<VersionManifest>(trimmedContent);
                 }
                 else if (baseType.ManifestType == "defaultLocale")
                 {
-                    manifests.DefaultLocaleManifest = Serialization.DeserializeFromString<DefaultLocaleManifest>(content);
+                    manifests.DefaultLocaleManifest = Serialization.DeserializeFromString<DefaultLocaleManifest>(trimmedContent);
                 }
                 else if (baseType.ManifestType == "locale")
                 {
-                    manifests.LocaleManifests.Add(Serialization.DeserializeFromString<LocaleManifest>(content));
+                    manifests.LocaleManifests.Add(Serialization.DeserializeFromString<LocaleManifest>(trimmedContent));
                 }
                 else if (baseType.ManifestType == "installer")
                 {
-                    manifests.InstallerManifest = Serialization.DeserializeFromString<InstallerManifest>(content);
+                    manifests.InstallerManifest = Serialization.DeserializeFromString<InstallerManifest>(trimmedContent);
                 }
             }
+        }
+
+        /// <summary>
+        /// Removes Byte Order Marker (BOM) prefix if exists in string.
+        /// </summary>
+        /// <param name="value">String to fix.</param>
+        /// <returns>String without BOM prefix.</returns>
+        private static string RemoveBom(string value)
+        {
+            string bomMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+            return value.StartsWith(bomMarkUtf8, StringComparison.OrdinalIgnoreCase) ? value.Remove(0, bomMarkUtf8.Length) : value;
         }
 
         private class YamlStringEnumConverter : IYamlTypeConverter
