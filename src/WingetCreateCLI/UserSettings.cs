@@ -58,7 +58,7 @@ namespace Microsoft.WingetCreateCLI
         /// Attempts to parse a settings json file to determine if the file is valid based on the settings schema.
         /// </summary>
         /// <param name="path">Path to settings json file.</param>
-        /// <returns>A boolean IsValid that indicates if the file was parsed successfully and a List of error strings if the parsing fails.</returns>
+        /// <returns>A boolean IsValid that indicates if the file was parsed successfully and a list of error strings if the parsing fails.</returns>
         public static (bool IsValid, List<string> Errors) ParseJsonFile(string path)
         {
             SettingsManifest settingsManifest;

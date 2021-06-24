@@ -11,7 +11,13 @@ namespace WingetCreateTests.UnitTests
 
     public class SettingsCommandTests
     {
+        // Create unit tests for the following
+        
+        // Clear out settings files and run settings command, verify that settings file is created
 
+        // Run settings command again and verify that backup file is created and that it is valid
+
+        // 
 
     }
 }
