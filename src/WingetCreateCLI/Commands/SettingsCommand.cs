@@ -39,12 +39,18 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Logger.WarnLocalized(nameof(Resources.GenerateNewSettingsFile_Message));
                     UserSettings.GenerateFileFromLoadedSettings(UserSettings.SettingsJsonPath);
                 }
-
-                (bool isSettingsValid, List<string> settingsFileErrors) = UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath);
-
-                if (!isSettingsValid)
+                else
                 {
-                    this.DisplayParsingErrors(settingsFileErrors, UserSettings.SettingsJsonPath);
+                    (bool isSettingsValid, List<string> settingsFileErrors) = UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath);
+
+                    if (!isSettingsValid)
+                    {
+                        this.DisplayParsingErrors(settingsFileErrors, UserSettings.SettingsJsonPath);
+                    }
+                    else
+                    {
+                        File.Copy(UserSettings.SettingsJsonPath, UserSettings.SettingsBackupJsonPath, true);
+                    }
                 }
 
                 if (File.Exists(UserSettings.SettingsBackupJsonPath))

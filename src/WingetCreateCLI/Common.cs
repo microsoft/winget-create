@@ -44,7 +44,7 @@ namespace Microsoft.WingetCreateCLI
                 Console.WriteLine("------------------");
                 Console.WriteLine(Resources.TelemetryJustification_Message);
                 Console.WriteLine(Resources.TelemetryAnonymous_Message);
-                UserSettings.TelemetryDisabled = !Prompt.Confirm(Resources.EnableTelemetryFirstRun_Message);
+                UserSettings.TelemetryDisable = !Prompt.Confirm(Resources.EnableTelemetryFirstRun_Message);
             }
         }
 

@@ -28,7 +28,7 @@ namespace Microsoft.WingetCreateCLI.Telemetry
         /// </summary>
         public void IsTelemetryEnabled()
         {
-            if (!UserSettings.TelemetryDisabled)
+            if (!UserSettings.TelemetryDisable)
             {
                 this.DisableEvents(new EventSource("Microsoft.PackageManager.Create"));
             }

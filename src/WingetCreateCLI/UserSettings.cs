@@ -38,7 +38,7 @@ namespace Microsoft.WingetCreateCLI
         /// <summary>
         /// Gets or sets a value indicating whether to disable telemetry.
         /// </summary>
-        public static bool TelemetryDisabled
+        public static bool TelemetryDisable
         {
             get
             {
@@ -99,6 +99,20 @@ namespace Microsoft.WingetCreateCLI
         }
 
         /// <summary>
+        /// Loads a json file from a path and creates a SettingsManifest object model.
+        /// </summary>
+        /// <param name="path">Path to settings json file.</param>
+        /// <returns>SettingsManifest object model.</returns>
+        public static SettingsManifest LoadJsonFile(string path)
+        {
+            using (StreamReader r = new StreamReader(path))
+            {
+                string json = r.ReadToEnd();
+                return JsonConvert.DeserializeObject<SettingsManifest>(json);
+            }
+        }
+
+        /// <summary>
         /// Loads the correct settings file based on the following order.
         /// 1. If the settings file exists and is valid, then overwrite the backup file with the current settings file.
         /// 2. If the backup settings file exists and is valid, then recreate the settings file using the backup.
@@ -108,7 +122,6 @@ namespace Microsoft.WingetCreateCLI
         {
             if (File.Exists(SettingsJsonPath) && ParseJsonFile(SettingsJsonPath).IsValid)
             {
-                File.Copy(SettingsJsonPath, SettingsBackupJsonPath, true);
                 Settings = LoadJsonFile(SettingsJsonPath);
             }
             else if (File.Exists(SettingsBackupJsonPath) && ParseJsonFile(SettingsBackupJsonPath).IsValid)
@@ -129,15 +142,6 @@ namespace Microsoft.WingetCreateCLI
         {
             string output = JsonConvert.SerializeObject(Settings, Formatting.Indented);
             File.WriteAllText(SettingsJsonPath, output);
-        }
-
-        private static SettingsManifest LoadJsonFile(string path)
-        {
-            using (StreamReader r = new StreamReader(path))
-            {
-                string json = r.ReadToEnd();
-                return JsonConvert.DeserializeObject<SettingsManifest>(json);
-            }
         }
     }
 }
