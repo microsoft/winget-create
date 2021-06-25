@@ -322,7 +322,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error parsing  file: {0}..
+        ///   Looks up a localized string similar to Error parsing file: {0}..
         /// </summary>
         public static string ErrorParsingSettingsFile_Message {
             get {

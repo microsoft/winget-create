@@ -13,7 +13,7 @@ namespace Microsoft.WingetCreateCLI.Telemetry
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryEventListener"/> class.
         /// </summary>
-        public TelemetryEventListener()
+        private TelemetryEventListener()
             : base()
         {
         }
@@ -24,11 +24,11 @@ namespace Microsoft.WingetCreateCLI.Telemetry
         public static TelemetryEventListener EventListener { get; } = new TelemetryEventListener();
 
         /// <summary>
-        /// Checks if the Telemetry field of the settings file is and toggles telemetry based on that value.
+        /// Disables all telemetry events if the Telemetry.Disable setting is set to true.
         /// </summary>
         public void IsTelemetryEnabled()
         {
-            if (UserSettings.TelemetryDisable)
+            if (UserSettings.TelemetryDisabled)
             {
                 this.DisableEvents(new EventSource(TelemetryManager.EventSourceName));
             }

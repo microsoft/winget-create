@@ -11,6 +11,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Threading.Tasks;
     using CommandLine;
     using Microsoft.WingetCreateCLI.Logging;
+    using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
@@ -37,11 +38,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (!File.Exists(UserSettings.SettingsJsonPath))
                 {
                     Logger.WarnLocalized(nameof(Resources.GenerateNewSettingsFile_Message));
-                    UserSettings.GenerateFileFromLoadedSettings(UserSettings.SettingsJsonPath);
+                    UserSettings.SaveSettings();
                 }
                 else
                 {
-                    (bool isSettingsValid, List<string> settingsFileErrors) = UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath);
+                    (bool isSettingsValid, List<string> settingsFileErrors) = UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest);
 
                     if (isSettingsValid)
                     {
@@ -55,7 +56,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (File.Exists(UserSettings.SettingsBackupJsonPath))
                 {
-                    (bool isBackupValid, List<string> backupFileErrors) = UserSettings.ParseJsonFile(UserSettings.SettingsBackupJsonPath);
+                    (bool isBackupValid, List<string> backupFileErrors) = UserSettings.ParseJsonFile(UserSettings.SettingsBackupJsonPath, out SettingsManifest manifest);
 
                     if (!isBackupValid)
                     {

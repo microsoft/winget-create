@@ -39,7 +39,7 @@ namespace Microsoft.WingetCreateCLI
         /// <summary>
         /// Gets or sets a value indicating whether to disable telemetry.
         /// </summary>
-        public static bool TelemetryDisable
+        public static bool TelemetryDisabled
         {
             get
             {
@@ -59,58 +59,31 @@ namespace Microsoft.WingetCreateCLI
         /// Attempts to parse a settings json file to determine if the file is valid based on the settings schema.
         /// </summary>
         /// <param name="path">Path to settings json file.</param>
+        /// <param name="settingsManifest">Settings manifest parsed from the json file.</param>
         /// <returns>A boolean IsValid that indicates if the file was parsed successfully and a list of error strings if the parsing fails.</returns>
-        public static (bool IsValid, List<string> Errors) ParseJsonFile(string path)
+        public static (bool IsValid, List<string> Errors) ParseJsonFile(string path, out SettingsManifest settingsManifest)
         {
-            SettingsManifest settingsManifest;
             List<string> errors = new List<string>();
 
-            using (StreamReader r = new StreamReader(path))
-            {
-                string json = r.ReadToEnd();
-                settingsManifest = JsonConvert.DeserializeObject<SettingsManifest>(
-                    json,
-                    new JsonSerializerSettings
+            string json = File.ReadAllText(path);
+            settingsManifest = JsonConvert.DeserializeObject<SettingsManifest>(
+                json,
+                new JsonSerializerSettings
+                {
+                    Error = (sender, args) =>
                     {
-                        Error = (sender, args) =>
-                        {
-                            errors.Add(args.ErrorContext.Error.Message);
-                            args.ErrorContext.Handled = true;
-                        },
-                    });
-            }
+                        errors.Add(args.ErrorContext.Error.Message);
+                        args.ErrorContext.Handled = true;
+                    },
+                });
 
             if (settingsManifest == null)
             {
                 errors.Add("Manifest cannot be empty.");
             }
 
-            bool isValid = errors.Count == 0 && settingsManifest != null;
+            bool isValid = errors.Count == 0;
             return (isValid, errors);
-        }
-
-        /// <summary>
-        /// Creates a settings json file based on the loaded setting configuration and outputs it to the specified path.
-        /// </summary>
-        /// <param name="path">Output path of settings json file.</param>
-        public static void GenerateFileFromLoadedSettings(string path)
-        {
-            string output = JsonConvert.SerializeObject(Settings, Formatting.Indented);
-            File.WriteAllText(path, output);
-        }
-
-        /// <summary>
-        /// Loads a json file from a path and creates a SettingsManifest object model.
-        /// </summary>
-        /// <param name="path">Path to settings json file.</param>
-        /// <returns>SettingsManifest object model.</returns>
-        public static SettingsManifest LoadJsonFile(string path)
-        {
-            using (StreamReader r = new StreamReader(path))
-            {
-                string json = r.ReadToEnd();
-                return JsonConvert.DeserializeObject<SettingsManifest>(json);
-            }
         }
 
         /// <summary>
@@ -126,8 +99,17 @@ namespace Microsoft.WingetCreateCLI
                 Console.WriteLine("------------------");
                 Console.WriteLine(Resources.TelemetryJustification_Message);
                 Console.WriteLine(Resources.TelemetryAnonymous_Message);
-                TelemetryDisable = !Prompt.Confirm(Resources.EnableTelemetryFirstRun_Message);
+                TelemetryDisabled = !Prompt.Confirm(Resources.EnableTelemetryFirstRun_Message);
             }
+        }
+
+        /// <summary>
+        /// Saves the current settings configurations to the settings.json file.
+        /// </summary>
+        public static void SaveSettings()
+        {
+            string output = JsonConvert.SerializeObject(Settings, Formatting.Indented);
+            File.WriteAllText(SettingsJsonPath, output);
         }
 
         /// <summary>
@@ -138,19 +120,21 @@ namespace Microsoft.WingetCreateCLI
         /// </summary>
         private static void LoadSettings()
         {
-            if (File.Exists(SettingsJsonPath) && ParseJsonFile(SettingsJsonPath).IsValid)
+            SettingsManifest parsedSettings;
+
+            if (File.Exists(SettingsJsonPath) && ParseJsonFile(SettingsJsonPath, out parsedSettings).IsValid)
             {
-                Settings = LoadJsonFile(SettingsJsonPath);
+                Settings = parsedSettings;
             }
-            else if (File.Exists(SettingsBackupJsonPath) && ParseJsonFile(SettingsBackupJsonPath).IsValid)
+            else if (File.Exists(SettingsBackupJsonPath) && ParseJsonFile(SettingsBackupJsonPath, out parsedSettings).IsValid)
             {
                 Logger.WarnLocalized(nameof(Resources.UnexpectedErrorLoadSettings_Message));
                 Logger.WarnLocalized(nameof(Resources.LoadSettingsFromBackup_Message));
-                Settings = LoadJsonFile(SettingsBackupJsonPath);
+                Settings = parsedSettings;
             }
             else
             {
-                // If either of these files exist, then this is not the first run and we can display warnings.
+                // If either of these files exist, then this indicates that a parsing error has occured and we can display warnings.
                 if (File.Exists(SettingsJsonPath) || File.Exists(SettingsBackupJsonPath))
                 {
                     Logger.WarnLocalized(nameof(Resources.UnexpectedErrorLoadSettings_Message));
@@ -159,12 +143,6 @@ namespace Microsoft.WingetCreateCLI
 
                 Settings = new SettingsManifest { Telemetry = new Models.Settings.Telemetry() };
             }
-        }
-
-        private static void SaveSettings()
-        {
-            string output = JsonConvert.SerializeObject(Settings, Formatting.Indented);
-            File.WriteAllText(SettingsJsonPath, output);
         }
     }
 }
