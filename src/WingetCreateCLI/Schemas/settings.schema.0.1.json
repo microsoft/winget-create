@@ -1,5 +1,5 @@
 {
-  "$id": "https://aka.ms/winget-settings.schema.json",
+  "$id": "https://aka.ms/wingetcreate-settings.schema.json",
   "$schema": "https://json-schema.org/draft/2019-09/schema#",
   "title": "Microsoft's Windows Package Manager Manifest Creator Settings Profile Schema",
   "definitions": {
@@ -18,6 +18,11 @@
   },
   "type": "object",
   "properties": {
+    "$schema": {
+      "description": "The settings json schema",
+      "type": "string",
+      "default": "https://aka.ms/wingetcreate-settings.schema.json"
+    },
     "telemetry": { "$ref": "#/definitions/Telemetry" }
   },
   "additionalProperties": false

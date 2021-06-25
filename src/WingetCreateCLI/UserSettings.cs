@@ -10,6 +10,7 @@ namespace Microsoft.WingetCreateCLI
     using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using Newtonsoft.Json;
+    using Sharprompt;
 
     /// <summary>
     /// UserSettings configuration class for WingetCreate.
@@ -113,6 +114,23 @@ namespace Microsoft.WingetCreateCLI
         }
 
         /// <summary>
+        /// Checks if the tool is being launched for the first time.
+        /// </summary>
+        public static void FirstRunTelemetryConsent()
+        {
+            if (!File.Exists(SettingsJsonPath))
+            {
+                Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
+                Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
+                Console.WriteLine(Resources.TelemetrySettings_Message);
+                Console.WriteLine("------------------");
+                Console.WriteLine(Resources.TelemetryJustification_Message);
+                Console.WriteLine(Resources.TelemetryAnonymous_Message);
+                TelemetryDisable = !Prompt.Confirm(Resources.EnableTelemetryFirstRun_Message);
+            }
+        }
+
+        /// <summary>
         /// Loads the correct settings file based on the following order.
         /// 1. If the settings file exists and is valid, then overwrite the backup file with the current settings file.
         /// 2. If the backup settings file exists and is valid, then recreate the settings file using the backup.
@@ -132,8 +150,13 @@ namespace Microsoft.WingetCreateCLI
             }
             else
             {
-                Logger.WarnLocalized(nameof(Resources.UnexpectedErrorLoadSettings_Message));
-                Logger.WarnLocalized(nameof(Resources.LoadSettingsFromDefault_Message));
+                // If either of these files exist, then this is not the first run and we can display warnings.
+                if (File.Exists(SettingsJsonPath) || File.Exists(SettingsBackupJsonPath))
+                {
+                    Logger.WarnLocalized(nameof(Resources.UnexpectedErrorLoadSettings_Message));
+                    Logger.WarnLocalized(nameof(Resources.LoadSettingsFromDefault_Message));
+                }
+
                 Settings = new SettingsManifest { Telemetry = new Models.Settings.Telemetry() };
             }
         }

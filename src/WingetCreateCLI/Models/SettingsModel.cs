@@ -22,6 +22,10 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class SettingsManifest 
     {
+        /// <summary>The settings json schema</summary>
+        [Newtonsoft.Json.JsonProperty("$schema", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Schema { get; set; } = "https://aka.ms/wingetcreate-settings.schema.json";
+    
         [Newtonsoft.Json.JsonProperty("telemetry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Telemetry Telemetry { get; set; }
     
