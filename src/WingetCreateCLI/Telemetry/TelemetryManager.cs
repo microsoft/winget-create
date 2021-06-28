@@ -15,7 +15,7 @@ namespace Microsoft.WingetCreateCLI.Telemetry
         /// <summary>
         /// Name for ETW event.
         /// </summary>
-        private const string EventSourceName = "Microsoft.PackageManager.Create";
+        public const string EventSourceName = "Microsoft.PackageManager.Create";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TelemetryManager"/> class.
