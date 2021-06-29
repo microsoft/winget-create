@@ -138,7 +138,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Convert list of yaml contents to Manifests object model, and then update them.
         /// </summary>
-        /// <param name="manifests">The manifest object model.</param>
+        /// <param name="manifests">Manifests object model.</param>
         /// <returns>Manifests object representing the updates manifest content, or null if the update failed.</returns>
         public async Task<Manifests> UpdateExistingManifests(Manifests manifests)
         {

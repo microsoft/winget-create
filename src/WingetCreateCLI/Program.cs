@@ -36,11 +36,7 @@ namespace Microsoft.WingetCreateCLI
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
             Logger.Trace($"Command line args: {arguments}");
 
-            Parser myParser = new Parser(config =>
-            {
-                config.HelpWriter = null;
-                config.IgnoreUnknownArguments = false;
-            });
+            Parser myParser = new Parser(config => config.HelpWriter = null);
 
             var types = LoadVerbs();
             var parserResult = myParser.ParseArguments(args, types);
@@ -74,7 +70,7 @@ namespace Microsoft.WingetCreateCLI
         private static Type[] LoadVerbs()
         {
             return Assembly.GetExecutingAssembly().GetTypes()
-                .Where(testc => testc.GetCustomAttribute<VerbAttribute>() != null).ToArray();
+                .Where(types => types.GetCustomAttribute<VerbAttribute>() != null).ToArray();
         }
 
         private static void DisplayHelp(NotParsed<object> result)
