@@ -178,6 +178,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please ensure that the updated manifest you are submitting is different from the existing package..
+        /// </summary>
+        public static string CompareUpdatedManifestWithExisting_Message {
+            get {
+                return ResourceManager.GetString("CompareUpdatedManifestWithExisting_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Would you like to submit your manifest to the Windows Package Manager repository?.
         /// </summary>
         public static string ConfirmGitHubSubmitManifest_Message {
@@ -637,6 +646,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid token provided, please generate a new GitHub token and try again..
+        /// </summary>
+        public static string InvalidTokenError_Message {
+            get {
+                return ResourceManager.GetString("InvalidTokenError_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid URL provided. Please check the URL and try again..
         /// </summary>
         public static string InvalidUrl_Error {
@@ -849,6 +867,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NewCommand_HelpText {
             get {
                 return ResourceManager.GetString("NewCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Submitting a manifest without any updated changes is not allowed. .
+        /// </summary>
+        public static string NoChangeDetectedInUpdatedManifest_Message {
+            get {
+                return ResourceManager.GetString("NoChangeDetectedInUpdatedManifest_Message", resourceCulture);
             }
         }
         

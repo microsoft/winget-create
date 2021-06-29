@@ -587,4 +587,13 @@
   <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
     <value>Unexpected error while loading settings. Please verify your settings by running the settings command.</value>
   </data>
+  <data name="CompareUpdatedManifestWithExisting_Message" xml:space="preserve">
+    <value>Please ensure that the updated manifest you are submitting is different from the existing package.</value>
+  </data>
+  <data name="InvalidTokenError_Message" xml:space="preserve">
+    <value>Invalid token provided, please generate a new GitHub token and try again.</value>
+  </data>
+  <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
+    <value>Submitting a manifest without any updated changes is not allowed. </value>
+  </data>
 </root>

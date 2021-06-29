@@ -149,7 +149,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 return true;
             }
-            catch
+            catch (Exception e)
             {
                 if (token == cachedToken)
                 {
@@ -157,6 +157,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Logger.WarnLocalized(nameof(Resources.InvalidCachedToken));
                     GitHubOAuth.DeleteTokenCache();
                     return await this.SetAndCheckGitHubToken();
+                }
+                else if (e is AuthorizationException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
+                    Logger.ErrorLocalized(nameof(Resources.InvalidTokenError_Message));
+                    return false;
                 }
                 else
                 {

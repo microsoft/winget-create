@@ -86,7 +86,7 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Tests the <see cref="UpdateCommand.DeserializeExistingManifestsAndUpdate"/> command, ensuring that it updates properties as expected.
+        /// Tests the <see cref="UpdateCommand.UpdateExistingManifests(Manifests)"/> command, ensuring that it updates properties as expected.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
@@ -102,7 +102,7 @@ namespace Microsoft.WingetCreateUnitTests
             Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
 
-            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            var updatedManifests = await command.UpdateExistingManifests(initialManifests);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
             var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
 

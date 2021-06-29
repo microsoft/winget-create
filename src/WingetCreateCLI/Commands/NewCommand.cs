@@ -150,18 +150,26 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
 
-                if (!ValidateManifest(manifestDirectoryPath) ||
-                    !Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message) ||
-                    !await this.SetAndCheckGitHubToken())
+                bool isManifestValid;
+
+                if (isManifestValid = ValidateManifest(manifestDirectoryPath) &&
+                    Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
+                {
+                    if (await this.SetAndCheckGitHubToken())
+                    {
+                        return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
+                         manifests,
+                         this.GitHubToken);
+                    }
+
+                    return false;
+                }
+                else
                 {
                     Console.WriteLine();
                     Logger.WarnLocalized(nameof(Resources.SkippingPullRequest_Message));
-                    return false;
+                    return commandEvent.IsSuccessful = isManifestValid;
                 }
-
-                return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
-                    manifests,
-                    this.GitHubToken);
             }
             finally
             {
