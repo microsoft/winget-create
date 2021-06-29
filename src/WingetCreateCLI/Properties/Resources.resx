@@ -556,4 +556,35 @@
   <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
     <value>We have detected that this package identifier already exists. If you intend to update an existing package, please use the update command.</value>
   </data>
+  <data name="EnableTelemetryFirstRun_Message" xml:space="preserve">
+    <value>Would you like to enable telemetry?</value>
+  </data>
+  <data name="SettingsCommand_HelpText" xml:space="preserve">
+    <value>Open settings</value>
+  </data>
+  <data name="ErrorParsingSettingsFile_Message" xml:space="preserve">
+    <value>Error parsing file: {0}.</value>
+    <comment>{0} - will be replaced with the path to the settings file.</comment>
+  </data>
+  <data name="GenerateNewSettingsFile_Message" xml:space="preserve">
+    <value>No settings file found, generating new settings file from loaded settings...</value>
+  </data>
+  <data name="LoadSettingsFromBackup_Message" xml:space="preserve">
+    <value>Loaded settings from backup file.</value>
+  </data>
+  <data name="LoadSettingsFromDefault_Message" xml:space="preserve">
+    <value>Loaded settings from default factory settings.</value>
+  </data>
+  <data name="TelemetryAnonymous_Message" xml:space="preserve">
+    <value>The data is collected by Microsoft and is anonymous.</value>
+  </data>
+  <data name="TelemetryJustification_Message" xml:space="preserve">
+    <value>The Windows Package Manager Manifest Creator collects usage data in order to improve your experience.</value>
+  </data>
+  <data name="TelemetrySettings_Message" xml:space="preserve">
+    <value>Telemetry Settings</value>
+  </data>
+  <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
+    <value>Unexpected error while loading settings. Please verify your settings by running the settings command.</value>
+  </data>
 </root>

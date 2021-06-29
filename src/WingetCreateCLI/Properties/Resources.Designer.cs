@@ -286,6 +286,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to enable telemetry?.
+        /// </summary>
+        public static string EnableTelemetryFirstRun_Message {
+            get {
+                return ResourceManager.GetString("EnableTelemetryFirstRun_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter values for the following fields:.
         /// </summary>
         public static string EnterFollowingFields_Message {
@@ -309,6 +318,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Error_Prefix {
             get {
                 return ResourceManager.GetString("Error_Prefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing file: {0}..
+        /// </summary>
+        public static string ErrorParsingSettingsFile_Message {
+            get {
+                return ResourceManager.GetString("ErrorParsingSettingsFile_Message", resourceCulture);
             }
         }
         
@@ -408,6 +426,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string GenerateManifestPreview_Message {
             get {
                 return ResourceManager.GetString("GenerateManifestPreview_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No settings file found, generating new settings file from loaded settings....
+        /// </summary>
+        public static string GenerateNewSettingsFile_Message {
+            get {
+                return ResourceManager.GetString("GenerateNewSettingsFile_Message", resourceCulture);
             }
         }
         
@@ -651,6 +678,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string LicenseUrl_KeywordDescription {
             get {
                 return ResourceManager.GetString("LicenseUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loaded settings from backup file..
+        /// </summary>
+        public static string LoadSettingsFromBackup_Message {
+            get {
+                return ResourceManager.GetString("LoadSettingsFromBackup_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loaded settings from default factory settings..
+        /// </summary>
+        public static string LoadSettingsFromDefault_Message {
+            get {
+                return ResourceManager.GetString("LoadSettingsFromDefault_Message", resourceCulture);
             }
         }
         
@@ -1078,6 +1123,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open settings.
+        /// </summary>
+        public static string SettingsCommand_HelpText {
+            get {
+                return ResourceManager.GetString("SettingsCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The SHA256 installer hash.
         /// </summary>
         public static string Sha256_KeywordDescription {
@@ -1195,6 +1249,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The data is collected by Microsoft and is anonymous..
+        /// </summary>
+        public static string TelemetryAnonymous_Message {
+            get {
+                return ResourceManager.GetString("TelemetryAnonymous_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Windows Package Manager Manifest Creator collects usage data in order to improve your experience..
+        /// </summary>
+        public static string TelemetryJustification_Message {
+            get {
+                return ResourceManager.GetString("TelemetryJustification_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry Settings.
+        /// </summary>
+        public static string TelemetrySettings_Message {
+            get {
+                return ResourceManager.GetString("TelemetrySettings_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modifies the GitHub auth token cache.
         /// </summary>
         public static string TokenCommand_HelpText {
@@ -1209,6 +1290,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string TokenExpired_Message {
             get {
                 return ResourceManager.GetString("TokenExpired_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected error while loading settings. Please verify your settings by running the settings command..
+        /// </summary>
+        public static string UnexpectedErrorLoadSettings_Message {
+            get {
+                return ResourceManager.GetString("UnexpectedErrorLoadSettings_Message", resourceCulture);
             }
         }
         

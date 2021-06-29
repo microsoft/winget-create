@@ -27,6 +27,7 @@ The **Windows Package Manager Manifest Creator** is available for download from 
 | [Update](doc/update.md)  | Command for updating an existing manifest |
 | [Submit](doc/submit.md)  | Command for submitting an existing PR  |
 | [Token](doc/token.md)   | Command for managing cached GitHub personal access tokens |
+| [Settings](doc/settings.md) | Command for editing the settings file configurations |
 | [-?](doc/help.md)      | Displays command line help |
 
 Click on the individual commands to learn more.
@@ -109,6 +110,8 @@ If you build the client yourself the instrumentation will not be enabled and no 
 The wingetcreate.exe client respects machine wide privacy settings and users can opt-out on their device, as documented in the Microsoft Windows privacy statement [here](https://support.microsoft.com/en-us/help/4468236/diagnostics-feedback-and-privacy-in-windows-10-microsoft-privacy).
 
 In short to opt-out, go to `Start`, then select `Settings` > `Privacy` > `Diagnostics & feedback`, and select `Basic`.
+
+You can also opt-out of telemetry by configuring the `settings.json` file and setting the `telemetry.disabled` field to true. More information can be found in our [Settings Command documentation](/doc/settings.md)
 
 See the [privacy statement](/PRIVACY.md) for more details.
 

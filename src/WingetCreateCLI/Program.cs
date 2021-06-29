@@ -28,13 +28,15 @@ namespace Microsoft.WingetCreateCLI
         private static async Task<int> Main(string[] args)
         {
             Logger.Initialize();
+            UserSettings.FirstRunTelemetryConsent();
+            TelemetryEventListener.EventListener.IsTelemetryEnabled();
 
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
             Logger.Trace($"Command line args: {arguments}");
 
             Parser myParser = new Parser(config => config.HelpWriter = null);
 
-            var parserResult = myParser.ParseArguments<NewCommand, UpdateCommand, SubmitCommand, TokenCommand>(args);
+            var parserResult = myParser.ParseArguments<NewCommand, UpdateCommand, SubmitCommand, TokenCommand, SettingsCommand>(args);
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
             if (command == null)
             {
