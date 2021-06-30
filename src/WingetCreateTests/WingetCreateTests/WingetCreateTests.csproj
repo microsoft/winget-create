@@ -50,6 +50,15 @@
     </None>
     <None Update="Resources\TestPublisher.MultipleInstallerApp.yaml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>     
+    </None>
+    <None Update="Resources\Multifile.MsiTest.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.MsiTest.installer.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.MsiTest.locale.en-US.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>      
   </ItemGroup>
 </Project>

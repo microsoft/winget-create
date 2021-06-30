@@ -67,5 +67,20 @@ namespace Microsoft.WingetCreateTests
         /// File name of the test msix manifest.
         /// </summary>
         public const string TestMsixManifest = "WingetCreateE2E.MsixTest.yaml";
+
+        /// <summary>
+        /// File name of the test multifile msi version manifest.
+        /// </summary>
+        public const string TestMultifileMsiVersionManifest = "Multifile.MsiTest.yaml";
+
+        /// <summary>
+        /// File name of the test multifile msi installer manifest.
+        /// </summary>
+        public const string TestMultifileMsiInstallerManifest = "Multifile.MsiTest.installer.yaml";
+
+        /// <summary>
+        /// File name of the test multifile msi default locale manifest.
+        /// </summary>
+        public const string TestMultifileMsiDefaultLocaleManifest = "Multifile.MsiTest.locale.en-US.yaml";
     }
 }

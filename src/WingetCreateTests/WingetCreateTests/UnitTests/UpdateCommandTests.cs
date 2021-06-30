@@ -109,6 +109,28 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
         }
 
+        /// <summary>
+        /// Verifies that the update command blocks the submission of a manifest if no installer hash changes are detected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task BlockUpdateSubmissionsWithNoUpdate()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestMsiInstaller);
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsiPackageIdentifier, "1.2.3.4", this.tempPath);
+            command.SubmitToGitHub = true;
+
+            var versionManifest = GetInitialManifestContent(TestConstants.TestMultifileMsiVersionManifest);
+            var installerManifest = GetInitialManifestContent(TestConstants.TestMultifileMsiInstallerManifest);
+            var defaultLocaleManifest = GetInitialManifestContent(TestConstants.TestMultifileMsiDefaultLocaleManifest);
+            var manifests = versionManifest.Concat(installerManifest).Concat(defaultLocaleManifest).ToList();
+
+            await command.ExecuteManifestUpdate(manifests, this.testCommandEvent);
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.NoChangeDetectedInUpdatedManifest_Message), "Failed to block manifests without updates from submitting.");
+        }
+
         private static List<string> GetInitialManifestContent(string manifestFileName)
         {
             string testFilePath = TestUtils.GetTestFile(manifestFileName);

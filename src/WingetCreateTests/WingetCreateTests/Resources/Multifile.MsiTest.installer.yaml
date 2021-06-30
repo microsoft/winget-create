@@ -1,0 +1,16 @@
+# Created using 
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.0.0.schema.json
+
+PackageIdentifier: WingetCreateE2E.MsiTest
+PackageVersion: 1.2.3.4
+MinimumOSVersion: 10.0.0.0
+InstallerType: msi
+Installers:
+- Architecture: x64
+  Scope: machine
+  InstallerUrl: https://fakedomain.com/WingetCreateMsiInstaller.msi
+  InstallerSha256: 3C2C5B16AACAD428E7E83AA7A9A0E2320563F68C3E27060F6CD4D297AAA9DEF7
+  ProductCode: '{E2650EFC-DCD3-4FAA-BBAC-FD1812B03A61}'
+ManifestType: installer
+ManifestVersion: 1.0.0
+

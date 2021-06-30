@@ -309,10 +309,18 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Boolean value indicating whether the package identifier is valid.</returns>
         private async Task<bool> PromptPackageIdentifierAndCheckDuplicates(Manifests manifests)
         {
+            GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
+
+            if (!string.IsNullOrEmpty(this.GitHubToken))
+            {
+                if (!await this.SetAndCheckGitHubToken())
+                {
+                    return false;
+                }
+            }
+
             VersionManifest versionManifest = manifests.VersionManifest;
             versionManifest.PackageIdentifier = PromptProperty(versionManifest, versionManifest.PackageIdentifier, nameof(versionManifest.PackageIdentifier));
-
-            GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
 
             string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
             if (!string.IsNullOrEmpty(exactMatch))

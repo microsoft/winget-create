@@ -1,0 +1,22 @@
+# Created using 
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.0.0.schema.json
+
+PackageIdentifier: WingetCreateE2E.MsiTest
+PackageVersion: 1.2.3.4
+PackageLocale: en-US
+Publisher: WingetCreateE2E
+Author: Microsoft
+PackageName: MsiTest
+License: MIT
+LicenseUrl: https://github.com/microsoft/winget-create
+ShortDescription: Testing WingetCreate with an msi installer
+Tags:
+- Windows Package Manager
+- winget create
+- package manager
+- utility
+- tool
+- test
+ManifestType: defaultLocale
+ManifestVersion: 1.0.0
+
