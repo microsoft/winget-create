@@ -38,14 +38,14 @@ namespace Microsoft.WingetCreateCLI
 
             Parser myParser = new Parser(config => config.HelpWriter = null);
 
-            var types = LoadVerbs();
+            var types = GetVerbs();
             var parserResult = myParser.ParseArguments(args, types);
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
 
             if (command == null)
             {
                 DisplayHelp(parserResult as NotParsed<object>);
-                return (Environment.GetCommandLineArgs().Length > 1) ? 1 : 0;
+                return args.Any() ? 1 : 0;
             }
 
             try
@@ -67,7 +67,7 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
-        private static Type[] LoadVerbs()
+        private static Type[] GetVerbs()
         {
             return Assembly.GetExecutingAssembly().GetTypes()
                 .Where(types => types.GetCustomAttribute<VerbAttribute>() != null).ToArray();

@@ -141,9 +141,11 @@ namespace Microsoft.WingetCreateCore
         /// Deserializes a list of manifest strings into their appropriate object models.
         /// </summary>
         /// <param name="manifestContents">List of manifest string contents.</param>
-        /// <param name="manifests">Wrapper object for manifest object models.</param>
-        public static void DeserializeManifestContents(IEnumerable<string> manifestContents, Manifests manifests)
+        /// <returns>Manifest object model.</returns>
+        public static Manifests DeserializeManifestContents(IEnumerable<string> manifestContents)
         {
+            Manifests manifests = new Manifests();
+
             foreach (string content in manifestContents)
             {
                 string trimmedContent = RemoveBom(content);
@@ -171,6 +173,8 @@ namespace Microsoft.WingetCreateCore
                     manifests.InstallerManifest = Serialization.DeserializeFromString<InstallerManifest>(trimmedContent);
                 }
             }
+
+            return manifests;
         }
 
         /// <summary>

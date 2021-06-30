@@ -138,10 +138,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Convert list of yaml contents to Manifests object model, and then update them.
         /// </summary>
-        /// <param name="manifests">Manifests object model.</param>
+        /// <param name="latestManifestContent">List of manifests to be updated.</param>
         /// <returns>Manifests object representing the updates manifest content, or null if the update failed.</returns>
-        public async Task<Manifests> UpdateExistingManifests(Manifests manifests)
+        public async Task<Manifests> DeserializeExistingManifestsAndUpdate(List<string> latestManifestContent)
         {
+            Manifests manifests = Serialization.DeserializeManifestContents(latestManifestContent);
+
             if (manifests.SingletonManifest != null)
             {
                 manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
@@ -197,12 +199,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Boolean representing whether the manifest was updated successfully or not.</returns>
         public async Task<bool> ExecuteManifestUpdate(List<string> latestManifestContent, CommandExecutedEvent commandEvent)
         {
-            Manifests originalManifests = new Manifests();
-            Serialization.DeserializeManifestContents(latestManifestContent, originalManifests);
+            Manifests originalManifests = Serialization.DeserializeManifestContents(latestManifestContent);
+            Manifests updatedManifests = await this.DeserializeExistingManifestsAndUpdate(latestManifestContent);
 
-            DisplayManifestPreview(originalManifests);
-
-            Manifests updatedManifests = await this.UpdateExistingManifests(originalManifests);
             if (updatedManifests == null)
             {
                 return false;
@@ -221,7 +220,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 if (this.SubmitToGitHub)
                 {
-                    if (!this.CheckForUpdatedInstallerHash(originalManifests, updatedManifests))
+                    if (!this.VerifyUpdatedInstallerHash(originalManifests.InstallerManifest, updatedManifests.InstallerManifest))
                     {
                         Logger.ErrorLocalized(nameof(Resources.NoChangeDetectedInUpdatedManifest_Message));
                         Logger.ErrorLocalized(nameof(Resources.CompareUpdatedManifestWithExisting_Message));
@@ -281,37 +280,14 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Compares the hashes of the original and updated manifests and returns true if the new manifest has an updated SHA256 hash.
         /// </summary>
-        /// <param name="oldManifests">The original manifest object model.</param>
-        /// <param name="newManifests">The updated manifest object model.</param>
+        /// <param name="oldManifest">The original installer manifest object model.</param>
+        /// <param name="newManifest">The updated installer manifest object model.</param>
         /// <returns>A boolean value indicating whether the updated manifest has new changes compared to the original manifest.</returns>
-        private bool CheckForUpdatedInstallerHash(Manifests oldManifests, Manifests newManifests)
+        private bool VerifyUpdatedInstallerHash(InstallerManifest oldManifest, InstallerManifest newManifest)
         {
-            InstallerManifest oldInstallerManifest = oldManifests.InstallerManifest;
-            List<string> hashes = new List<string>();
-
-            foreach (WingetCreateCore.Models.Installer.Installer installer in oldInstallerManifest.Installers)
-            {
-                if (!hashes.Contains(installer.InstallerSha256))
-                {
-                    hashes.Add(installer.InstallerSha256);
-                }
-            }
-
-            InstallerManifest newInstallerManifest = newManifests.InstallerManifest;
-
-            foreach (WingetCreateCore.Models.Installer.Installer installer in newInstallerManifest.Installers)
-            {
-                if (hashes.Contains(installer.InstallerSha256))
-                {
-                    continue;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            var oldHashes = oldManifest.Installers.Select(i => i.InstallerSha256).Distinct();
+            var newHashes = newManifest.Installers.Select(i => i.InstallerSha256).Distinct();
+            return newHashes.Except(oldHashes).Any();
         }
     }
 }

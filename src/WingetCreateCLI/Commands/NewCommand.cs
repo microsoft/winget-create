@@ -150,16 +150,13 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
 
-                bool isManifestValid;
+                bool isManifestValid = ValidateManifest(manifestDirectoryPath);
 
-                if (isManifestValid = ValidateManifest(manifestDirectoryPath) &&
-                    Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
+                if (isManifestValid && Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
                 {
                     if (await this.SetAndCheckGitHubToken())
                     {
-                        return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
-                         manifests,
-                         this.GitHubToken);
+                        return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken);
                     }
 
                     return false;
@@ -315,7 +312,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             VersionManifest versionManifest = manifests.VersionManifest;
             versionManifest.PackageIdentifier = PromptProperty(versionManifest, versionManifest.PackageIdentifier, nameof(versionManifest.PackageIdentifier));
 
-            GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
+            GitHub client = new GitHub(null, this.WingetRepoOwner, this.WingetRepo);
 
             string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
             if (!string.IsNullOrEmpty(exactMatch))
