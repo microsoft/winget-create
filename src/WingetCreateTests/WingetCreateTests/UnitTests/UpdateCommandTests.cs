@@ -66,8 +66,7 @@ namespace Microsoft.WingetCreateUnitTests
             string manifestDir = Utils.GetAppManifestDirPath(TestConstants.TestPackageIdentifier, version);
             var updatedManifestContents = Directory.GetFiles(Path.Combine(this.tempPath, manifestDir)).Select(f => File.ReadAllText(f));
             Assert.IsTrue(updatedManifestContents.Any(), "Updated manifests were not created successfully");
-            var manifestsToValidate = new Manifests();
-            Serialization.DeserializeManifestContents(updatedManifestContents, manifestsToValidate);
+            Manifests manifestsToValidate = Serialization.DeserializeManifestContents(updatedManifestContents);
             Assert.AreEqual(version, manifestsToValidate.VersionManifest.PackageVersion, $"Failed to update version of {TestConstants.TestPackageIdentifier}");
         }
 
@@ -86,7 +85,7 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Tests the <see cref="UpdateCommand.UpdateExistingManifests(Manifests)"/> command, ensuring that it updates properties as expected.
+        /// Tests the <see cref="UpdateCommand.DeserializeExistingManifestsAndUpdate"/> command, ensuring that it updates properties as expected.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
@@ -98,11 +97,10 @@ namespace Microsoft.WingetCreateUnitTests
             string version = "1.2.3.4";
             UpdateCommand command = GetUpdateCommand(TestConstants.TestMsiPackageIdentifier, version, this.tempPath);
             List<string> initialManifestContent = GetInitialManifestContent(TestConstants.TestMsiManifest);
-            var initialManifests = new Manifests();
-            Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
+            Manifests initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
 
-            var updatedManifests = await command.UpdateExistingManifests(initialManifests);
+            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
             var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
 
