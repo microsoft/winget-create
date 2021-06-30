@@ -1,7 +1,7 @@
 # Created using 
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.0.0.schema.json
 
-PackageIdentifier: WingetCreateE2E.MsiTest
+PackageIdentifier: Multifile.MsiTest
 PackageVersion: 1.2.3.4
 MinimumOSVersion: 10.0.0.0
 InstallerType: msi

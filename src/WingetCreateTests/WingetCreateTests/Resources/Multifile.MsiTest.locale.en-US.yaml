@@ -1,7 +1,7 @@
 # Created using 
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.0.0.schema.json
 
-PackageIdentifier: WingetCreateE2E.MsiTest
+PackageIdentifier: Multifile.MsiTest
 PackageVersion: 1.2.3.4
 PackageLocale: en-US
 Publisher: WingetCreateE2E
