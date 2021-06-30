@@ -19,7 +19,7 @@ Tags:
 InstallerType: msix
 Installers:
   - Architecture: x64
-    InstallerUrl: https://fakedomain.com/WingetCreateMsixInstaller.msixbundle
+    InstallerUrl: https://fakedomain.com/WingetCreateTestMsixInstaller.msixbundle
     InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
     SignatureSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
     InstallerType: msix

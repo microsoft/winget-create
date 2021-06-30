@@ -58,7 +58,7 @@ namespace Microsoft.WingetCreateUnitTests
         public void ShowMissingLocalizedStrings()
         {
             // Expected language set comes from https://setup.intlservices.microsoft.com/Home/ConfigSettings?TeamID=25160
-            string[] expectedLanguages = new[] { "af-ZA", "am-ET", "ar-SA", "az-Latn-AZ", "bg-BG", "ca-ES", "cs-CZ", "da-DK", "de-DE", "el-GR", "en-GB", "es-ES", "es-MX", "et-EE", "eu-ES", "fa-IR", "fi-FI", "fil-PH", "fr-CA", "fr-FR", "gl-ES", "he-IL", "hi-IN", "hr-HR", "hu-HU", "id-ID", "is-IS", "it-IT", "ja-JP", "kk-KZ", "km-KH", "kn-IN", "ko-KR", "lo-LA", "lt-LT", "lv-LV", "mk-MK", "ml-IN", "ms-MY", "nb-NO", "nl-NL", "pl-PL", "pt-BR", "pt-PT", "ro-RO", "ru-RU", "sk-SK", "sl-SI", "sq-AL", "sr-Latn-RS", "sv-SE", "ta-IN", "te-IN", "th-TH", "tr-TR", "uk-UA", "vi-VN", "zh-CN", "zh-TW" };
+            string[] expectedLanguages = new[] { "de-DE", "es-ES", "fr-FR", "it-IT", "ja-JP", "ko-KR", "pt-BR", "ru-RU", "zh-CN", "zh-TW" };
 
             var expectedResourceKeys = Resources.ResourceManager.GetResourceSet(new CultureInfo("en-us"), true, true)
                 .Cast<DictionaryEntry>()

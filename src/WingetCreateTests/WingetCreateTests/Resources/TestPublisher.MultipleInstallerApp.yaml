@@ -4,15 +4,25 @@ PackageName: Multiple installer app
 Publisher: Test publisher
 License: MIT
 ShortDescription: A manifest used for testing with multiple installers.
+InstallerLocale: en-US
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v-0.2.10771-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle
+    InstallerUrl: https://fakedomain.com/WingetCreateTestMsixInstaller.msixbundle
     InstallerType: msix
-    InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
   - Architecture: x86
-    InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v-0.3.11102-preview/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.appxbundle
+    InstallerUrl: https://fakedomain.com/WingetCreateTestMsixInstaller.msixbundle
     InstallerType: msix
-    InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+    InstallerType: exe
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestMsiInstaller.msi
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+    InstallerType: msi
+    Scope: machine
 PackageLocale: en-US
 ManifestType: singleton
 ManifestVersion: 1.0.0

@@ -23,6 +23,39 @@ namespace Microsoft.WingetCreateTests
         private static HttpResponseMessage httpResponseMessage;
 
         /// <summary>
+        /// Initializes and sets up the infrastructure for mocking installer downloads, and sets the mock response content for each specified file.
+        /// </summary>
+        /// <param name="files">An array of files to generate mock response for.</param>
+        public static void InitializeMultipleMockDownloads(params string[] files)
+        {
+            var handlerMock = new Mock<HttpMessageHandler>();
+
+            foreach (var filename in files)
+            {
+                string url = $"https://fakedomain.com/{filename}";
+                var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
+                var content = new ByteArrayContent(File.ReadAllBytes(TestUtils.GetTestFile(filename)));
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                httpResponse.Content = content;
+
+                handlerMock
+                    .Protected()
+
+                    // Setup the PROTECTED method to mock
+                    .Setup<Task<HttpResponseMessage>>(
+                        "SendAsync",
+                        ItExpr.Is<HttpRequestMessage>(x => x.RequestUri.AbsoluteUri == url),
+                        ItExpr.IsAny<CancellationToken>())
+
+                    // prepare the expected response of the mocked http call
+                    .ReturnsAsync(httpResponse)
+                    .Verifiable();
+            }
+
+            PackageParser.SetHttpMessageHandler(handlerMock.Object);
+        }
+
+        /// <summary>
         /// Initializes and sets up the infrastructure for mocking installer downloads.
         /// </summary>
         public static void InitializeMockDownload()
@@ -52,7 +85,7 @@ namespace Microsoft.WingetCreateTests
         /// <param name="installerName">File name of the installer.</param>
         public static void SetMockHttpResponseContent(string installerName)
         {
-            var content = new ByteArrayContent(File.ReadAllBytes(Path.Combine("Resources", installerName)));
+            var content = new ByteArrayContent(File.ReadAllBytes(TestUtils.GetTestFile(installerName)));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             httpResponseMessage.Content = content;
             PackageParser.SetHttpMessageHandler(httpMessageHandler);
@@ -65,7 +98,7 @@ namespace Microsoft.WingetCreateTests
         /// <returns>Full path of the test file.</returns>
         public static string GetTestFile(string fileName)
         {
-            return Path.Combine(Environment.CurrentDirectory, @"Resources", fileName);
+            return Path.Combine(Environment.CurrentDirectory, "Resources", fileName);
         }
     }
 }

@@ -163,7 +163,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             if (!this.InstallerUrls.Any())
             {
-                this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).ToArray();
+                this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().ToArray();
             }
 
             // We only support updates with same number of installer URLs
