@@ -5,7 +5,7 @@
     <TargetFramework>net5.0-windows10.0.17763.0</TargetFramework>
     <AssemblyName>WingetCreateCLI</AssemblyName>
     <RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Platforms>x64;x86</Platforms>
     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
