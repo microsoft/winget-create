@@ -587,4 +587,7 @@
   <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
     <value>Unexpected error while loading settings. Please verify your settings by running the settings command.</value>
   </data>
+  <data name="MissingPackageError_Message" xml:space="preserve">
+    <value>Missing new package for {0} {1} installer in existing manifest</value>
+  </data>
 </root>

@@ -146,13 +146,13 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerManifest"><see cref="InstallerManifest"/> to update.</param>
         /// <param name="installerUrls">InstallerUrls where installers can be downloaded.</param>
         /// <param name="paths">Paths to packages to extract metadata from.</param>
+        /// <param name="installersMissingMatches">If populated, all packages were successfully parsed, but there were some without matches in the existing manifest.</param>
         /// <returns>True if update succeeded, false otherwise.</returns>
-        public static bool UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrls, List<string> paths)
+        public static bool UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrls, List<string> paths, out List<Installer> installersMissingMatches)
         {
             var newPackages = paths.Zip(installerUrls, (path, url) => (path, url)).ToList();
-
-            var existingInstallers = installerManifest.Installers;
             var newInstallers = new List<Installer>();
+            installersMissingMatches = new List<Installer>();
 
             foreach (var (path, url) in newPackages)
             {
@@ -162,22 +162,30 @@ namespace Microsoft.WingetCreateCore
                 }
             }
 
-            // We only allow updating manifests with the same packages
-            if (newInstallers.Count != existingInstallers.Count)
-            {
-                return false;
-            }
+            //// We only allow updating manifests with the same package count
+            //if (newInstallers.Count != existingInstallers.Count)
+            //{
+            //    return false;
+            //}
+
+            installersMissingMatches.AddRange(installerManifest.Installers);
 
             // Update previous installers with parsed data from downloaded packages
             foreach (var newInstaller in newInstallers)
             {
-                var matchingExistingInstaller = existingInstallers.SingleOrDefault(i =>
+                // Find a match for the current installer in the list of installers remaining to be updated.
+                var matchingExistingInstaller = installersMissingMatches.SingleOrDefault(i =>
                     (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
                     i.Architecture == newInstaller.Architecture);
 
+                // If we can't find a match in the remaining existing packages, there must be a mismatch between the old manifest and the URLs provided
                 if (matchingExistingInstaller == null)
                 {
                     return false;
+                }
+                else
+                {
+                    installersMissingMatches.Remove(matchingExistingInstaller);
                 }
 
                 matchingExistingInstaller.InstallerUrl = newInstaller.InstallerUrl;

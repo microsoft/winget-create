@@ -790,6 +790,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Missing new package for {0} {1} installer in existing manifest.
+        /// </summary>
+        public static string MissingPackageError_Message {
+            get {
+                return ResourceManager.GetString("MissingPackageError_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The most common package term.
         /// </summary>
         public static string Moniker_KeywordDescription {

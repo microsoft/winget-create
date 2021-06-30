@@ -76,7 +76,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Gets or sets the new value(s) used to update the manifest installer elements.
         /// </summary>
         [Option('u', "urls", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]
-        public IEnumerable<string> InstallerUrls { get; set; }
+        public IEnumerable<string> InstallerUrls { get; set; } = new List<string>();
 
         /// <summary>
         /// Executes the update command flow.
@@ -169,7 +169,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             // We only support updates with same number of installer URLs
             if (this.InstallerUrls.Distinct().Count() != installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().Count())
             {
-                Logger.Error(Resources.MultipleInstallerUpdateDiscrepancy_Error);
+                Logger.ErrorLocalized(nameof(Resources.MultipleInstallerUpdateDiscrepancy_Error));
                 return null;
             }
 
@@ -184,8 +184,21 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.packageFiles.Add(packageFile);
             }
 
-            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, this.packageFiles))
+            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, this.packageFiles, out List<WingetCreateCore.Models.Installer.Installer> installersMissingMatches))
             {
+                if (installersMissingMatches.Any())
+                {
+                    Logger.ErrorLocalized(nameof(Resources.MultipleInstallerUpdateDiscrepancy_Error));
+                    foreach (var installer in installersMissingMatches)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.MissingPackageError_Message), installer.InstallerType, installer.Architecture);
+                    }
+                }
+                else
+                {
+                    Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
+                }
+
                 return null;
             }
 

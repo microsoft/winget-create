@@ -176,8 +176,12 @@ namespace Microsoft.WingetCreateUnitTests
                 Id = id,
                 Version = version,
                 OutputDir = outputDir,
-                InstallerUrls = installerUrls ?? new List<string>(),
             };
+
+            if (installerUrls != null)
+            {
+                updateCommand.InstallerUrls = installerUrls;
+            }
 
             var initialManifestContent = GetInitialManifestContent($"{id}.yaml");
 
