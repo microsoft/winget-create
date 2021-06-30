@@ -808,11 +808,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updating an existing manifest with multiple distinct installer urls is currently not supported..
+        ///   Looks up a localized string similar to Updating a manifest is only supported with the same number of installer URLs, and the same installer types and architectures.
         /// </summary>
-        public static string MultipleInstallerUrlFound_Error {
+        public static string MultipleInstallerUpdateDiscrepancy_Error {
             get {
-                return ResourceManager.GetString("MultipleInstallerUrlFound_Error", resourceCulture);
+                return ResourceManager.GetString("MultipleInstallerUpdateDiscrepancy_Error", resourceCulture);
             }
         }
         

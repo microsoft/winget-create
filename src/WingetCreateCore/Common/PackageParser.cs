@@ -114,9 +114,7 @@ namespace Microsoft.WingetCreateCore
             defaultLocaleManifest.ShortDescription ??= versionInfo.FileDescription?.Trim();
             defaultLocaleManifest.License ??= versionInfo.LegalCopyright?.Trim();
 
-            var installers = ParsePackageAndGenerateInstallerNodes(path, url, manifests);
-
-            if (installers.Any())
+            if (ParsePackageAndGenerateInstallerNodes(path, url, installerManifest.Installers, manifests))
             {
                 if (!string.IsNullOrEmpty(defaultLocaleManifest.PackageVersion))
                 {
@@ -135,27 +133,22 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
-        public static IEnumerable<Installer> ParsePackageAndGenerateInstallerNodes(string path, string url, Manifests manifests)
+        public static bool ParsePackageAndGenerateInstallerNodes(string path, string url, List<Installer> installers, Manifests manifests)
         {
             var installer = new Installer();
             installer.InstallerUrl = url;
             installer.InstallerSha256 = GetFileHash(path);
             installer.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
 
-            if (ParseExeInstallerType(path, installer) ||
+            if (ParseExeInstallerType(path, installers, installer) ||
                 ParseMsix(path, manifests, installer) ||
                 ParseMsi(path, installer, manifests))
             {
-                if (!manifests.InstallerManifest.Installers.Any())
-                {
-                    manifests.InstallerManifest.Installers.Add(installer);
-                }
-
-                return manifests.InstallerManifest.Installers;
+                return true;
             }
             else
             {
-                return null;
+                return false;
             }
         }
 
@@ -220,31 +213,28 @@ namespace Microsoft.WingetCreateCore
         {
             var newPackages = paths.Zip(installerUrls, (Path, Url) => (Path, Url)).ToList();
 
-            if (newPackages.Count != installerManifest.Installers.Count)
-            {
-                return false;
-            }
+            var existingInstallers = installerManifest.Installers;
+            var newInstallers = new List<Installer>();
 
             foreach (var package in newPackages)
             {
                 string installerSha256 = GetFileHash(package.Path);
 
-                var installers = ParsePackageAndGenerateInstallerNodes(package.Path, package.Url, null);
-
-                foreach (var installer in installers)
+                if (!ParsePackageAndGenerateInstallerNodes(package.Path, package.Url, newInstallers, null))
                 {
-                    installer.InstallerSha256 = installerSha256;
-                    installer.InstallerUrl = package.Url;
-
-                    // If installer is an MSI, update its ProductCode
-                    var updatedInstaller = new Installer();
-                    if (ParseMsi(package.Path, updatedInstaller, null))
-                    {
-                        installer.ProductCode = updatedInstaller.ProductCode;
-                    }
-
-                    GetAppxMetadataAndSetInstallerProperties(package.Path, installerManifest, installer);
+                    return false;
                 }
+            }
+
+            foreach (var installer in newInstallers)
+            {
+                var matchingExistingInstaller = existingInstallers.SingleOrDefault(i => i.InstallerType == installer.InstallerType && i.Architecture == installer.Architecture);
+                if (matchingExistingInstaller == null)
+                {
+                    return false;
+                }
+
+
             }
 
             return true;
@@ -300,7 +290,7 @@ namespace Microsoft.WingetCreateCore
             return null;
         }
 
-        private static bool ParseExeInstallerType(string path, Installer installer)
+        private static bool ParseExeInstallerType(string path, List<Installer> installers, Installer baseInstaller)
         {
             try
             {
@@ -317,17 +307,19 @@ namespace Microsoft.WingetCreateCore
                 if (installerType.EqualsIC("wix"))
                 {
                     // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
-                    installer.InstallerType = InstallerType.Burn;
+                    baseInstaller.InstallerType = InstallerType.Burn;
                 }
                 else if (KnownInstallerResourceNames.Contains(installerType))
                 {
                     // If it's a known exe installer type, set as appropriately
-                    installer.InstallerType = installerType.ToEnumOrDefault<InstallerType>();
+                    baseInstaller.InstallerType = installerType.ToEnumOrDefault<InstallerType>();
                 }
                 else
                 {
-                    installer.InstallerType = InstallerType.Exe;
+                    baseInstaller.InstallerType = InstallerType.Exe;
                 }
+
+                installers.Add(baseInstaller);
 
                 return true;
             }
@@ -338,7 +330,7 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
-        private static bool ParseMsi(string path, Installer installer, Manifests manifests)
+        private static bool ParseMsi(string path, Installer baseInstaller, Manifests manifests)
         {
             DefaultLocaleManifest defaultLocaleManifest = manifests?.DefaultLocaleManifest;
 
@@ -346,7 +338,7 @@ namespace Microsoft.WingetCreateCore
             {
                 using (var database = new QDatabase(path, Deployment.WindowsInstaller.DatabaseOpenMode.ReadOnly))
                 {
-                    installer.InstallerType = InstallerType.Msi;
+                    baseInstaller.InstallerType = InstallerType.Msi;
 
                     var properties = database.Properties.ToList();
 
@@ -357,15 +349,15 @@ namespace Microsoft.WingetCreateCore
                         defaultLocaleManifest.Publisher ??= properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value;
                     }
 
-                    installer.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
+                    baseInstaller.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
 
                     string archString = database.SummaryInfo.Template.Split(';').First();
 
                     archString = archString.EqualsIC("Intel") ? "x86" : archString.EqualsIC("Intel64") ? "x64" : archString;
 
-                    installer.Architecture = archString.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+                    baseInstaller.Architecture = archString.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
 
-                    if (installer.InstallerLocale == null)
+                    if (baseInstaller.InstallerLocale == null)
                     {
                         string languageString = properties.FirstOrDefault(p => p.Property == "ProductLanguage")?.Value;
 
@@ -373,7 +365,7 @@ namespace Microsoft.WingetCreateCore
                         {
                             try
                             {
-                                installer.InstallerLocale = new CultureInfo(lcid).Name;
+                                baseInstaller.InstallerLocale = new CultureInfo(lcid).Name;
                             }
                             catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is CultureNotFoundException)
                             {
@@ -382,6 +374,8 @@ namespace Microsoft.WingetCreateCore
                         }
                     }
                 }
+
+                manifests?.InstallerManifest.Installers.Add(baseInstaller);
 
                 return true;
             }
@@ -411,6 +405,26 @@ namespace Microsoft.WingetCreateCore
 
             return true;
         }
+
+        //private static IList<Installer> MergeAndUpdateInstallers(IEnumerable<Installer> oldInstallers, IEnumerable<Installer> newInstallers)
+        //{
+        //    // Remove installer nodes which have no matching architecture in msix/bundle
+        //    msixInstallers.RemoveAll(i => !appxMetadatas.Any(m => m.Architecture.EqualsIC(i.Architecture.ToString())));
+
+        //    foreach (var appxMetadata in appxMetadatas)
+        //    {
+        //        InstallerArchitecture appxArchitecture = appxMetadata.Architecture.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+        //        var matchingInstaller = msixInstallers.SingleOrDefault(i => i.Architecture == appxArchitecture);
+        //        if (matchingInstaller == null)
+        //        {
+        //            matchingInstaller = CloneInstaller(msixInstaller);
+        //            installers.Add(matchingInstaller);
+        //            msixInstallers.Add(matchingInstaller);
+        //        }
+
+        //        SetInstallerPropertiesFromAppxMetadata(appxMetadata, matchingInstaller, installerManifest);
+        //    }
+        //}
 
         private static string GetApplicationProperty(AppxMetadata appxMetadata, string propertyName)
         {

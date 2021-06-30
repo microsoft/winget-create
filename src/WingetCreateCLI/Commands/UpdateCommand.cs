@@ -166,8 +166,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).ToArray();
             }
 
-            //bool previousManifestHasMultipleUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().Count() > 1;
-            //bool updatingManifestWithMultipleUrls = this.InstallerUrls.Distinct().Count() > 1;
+            // We only support updates with same number of installer URLs
+            if (this.InstallerUrls.Distinct().Count() != installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().Count())
+            {
+                Logger.Error(Resources.MultipleInstallerUpdateDiscrepancy_Error);
+                return null;
+            }
 
             foreach (var url in this.InstallerUrls)
             {
@@ -177,17 +181,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return null;
                 }
 
-                //// Updating an msixbundle is only supported when specifying a single distinct URL
-                //if (updatingManifestWithMultipleUrls && PackageParser.IsPackageMsixBundle(packageFile))
-                //{
-                //    Logger.Error(Resources.MultipleInstallerUrlFound_Error);
-                //    return null;
-                //}
-
                 this.packageFiles.Add(packageFile);
             }
 
-            PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, this.packageFiles);
+            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, this.packageFiles))
+            {
+                return null;
+            }
 
             return manifests;
         }

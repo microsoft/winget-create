@@ -57,7 +57,7 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task UpdateCommandTest()
         {
             string version = "1.2.3.4";
-            UpdateCommand command = GetUpdateCommand(TestConstants.TestPackageIdentifier, version, this.tempPath);
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestPackageIdentifier, version, this.tempPath, null);
             var initialManifestContent = GetInitialManifestContent($"{TestConstants.TestPackageIdentifier}.yaml");
 
             var updatedManifests = await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent);
@@ -78,12 +78,12 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateWithMultipleInstallers()
         {
-            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsixInstaller, null, this.tempPath);
-            var initialManifestContent = GetInitialManifestContent($"{TestConstants.TestMsixInstaller}.yaml");
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestMultipleInstallerPackageIdentifier, null, this.tempPath, new[] { "fakeurl" });
+            var initialManifestContent = GetInitialManifestContent($"{TestConstants.TestMultipleInstallerPackageIdentifier}.yaml");
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.MultipleInstallerUrlFound_Error), "Multiple installer url error should be thrown");
+            Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Multiple installer url error should be thrown");
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.SetMockHttpResponseContent(TestConstants.TestMsiInstaller);
 
             string version = "1.2.3.4";
-            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsiPackageIdentifier, version, this.tempPath);
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsiPackageIdentifier, version, this.tempPath, null);
             List<string> initialManifestContent = GetInitialManifestContent(TestConstants.TestMsiManifest);
             var initialManifests = new Manifests();
             Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
@@ -119,7 +119,7 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.SetMockHttpResponseContent(TestConstants.TestMsiInstaller);
 
             string version = "1.2.3.4";
-            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsiPackageIdentifier, version, this.tempPath);
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsiPackageIdentifier, version, this.tempPath, null);
             List<string> initialManifestContent = GetInitialManifestContent(TestConstants.TestMsiManifest);
             var initialManifests = new Manifests();
             Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
@@ -141,13 +141,14 @@ namespace Microsoft.WingetCreateUnitTests
             return initialManifestContent;
         }
 
-        private static UpdateCommand GetUpdateCommand(string id, string version, string outputDir)
+        private static UpdateCommand GetUpdateCommand(string id, string version, string outputDir, IEnumerable<string> installerUrls)
         {
             return new UpdateCommand
             {
                 Id = id,
                 Version = version,
                 OutputDir = outputDir,
+                InstallerUrls = installerUrls,
             };
         }
     }

@@ -495,8 +495,8 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>The installer minimum operating system version</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>Updating an existing manifest with multiple distinct installer urls is currently not supported.</value>
+  <data name="MultipleInstallerUpdateDiscrepancy_Error" xml:space="preserve">
+    <value>Updating a manifest is only supported with the same number of installer URLs, and the same installer types and architectures</value>
   </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>The upgrade switches</value>
