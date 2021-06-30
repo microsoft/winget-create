@@ -24,9 +24,9 @@ namespace Microsoft.WingetCreateCLI.Telemetry.Events
         public bool HasGitHubToken { get; set; }
 
         /// <summary>
-        /// Gets or sets the user provided installer URL.
+        /// Gets or sets the user provided installer URL(s).
         /// </summary>
-        public IEnumerable<string> InstallerUrls { get; set; }
+        public string InstallerUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the user provided package ID.

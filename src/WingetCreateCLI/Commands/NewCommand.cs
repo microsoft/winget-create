@@ -41,11 +41,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msi, InstallerType.Msix, InstallerType.Appx };
 
         /// <summary>
-        /// Gets or sets the package file(s) used for parsing and extracting relevant installer metadata.
-        /// </summary>
-        private readonly List<string> packageFiles = new();
-
-        /// <summary>
         /// Gets the usage examples for the New command.
         /// </summary>
         [Usage(ApplicationAlias = ProgramApplicationAlias)]
@@ -85,7 +80,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             CommandExecutedEvent commandEvent = new CommandExecutedEvent
             {
                 Command = nameof(NewCommand),
-                InstallerUrls = this.InstallerUrls,
+                InstallerUrl = string.Join(',', this.InstallerUrls),
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
             };
 
@@ -102,20 +97,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                         new Installer(),
                         this.InstallerUrls,
                         nameof(Installer.InstallerUrl));
+                    Console.Clear();
                 }
 
-                foreach (var url in this.InstallerUrls)
+                var packageFiles = await DownloadInstallers(this.InstallerUrls);
+                if (packageFiles == null)
                 {
-                    string packageFile = await DownloadPackageFile(url);
-                    if (string.IsNullOrEmpty(packageFile))
-                    {
-                        return false;
-                    }
-
-                    this.packageFiles.Add(packageFile);
+                    return false;
                 }
 
-                if (!PackageParser.ParsePackages(this.packageFiles, this.InstallerUrls, manifests))
+                if (!PackageParser.ParsePackages(packageFiles, this.InstallerUrls, manifests))
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                     return false;
@@ -304,6 +295,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                     .MakeGenericMethod(property.GetType());
 
                 return (T)generic.Invoke(null, new object[] { message, property.GetType().GetEnumValues(), null, property, null });
+            }
+            else if (typeof(T) != typeof(string) && typeof(IEnumerable<string>).IsAssignableFrom(typeof(T)))
+            {
+                // If property is an IEnumerable<string>, we take in a comma-delimited string, and validate each split item, then return the split array
+                string promptResult = Prompt.Input<string>(message, null, new[] { FieldValidation.ValidateProperty(model, memberName, property) });
+                return (T)(object)promptResult?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             }
             else
             {

@@ -30,11 +30,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     public class UpdateCommand : BaseCommand
     {
         /// <summary>
-        /// Gets or sets the package files used for parsing and extracting relevant installer metadata.
-        /// </summary>
-        private readonly List<string> packageFiles = new();
-
-        /// <summary>
         /// Gets the usage examples for the update command.
         /// </summary>
         [Usage(ApplicationAlias = ProgramApplicationAlias)]
@@ -87,7 +82,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             CommandExecutedEvent commandEvent = new CommandExecutedEvent
             {
                 Command = nameof(UpdateCommand),
-                InstallerUrls = this.InstallerUrls,
+                InstallerUrl = string.Join(',', this.InstallerUrls),
                 Id = this.Id,
                 Version = this.Version,
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
@@ -173,18 +168,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            foreach (var url in this.InstallerUrls)
+            var packageFiles = await DownloadInstallers(this.InstallerUrls);
+            if (packageFiles == null)
             {
-                string packageFile = await DownloadPackageFile(url);
-                if (string.IsNullOrEmpty(packageFile))
-                {
-                    return null;
-                }
-
-                this.packageFiles.Add(packageFile);
+                return null;
             }
 
-            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, this.packageFiles, out List<WingetCreateCore.Models.Installer.Installer> installersMissingMatches))
+            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, packageFiles, out List<WingetCreateCore.Models.Installer.Installer> installersMissingMatches))
             {
                 if (installersMissingMatches.Any())
                 {

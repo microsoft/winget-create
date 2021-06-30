@@ -148,7 +148,7 @@ namespace Microsoft.WingetCreateCore
         /// <param name="paths">Paths to packages to extract metadata from.</param>
         /// <param name="installersMissingMatches">If populated, all packages were successfully parsed, but there were some without matches in the existing manifest.</param>
         /// <returns>True if update succeeded, false otherwise.</returns>
-        public static bool UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrls, List<string> paths, out List<Installer> installersMissingMatches)
+        public static bool UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrls, IEnumerable<string> paths, out List<Installer> installersMissingMatches)
         {
             var newPackages = paths.Zip(installerUrls, (path, url) => (path, url)).ToList();
             var newInstallers = new List<Installer>();
@@ -161,12 +161,6 @@ namespace Microsoft.WingetCreateCore
                     return false;
                 }
             }
-
-            //// We only allow updating manifests with the same package count
-            //if (newInstallers.Count != existingInstallers.Count)
-            //{
-            //    return false;
-            //}
 
             installersMissingMatches.AddRange(installerManifest.Installers);
 

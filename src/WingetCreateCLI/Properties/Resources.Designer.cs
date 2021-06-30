@@ -583,7 +583,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installer Url used to extract relevant metadata for generating a manifest.
+        ///   Looks up a localized string similar to Installer Url(s) used to extract relevant metadata for generating a manifest.
         /// </summary>
         public static string InstallerUrl_HelpText {
             get {
@@ -592,7 +592,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The installer URL |e.g. https://microsoft.com/downloads|.
+        ///   Looks up a localized string similar to The installer URL(s). Comma-delimit multiple values |e.g. https://microsoft.com/downloads/foo.exe,https://microsoft.com/downloads/bar.msix|.
         /// </summary>
         public static string InstallerUrl_KeywordDescription {
             get {

@@ -260,7 +260,7 @@
     <value>The installer type</value>
   </data>
   <data name="InstallerUrl_HelpText" xml:space="preserve">
-    <value>Installer Url used to extract relevant metadata for generating a manifest</value>
+    <value>Installer Url(s) used to extract relevant metadata for generating a manifest</value>
   </data>
   <data name="InstallLocation_KeywordDescription" xml:space="preserve">
     <value>The installer location redirection path</value>
@@ -514,7 +514,7 @@
     <value>List of external package dependencies</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>The installer URL |e.g. https://microsoft.com/downloads|</value>
+    <value>The installer URL(s). Comma-delimit multiple values |e.g. https://microsoft.com/downloads/foo.exe,https://microsoft.com/downloads/bar.msix|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>The manifest type</value>
@@ -589,5 +589,7 @@
   </data>
   <data name="MissingPackageError_Message" xml:space="preserve">
     <value>Missing new package for {0} {1} installer in existing manifest</value>
+    <comment>{0} - will be replaced with installer type
+{1} - will be replaced with installer architecture</comment>
   </data>
 </root>

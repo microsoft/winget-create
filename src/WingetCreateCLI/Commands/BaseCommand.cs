@@ -292,6 +292,29 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
+        /// Download all packages specified by urls, and return list of downloaded file paths.
+        /// </summary>
+        /// <param name="urls">Urls for packages to download.</param>
+        /// <returns>List of file paths downloaded.</returns>
+        protected static async Task<IList<string>> DownloadInstallers(IEnumerable<string> urls)
+        {
+            var packageFiles = new List<string>();
+
+            foreach (var url in urls)
+            {
+                string packageFile = await DownloadPackageFile(url);
+                if (string.IsNullOrEmpty(packageFile))
+                {
+                    return null;
+                }
+
+                packageFiles.Add(packageFile);
+            }
+
+            return packageFiles;
+        }
+
+        /// <summary>
         /// Utilizes WingetUtil to validate a specified manifest.
         /// </summary>
         /// <param name="manifestPath"> Path to the manifest file to be validated. </param>
