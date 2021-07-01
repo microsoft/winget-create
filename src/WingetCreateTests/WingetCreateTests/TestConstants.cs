@@ -56,7 +56,7 @@ namespace Microsoft.WingetCreateTests
         /// <summary>
         /// File name of the test msix manifest.
         /// </summary>
-        public const string TestMultifileMsixPackageIdentifier = "Multifile.MsixTest.yaml";
+        public const string TestMultifileMsixPackageIdentifier = "Multifile.MsixTest";
 
         /// <summary>
         /// File name of the test exe manifest.
