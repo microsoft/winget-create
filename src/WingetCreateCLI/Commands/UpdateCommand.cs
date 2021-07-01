@@ -174,14 +174,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, packageFiles, out List<WingetCreateCore.Models.Installer.Installer> installersMissingMatches))
+            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, packageFiles, out bool installerMismatch, out WingetCreateCore.Models.Installer.Installer installersMissingMatch))
             {
-                if (installersMissingMatches.Any())
+                if (installerMismatch)
                 {
                     Logger.ErrorLocalized(nameof(Resources.MultipleInstallerUpdateDiscrepancy_Error));
-                    foreach (var installer in installersMissingMatches)
+                    if (installersMissingMatch != null)
                     {
-                        Logger.ErrorLocalized(nameof(Resources.MissingPackageError_Message), installer.InstallerType, installer.Architecture);
+                        Logger.ErrorLocalized(nameof(Resources.MissingPackageError_Message), installersMissingMatch.InstallerType, installersMissingMatch.Architecture);
                     }
                 }
                 else

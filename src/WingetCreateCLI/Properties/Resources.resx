@@ -588,7 +588,7 @@
     <value>Unexpected error while loading settings. Please verify your settings by running the settings command.</value>
   </data>
   <data name="MissingPackageError_Message" xml:space="preserve">
-    <value>Missing new package for {0} {1} installer in existing manifest</value>
+    <value>New package found for {0} {1} installer, but not found in existing manifest</value>
     <comment>{0} - will be replaced with installer type
 {1} - will be replaced with installer architecture</comment>
   </data>

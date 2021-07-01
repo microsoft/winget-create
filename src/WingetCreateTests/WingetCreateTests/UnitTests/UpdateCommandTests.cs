@@ -35,19 +35,17 @@ namespace Microsoft.WingetCreateUnitTests
         public void OneTimeSetup()
         {
             this.testCommandEvent = new CommandExecutedEvent();
-            this.sw = new StringWriter();
-            Console.SetOut(this.sw);
             Logger.Initialize();
         }
 
         /// <summary>
-        /// Teardown method for the update command unit tests.
+        /// Setup method for each individual test.
         /// </summary>
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [SetUp]
+        public void Setup()
         {
-            this.sw.Dispose();
-            PackageParser.SetHttpMessageHandler(null);
+            this.sw = new StringWriter();
+            Console.SetOut(this.sw);
         }
 
         /// <summary>
@@ -56,6 +54,7 @@ namespace Microsoft.WingetCreateUnitTests
         [TearDown]
         public void TearDown()
         {
+            this.sw.Dispose();
             PackageParser.SetHttpMessageHandler(null);
         }
 
@@ -87,7 +86,7 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateAndVerifyUpdatedProperties()
         {
-            TestUtils.InitializeMultipleMockDownloads(TestConstants.TestMsiInstaller);
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsiInstaller);
 
             string version = "1.2.3.4";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMsiPackageIdentifier, version, this.tempPath, null);
@@ -112,7 +111,7 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateMultipleUrlManifests()
         {
-            TestUtils.InitializeMultipleMockDownloads(TestConstants.TestMsixInstaller, TestConstants.TestExeInstaller, TestConstants.TestMsiInstaller);
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller, TestConstants.TestExeInstaller, TestConstants.TestMsiInstaller);
 
             string version = "1.2.3.4";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMultipleInstallerPackageIdentifier, version, this.tempPath, null);
@@ -149,17 +148,49 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Tests the update command to ensure that updating installer manifests should throw an error if the packages aren't equivalent before and after.
+        /// Verify that update command fails if there is a discrepency in the URL count.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task UpdateWithUnmatchedMultipleInstallers()
+        public async Task UpdateFailsWithInstallerUrlCountDiscrepency()
         {
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMultipleInstallerPackageIdentifier, null, this.tempPath, new[] { "fakeurl" });
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Multiple installer url error should be thrown");
+            Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
+        }
+
+        /// <summary>
+        /// Verify that update command fails if there is a discrepency in the package count.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateFailsWithPackageCountDiscrepency()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.SingleMsixInExistingBundle", null, this.tempPath, null);
+            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            Assert.IsNull(updatedManifests, "Command should have failed");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
+        }
+
+        /// <summary>
+        /// Verify that update command fails if there is a discrepency in the package types.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateFailsWithUnmatchedPackages()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MismatchedMsixInExistingBundle", null, this.tempPath, null);
+            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            Assert.IsNull(updatedManifests, "Command should have failed");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
+            Assert.That(result, Does.Contain(string.Format(Resources.MissingPackageError_Message, InstallerType.Msix, InstallerArchitecture.X86)), "Missing package error should be thrown");
         }
 
         private static List<string> GetInitialManifestContent(string manifestFileName)

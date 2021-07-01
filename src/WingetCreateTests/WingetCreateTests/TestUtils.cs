@@ -26,7 +26,7 @@ namespace Microsoft.WingetCreateTests
         /// Initializes and sets up the infrastructure for mocking installer downloads, and sets the mock response content for each specified file.
         /// </summary>
         /// <param name="files">An array of files to generate mock response for.</param>
-        public static void InitializeMultipleMockDownloads(params string[] files)
+        public static void InitializeMockDownloads(params string[] files)
         {
             var handlerMock = new Mock<HttpMessageHandler>();
 
