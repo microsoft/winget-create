@@ -43,6 +43,7 @@ namespace Microsoft.WingetCreateE2ETests
         [TestCase(TestConstants.TestExePackageIdentifier, TestConstants.TestExeManifest, TestConstants.TestExeInstaller)]
         [TestCase(TestConstants.TestMsiPackageIdentifier, TestConstants.TestMsiManifest, TestConstants.TestMsiInstaller)]
         [TestCase(TestConstants.TestMsixPackageIdentifier, TestConstants.TestMsixManifest, TestConstants.TestMsixInstaller)]
+        [TestCase(TestConstants.TestMultifileMsixPackageIdentifier, TestConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller)]
         public async Task SubmitAndUpdateInstaller(string packageId, string manifestName, string installerName)
         {
             await this.RunSubmitAndUpdateFlow(packageId, TestUtils.GetTestFile(manifestName), installerName);

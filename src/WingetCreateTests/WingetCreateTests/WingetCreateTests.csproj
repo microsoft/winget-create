@@ -27,10 +27,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.installer.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.locale.en-US.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\TestPublisher.MismatchedMsixInExistingBundle.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.SingleMsixInExistingBundle.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\WingetCreateTestExeInstaller.exe">
