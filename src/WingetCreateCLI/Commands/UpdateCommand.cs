@@ -220,7 +220,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 if (this.SubmitToGitHub)
                 {
-                    if (!this.VerifyUpdatedInstallerHash(originalManifests.InstallerManifest, updatedManifests.InstallerManifest))
+                    if (!this.VerifyUpdatedInstallerHash(originalManifests, updatedManifests.InstallerManifest))
                     {
                         Logger.ErrorLocalized(nameof(Resources.NoChangeDetectedInUpdatedManifest_Message));
                         Logger.ErrorLocalized(nameof(Resources.CompareUpdatedManifestWithExisting_Message));
@@ -280,12 +280,17 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Compares the hashes of the original and updated manifests and returns true if the new manifest has an updated SHA256 hash.
         /// </summary>
-        /// <param name="oldManifest">The original installer manifest object model.</param>
+        /// <param name="oldManifest">The original manifest object model.</param>
         /// <param name="newManifest">The updated installer manifest object model.</param>
         /// <returns>A boolean value indicating whether the updated manifest has new changes compared to the original manifest.</returns>
-        private bool VerifyUpdatedInstallerHash(InstallerManifest oldManifest, InstallerManifest newManifest)
+        private bool VerifyUpdatedInstallerHash(Manifests oldManifest, InstallerManifest newManifest)
         {
-            var oldHashes = oldManifest.Installers.Select(i => i.InstallerSha256).Distinct();
+            IEnumerable<string> oldHashes;
+
+            oldHashes = oldManifest.InstallerManifest == null
+                ? oldManifest.SingletonManifest.Installers.Select(i => i.InstallerSha256).Distinct()
+                : oldManifest.InstallerManifest.Installers.Select(i => i.InstallerSha256).Distinct();
+
             var newHashes = newManifest.Installers.Select(i => i.InstallerSha256).Distinct();
             return newHashes.Except(oldHashes).Any();
         }

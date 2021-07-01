@@ -117,15 +117,11 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task BlockUpdateSubmissionsWithNoUpdate()
         {
             TestUtils.InitializeMockDownload();
-            TestUtils.SetMockHttpResponseContent(TestConstants.TestMsiInstaller);
-            UpdateCommand command = GetUpdateCommand(TestConstants.TestMsiPackageIdentifier, "1.2.3.4", this.tempPath);
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            UpdateCommand command = GetUpdateCommand(TestConstants.TestExePackageIdentifier, "1.2.3.4", this.tempPath);
             command.SubmitToGitHub = true;
 
-            var versionManifest = GetInitialManifestContent(TestConstants.TestMultifileMsiVersionManifest);
-            var installerManifest = GetInitialManifestContent(TestConstants.TestMultifileMsiInstallerManifest);
-            var defaultLocaleManifest = GetInitialManifestContent(TestConstants.TestMultifileMsiDefaultLocaleManifest);
-            var manifests = versionManifest.Concat(installerManifest).Concat(defaultLocaleManifest).ToList();
-
+            var manifests = GetInitialManifestContent(TestConstants.TestExeManifest);
             await command.ExecuteManifestUpdate(manifests, this.testCommandEvent);
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.NoChangeDetectedInUpdatedManifest_Message), "Failed to block manifests without updates from submitting.");
