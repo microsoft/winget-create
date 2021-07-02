@@ -34,7 +34,7 @@ namespace Microsoft.WingetCreateTests
             {
                 string url = $"https://fakedomain.com/{filename}";
                 var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
-                var content = new ByteArrayContent(File.ReadAllBytes(TestUtils.GetTestFile(filename)));
+                var content = new ByteArrayContent(File.ReadAllBytes(GetTestFile(filename)));
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                 httpResponse.Content = content;
 
@@ -85,7 +85,7 @@ namespace Microsoft.WingetCreateTests
         /// <param name="installerName">File name of the installer.</param>
         public static void SetMockHttpResponseContent(string installerName)
         {
-            var content = new ByteArrayContent(File.ReadAllBytes(TestUtils.GetTestFile(installerName)));
+            var content = new ByteArrayContent(File.ReadAllBytes(GetTestFile(installerName)));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             httpResponseMessage.Content = content;
             PackageParser.SetHttpMessageHandler(httpMessageHandler);

@@ -3,7 +3,6 @@
 
 namespace Microsoft.WingetCreateCLI.Telemetry.Events
 {
-    using System.Collections.Generic;
     using System.Diagnostics.Tracing;
     using Microsoft.Diagnostics.Telemetry.Internal;
 
