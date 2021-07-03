@@ -86,9 +86,7 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateAndVerifyUpdatedProperties()
         {
-            TestUtils.InitializeMockDownload();
-            TestUtils.SetMockHttpResponseContent(TestConstants.TestMsiInstaller);
-
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsiInstaller);
             string version = "1.2.3.4";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMsiPackageIdentifier, version, this.tempPath, null);
 
