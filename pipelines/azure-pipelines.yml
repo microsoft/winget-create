@@ -59,7 +59,7 @@ jobs:
         revision: $[counter(variables['majorMinorBuildVersion'], 1)]
 
       version: "$(majorMinorBuildVersion).$(revision)"
-      appxBundlePath: '$(appxPackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.appxbundle'
+      appxBundlePath: '$(appxPackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle'
     pool:
       vmImage: $(vmImageName)
 
@@ -103,8 +103,8 @@ jobs:
             /p:AppxPackageSigningEnabled=false'
 
       - publish: $(appxBundlePath)
-        artifact: appxbundle
-        displayName: Publish appx bundle
+        artifact: msixbundle
+        displayName: Publish msix bundle
 
       - task: ComponentGovernanceComponentDetection@0
         displayName: Component Governance
@@ -139,6 +139,6 @@ jobs:
         displayName: Run Tests
         inputs:
           testSelector: "testAssemblies"
-          testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\net5.0-windows10.0.18362.0\WingetCreateTests.dll'
+          testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\net5.0-windows10.0.17763.0\WingetCreateTests.dll'
           runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
           overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'

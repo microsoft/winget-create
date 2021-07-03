@@ -60,15 +60,15 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
-        /// Parses a package for available metadata including Version, Publisher, Name, Descripion, License, etc.
+        /// Parses packages for available metadata including Version, Publisher, Name, Descripion, License, etc.
         /// </summary>
-        /// <param name="path">Path to package file. </param>
-        /// <param name="url">Installer url. </param>
+        /// <param name="paths">Path(s) to package files. </param>
+        /// <param name="urls">Installer urls. </param>
         /// <param name="manifests">Wrapper object for manifest object models.</param>
-        /// <returns>True if package was successfully parsed and metadata extracted, false otherwise.</returns>
-        public static bool ParsePackage(
-            string path,
-            string url,
+        /// <returns>True if packages were successfully parsed and metadata extracted, false otherwise.</returns>
+        public static bool ParsePackages(
+            IEnumerable<string> paths,
+            IEnumerable<string> urls,
             Manifests manifests)
         {
             VersionManifest versionManifest = manifests.VersionManifest = new VersionManifest();
@@ -79,39 +79,15 @@ namespace Microsoft.WingetCreateCore
             InstallerManifest installerManifest = manifests.InstallerManifest = new InstallerManifest();
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest = new DefaultLocaleManifest();
 
-            var versionInfo = FileVersionInfo.GetVersionInfo(path);
-
-            var installer = new Installer();
-            installer.InstallerUrl = url;
-            installer.InstallerSha256 = GetFileHash(path);
-            installer.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
-            installerManifest.Installers.Add(installer);
-
-            defaultLocaleManifest.PackageVersion ??= versionInfo.FileVersion?.Trim() ?? versionInfo.ProductVersion?.Trim();
-            defaultLocaleManifest.Publisher ??= versionInfo.CompanyName?.Trim();
-            defaultLocaleManifest.PackageName ??= versionInfo.ProductName?.Trim();
-            defaultLocaleManifest.ShortDescription ??= versionInfo.FileDescription?.Trim();
-            defaultLocaleManifest.License ??= versionInfo.LegalCopyright?.Trim();
-
-            if (ParseExeInstallerType(path, installer) ||
-                ParseMsix(path, manifests) ||
-                ParseMsi(path, installer, manifests))
+            foreach (var package in paths.Zip(urls, (path, url) => (path, url)))
             {
-                if (!string.IsNullOrEmpty(defaultLocaleManifest.PackageVersion))
+                if (!ParsePackage(package.path, package.url, manifests))
                 {
-                    versionManifest.PackageVersion = installerManifest.PackageVersion = RemoveInvalidCharsFromString(defaultLocaleManifest.PackageVersion);
+                    return false;
                 }
+            }
 
-                string packageIdPublisher = defaultLocaleManifest.Publisher?.Remove(" ").Trim('.') ?? $"<{nameof(defaultLocaleManifest.Publisher)}>";
-                string packageIdName = defaultLocaleManifest.PackageName?.Remove(" ").Trim('.') ?? $"<{nameof(defaultLocaleManifest.PackageName)}>";
-                versionManifest.PackageIdentifier = $"{RemoveInvalidCharsFromString(packageIdPublisher)}.{RemoveInvalidCharsFromString(packageIdName)}";
-                installerManifest.PackageIdentifier = defaultLocaleManifest.PackageIdentifier = versionManifest.PackageIdentifier;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return true;
         }
 
         /// <summary>
@@ -165,28 +141,122 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
-        /// Update InstallerManifest's Installer nodes based on specified package file path.
+        /// Update InstallerManifest's Installer nodes based on specified package file paths.
         /// </summary>
         /// <param name="installerManifest"><see cref="InstallerManifest"/> to update.</param>
-        /// <param name="installerUrl">InstallerUrl where installer can be downloaded.</param>
-        /// <param name="packageFile">Path to package to extract metadata from.</param>
-        public static void UpdateInstallerNodes(InstallerManifest installerManifest, string installerUrl, string packageFile)
+        /// <param name="installerUrls">InstallerUrls where installers can be downloaded.</param>
+        /// <param name="paths">Paths to packages to extract metadata from.</param>
+        /// <param name="installerMismatch">If set, the failure was due to an installer count or type mismatch.</param>
+        /// <param name="installerMissingMatch">If populated, all packages were successfully parsed, but at least one without a match in the existing manifest.</param>
+        /// <returns>True if update succeeded, false otherwise.</returns>
+        public static bool UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrls, IEnumerable<string> paths, out bool installerMismatch, out Installer installerMissingMatch)
         {
-            string installerSha256 = GetFileHash(packageFile);
-            foreach (var installer in installerManifest.Installers)
-            {
-                installer.InstallerSha256 = installerSha256;
-                installer.InstallerUrl = installerUrl;
+            var newPackages = paths.Zip(installerUrls, (path, url) => (path, url)).ToList();
+            var newInstallers = new List<Installer>();
+            var existingInstallers = new List<Installer>(installerManifest.Installers);
+            installerMismatch = false;
+            installerMissingMatch = null;
 
-                // If installer is an MSI, update its ProductCode
-                var updatedInstaller = new Installer();
-                if (ParseMsi(packageFile, updatedInstaller, null))
+            foreach (var (path, url) in newPackages)
+            {
+                if (!ParsePackageAndGenerateInstallerNodes(path, url, newInstallers, null))
                 {
-                    installer.ProductCode = updatedInstaller.ProductCode;
+                    return false;
                 }
             }
 
-            GetAppxMetadataAndSetInstallerProperties(packageFile, installerManifest);
+            // We only allow updating manifests with the same package count
+            if (newInstallers.Count != existingInstallers.Count)
+            {
+                installerMismatch = true;
+                return false;
+            }
+
+            // Update previous installers with parsed data from downloaded packages
+            foreach (var newInstaller in newInstallers)
+            {
+                // Find a match for the current installer in the list of installers remaining to be updated.
+                var matchingExistingInstaller = existingInstallers.SingleOrDefault(i =>
+                    (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
+                    i.Architecture == newInstaller.Architecture);
+
+                // If we can't find a match in the remaining existing packages, there must be a mismatch between the old manifest and the URLs provided
+                if (matchingExistingInstaller == null)
+                {
+                    installerMismatch = true;
+                    installerMissingMatch = newInstaller;
+                    return false;
+                }
+                else
+                {
+                    existingInstallers.Remove(matchingExistingInstaller);
+                }
+
+                matchingExistingInstaller.InstallerUrl = newInstaller.InstallerUrl;
+                matchingExistingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
+                matchingExistingInstaller.SignatureSha256 = newInstaller.SignatureSha256;
+                matchingExistingInstaller.ProductCode = newInstaller.ProductCode;
+                matchingExistingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion;
+                matchingExistingInstaller.PackageFamilyName = newInstaller.PackageFamilyName;
+                matchingExistingInstaller.Platform = newInstaller.Platform;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Parses a package for available metadata including Version, Publisher, Name, Descripion, License, etc.
+        /// </summary>
+        /// <param name="path">Path to package file. </param>
+        /// <param name="url">Installer url. </param>
+        /// <param name="manifests">Wrapper object for manifest object models.</param>
+        /// <returns>True if package was successfully parsed and metadata extracted, false otherwise.</returns>
+        private static bool ParsePackage(
+            string path,
+            string url,
+            Manifests manifests)
+        {
+            VersionManifest versionManifest = manifests.VersionManifest;
+            InstallerManifest installerManifest = manifests.InstallerManifest;
+            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
+
+            var versionInfo = FileVersionInfo.GetVersionInfo(path);
+
+            defaultLocaleManifest.PackageVersion ??= versionInfo.FileVersion?.Trim() ?? versionInfo.ProductVersion?.Trim();
+            defaultLocaleManifest.Publisher ??= versionInfo.CompanyName?.Trim();
+            defaultLocaleManifest.PackageName ??= versionInfo.ProductName?.Trim();
+            defaultLocaleManifest.ShortDescription ??= versionInfo.FileDescription?.Trim();
+            defaultLocaleManifest.License ??= versionInfo.LegalCopyright?.Trim();
+
+            if (ParsePackageAndGenerateInstallerNodes(path, url, installerManifest.Installers, manifests))
+            {
+                if (!string.IsNullOrEmpty(defaultLocaleManifest.PackageVersion))
+                {
+                    versionManifest.PackageVersion = installerManifest.PackageVersion = RemoveInvalidCharsFromString(defaultLocaleManifest.PackageVersion);
+                }
+
+                string packageIdPublisher = defaultLocaleManifest.Publisher?.Remove(" ").Trim('.') ?? $"<{nameof(defaultLocaleManifest.Publisher)}>";
+                string packageIdName = defaultLocaleManifest.PackageName?.Remove(" ").Trim('.') ?? $"<{nameof(defaultLocaleManifest.PackageName)}>";
+                versionManifest.PackageIdentifier ??= $"{RemoveInvalidCharsFromString(packageIdPublisher)}.{RemoveInvalidCharsFromString(packageIdName)}";
+                installerManifest.PackageIdentifier = defaultLocaleManifest.PackageIdentifier = versionManifest.PackageIdentifier;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private static bool ParsePackageAndGenerateInstallerNodes(string path, string url, List<Installer> installers, Manifests manifests)
+        {
+            var installer = new Installer();
+            installer.InstallerUrl = url;
+            installer.InstallerSha256 = GetFileHash(path);
+            installer.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+
+            return ParseExeInstallerType(path, installer, installers) ||
+                ParseMsix(path, installer, manifests, installers) ||
+                ParseMsi(path, installer, manifests, installers);
         }
 
         /// <summary>
@@ -239,7 +309,7 @@ namespace Microsoft.WingetCreateCore
             return null;
         }
 
-        private static bool ParseExeInstallerType(string path, Installer installer)
+        private static bool ParseExeInstallerType(string path, Installer baseInstaller, List<Installer> installers)
         {
             try
             {
@@ -256,17 +326,19 @@ namespace Microsoft.WingetCreateCore
                 if (installerType.EqualsIC("wix"))
                 {
                     // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
-                    installer.InstallerType = InstallerType.Burn;
+                    baseInstaller.InstallerType = InstallerType.Burn;
                 }
                 else if (KnownInstallerResourceNames.Contains(installerType))
                 {
                     // If it's a known exe installer type, set as appropriately
-                    installer.InstallerType = installerType.ToEnumOrDefault<InstallerType>();
+                    baseInstaller.InstallerType = installerType.ToEnumOrDefault<InstallerType>();
                 }
                 else
                 {
-                    installer.InstallerType = InstallerType.Exe;
+                    baseInstaller.InstallerType = InstallerType.Exe;
                 }
+
+                installers.Add(baseInstaller);
 
                 return true;
             }
@@ -277,7 +349,7 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
-        private static bool ParseMsi(string path, Installer installer, Manifests manifests)
+        private static bool ParseMsi(string path, Installer baseInstaller, Manifests manifests, List<Installer> installers)
         {
             DefaultLocaleManifest defaultLocaleManifest = manifests?.DefaultLocaleManifest;
 
@@ -285,7 +357,7 @@ namespace Microsoft.WingetCreateCore
             {
                 using (var database = new QDatabase(path, Deployment.WindowsInstaller.DatabaseOpenMode.ReadOnly))
                 {
-                    installer.InstallerType = InstallerType.Msi;
+                    baseInstaller.InstallerType = InstallerType.Msi;
 
                     var properties = database.Properties.ToList();
 
@@ -296,12 +368,15 @@ namespace Microsoft.WingetCreateCore
                         defaultLocaleManifest.Publisher ??= properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value;
                     }
 
-                    installer.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
+                    baseInstaller.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
 
                     string archString = database.SummaryInfo.Template.Split(';').First();
-                    installer.Architecture = archString.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
 
-                    if (installer.InstallerLocale == null)
+                    archString = archString.EqualsIC("Intel") ? "x86" : archString.EqualsIC("Intel64") ? "x64" : archString;
+
+                    baseInstaller.Architecture = archString.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+
+                    if (baseInstaller.InstallerLocale == null)
                     {
                         string languageString = properties.FirstOrDefault(p => p.Property == "ProductLanguage")?.Value;
 
@@ -309,7 +384,7 @@ namespace Microsoft.WingetCreateCore
                         {
                             try
                             {
-                                installer.InstallerLocale = new CultureInfo(lcid).Name;
+                                baseInstaller.InstallerLocale = new CultureInfo(lcid).Name;
                             }
                             catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is CultureNotFoundException)
                             {
@@ -318,6 +393,8 @@ namespace Microsoft.WingetCreateCore
                         }
                     }
                 }
+
+                installers?.Add(baseInstaller);
 
                 return true;
             }
@@ -328,23 +405,25 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
-        private static bool ParseMsix(string path, Manifests manifests)
+        private static bool ParseMsix(string path, Installer baseInstaller, Manifests manifests, List<Installer> installers)
         {
-            InstallerManifest installerManifest = manifests.InstallerManifest;
-            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
+            InstallerManifest installerManifest = manifests?.InstallerManifest;
+            DefaultLocaleManifest defaultLocaleManifest = manifests?.DefaultLocaleManifest;
 
-            AppxMetadata metadata = GetAppxMetadataAndSetInstallerProperties(path, installerManifest);
+            AppxMetadata metadata = GetAppxMetadataAndSetInstallerProperties(path, installerManifest, baseInstaller, installers);
             if (metadata == null)
             {
                 // Binary wasn't an MSIX, skip
                 return false;
             }
 
-            installerManifest.Installers.ForEach(i => i.InstallerType = InstallerType.Msix);
-            defaultLocaleManifest.PackageVersion = metadata.Version?.ToString();
-            defaultLocaleManifest.PackageName ??= metadata.DisplayName;
-            defaultLocaleManifest.Publisher ??= metadata.PublisherDisplayName;
-            defaultLocaleManifest.ShortDescription ??= GetApplicationProperty(metadata, "Description");
+            if (defaultLocaleManifest != null)
+            {
+                defaultLocaleManifest.PackageVersion ??= metadata.Version?.ToString();
+                defaultLocaleManifest.PackageName ??= metadata.DisplayName;
+                defaultLocaleManifest.Publisher ??= metadata.PublisherDisplayName;
+                defaultLocaleManifest.ShortDescription ??= GetApplicationProperty(metadata, "Description");
+            }
 
             return true;
         }
@@ -383,8 +462,8 @@ namespace Microsoft.WingetCreateCore
         {
             installer.Architecture = appxMetadata.Architecture.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
 
-            installer.MinimumOSVersion = SetInstallerStringPropertyIfNeeded(installerManifest.MinimumOSVersion, appxMetadata.MinOSVersion?.ToString());
-            installer.PackageFamilyName = SetInstallerStringPropertyIfNeeded(installerManifest.PackageFamilyName, appxMetadata.PackageFamilyName);
+            installer.MinimumOSVersion = SetInstallerStringPropertyIfNeeded(installerManifest?.MinimumOSVersion, appxMetadata.MinOSVersion?.ToString());
+            installer.PackageFamilyName = SetInstallerStringPropertyIfNeeded(installerManifest?.PackageFamilyName, appxMetadata.PackageFamilyName);
 
             // We have to fixup the Platform string first, and then remove anything that fails to parse.
             var platformValues = appxMetadata.TargetDeviceFamiliesMinVersions.Keys
@@ -392,7 +471,7 @@ namespace Microsoft.WingetCreateCore
                 .Where(p => p != null)
                 .Select(p => p.Value)
                 .ToList();
-            installer.Platform = SetInstallerListPropertyIfNeeded(installerManifest.Platform, platformValues);
+            installer.Platform = SetInstallerListPropertyIfNeeded(installerManifest?.Platform, platformValues);
         }
 
         private static string SetInstallerStringPropertyIfNeeded(string rootProperty, string valueToSet)
@@ -405,11 +484,10 @@ namespace Microsoft.WingetCreateCore
             return rootProperty != null && new HashSet<T>(rootProperty).SetEquals(valueToSet) ? null : valueToSet;
         }
 
-        private static AppxMetadata GetAppxMetadataAndSetInstallerProperties(string path, InstallerManifest installerManifest)
+        private static AppxMetadata GetAppxMetadataAndSetInstallerProperties(string path, InstallerManifest installerManifest, Installer baseInstaller, List<Installer> installers)
         {
             try
             {
-                var installers = installerManifest.Installers;
                 var appxMetadatas = new List<AppxMetadata>();
                 string signatureSha256;
 
@@ -437,25 +515,17 @@ namespace Microsoft.WingetCreateCore
                     signatureSha256 = HashAppxFile(signatureFile);
                 }
 
-                var firstInstaller = installers.First();
+                baseInstaller.SignatureSha256 = signatureSha256;
+                baseInstaller.InstallerType = InstallerType.Msix;
 
-                // Remove installer nodes which have no matching architecture in msix/bundle
-                installers.RemoveAll(i => !appxMetadatas.Any(m => m.Architecture.EqualsIC(i.Architecture.ToString())));
-
+                // Add installer nodes for MSIX installers
                 foreach (var appxMetadata in appxMetadatas)
                 {
-                    InstallerArchitecture appxArchitecture = appxMetadata.Architecture.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
-                    var matchingInstaller = installers.SingleOrDefault(i => i.Architecture == appxArchitecture);
-                    if (matchingInstaller == null)
-                    {
-                        matchingInstaller = CloneInstaller(firstInstaller);
-                        installers.Add(matchingInstaller);
-                    }
+                    var msixInstaller = CloneInstaller(baseInstaller);
+                    installers.Add(msixInstaller);
 
-                    SetInstallerPropertiesFromAppxMetadata(appxMetadata, matchingInstaller, installerManifest);
+                    SetInstallerPropertiesFromAppxMetadata(appxMetadata, msixInstaller, installerManifest);
                 }
-
-                installers.ForEach(i => i.SignatureSha256 = signatureSha256);
 
                 return appxMetadatas.First();
             }

@@ -583,7 +583,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installer Url used to extract relevant metadata for generating a manifest.
+        ///   Looks up a localized string similar to Installer Url(s) used to extract relevant metadata for generating a manifest.
         /// </summary>
         public static string InstallerUrl_HelpText {
             get {
@@ -592,7 +592,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The installer URL |e.g. https://microsoft.com/downloads|.
+        ///   Looks up a localized string similar to The installer URL(s). Comma-delimit multiple values |e.g. https://microsoft.com/downloads/foo.exe,https://microsoft.com/downloads/bar.msix|.
         /// </summary>
         public static string InstallerUrl_KeywordDescription {
             get {
@@ -790,6 +790,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New package found for {0} {1} installer, but not found in existing manifest.
+        /// </summary>
+        public static string MissingPackageError_Message {
+            get {
+                return ResourceManager.GetString("MissingPackageError_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The most common package term.
         /// </summary>
         public static string Moniker_KeywordDescription {
@@ -808,11 +817,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updating an existing manifest with multiple distinct installer urls is currently not supported..
+        ///   Looks up a localized string similar to Updating a manifest is only supported with the same number of installer URLs, and the same installer types and architectures.
         /// </summary>
-        public static string MultipleInstallerUrlFound_Error {
+        public static string MultipleInstallerUpdateDiscrepancy_Error {
             get {
-                return ResourceManager.GetString("MultipleInstallerUrlFound_Error", resourceCulture);
+                return ResourceManager.GetString("MultipleInstallerUpdateDiscrepancy_Error", resourceCulture);
             }
         }
         
