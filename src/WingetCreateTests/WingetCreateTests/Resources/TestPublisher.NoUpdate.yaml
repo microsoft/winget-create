@@ -1,0 +1,27 @@
+﻿PackageIdentifier: TestPublisher.NoUpdate
+PackageName: ExeTest
+PackageVersion: 1.2.3.4
+Publisher: TestPublisher
+Author: Microsoft
+License: MIT
+LicenseUrl: https://github.com/microsoft/winget-create
+MinimumOSVersion: 10.0.0.0
+ShortDescription: Testing WingetCreate with an exe installer using an up-to-date manifest
+PackageLocale: en-US
+Tags: 
+  - Windows Package Manager
+  - winget create
+  - package manager
+  - utility
+  - tool
+  - test
+InstallerType: exe
+InstallerSwitches:
+  Silent: --silent
+  SilentWithProgress: --silent
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerSha256: 71A2BF371B23C9432F4E0E08AE6F2A754067F0FE09C0141556DE4AF628F6B371
+ManifestType: singleton
+ManifestVersion: 1.0.0

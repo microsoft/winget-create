@@ -89,8 +89,7 @@ namespace Microsoft.WingetCreateUnitTests
             string version = "1.2.3.4";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMsiPackageIdentifier, version, this.tempPath, null);
 
-            var initialManifests = new Manifests();
-            Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
 
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
@@ -114,8 +113,7 @@ namespace Microsoft.WingetCreateUnitTests
             string version = "1.2.3.4";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMultipleInstallerPackageIdentifier, version, this.tempPath, null);
 
-            var initialManifests = new Manifests();
-            Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
 
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
@@ -200,10 +198,8 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownload();
             TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
-            UpdateCommand command = GetUpdateCommand(TestConstants.TestExePackageIdentifier, "1.2.3.4", this.tempPath);
+            (UpdateCommand command, var manifests) = GetUpdateCommandAndManifestData("TestPublisher.NoUpdate", "1.2.3.4", this.tempPath, null);
             command.SubmitToGitHub = true;
-
-            var manifests = GetInitialManifestContent(TestConstants.TestExeManifest);
             await command.ExecuteManifestUpdate(manifests, this.testCommandEvent);
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.NoChangeDetectedInUpdatedManifest_Message), "Failed to block manifests without updates from submitting.");
