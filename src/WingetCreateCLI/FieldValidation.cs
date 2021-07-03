@@ -31,15 +31,40 @@ namespace Microsoft.WingetCreateCLI
                 }
 
                 var validationContext = new ValidationContext(instance) { MemberName = memberName };
-                var validationResults = new List<ValidationResult>();
-                if (Validator.TryValidateProperty(property, validationContext, validationResults))
+
+                if (defaultValue != null && defaultValue is not string && typeof(IEnumerable<string>).IsAssignableFrom(defaultValue.GetType()))
                 {
+                    // If prompt is an IEnumerable<string>, validate each item in the enumerable against the property
+
+                    // If the user didn't provide a value, check if null is allowed for field
+                    var items = property == null
+                        ? new string[] { null }
+                        : (property as string).Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                    foreach (var item in items)
+                    {
+                        var validationResults = new List<ValidationResult>();
+                        if (!Validator.TryValidateProperty(property, validationContext, validationResults))
+                        {
+                            string result = JoinErrorMessages(validationResults);
+                            return new ValidationResult(result);
+                        }
+                    }
+
                     return null;
                 }
                 else
                 {
-                    string result = JoinErrorMessages(validationResults);
-                    return new ValidationResult(result);
+                    var validationResults = new List<ValidationResult>();
+                    if (Validator.TryValidateProperty(property, validationContext, validationResults))
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        string result = JoinErrorMessages(validationResults);
+                        return new ValidationResult(result);
+                    }
                 }
             };
         }

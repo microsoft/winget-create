@@ -260,7 +260,7 @@
     <value>The installer type</value>
   </data>
   <data name="InstallerUrl_HelpText" xml:space="preserve">
-    <value>Installer Url used to extract relevant metadata for generating a manifest</value>
+    <value>Installer Url(s) used to extract relevant metadata for generating a manifest</value>
   </data>
   <data name="InstallLocation_KeywordDescription" xml:space="preserve">
     <value>The installer location redirection path</value>
@@ -495,8 +495,8 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>The installer minimum operating system version</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>Updating an existing manifest with multiple distinct installer urls is currently not supported.</value>
+  <data name="MultipleInstallerUpdateDiscrepancy_Error" xml:space="preserve">
+    <value>Updating a manifest is only supported with the same number of installer URLs, and the same installer types and architectures</value>
   </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>The upgrade switches</value>
@@ -514,7 +514,7 @@
     <value>List of external package dependencies</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>The installer URL |e.g. https://microsoft.com/downloads|</value>
+    <value>The installer URL(s). Comma-delimit multiple values |e.g. https://microsoft.com/downloads/foo.exe,https://microsoft.com/downloads/bar.msix|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>The manifest type</value>
@@ -595,5 +595,10 @@
   </data>
   <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
     <value>Submitting a manifest without any updated changes is not allowed. </value>
+  </data>
+  <data name="MissingPackageError_Message" xml:space="preserve">
+    <value>New package found for {0} {1} installer, but not found in existing manifest</value>
+    <comment>{0} - will be replaced with installer type
+{1} - will be replaced with installer architecture</comment>
   </data>
 </root>

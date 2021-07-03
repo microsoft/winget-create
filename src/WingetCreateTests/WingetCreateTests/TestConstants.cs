@@ -54,6 +54,11 @@ namespace Microsoft.WingetCreateTests
         public const string TestMsixPackageIdentifier = "WingetCreateE2E.MsixTest";
 
         /// <summary>
+        /// File name of the test msix manifest.
+        /// </summary>
+        public const string TestMultifileMsixPackageIdentifier = "Multifile.MsixTest";
+
+        /// <summary>
         /// File name of the test exe manifest.
         /// </summary>
         public const string TestExeManifest = "WingetCreateE2E.ExeTest.yaml";
@@ -69,18 +74,8 @@ namespace Microsoft.WingetCreateTests
         public const string TestMsixManifest = "WingetCreateE2E.MsixTest.yaml";
 
         /// <summary>
-        /// File name of the test multifile msi version manifest.
+        /// Path of the directory with the multifile msix test manifests.
         /// </summary>
-        public const string TestMultifileMsiVersionManifest = "Multifile.MsiTest.yaml";
-
-        /// <summary>
-        /// File name of the test multifile msi installer manifest.
-        /// </summary>
-        public const string TestMultifileMsiInstallerManifest = "Multifile.MsiTest.installer.yaml";
-
-        /// <summary>
-        /// File name of the test multifile msi default locale manifest.
-        /// </summary>
-        public const string TestMultifileMsiDefaultLocaleManifest = "Multifile.MsiTest.locale.en-US.yaml";
+        public const string TestMultifileMsixManifestDir = "Multifile.MsixTest";
     }
 }

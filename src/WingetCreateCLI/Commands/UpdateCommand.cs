@@ -38,7 +38,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             get
             {
                 yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateVersion, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>" });
-                yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateInstallerURL, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrl = "<InstallerUrl>" });
+                yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateInstallerURL, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>" } });
                 yield return new Example(Resources.Example_UpdateCommand_SaveAndPublish, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>", OutputDir = "<OutputDirectory>", GitHubToken = "<GitHubPersonalAccessToken>" });
             }
         }
@@ -56,12 +56,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string Version { get; set; }
 
         /// <summary>
-        /// Gets or sets the new value used to update the manifest installer url element.
-        /// </summary>
-        [Option('u', "url", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]
-        public string InstallerUrl { get; set; }
-
-        /// <summary>
         /// Gets or sets the outputPath where the generated manifest file should be saved to.
         /// </summary>
         [Option('o', "out", Required = false, HelpText = "OutputDirectory_HelpText", ResourceType = typeof(Resources))]
@@ -74,9 +68,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         public bool SubmitToGitHub { get; set; }
 
         /// <summary>
-        /// Gets or sets the package file used for parsing and extracting relevant installer metadata.
+        /// Gets or sets the new value(s) used to update the manifest installer elements.
         /// </summary>
-        private string PackageFile { get; set; }
+        [Option('u', "urls", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]
+        public IEnumerable<string> InstallerUrls { get; set; } = new List<string>();
 
         /// <summary>
         /// Executes the update command flow.
@@ -87,7 +82,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             CommandExecutedEvent commandEvent = new CommandExecutedEvent
             {
                 Command = nameof(UpdateCommand),
-                InstallerUrl = this.InstallerUrl,
+                InstallerUrl = string.Join(',', this.InstallerUrls),
                 Id = this.Id,
                 Version = this.Version,
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
@@ -168,25 +163,41 @@ namespace Microsoft.WingetCreateCLI.Commands
                 UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
             }
 
-            if (installerManifest.Installers.Select(x => x.InstallerUrl).Distinct().Count() > 1)
+            if (!this.InstallerUrls.Any())
             {
-                Logger.Error(Resources.MultipleInstallerUrlFound_Error);
+                this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().ToArray();
+            }
+
+            // We only support updates with same number of installer URLs
+            if (this.InstallerUrls.Distinct().Count() != installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().Count())
+            {
+                Logger.ErrorLocalized(nameof(Resources.MultipleInstallerUpdateDiscrepancy_Error));
                 return null;
             }
 
-            if (string.IsNullOrEmpty(this.InstallerUrl))
-            {
-                this.InstallerUrl = installerManifest.Installers.First().InstallerUrl;
-            }
-
-            this.PackageFile = await DownloadPackageFile(this.InstallerUrl);
-
-            if (string.IsNullOrEmpty(this.PackageFile))
+            var packageFiles = await DownloadInstallers(this.InstallerUrls);
+            if (packageFiles == null)
             {
                 return null;
             }
 
-            PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrl, this.PackageFile);
+            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, packageFiles, out bool installerMismatch, out WingetCreateCore.Models.Installer.Installer installersMissingMatch))
+            {
+                if (installerMismatch)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.MultipleInstallerUpdateDiscrepancy_Error));
+                    if (installersMissingMatch != null)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.MissingPackageError_Message), installersMissingMatch.InstallerType, installersMissingMatch.Architecture);
+                    }
+                }
+                else
+                {
+                    Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
+                }
+
+                return null;
+            }
 
             return manifests;
         }
@@ -285,9 +296,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>A boolean value indicating whether the updated manifest has new changes compared to the original manifest.</returns>
         private bool VerifyUpdatedInstallerHash(Manifests oldManifest, InstallerManifest newManifest)
         {
-            IEnumerable<string> oldHashes;
-
-            oldHashes = oldManifest.InstallerManifest == null
+            IEnumerable<string> oldHashes = oldManifest.InstallerManifest == null
                 ? oldManifest.SingletonManifest.Installers.Select(i => i.InstallerSha256).Distinct()
                 : oldManifest.InstallerManifest.Installers.Select(i => i.InstallerSha256).Distinct();
 
