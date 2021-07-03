@@ -145,18 +145,23 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
 
-                if (!ValidateManifest(manifestDirectoryPath) ||
-                    !Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message) ||
-                    !await this.SetAndCheckGitHubToken())
+                bool isManifestValid = ValidateManifest(manifestDirectoryPath);
+
+                if (isManifestValid && Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
+                {
+                    if (await this.SetAndCheckGitHubToken())
+                    {
+                        return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken);
+                    }
+
+                    return false;
+                }
+                else
                 {
                     Console.WriteLine();
                     Logger.WarnLocalized(nameof(Resources.SkippingPullRequest_Message));
-                    return false;
+                    return commandEvent.IsSuccessful = isManifestValid;
                 }
-
-                return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
-                    manifests,
-                    this.GitHubToken);
             }
             finally
             {
@@ -317,10 +322,18 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Boolean value indicating whether the package identifier is valid.</returns>
         private async Task<bool> PromptPackageIdentifierAndCheckDuplicates(Manifests manifests)
         {
+            GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
+
+            if (!string.IsNullOrEmpty(this.GitHubToken))
+            {
+                if (!await this.SetAndCheckGitHubToken())
+                {
+                    return false;
+                }
+            }
+
             VersionManifest versionManifest = manifests.VersionManifest;
             versionManifest.PackageIdentifier = PromptProperty(versionManifest, versionManifest.PackageIdentifier, nameof(versionManifest.PackageIdentifier));
-
-            GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
 
             string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
             if (!string.IsNullOrEmpty(exactMatch))

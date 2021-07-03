@@ -90,9 +90,18 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
+                GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
+
+                if (!string.IsNullOrEmpty(this.GitHubToken))
+                {
+                    if (!await this.SetAndCheckGitHubToken())
+                    {
+                        return false;
+                    }
+                }
+
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
-                GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
                 string exactId = await client.FindPackageId(this.Id);
 
                 if (!string.IsNullOrEmpty(exactId))
@@ -128,9 +137,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Manifests object representing the updates manifest content, or null if the update failed.</returns>
         public async Task<Manifests> DeserializeExistingManifestsAndUpdate(List<string> latestManifestContent)
         {
-            Manifests manifests = new Manifests();
-
-            Serialization.DeserializeManifestContents(latestManifestContent, manifests);
+            Manifests manifests = Serialization.DeserializeManifestContents(latestManifestContent);
 
             if (manifests.SingletonManifest != null)
             {
@@ -203,27 +210,36 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Boolean representing whether the manifest was updated successfully or not.</returns>
         public async Task<bool> ExecuteManifestUpdate(List<string> latestManifestContent, CommandExecutedEvent commandEvent)
         {
-            Manifests manifests = await this.DeserializeExistingManifestsAndUpdate(latestManifestContent);
-            if (manifests == null)
+            Manifests originalManifests = Serialization.DeserializeManifestContents(latestManifestContent);
+            Manifests updatedManifests = await this.DeserializeExistingManifestsAndUpdate(latestManifestContent);
+
+            if (updatedManifests == null)
             {
                 return false;
             }
 
-            DisplayManifestPreview(manifests);
+            DisplayManifestPreview(updatedManifests);
 
             if (string.IsNullOrEmpty(this.OutputDir))
             {
                 this.OutputDir = Directory.GetCurrentDirectory();
             }
 
-            string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
+            string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, this.OutputDir);
 
             if (ValidateManifest(manifestDirectoryPath))
             {
                 if (this.SubmitToGitHub)
                 {
+                    if (!this.VerifyUpdatedInstallerHash(originalManifests, updatedManifests.InstallerManifest))
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.NoChangeDetectedInUpdatedManifest_Message));
+                        Logger.ErrorLocalized(nameof(Resources.CompareUpdatedManifestWithExisting_Message));
+                        return false;
+                    }
+
                     return await this.SetAndCheckGitHubToken()
-                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken))
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests, this.GitHubToken))
                         : false;
                 }
 
@@ -270,6 +286,22 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 manifest.GetType().GetProperty(propertyName).SetValue(manifest, value);
             }
+        }
+
+        /// <summary>
+        /// Compares the hashes of the original and updated manifests and returns true if the new manifest has an updated SHA256 hash.
+        /// </summary>
+        /// <param name="oldManifest">The original manifest object model.</param>
+        /// <param name="newManifest">The updated installer manifest object model.</param>
+        /// <returns>A boolean value indicating whether the updated manifest has new changes compared to the original manifest.</returns>
+        private bool VerifyUpdatedInstallerHash(Manifests oldManifest, InstallerManifest newManifest)
+        {
+            IEnumerable<string> oldHashes = oldManifest.InstallerManifest == null
+                ? oldManifest.SingletonManifest.Installers.Select(i => i.InstallerSha256).Distinct()
+                : oldManifest.InstallerManifest.Installers.Select(i => i.InstallerSha256).Distinct();
+
+            var newHashes = newManifest.Installers.Select(i => i.InstallerSha256).Distinct();
+            return newHashes.Except(oldHashes).Any();
         }
     }
 }

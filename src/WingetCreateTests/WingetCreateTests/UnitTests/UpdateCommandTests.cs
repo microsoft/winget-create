@@ -74,8 +74,7 @@ namespace Microsoft.WingetCreateUnitTests
             string manifestDir = Utils.GetAppManifestDirPath(TestConstants.TestPackageIdentifier, version);
             var updatedManifestContents = Directory.GetFiles(Path.Combine(this.tempPath, manifestDir)).Select(f => File.ReadAllText(f));
             Assert.IsTrue(updatedManifestContents.Any(), "Updated manifests were not created successfully");
-            var manifestsToValidate = new Manifests();
-            Serialization.DeserializeManifestContents(updatedManifestContents, manifestsToValidate);
+            Manifests manifestsToValidate = Serialization.DeserializeManifestContents(updatedManifestContents);
             Assert.AreEqual(version, manifestsToValidate.VersionManifest.PackageVersion, $"Failed to update version of {TestConstants.TestPackageIdentifier}");
         }
 
@@ -90,8 +89,7 @@ namespace Microsoft.WingetCreateUnitTests
             string version = "1.2.3.4";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMsiPackageIdentifier, version, this.tempPath, null);
 
-            var initialManifests = new Manifests();
-            Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
 
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
@@ -115,8 +113,7 @@ namespace Microsoft.WingetCreateUnitTests
             string version = "1.2.3.4";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMultipleInstallerPackageIdentifier, version, this.tempPath, null);
 
-            var initialManifests = new Manifests();
-            Serialization.DeserializeManifestContents(initialManifestContent, initialManifests);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
 
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
@@ -190,6 +187,22 @@ namespace Microsoft.WingetCreateUnitTests
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
             Assert.That(result, Does.Contain(string.Format(Resources.MissingPackageError_Message, InstallerType.Msix, InstallerArchitecture.X86)), "Missing package error should be thrown");
+        }
+
+        /// <summary>
+        /// Verifies that the update command blocks the submission of a manifest if no installer hash changes are detected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task BlockUpdateSubmissionsWithNoUpdate()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var manifests) = GetUpdateCommandAndManifestData("TestPublisher.NoUpdate", "1.2.3.4", this.tempPath, null);
+            command.SubmitToGitHub = true;
+            await command.ExecuteManifestUpdate(manifests, this.testCommandEvent);
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.NoChangeDetectedInUpdatedManifest_Message), "Failed to block manifests without updates from submitting.");
         }
 
         private static List<string> GetInitialManifestContent(string manifestFileName)

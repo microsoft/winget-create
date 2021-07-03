@@ -5,6 +5,8 @@ namespace Microsoft.WingetCreateCLI
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -36,12 +38,14 @@ namespace Microsoft.WingetCreateCLI
 
             Parser myParser = new Parser(config => config.HelpWriter = null);
 
-            var parserResult = myParser.ParseArguments<NewCommand, UpdateCommand, SubmitCommand, TokenCommand, SettingsCommand>(args);
+            var types = GetVerbs();
+            var parserResult = myParser.ParseArguments(args, types);
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
+
             if (command == null)
             {
                 DisplayHelp(parserResult as NotParsed<object>);
-                return 1;
+                return args.Any() ? 1 : 0;
             }
 
             try
@@ -61,6 +65,12 @@ namespace Microsoft.WingetCreateCLI
                 Logger.Error(ex.ToString());
                 return 1;
             }
+        }
+
+        private static Type[] GetVerbs()
+        {
+            return Assembly.GetExecutingAssembly().GetTypes()
+                .Where(types => types.GetCustomAttribute<VerbAttribute>() != null).ToArray();
         }
 
         private static void DisplayHelp(NotParsed<object> result)
