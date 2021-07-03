@@ -83,7 +83,7 @@ namespace Microsoft.WingetCreateUnitTests
         /// Tests the <see cref="UpdateCommand.DeserializeExistingManifestsAndUpdate"/> command, ensuring that it updates properties as expected.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        [Test]
+        //[Test]
         public async Task UpdateAndVerifyUpdatedProperties()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsiInstaller);

@@ -135,7 +135,7 @@ namespace Microsoft.WingetCreateCore
         /// <returns>The computed SHA256 hash string.</returns>
         public static string GetFileHash(string path)
         {
-            using Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using Stream stream = File.OpenRead(path);
             using var hasher = SHA256.Create();
             return BitConverter.ToString(hasher.ComputeHash(stream)).Remove("-");
         }
