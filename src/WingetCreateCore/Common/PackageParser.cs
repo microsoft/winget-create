@@ -100,6 +100,14 @@ namespace Microsoft.WingetCreateCore
         {
             var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
+            int redirectCount = 0;
+            while (response.StatusCode == System.Net.HttpStatusCode.Redirect && redirectCount < 2)
+            {
+                var redirectUri = response.Headers.Location;
+                response = await httpClient.GetAsync(redirectUri, HttpCompletionOption.ResponseHeadersRead);
+                redirectCount++;
+            }
+
             if (!response.IsSuccessStatusCode)
             {
                 string message = await response.Content.ReadAsStringAsync();

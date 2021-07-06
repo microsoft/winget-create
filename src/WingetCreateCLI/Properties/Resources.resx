@@ -601,4 +601,7 @@
     <comment>{0} - will be replaced with installer type
 {1} - will be replaced with installer architecture</comment>
   </data>
+  <data name="NoUpdateArgumentsSpecified_Message" xml:space="preserve">
+    <value>No updates values were specified for the arguments --version and --urls.</value>
+  </data>
 </root>

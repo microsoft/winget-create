@@ -90,6 +90,11 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
+                if (string.IsNullOrEmpty(this.Version) && this.InstallerUrls.Count() == 0)
+                {
+                    Logger.WarnLocalized(nameof(Resources.NoUpdateArgumentsSpecified_Message));
+                }
+
                 GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
 
                 if (!string.IsNullOrEmpty(this.GitHubToken))

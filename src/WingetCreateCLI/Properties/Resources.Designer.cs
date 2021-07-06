@@ -907,6 +907,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No updates values were specified for the arguments --version and --urls..
+        /// </summary>
+        public static string NoUpdateArgumentsSpecified_Message {
+            get {
+                return ResourceManager.GetString("NoUpdateArgumentsSpecified_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please check the spelling and casing of the package identifier.
         /// </summary>
         public static string OctokitNotFound_Error {

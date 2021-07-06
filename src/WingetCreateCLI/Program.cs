@@ -36,7 +36,11 @@ namespace Microsoft.WingetCreateCLI
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
             Logger.Trace($"Command line args: {arguments}");
 
-            Parser myParser = new Parser(config => config.HelpWriter = null);
+            Parser myParser = new Parser(config =>
+                {
+                    config.HelpWriter = null;
+                    config.IgnoreUnknownArguments = false;
+                });
 
             var types = GetVerbs();
             var parserResult = myParser.ParseArguments(args, types);
