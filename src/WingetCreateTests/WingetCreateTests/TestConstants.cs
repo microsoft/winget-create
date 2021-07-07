@@ -49,11 +49,6 @@ namespace Microsoft.WingetCreateTests
         public const string TestMsiPackageIdentifier = "WingetCreateE2E.MsiTest";
 
         /// <summary>
-        /// PackageIdentifier for test msix.
-        /// </summary>
-        public const string TestMsixPackageIdentifier = "WingetCreateE2E.MsixTest";
-
-        /// <summary>
         /// File name of the test msix manifest.
         /// </summary>
         public const string TestMultifileMsixPackageIdentifier = "Multifile.MsixTest";

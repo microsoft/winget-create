@@ -47,7 +47,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Gets or sets the unbound arguments that exist after the first positional parameter.
         /// </summary>
         [Value(1, Hidden = true)]
-        public IList<string> UnboundArgs { get; set; }
+        public IList<string> UnboundArgs { get; set; } = new List<string>();
 
         /// <summary>
         /// Executes the submit command flow.
