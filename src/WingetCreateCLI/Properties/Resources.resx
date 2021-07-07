@@ -603,7 +603,7 @@
   </data>
   <data name="UnboundArguments_Message" xml:space="preserve">
     <value>The following unbound argument(s) were detected: "{0}"</value>
-    <comment>{0} - The additional unbound arguments present in the update command line arguments.</comment>
+    <comment>{0} - The additional unbound arguments present in the command line arguments.</comment>
   </data>
   <data name="VerifyCommandUsage_Message" xml:space="preserve">
     <value>Please check and verify the usage of this command by passing in the --help flag.</value>
