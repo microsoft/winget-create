@@ -96,7 +96,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                if (this.UnboundArgs.Count() > 0)
+                if (this.UnboundArgs.Any())
                 {
                     Logger.ErrorLocalized(nameof(Resources.UnboundArguments_Message), string.Join(" ", this.UnboundArgs));
                     Logger.WarnLocalized(nameof(Resources.VerifyCommandUsage_Message));
