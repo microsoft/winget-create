@@ -64,11 +64,6 @@ namespace Microsoft.WingetCreateTests
         public const string TestMsiManifest = "WingetCreateE2E.MsiTest.yaml";
 
         /// <summary>
-        /// File name of the test msix manifest.
-        /// </summary>
-        public const string TestMsixManifest = "WingetCreateE2E.MsixTest.yaml";
-
-        /// <summary>
         /// Path of the directory with the multifile msix test manifests.
         /// </summary>
         public const string TestMultifileMsixManifestDir = "Multifile.MsixTest";
