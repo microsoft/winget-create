@@ -74,6 +74,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public IEnumerable<string> InstallerUrls { get; set; } = new List<string>();
 
         /// <summary>
+        /// Gets or sets the number of unbound arguments that exist after the first positional parameter.
+        /// </summary>
+        [Value(1, Hidden = true)]
+        public IList<string> UnboundArgs { get; set; }
+
+        /// <summary>
         /// Executes the update command flow.
         /// </summary>
         /// <returns>Boolean representing success or fail of the command.</returns>
@@ -90,9 +96,11 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                if (string.IsNullOrEmpty(this.Version) && this.InstallerUrls.Count() == 0)
+                if (this.UnboundArgs.Count() > 0)
                 {
-                    Logger.WarnLocalized(nameof(Resources.NoUpdateArgumentsSpecified_Message));
+                    Logger.ErrorLocalized(nameof(Resources.UnboundArguments_Message), string.Join(" ", this.UnboundArgs));
+                    Logger.WarnLocalized(nameof(Resources.VerifyCommandUsage_Message));
+                    return false;
                 }
 
                 GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);

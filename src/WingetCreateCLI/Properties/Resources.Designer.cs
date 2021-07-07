@@ -907,15 +907,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No updates values were specified for the arguments --version and --urls..
-        /// </summary>
-        public static string NoUpdateArgumentsSpecified_Message {
-            get {
-                return ResourceManager.GetString("NoUpdateArgumentsSpecified_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Please check the spelling and casing of the package identifier.
         /// </summary>
         public static string OctokitNotFound_Error {
@@ -1339,6 +1330,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following unbound argument(s) were detected: &quot;{0}&quot;.
+        /// </summary>
+        public static string UnboundArguments_Message {
+            get {
+                return ResourceManager.GetString("UnboundArguments_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unexpected error while loading settings. Please verify your settings by running the settings command..
         /// </summary>
         public static string UnexpectedErrorLoadSettings_Message {
@@ -1407,6 +1407,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UsingTokenFromCache_Message {
             get {
                 return ResourceManager.GetString("UsingTokenFromCache_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please check and verify the usage of this command by passing in the --help flag..
+        /// </summary>
+        public static string VerifyCommandUsage_Message {
+            get {
+                return ResourceManager.GetString("VerifyCommandUsage_Message", resourceCulture);
             }
         }
         
