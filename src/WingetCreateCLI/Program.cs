@@ -120,6 +120,11 @@ namespace Microsoft.WingetCreateCLI
                 }
                 else if (error is UnknownOptionError uoe)
                 {
+                    if (uoe.Token == "?")
+                    {
+                        break;
+                    }
+
                     Utils.WriteLineColored(ConsoleColor.Red, $"Unknown option: {uoe.Token}");
                 }
                 else if (error is NoVerbSelectedError)

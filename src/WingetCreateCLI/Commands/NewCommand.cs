@@ -121,14 +121,6 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
-                PromptOptionalPropertiesFromManifests(manifests);
-
-                //// Prompting Optional Fields
-                //if (Prompt.Confirm("Would you like to add optional fields?"))
-                //{
-                //    PromptOptionalProperties(manifests);
-                //}
-
                 do
                 {
                     if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
@@ -138,11 +130,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return false;
                     }
 
-                    PromptRequiredProperties(manifests.VersionManifest);
-                    PromptRequiredProperties(manifests.InstallerManifest, manifests.VersionManifest);
-                    PromptRequiredProperties(manifests.DefaultLocaleManifest, manifests.VersionManifest);
-                    Console.WriteLine();
-                    DisplayManifestPreview(manifests);
+                    PromptPropertiesAndDisplayManifests(manifests);
                 }
                 while (Prompt.Confirm(Resources.ConfirmManifestCreation_Message));
 
@@ -175,6 +163,23 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 TelemetryManager.Log.WriteEvent(commandEvent);
             }
+        }
+
+        private static void PromptPropertiesAndDisplayManifests(Manifests manifests)
+        {
+            PromptRequiredProperties(manifests.VersionManifest);
+            PromptRequiredProperties(manifests.InstallerManifest, manifests.VersionManifest);
+            PromptRequiredProperties(manifests.DefaultLocaleManifest, manifests.VersionManifest);
+
+            Console.WriteLine();
+            if (Prompt.Confirm(Resources.AddOptionalFields_Message))
+            {
+                PromptOptionalProperties(manifests.DefaultLocaleManifest);
+                PromptOptionalProperties(manifests.InstallerManifest);
+            }
+
+            Console.WriteLine();
+            DisplayManifestPreview(manifests);
         }
 
         private static void PromptRequiredProperties<T>(T manifest, VersionManifest versionManifest = null)
@@ -223,13 +228,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void PromptOptionalPropertiesFromManifests(Manifests manifests)
-        {
-            PromptOptionalProperties(manifests.VersionManifest);
-            PromptOptionalProperties(manifests.InstallerManifest);
-            PromptOptionalProperties(manifests.DefaultLocaleManifest);
-        }
-
         private static void PromptOptionalProperties<T>(T manifest)
         {
             var properties = manifest.GetType().GetProperties().ToList();
@@ -239,11 +237,10 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 if (property.PropertyType == typeof(string))
                 {
-                    Console.WriteLine(property.Name);
-                    //var currentValue = property.GetValue(manifest);
-                    //var result = PromptProperty(manifest, currentValue, property.Name);
-                    //property.SetValue(manifest, result);
-                    //Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
+                    var currentValue = property.GetValue(manifest);
+                    var result = PromptProperty(manifest, currentValue, property.Name);
+                    property.SetValue(manifest, result);
+                    Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
                 }
             }
         }
