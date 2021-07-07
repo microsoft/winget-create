@@ -44,6 +44,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string Path { get; set; }
 
         /// <summary>
+        /// Gets or sets the unbound arguments that exist after the first positional parameter.
+        /// </summary>
+        [Value(1, Hidden = true)]
+        public IList<string> UnboundArgs { get; set; } = new List<string>();
+
+        /// <summary>
         /// Executes the submit command flow.
         /// </summary>
         /// <returns>Boolean representing success or fail of the command.</returns>
@@ -57,6 +63,13 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
+                if (this.UnboundArgs.Any())
+                {
+                    Logger.ErrorLocalized(nameof(Resources.UnboundArguments_Message), string.Join(" ", this.UnboundArgs));
+                    Logger.WarnLocalized(nameof(Resources.VerifyCommandUsage_Message));
+                    return false;
+                }
+
                 if (!await this.SetAndCheckGitHubToken())
                 {
                     return false;
