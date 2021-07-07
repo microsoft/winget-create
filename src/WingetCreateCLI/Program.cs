@@ -40,6 +40,7 @@ namespace Microsoft.WingetCreateCLI
 
             var types = GetVerbs();
             var parserResult = myParser.ParseArguments(args, types);
+
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
 
             if (command == null)
@@ -127,7 +128,7 @@ namespace Microsoft.WingetCreateCLI
 
                     Utils.WriteLineColored(ConsoleColor.Red, $"Unknown option: {uoe.Token}");
                 }
-                else if (error is NoVerbSelectedError)
+                else if (error is NoVerbSelectedError || error is HelpRequestedError)
                 {
                     continue;
                 }
