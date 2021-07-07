@@ -44,7 +44,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string Path { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of unbound arguments that exist after the first positional parameter.
+        /// Gets or sets the unbound arguments that exist after the first positional parameter.
         /// </summary>
         [Value(1, Hidden = true)]
         public IList<string> UnboundArgs { get; set; }
