@@ -121,6 +121,14 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
+                PromptOptionalPropertiesFromManifests(manifests);
+
+                //// Prompting Optional Fields
+                //if (Prompt.Confirm("Would you like to add optional fields?"))
+                //{
+                //    PromptOptionalProperties(manifests);
+                //}
+
                 do
                 {
                     if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
@@ -211,6 +219,31 @@ namespace Microsoft.WingetCreateCLI.Commands
                     var result = PromptProperty(manifest, currentValue, property.Name);
                     property.SetValue(manifest, result);
                     Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
+                }
+            }
+        }
+
+        private static void PromptOptionalPropertiesFromManifests(Manifests manifests)
+        {
+            PromptOptionalProperties(manifests.VersionManifest);
+            PromptOptionalProperties(manifests.InstallerManifest);
+            PromptOptionalProperties(manifests.DefaultLocaleManifest);
+        }
+
+        private static void PromptOptionalProperties<T>(T manifest)
+        {
+            var properties = manifest.GetType().GetProperties().ToList();
+            var optionalProperties = properties.Where(p => p.GetCustomAttribute<RequiredAttribute>() == null).ToList();
+
+            foreach (var property in optionalProperties)
+            {
+                if (property.PropertyType == typeof(string))
+                {
+                    Console.WriteLine(property.Name);
+                    //var currentValue = property.GetValue(manifest);
+                    //var result = PromptProperty(manifest, currentValue, property.Name);
+                    //property.SetValue(manifest, result);
+                    //Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
                 }
             }
         }
