@@ -39,18 +39,12 @@ namespace Microsoft.WingetCreateCLI
                 {
                     // If the user didn't provide a value, check if null is allowed for field
                     var items = property == null
-                        ? new List<string>()
+                        ? new List<string> { null }
                         : (property as string).Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
 
                     // If the original type of the field is a string, validate each item in the enumerable against the property
                     if (type == typeof(string))
                     {
-                        if (!items.Any())
-                        {
-                            // If no entry is found, add an empty string to trigger validation.
-                            items.Add(string.Empty);
-                        }
-
                         foreach (var item in items)
                         {
                             if (!Validator.TryValidateProperty(property, validationContext, validationResults))

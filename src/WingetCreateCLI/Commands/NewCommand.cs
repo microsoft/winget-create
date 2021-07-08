@@ -338,7 +338,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 string combinedString = null;
 
-                if (property is List<string> propList && propList.Any())
+                if (property is IEnumerable<string> propList && propList.Any())
                 {
                     combinedString = string.Join(", ", propList);
                 }
