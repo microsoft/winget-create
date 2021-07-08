@@ -22,6 +22,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Version;
+    using Newtonsoft.Json;
     using Sharprompt;
 
     /// <summary>
@@ -230,17 +231,16 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static void PromptOptionalProperties<T>(T manifest)
         {
             var properties = manifest.GetType().GetProperties().ToList();
-            var optionalProperties = properties.Where(p => p.GetCustomAttribute<RequiredAttribute>() == null).ToList();
+            var optionalProperties = properties.Where(p =>
+                p.GetCustomAttribute<RequiredAttribute>() == null &&
+                p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
 
             foreach (var property in optionalProperties)
             {
-                if (property.PropertyType == typeof(string) || property.Name == nameof(DefaultLocaleManifest.Tags))
-                {
-                    var currentValue = property.GetValue(manifest);
-                    var result = PromptProperty(manifest, currentValue, property.Name);
-                    property.SetValue(manifest, result);
-                    Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
-                }
+                var currentValue = property.GetValue(manifest);
+                var result = PromptProperty(manifest, currentValue, property.Name);
+                property.SetValue(manifest, result);
+                Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
             }
         }
 
@@ -323,7 +323,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             // Because some properties don't have a current value, we can't rely on T or the property to obtain the type.
             // Use reflection to obtain the type by looking up the property type by membername based on the model.
             Type typeFromModel = model.GetType().GetProperty(memberName).PropertyType;
-
             if (typeFromModel.IsEnum)
             {
                 // For enums, we want to call Prompt.Select<T>, specifically the overload that takes 4 parameters
