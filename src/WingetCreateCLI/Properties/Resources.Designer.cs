@@ -601,7 +601,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The installer URL(s). Comma-delimit multiple values |e.g. https://microsoft.com/downloads/foo.exe,https://microsoft.com/downloads/bar.msix|.
+        ///   Looks up a localized string similar to The installer URL(s) |e.g. https://microsoft.com/foo.exe, https://microsoft.com/bar.msix|.
         /// </summary>
         public static string InstallerUrl_KeywordDescription {
             get {
@@ -817,6 +817,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to modify the optional fields?.
+        /// </summary>
+        public static string ModifyOptionalFields_Message {
+            get {
+                return ResourceManager.GetString("ModifyOptionalFields_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The most common package term.
         /// </summary>
         public static string Moniker_KeywordDescription {
@@ -997,7 +1006,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The package home page..
+        ///   Looks up a localized string similar to The package home page.
         /// </summary>
         public static string PackageUrl_KeywordDescription {
             get {
@@ -1276,7 +1285,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to List of additional package search terms.
+        ///   Looks up a localized string similar to List of additional package search terms |e.g. Tag1, Tag2, Tag3|.
         /// </summary>
         public static string Tags_KeywordDescription {
             get {

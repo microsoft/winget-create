@@ -22,6 +22,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Version;
+    using Newtonsoft.Json;
     using Sharprompt;
 
     /// <summary>
@@ -121,6 +122,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
+                bool isManifestValid;
+
                 do
                 {
                     if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
@@ -130,11 +133,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return false;
                     }
 
-                    PromptRequiredProperties(manifests.VersionManifest);
-                    PromptRequiredProperties(manifests.InstallerManifest, manifests.VersionManifest);
-                    PromptRequiredProperties(manifests.DefaultLocaleManifest, manifests.VersionManifest);
-                    Console.WriteLine();
-                    DisplayManifestPreview(manifests);
+                    PromptPropertiesAndDisplayManifests(manifests);
+                    isManifestValid = ValidateManifestsInTempDir(manifests);
                 }
                 while (Prompt.Confirm(Resources.ConfirmManifestCreation_Message));
 
@@ -143,9 +143,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     this.OutputDir = Directory.GetCurrentDirectory();
                 }
 
-                string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
-
-                bool isManifestValid = ValidateManifest(manifestDirectoryPath);
+                SaveManifestDirToLocalPath(manifests, this.OutputDir);
 
                 if (isManifestValid && Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
                 {
@@ -167,6 +165,22 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 TelemetryManager.Log.WriteEvent(commandEvent);
             }
+        }
+
+        private static void PromptPropertiesAndDisplayManifests(Manifests manifests)
+        {
+            PromptRequiredProperties(manifests.VersionManifest);
+            PromptRequiredProperties(manifests.InstallerManifest, manifests.VersionManifest);
+            PromptRequiredProperties(manifests.DefaultLocaleManifest, manifests.VersionManifest);
+
+            Console.WriteLine();
+            if (Prompt.Confirm(Resources.ModifyOptionalFields_Message))
+            {
+                PromptOptionalProperties(manifests.DefaultLocaleManifest);
+            }
+
+            Console.WriteLine();
+            DisplayManifestPreview(manifests);
         }
 
         private static void PromptRequiredProperties<T>(T manifest, VersionManifest versionManifest = null)
@@ -212,6 +226,22 @@ namespace Microsoft.WingetCreateCLI.Commands
                     property.SetValue(manifest, result);
                     Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
                 }
+            }
+        }
+
+        private static void PromptOptionalProperties<T>(T manifest)
+        {
+            var properties = manifest.GetType().GetProperties().ToList();
+            var optionalProperties = properties.Where(p =>
+                p.GetCustomAttribute<RequiredAttribute>() == null &&
+                p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
+
+            foreach (var property in optionalProperties)
+            {
+                var currentValue = property.GetValue(manifest);
+                var result = PromptProperty(manifest, currentValue, property.Name);
+                property.SetValue(manifest, result);
+                Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
             }
         }
 
@@ -290,7 +320,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             message ??= $"[{memberName}] " +
             Resources.ResourceManager.GetString($"{memberName}_KeywordDescription") ?? memberName;
-            if (property?.GetType().IsEnum ?? false)
+
+            // Because some properties don't have a current value, we can't rely on T or the property to obtain the type.
+            // Use reflection to obtain the type by looking up the property type by membername based on the model.
+            Type typeFromModel = model.GetType().GetProperty(memberName).PropertyType;
+            if (typeFromModel.IsEnum)
             {
                 // For enums, we want to call Prompt.Select<T>, specifically the overload that takes 4 parameters
                 var generic = typeof(Prompt)
@@ -301,11 +335,18 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 return (T)generic.Invoke(null, new object[] { message, property.GetType().GetEnumValues(), null, property, null });
             }
-            else if (typeof(T) != typeof(string) && typeof(IEnumerable<string>).IsAssignableFrom(typeof(T)))
+            else if (typeof(IEnumerable<string>).IsAssignableFrom(typeof(T)) || typeof(IEnumerable<string>).IsAssignableFrom(typeFromModel))
             {
-                // If property is an IEnumerable<string>, we take in a comma-delimited string, and validate each split item, then return the split array
-                string promptResult = Prompt.Input<string>(message, null, new[] { FieldValidation.ValidateProperty(model, memberName, property) });
-                return (T)(object)promptResult?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                string combinedString = null;
+
+                if (property is IEnumerable<string> propList && propList.Any())
+                {
+                    combinedString = string.Join(", ", propList);
+                }
+
+                // Take in a comma-delimited string, and validate each split item, then return the split array
+                string promptResult = Prompt.Input<string>(message, combinedString, new[] { FieldValidation.ValidateProperty(model, memberName, property) });
+                return (T)(object)promptResult?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
             }
             else
             {

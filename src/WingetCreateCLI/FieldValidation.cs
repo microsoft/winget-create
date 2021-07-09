@@ -6,6 +6,7 @@ namespace Microsoft.WingetCreateCLI
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     /// <summary>
     /// Provides functionality for validating properties of the manifest object model.
@@ -31,40 +32,43 @@ namespace Microsoft.WingetCreateCLI
                 }
 
                 var validationContext = new ValidationContext(instance) { MemberName = memberName };
+                Type type = instance.GetType().GetProperty(memberName).PropertyType;
+                List<ValidationResult> validationResults = new List<ValidationResult>();
 
-                if (defaultValue != null && defaultValue is not string && typeof(IEnumerable<string>).IsAssignableFrom(defaultValue.GetType()))
+                if (typeof(IEnumerable<string>).IsAssignableFrom(type) || (defaultValue != null && typeof(IEnumerable<string>).IsAssignableFrom(defaultValue.GetType())))
                 {
-                    // If prompt is an IEnumerable<string>, validate each item in the enumerable against the property
-
                     // If the user didn't provide a value, check if null is allowed for field
                     var items = property == null
-                        ? new string[] { null }
-                        : (property as string).Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        ? new List<string> { null }
+                        : (property as string).Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
 
-                    foreach (var item in items)
+                    // If the original type of the field is a string, validate each item in the enumerable against the property
+                    if (type == typeof(string))
                     {
-                        var validationResults = new List<ValidationResult>();
-                        if (!Validator.TryValidateProperty(property, validationContext, validationResults))
+                        foreach (var item in items)
                         {
-                            string result = JoinErrorMessages(validationResults);
-                            return new ValidationResult(result);
+                            if (!Validator.TryValidateProperty(property, validationContext, validationResults))
+                            {
+                                string result = JoinErrorMessages(validationResults);
+                                return new ValidationResult(result);
+                            }
                         }
+
+                        return null;
                     }
 
+                    // If the original type of the field is not a string, validate as a List<string>
+                    property = items;
+                }
+
+                if (Validator.TryValidateProperty(property, validationContext, validationResults))
+                {
                     return null;
                 }
                 else
                 {
-                    var validationResults = new List<ValidationResult>();
-                    if (Validator.TryValidateProperty(property, validationContext, validationResults))
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        string result = JoinErrorMessages(validationResults);
-                        return new ValidationResult(result);
-                    }
+                    string result = JoinErrorMessages(validationResults);
+                    return new ValidationResult(result);
                 }
             };
         }

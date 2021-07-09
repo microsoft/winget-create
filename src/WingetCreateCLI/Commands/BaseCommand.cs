@@ -232,6 +232,31 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
+        /// Saves the manifests to a randomly generated directory in the %TEMP% folder and validates them, printing the results to console.
+        /// </summary>
+        /// <param name="manifests">Manifests object model.</param>
+        /// <returns>A boolean value indicating whether validation of the manifests was successful.</returns>
+        protected static bool ValidateManifestsInTempDir(Manifests manifests)
+        {
+            string packageId = manifests.VersionManifest.PackageIdentifier;
+            string defaultPackageLocale = manifests.DefaultLocaleManifest.PackageLocale;
+            string versionManifestFileName = $"{packageId}.yaml";
+            string installerManifestFileName = $"{packageId}.installer.yaml";
+            string defaultLocaleManifestFileName = $"{packageId}.locale.{defaultPackageLocale}.yaml";
+
+            string randomDirPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(randomDirPath);
+
+            File.WriteAllText(Path.Combine(randomDirPath, versionManifestFileName), manifests.VersionManifest.ToYaml());
+            File.WriteAllText(Path.Combine(randomDirPath, installerManifestFileName), manifests.InstallerManifest.ToYaml());
+            File.WriteAllText(Path.Combine(randomDirPath, defaultLocaleManifestFileName), manifests.DefaultLocaleManifest.ToYaml());
+
+            bool result = ValidateManifest(randomDirPath);
+            Directory.Delete(randomDirPath, true);
+            return result;
+        }
+
+        /// <summary>
         /// Launches the OAuth flow to allow the user to login to their GitHub account and grant permission to the app.
         /// </summary>
         /// <returns>Access token string.</returns>

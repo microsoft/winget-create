@@ -332,7 +332,7 @@
     <value>The package meta-data locale</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
-    <value>The package home page.</value>
+    <value>The package home page</value>
   </data>
   <data name="Platform_KeywordDescription" xml:space="preserve">
     <value>The installer platform</value>
@@ -402,7 +402,7 @@
     <value>Collection of installer switches</value>
   </data>
   <data name="Tags_KeywordDescription" xml:space="preserve">
-    <value>List of additional package search terms</value>
+    <value>List of additional package search terms |e.g. Tag1, Tag2, Tag3|</value>
   </data>
   <data name="TokenCommand_HelpText" xml:space="preserve">
     <value>Modifies the GitHub auth token cache</value>
@@ -514,7 +514,7 @@
     <value>List of external package dependencies</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>The installer URL(s). Comma-delimit multiple values |e.g. https://microsoft.com/downloads/foo.exe,https://microsoft.com/downloads/bar.msix|</value>
+    <value>The installer URL(s) |e.g. https://microsoft.com/foo.exe, https://microsoft.com/bar.msix|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>The manifest type</value>
@@ -607,5 +607,8 @@
   </data>
   <data name="VerifyCommandUsage_Message" xml:space="preserve">
     <value>Please check and verify the usage of this command by passing in the --help flag.</value>
+  </data>
+  <data name="ModifyOptionalFields_Message" xml:space="preserve">
+    <value>Would you like to modify the optional fields?</value>
   </data>
 </root>
