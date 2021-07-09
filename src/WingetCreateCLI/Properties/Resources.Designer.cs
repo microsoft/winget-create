@@ -70,15 +70,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to add optional fields?.
-        /// </summary>
-        public static string AddOptionalFields_Message {
-            get {
-                return ResourceManager.GetString("AddOptionalFields_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The manifest creation command line utility generates manifest for submitting apps to the Windows Package Manager repo..
         /// </summary>
         public static string AppDescription_HelpText {
@@ -822,6 +813,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string MissingPackageError_Message {
             get {
                 return ResourceManager.GetString("MissingPackageError_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to modify the optional fields?.
+        /// </summary>
+        public static string ModifyOptionalFields_Message {
+            get {
+                return ResourceManager.GetString("ModifyOptionalFields_Message", resourceCulture);
             }
         }
         

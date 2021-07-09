@@ -608,7 +608,7 @@
   <data name="VerifyCommandUsage_Message" xml:space="preserve">
     <value>Please check and verify the usage of this command by passing in the --help flag.</value>
   </data>
-  <data name="AddOptionalFields_Message" xml:space="preserve">
-    <value>Would you like to add optional fields?</value>
+  <data name="ModifyOptionalFields_Message" xml:space="preserve">
+    <value>Would you like to modify the optional fields?</value>
   </data>
 </root>

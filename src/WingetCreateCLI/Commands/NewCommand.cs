@@ -122,6 +122,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
+                bool isManifestValid;
+
                 do
                 {
                     if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
@@ -132,6 +134,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
 
                     PromptPropertiesAndDisplayManifests(manifests);
+                    isManifestValid = ValidateManifestsInTempDir(manifests);
                 }
                 while (Prompt.Confirm(Resources.ConfirmManifestCreation_Message));
 
@@ -140,9 +143,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     this.OutputDir = Directory.GetCurrentDirectory();
                 }
 
-                string manifestDirectoryPath = SaveManifestDirToLocalPath(manifests, this.OutputDir);
-
-                bool isManifestValid = ValidateManifest(manifestDirectoryPath);
+                SaveManifestDirToLocalPath(manifests, this.OutputDir);
 
                 if (isManifestValid && Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
                 {
@@ -173,7 +174,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             PromptRequiredProperties(manifests.DefaultLocaleManifest, manifests.VersionManifest);
 
             Console.WriteLine();
-            if (Prompt.Confirm(Resources.AddOptionalFields_Message))
+            if (Prompt.Confirm(Resources.ModifyOptionalFields_Message))
             {
                 PromptOptionalProperties(manifests.DefaultLocaleManifest);
             }
