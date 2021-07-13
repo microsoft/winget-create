@@ -19,6 +19,9 @@ namespace Microsoft.WingetCreateTests
     /// </summary>
     public static class TestUtils
     {
+        /// <summary>
+        /// The default test installer base url.
+        /// </summary>
         public static readonly string DefaultTestInstallerBaseUrl = "https://fakedomain.com/";
 
         private static HttpMessageHandler httpMessageHandler;
@@ -39,7 +42,6 @@ namespace Microsoft.WingetCreateTests
 
             foreach (var filename in files)
             {
-                //string url = $"https://fakedomain.com/{filename}";
                 string url = TestInstallerBaseUrl + filename;
                 var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
                 var content = new ByteArrayContent(File.ReadAllBytes(GetTestFile(filename)));
