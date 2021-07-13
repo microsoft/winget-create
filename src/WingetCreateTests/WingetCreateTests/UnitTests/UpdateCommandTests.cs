@@ -186,7 +186,6 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
-            Assert.That(result, Does.Contain(string.Format(Resources.InstallerDetectedFromUrl_Message, updatedManifests.InstallerManifest.Installers.FirstOrDefault().InstallerUrl, InstallerType.Msix, InstallerArchitecture.X86)), "Missing package error should be thrown");
         }
 
         /// <summary>
