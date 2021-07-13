@@ -186,7 +186,27 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
-            Assert.That(result, Does.Contain(string.Format(Resources.MissingPackageError_Message, InstallerType.Msix, InstallerArchitecture.X86)), "Missing package error should be thrown");
+            Assert.That(result, Does.Contain(string.Format(Resources.InstallerDetectedFromUrl_Message, updatedManifests.InstallerManifest.Installers.FirstOrDefault().InstallerUrl, InstallerType.Msix, InstallerArchitecture.X86)), "Missing package error should be thrown");
+        }
+
+        /// <summary>
+        /// Since some installers are incorrectly labeled on the manifest, resort to using the installer URL to find matches.
+        /// This unit test uses a msi installer that is not an arm64 installer, but because the installer URL includes "arm64", it should find a match.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateBasedOnInstallerUrlMatch()
+        {
+            TestUtils.TestInstallerBaseUrl = "https://fakedomain.com/arm64/";
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsiInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithInstallerUrl", null, this.tempPath, null);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+
+            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            Assert.AreNotEqual(initialInstaller.InstallerSha256 != updatedManifests.InstallerManifest.Installers.FirstOrDefault().InstallerSha256, "Installer hash should be updated.");
+            TestUtils.TestInstallerBaseUrl = TestUtils.DefaultTestInstallerBaseUrl;
         }
 
         /// <summary>

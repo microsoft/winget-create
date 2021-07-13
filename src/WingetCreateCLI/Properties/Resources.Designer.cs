@@ -529,6 +529,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} {1} installer detected from the url: {2}.
+        /// </summary>
+        public static string InstallerDetectedFromUrl_Message {
+            get {
+                return ResourceManager.GetString("InstallerDetectedFromUrl_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package installer locale.
         /// </summary>
         public static string InstallerLocale_KeywordDescription {
@@ -543,6 +552,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InstallerManifestPreview_Message {
             get {
                 return ResourceManager.GetString("InstallerManifestPreview_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following installers failed to match an existing installer node:.
+        /// </summary>
+        public static string InstallerMatchFailedError_Message {
+            get {
+                return ResourceManager.GetString("InstallerMatchFailedError_Message", resourceCulture);
             }
         }
         
@@ -808,15 +826,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New package found for {0} {1} installer, but not found in existing manifest.
-        /// </summary>
-        public static string MissingPackageError_Message {
-            get {
-                return ResourceManager.GetString("MissingPackageError_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Would you like to modify the optional fields?.
         /// </summary>
         public static string ModifyOptionalFields_Message {
@@ -844,11 +853,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updating a manifest is only supported with the same number of installer URLs, and the same installer types and architectures.
+        ///   Looks up a localized string similar to Updating a manifest is only supported with the same number of installer URLs..
         /// </summary>
         public static string MultipleInstallerUpdateDiscrepancy_Error {
             get {
                 return ResourceManager.GetString("MultipleInstallerUpdateDiscrepancy_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple existing installer nodes matched the following installer:.
+        /// </summary>
+        public static string MultipleMatchingInstallerNodes_Error {
+            get {
+                return ResourceManager.GetString("MultipleMatchingInstallerNodes_Error", resourceCulture);
             }
         }
         
@@ -885,6 +903,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NewCommand_HelpText {
             get {
                 return ResourceManager.GetString("NewCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each new installer URL must have a match to an existing installer node based on installer type and architecture..
+        /// </summary>
+        public static string NewInstallerUrlMustMatchExisting_Message {
+            get {
+                return ResourceManager.GetString("NewInstallerUrlMustMatchExisting_Message", resourceCulture);
             }
         }
         

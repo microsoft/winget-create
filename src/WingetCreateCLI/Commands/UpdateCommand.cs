@@ -194,20 +194,40 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, packageFiles, out bool installerMismatch, out WingetCreateCore.Models.Installer.Installer installersMissingMatch))
+            if (!PackageParser.UpdateInstallerNodesAsync(
+                installerManifest,
+                this.InstallerUrls,
+                packageFiles,
+                out bool installerMismatch,
+                out bool multipleMatchesFound,
+                out List<WingetCreateCore.Models.Installer.Installer> installersMissingMatch))
             {
                 if (installerMismatch)
                 {
                     Logger.ErrorLocalized(nameof(Resources.MultipleInstallerUpdateDiscrepancy_Error));
-                    if (installersMissingMatch != null)
+                    Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
+
+                    if (installersMissingMatch.Any())
                     {
-                        Logger.ErrorLocalized(nameof(Resources.MissingPackageError_Message), installersMissingMatch.InstallerType, installersMissingMatch.Architecture);
+                        Logger.ErrorLocalized(nameof(Resources.InstallerMatchFailedError_Message));
                     }
+                }
+                else if (multipleMatchesFound)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.MultipleMatchingInstallerNodes_Error));
                 }
                 else
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                 }
+
+                installersMissingMatch.ForEach(i =>
+                {
+                    if (installerMismatch || multipleMatchesFound)
+                    {
+                        Logger.WarnLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl);
+                    }
+                });
 
                 return null;
             }

@@ -155,15 +155,23 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerUrls">InstallerUrls where installers can be downloaded.</param>
         /// <param name="paths">Paths to packages to extract metadata from.</param>
         /// <param name="installerMismatch">If set, the failure was due to an installer count or type mismatch.</param>
+        /// <param name="multipleMatchesFound">If set, the failure was due to multiple installer nodes found.</param>
         /// <param name="installerMissingMatch">If populated, all packages were successfully parsed, but at least one without a match in the existing manifest.</param>
         /// <returns>True if update succeeded, false otherwise.</returns>
-        public static bool UpdateInstallerNodes(InstallerManifest installerManifest, IEnumerable<string> installerUrls, IEnumerable<string> paths, out bool installerMismatch, out Installer installerMissingMatch)
+        public static bool UpdateInstallerNodesAsync(
+            InstallerManifest installerManifest,
+            IEnumerable<string> installerUrls,
+            IEnumerable<string> paths,
+            out bool installerMismatch,
+            out bool multipleMatchesFound,
+            out List<Installer> installerMissingMatch)
         {
             var newPackages = paths.Zip(installerUrls, (path, url) => (path, url)).ToList();
             var newInstallers = new List<Installer>();
             var existingInstallers = new List<Installer>(installerManifest.Installers);
             installerMismatch = false;
-            installerMissingMatch = null;
+            multipleMatchesFound = false;
+            installerMissingMatch = new List<Installer>();
 
             foreach (var (path, url) in newPackages)
             {
@@ -183,17 +191,33 @@ namespace Microsoft.WingetCreateCore
             // Update previous installers with parsed data from downloaded packages
             foreach (var newInstaller in newInstallers)
             {
-                // Find a match for the current installer in the list of installers remaining to be updated.
-                var matchingExistingInstaller = existingInstallers.SingleOrDefault(i =>
-                    (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
-                    i.Architecture == newInstaller.Architecture);
+                var archGuess = GetArchFromUrl(newInstaller.InstallerUrl);
+                dynamic matchingExistingInstaller = null;
+                try
+                {
+                    var urlMatch = existingInstallers.SingleOrDefault(
+                        i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
+                        i.Architecture == archGuess);
+
+                    var typeAndArchMatch = existingInstallers.SingleOrDefault(
+                        i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
+                        i.Architecture == newInstaller.Architecture);
+
+                    matchingExistingInstaller = urlMatch ?? typeAndArchMatch;
+                }
+                catch (InvalidOperationException)
+                {
+                    multipleMatchesFound = true;
+                    installerMissingMatch = new List<Installer> { newInstaller };
+                    return false;
+                }
 
                 // If we can't find a match in the remaining existing packages, there must be a mismatch between the old manifest and the URLs provided
                 if (matchingExistingInstaller == null)
                 {
                     installerMismatch = true;
-                    installerMissingMatch = newInstaller;
-                    return false;
+                    installerMissingMatch.Add(newInstaller);
+                    continue;
                 }
                 else
                 {
@@ -209,7 +233,24 @@ namespace Microsoft.WingetCreateCore
                 matchingExistingInstaller.Platform = newInstaller.Platform;
             }
 
-            return true;
+            return !installerMissingMatch.Any();
+        }
+
+        /// <summary>
+        /// Performs a regex match to determine the installer architecture based on the url string.
+        /// </summary>
+        /// <param name="url">Installer url string.</param>
+        /// <returns>Installer architecture enum.</returns>
+        private static InstallerArchitecture? GetArchFromUrl(string url)
+        {
+            return url switch
+            {
+                string when Regex.Match(url, "arm64", RegexOptions.IgnoreCase).Success => InstallerArchitecture.Arm64,
+                string when Regex.Match(url, "arm", RegexOptions.IgnoreCase).Success => InstallerArchitecture.Arm,
+                string when Regex.Match(url, "x64|win64", RegexOptions.IgnoreCase).Success => InstallerArchitecture.X64,
+                string when Regex.Match(url, "x86|win32|ia32|86|32", RegexOptions.IgnoreCase).Success => InstallerArchitecture.X86,
+                _ => null,
+            };
         }
 
         /// <summary>
@@ -380,7 +421,10 @@ namespace Microsoft.WingetCreateCore
 
                     string archString = database.SummaryInfo.Template.Split(';').First();
 
-                    archString = archString.EqualsIC("Intel") ? "x86" : archString.EqualsIC("Intel64") ? "x64" : archString;
+                    archString = archString.EqualsIC("Intel") ? "x86" :
+                        archString.EqualsIC("Intel64") ? "x64" :
+                        archString.EqualsIC("Arm64") ? "Arm64" :
+                        archString.EqualsIC("Arm") ? "Arm" : archString;
 
                     baseInstaller.Architecture = archString.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
 
