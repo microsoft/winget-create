@@ -616,7 +616,7 @@
 {2} - will be replaced with the installer url</comment>
   </data>
   <data name="MultipleMatchingInstallerNodes_Error" xml:space="preserve">
-    <value>Multiple existing installer nodes matched the following installer:</value>
+    <value>Multiple existing installer nodes matched the following installer(s):</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
     <value>Each new installer URL must have a match to an existing installer node based on installer type and architecture.</value>

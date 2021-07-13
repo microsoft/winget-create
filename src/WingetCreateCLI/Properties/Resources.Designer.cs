@@ -862,7 +862,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple existing installer nodes matched the following installer:.
+        ///   Looks up a localized string similar to Multiple existing installer nodes matched the following installer(s):.
         /// </summary>
         public static string MultipleMatchingInstallerNodes_Error {
             get {

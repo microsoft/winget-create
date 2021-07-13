@@ -199,35 +199,30 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.InstallerUrls,
                 packageFiles,
                 out bool installerMismatch,
-                out bool multipleMatchesFound,
-                out List<WingetCreateCore.Models.Installer.Installer> installersMissingMatch))
+                out List<WingetCreateCore.Models.Installer.Installer> unmatchedInstallers,
+                out List<WingetCreateCore.Models.Installer.Installer> multipleMatchedInstallers))
             {
                 if (installerMismatch)
                 {
                     Logger.ErrorLocalized(nameof(Resources.MultipleInstallerUpdateDiscrepancy_Error));
                     Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
 
-                    if (installersMissingMatch.Any())
+                    if (unmatchedInstallers.Any())
                     {
                         Logger.ErrorLocalized(nameof(Resources.InstallerMatchFailedError_Message));
+                        unmatchedInstallers.ForEach(i => Logger.WarnLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl));
                     }
-                }
-                else if (multipleMatchesFound)
-                {
-                    Logger.ErrorLocalized(nameof(Resources.MultipleMatchingInstallerNodes_Error));
+
+                    if (multipleMatchedInstallers.Any())
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.MultipleMatchingInstallerNodes_Error));
+                        multipleMatchedInstallers.ForEach(i => Logger.WarnLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl));
+                    }
                 }
                 else
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                 }
-
-                installersMissingMatch.ForEach(i =>
-                {
-                    if (installerMismatch || multipleMatchesFound)
-                    {
-                        Logger.WarnLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl);
-                    }
-                });
 
                 return null;
             }
