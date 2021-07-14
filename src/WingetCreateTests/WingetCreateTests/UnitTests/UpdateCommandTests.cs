@@ -171,7 +171,7 @@ namespace Microsoft.WingetCreateUnitTests
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
+            Assert.That(result, Does.Contain(Resources.NewInstallerUrlMustMatchExisting_Message), "Installer must have match error should be thrown");
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Microsoft.WingetCreateUnitTests
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
+            Assert.That(result, Does.Contain(Resources.NewInstallerUrlMustMatchExisting_Message), "Installer must have match error should be thrown");
         }
 
         /// <summary>
