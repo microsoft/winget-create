@@ -33,11 +33,6 @@ namespace Microsoft.WingetCreateCore
     /// </summary>
     public static class PackageParser
     {
-        /// <summary>
-        /// If populated, the architectures of these parsed installers differed from the architecture detected from the installer url.
-        /// </summary>
-        public static List<(string Url, InstallerArchitecture DetectedArch)> ArchMismatches = new List<(string Url, InstallerArchitecture DetectedArch)>();
-
         private const string InvalidCharacters = "©|®";
 
         private static readonly string[] KnownInstallerResourceNames = new[]
@@ -53,6 +48,11 @@ namespace Microsoft.WingetCreateCore
             X86 = 0x014c,
             X64 = 0x8664,
         }
+
+        /// <summary>
+        /// Gets the architectures of these parsed installers differed from the architecture detected from the installer url.
+        /// </summary>
+        public static List<(string Url, InstallerArchitecture DetectedArch)> ArchMismatches { get; private set; } = new List<(string Url, InstallerArchitecture DetectedArch)>();
 
         /// <summary>
         /// Sets the HttpMessageHandler used for the static HttpClient.
@@ -162,7 +162,6 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerMismatch">If set, the failure was due to an installer count or type mismatch.</param>
         /// <param name="unmatchedInstallers">If populated, all packages were successfully parsed, but at least one without a match in the existing manifest.</param>
         /// <param name="multipleMatchedInstallers">If populated, all packages were successfully parsed, but at least one with multiple matches in the existing manifest.</param>
-        /// <param name="archMismatches">If populated, the architectures of these installers differed from the architecture detected from the installer url.</param>
         /// <returns>True if update succeeded, false otherwise.</returns>
         public static bool UpdateInstallerNodesAsync(
             InstallerManifest installerManifest,
@@ -178,7 +177,6 @@ namespace Microsoft.WingetCreateCore
             installerMismatch = false;
             unmatchedInstallers = new List<Installer>();
             multipleMatchedInstallers = new List<Installer>();
-            ArchMismatches = new List<(string, InstallerArchitecture)>();
 
             foreach (var (path, url) in newPackages)
             {
