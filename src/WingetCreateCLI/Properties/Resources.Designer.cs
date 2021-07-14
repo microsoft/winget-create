@@ -268,6 +268,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The detected architecture might be different than what is specified in the installer URL for the following installers:.
+        /// </summary>
+        public static string DetectedArchMismatch_Message {
+            get {
+                return ResourceManager.GetString("DetectedArchMismatch_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DONE.
         /// </summary>
         public static string DoneSymbol_String {
@@ -525,6 +534,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InstallerArchitecture_KeywordDescription {
             get {
                 return ResourceManager.GetString("InstallerArchitecture_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The installer binary of {0} was detected to be an {1} installer.
+        /// </summary>
+        public static string InstallerBinaryMismatch_Message {
+            get {
+                return ResourceManager.GetString("InstallerBinaryMismatch_Message", resourceCulture);
             }
         }
         

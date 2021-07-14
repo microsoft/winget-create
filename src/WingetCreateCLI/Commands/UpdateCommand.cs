@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateCLI.Commands
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -204,25 +205,32 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 if (installerMismatch)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.MultipleInstallerUpdateDiscrepancy_Error));
                     Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
 
                     if (unmatchedInstallers.Any())
                     {
                         Logger.ErrorLocalized(nameof(Resources.InstallerMatchFailedError_Message));
-                        unmatchedInstallers.ForEach(i => Logger.WarnLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl));
+                        Console.WriteLine();
+                        unmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl));
                     }
 
                     if (multipleMatchedInstallers.Any())
                     {
                         Logger.ErrorLocalized(nameof(Resources.MultipleMatchingInstallerNodes_Error));
-                        multipleMatchedInstallers.ForEach(i => Logger.WarnLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl));
+                        Console.WriteLine();
+                        multipleMatchedInstallers.ForEach(i =>
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl);
+                            Console.WriteLine();
+                        });
                     }
                 }
                 else
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                 }
+
+                DisplayMismatchedArchitectures();
 
                 return null;
             }

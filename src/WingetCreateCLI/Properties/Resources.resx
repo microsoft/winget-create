@@ -621,4 +621,12 @@
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
     <value>Each new installer URL must have a match to an existing installer node based on installer type and architecture.</value>
   </data>
+  <data name="DetectedArchMismatch_Message" xml:space="preserve">
+    <value>The detected architecture might be different than what is specified in the installer URL for the following installers:</value>
+  </data>
+  <data name="InstallerBinaryMismatch_Message" xml:space="preserve">
+    <value>The installer binary of {0} was detected to be an {1} installer</value>
+    <comment>{0} - Installer URL
+{1} - Architecture determined from the installer binary</comment>
+  </data>
 </root>

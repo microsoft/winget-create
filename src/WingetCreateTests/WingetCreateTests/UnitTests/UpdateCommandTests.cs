@@ -56,6 +56,7 @@ namespace Microsoft.WingetCreateUnitTests
         {
             this.sw.Dispose();
             PackageParser.SetHttpMessageHandler(null);
+            TestUtils.TestInstallerBaseUrl = TestUtils.DefaultTestInstallerBaseUrl;
         }
 
         /// <summary>
@@ -205,7 +206,6 @@ namespace Microsoft.WingetCreateUnitTests
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
             Assert.AreNotEqual(initialInstaller.InstallerSha256 != updatedManifests.InstallerManifest.Installers.FirstOrDefault().InstallerSha256, "Installer hash should be updated.");
-            TestUtils.TestInstallerBaseUrl = TestUtils.DefaultTestInstallerBaseUrl;
         }
 
         /// <summary>

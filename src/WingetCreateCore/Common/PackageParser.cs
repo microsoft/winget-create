@@ -33,6 +33,11 @@ namespace Microsoft.WingetCreateCore
     /// </summary>
     public static class PackageParser
     {
+        /// <summary>
+        /// If populated, the architectures of these parsed installers differed from the architecture detected from the installer url.
+        /// </summary>
+        public static List<(string Url, InstallerArchitecture DetectedArch)> ArchMismatches = new List<(string Url, InstallerArchitecture DetectedArch)>();
+
         private const string InvalidCharacters = "©|®";
 
         private static readonly string[] KnownInstallerResourceNames = new[]
@@ -157,6 +162,7 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerMismatch">If set, the failure was due to an installer count or type mismatch.</param>
         /// <param name="unmatchedInstallers">If populated, all packages were successfully parsed, but at least one without a match in the existing manifest.</param>
         /// <param name="multipleMatchedInstallers">If populated, all packages were successfully parsed, but at least one with multiple matches in the existing manifest.</param>
+        /// <param name="archMismatches">If populated, the architectures of these installers differed from the architecture detected from the installer url.</param>
         /// <returns>True if update succeeded, false otherwise.</returns>
         public static bool UpdateInstallerNodesAsync(
             InstallerManifest installerManifest,
@@ -172,6 +178,7 @@ namespace Microsoft.WingetCreateCore
             installerMismatch = false;
             unmatchedInstallers = new List<Installer>();
             multipleMatchedInstallers = new List<Installer>();
+            ArchMismatches = new List<(string, InstallerArchitecture)>();
 
             foreach (var (path, url) in newPackages)
             {
@@ -192,6 +199,12 @@ namespace Microsoft.WingetCreateCore
             foreach (var newInstaller in newInstallers)
             {
                 var archGuess = GetArchFromUrl(newInstaller.InstallerUrl);
+
+                if (archGuess != null && archGuess != newInstaller.Architecture)
+                {
+                    ArchMismatches.Add((newInstaller.InstallerUrl, newInstaller.Architecture));
+                    newInstaller.Architecture = (InstallerArchitecture)archGuess;
+                }
 
                 var urlMatch = existingInstallers.Where(
                     i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
@@ -255,7 +268,7 @@ namespace Microsoft.WingetCreateCore
         /// </summary>
         /// <param name="url">Installer url string.</param>
         /// <returns>Installer architecture enum.</returns>
-        private static InstallerArchitecture? GetArchFromUrl(string url)
+        public static InstallerArchitecture? GetArchFromUrl(string url)
         {
             List<InstallerArchitecture> archMatches = new List<InstallerArchitecture>();
 
@@ -325,12 +338,24 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
-        private static bool ParsePackageAndGenerateInstallerNodes(string path, string url, List<Installer> installers, Manifests manifests)
+        private static bool ParsePackageAndGenerateInstallerNodes(
+            string path,
+            string url,
+            List<Installer> installers,
+            Manifests manifests)
         {
             var installer = new Installer();
             installer.InstallerUrl = url;
             installer.InstallerSha256 = GetFileHash(path);
             installer.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+
+            var archGuess = GetArchFromUrl(installer.InstallerUrl);
+
+            if (archGuess != null && archGuess != installer.Architecture)
+            {
+                ArchMismatches.Add((installer.InstallerUrl, installer.Architecture));
+                installer.Architecture = (InstallerArchitecture)archGuess;
+            }
 
             return ParseExeInstallerType(path, installer, installers) ||
                 ParseMsix(path, installer, manifests, installers) ||

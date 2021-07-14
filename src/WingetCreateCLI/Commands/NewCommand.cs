@@ -39,7 +39,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Installer types for which we can trust that the detected architecture is correct, so don't need to prompt the user to confirm.
         /// </summary>
-        private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msi, InstallerType.Msix, InstallerType.Appx };
+        private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msix, InstallerType.Appx };
 
         /// <summary>
         /// Gets the usage examples for the New command.
@@ -112,6 +112,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                     return false;
                 }
+
+                DisplayMismatchedArchitectures();
 
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
