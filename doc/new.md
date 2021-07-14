@@ -6,9 +6,17 @@ The **new** command of the [Winget-Create](../README.md) tool begins the process
 
 `WingetCreateCLI.exe new [<urls>] [\<options>]`
 
-The **new** command can be called with the optional URL(s). **Winget-Create** will download each provided installer as it begins.  If the URL is not included, the user will need to add it when prompted. When prompted, use a comma to separate each installer url you wish to include in your generated manifest.
+The **new** command can be called with the optional URL(s). **Winget-Create** will download each provided installer as it begins.  If the URL is not included, the user will need to add it when prompted. 
 
-Multiple URLs prompt example:
+### Multiple URLs in command line:
+
+When including multiple urls in the command line arguments, use a space to separate each installer you wish to include in your generated manifest.
+
+`wingetcreate new https://microsoft.com/foo.exe https://microsoft.com/bar.msix`
+
+### Multiple URLs prompt:
+
+If you choose not to include URLs in the command line, you will be prompted for your URLs. When prompted, use a comma to separate each installer url you wish to include in your generated manifest.
 
 `[InstallerUrl] The installer URL(s): https://microsoft.com/foo.exe, https://microsoft.com/bar.msix`
 

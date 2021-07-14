@@ -1,7 +1,7 @@
 
 # update command (Winget-Create)
 
-The **update** command of the [Winget-Create](../README.md) tool is designed to update an existing manifest. The **update** command is non-interactive so that it can be seamlessly integrated into your build pipeline to assist with the publishing of your installer.  The **update** command will update the manifest with the new URL, hash and version and automatically submit the pull request (PR) to the [Windows Package Manager repo](https://docs.microsoft.com/en-us/windows/package-manager/).  
+The **update** command of the [Winget-Create](../README.md) tool is designed to update an existing manifest. The **update** command is non-interactive so that it can be seamlessly integrated into your build pipeline to assist with the publishing of your installer.  The **update** command will update the manifest with the new URL, hash and version and can automatically submit the pull request (PR) to the [Windows Package Manager repo](https://docs.microsoft.com/en-us/windows/package-manager/).  
 
 ## Usage
 
@@ -42,24 +42,9 @@ The following arguments are available:
 | **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
 | **-?, --help** |  Gets additional help on this command. |
 
-## Winget-Create update Command flow
-The update command allows you to quickly and easily update your manifest and submit a PR. **Winget-Create** can be integrated into your build pipeline to respond to your publishing of your installer.
-1) publish your installer to known URL(s)
-2) call the WingetCreateCLI.exe
+## Submit 
 
-`WingetCreateCLI.exe update <PackageIdentifier> --urls <InstallerUrls> --token <token> --version <version>`
-
-### PackageIdentifier  
-
-The first action **Winget-Create** will do is to download the metadata associated with the **PackageIdentifier**.
-
-**Winget-Create** will then replace the following manifest values with the values provided on the command line:
-* Version
-* Urls
-
-Finally, **Winget-Create** will calculate and update the hash.
-
-If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line along with the **--submit** command and the device is registered with Github, **Winget-Create** will submit your PR to [Windows Package Manager repo](https://docs.microsoft.com/en-us/windows/package-manager/).  
+If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line along with the **--submit** command and the device is registered with Github, **Winget-Create** will automatically submit your PR to [Windows Package Manager repo](https://docs.microsoft.com/en-us/windows/package-manager/).  
 
 ## Output 
 If you would like to write the file to disk rather than submit to the repository, you can pass in the **--output** command along with the file name to write to.
