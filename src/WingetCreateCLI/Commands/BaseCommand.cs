@@ -268,7 +268,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Console.WriteLine();
                 PackageParser.ArchMismatches.ForEach(i =>
                 {
-                    Logger.WarnLocalized(nameof(Resources.InstallerBinaryMismatch_Message), i.Url, i.DetectedArch);
+                    Logger.WarnLocalized(nameof(Resources.InstallerBinaryMismatch_Message), i.UrlArch, i.BinaryArch);
+                    Logger.Warn($"{i.Url}");
                     Console.WriteLine();
                 });
             }

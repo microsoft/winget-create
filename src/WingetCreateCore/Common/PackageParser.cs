@@ -52,7 +52,8 @@ namespace Microsoft.WingetCreateCore
         /// <summary>
         /// Gets the architectures of these parsed installers differed from the architecture detected from the installer url.
         /// </summary>
-        public static List<(string Url, InstallerArchitecture DetectedArch)> ArchMismatches { get; private set; } = new List<(string Url, InstallerArchitecture DetectedArch)>();
+        public static List<(string Url, InstallerArchitecture UrlArch, InstallerArchitecture BinaryArch)> ArchMismatches { get; private set; }
+            = new List<(string Url, InstallerArchitecture UrlArch, InstallerArchitecture BinaryArch)>();
 
         /// <summary>
         /// Sets the HttpMessageHandler used for the static HttpClient.
@@ -200,7 +201,7 @@ namespace Microsoft.WingetCreateCore
 
                 if (archGuess != null && archGuess != newInstaller.Architecture)
                 {
-                    ArchMismatches.Add((newInstaller.InstallerUrl, newInstaller.Architecture));
+                    ArchMismatches.Add((newInstaller.InstallerUrl, (InstallerArchitecture)archGuess, newInstaller.Architecture));
                     newInstaller.Architecture = (InstallerArchitecture)archGuess;
                 }
 
@@ -351,7 +352,7 @@ namespace Microsoft.WingetCreateCore
 
             if (archGuess != null && archGuess != installer.Architecture)
             {
-                ArchMismatches.Add((installer.InstallerUrl, installer.Architecture));
+                ArchMismatches.Add((installer.InstallerUrl, (InstallerArchitecture)archGuess, installer.Architecture));
                 installer.Architecture = (InstallerArchitecture)archGuess;
             }
 

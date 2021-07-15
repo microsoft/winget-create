@@ -538,7 +538,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The installer binary of {0} was detected to be an {1} installer.
+        ///   Looks up a localized string similar to Selected architecture detected from URL: {0} | Architecture detected from binary: {1}.
         /// </summary>
         public static string InstallerBinaryMismatch_Message {
             get {

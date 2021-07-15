@@ -625,8 +625,8 @@
     <value>The detected architecture might be different than what is specified in the installer URL for the following installers:</value>
   </data>
   <data name="InstallerBinaryMismatch_Message" xml:space="preserve">
-    <value>The installer binary of {0} was detected to be an {1} installer</value>
-    <comment>{0} - Installer URL
+    <value>Selected architecture detected from URL: {0} | Architecture detected from binary: {1}</value>
+    <comment>{0} - Architecture detected from the installer URL
 {1} - Architecture determined from the installer binary</comment>
   </data>
 </root>
