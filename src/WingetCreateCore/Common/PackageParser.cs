@@ -36,7 +36,7 @@ namespace Microsoft.WingetCreateCore
         /// <summary>
         /// Representation of an installer's architectures detected from the url and binary.
         /// </summary>
-        public record DetectedArch(string Url, InstallerArchitecture UrlArch, InstallerArchitecture BinaryArch);
+        public record DetectedArch(string Url, InstallerArchitecture? UrlArch, InstallerArchitecture BinaryArch);
 
         private const string InvalidCharacters = "©|®";
 
@@ -203,7 +203,8 @@ namespace Microsoft.WingetCreateCore
             foreach (var newInstaller in newInstallers)
             {
                 DetectedArch detectedArch = detectedArchOfInstallers.Find(
-                    i => i.Url == newInstaller.InstallerUrl && i.UrlArch == newInstaller.Architecture);
+                    i => i.Url == newInstaller.InstallerUrl &&
+                    (i.UrlArch == newInstaller.Architecture || i.BinaryArch == newInstaller.Architecture));
 
                 var urlMatch = existingInstallers.Where(
                     i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
@@ -370,13 +371,12 @@ namespace Microsoft.WingetCreateCore
             }
             else
             {
-                var archGuess = GetArchFromUrl(installer.InstallerUrl) ?? installer.Architecture;
-
+                var archGuess = GetArchFromUrl(installer.InstallerUrl);
                 detectedArchOfInstallers.Add(new DetectedArch(installer.InstallerUrl, archGuess, installer.Architecture));
 
-                if (archGuess != installer.Architecture)
+                if (archGuess.HasValue)
                 {
-                    installer.Architecture = archGuess;
+                    installer.Architecture = archGuess.Value;
                 }
             }
 

@@ -263,7 +263,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <param name="detectedArchs">List of DetectedArch objects that represent each installers detected architectures.</param>
         protected static void DisplayMismatchedArchitectures(List<PackageParser.DetectedArch> detectedArchs)
         {
-            var mismatchedArchInstallers = detectedArchs.Where(i => i.UrlArch != i.BinaryArch);
+            var mismatchedArchInstallers = detectedArchs.Where(i => i.UrlArch.HasValue && i.UrlArch != i.BinaryArch);
 
             if (mismatchedArchInstallers.Any())
             {
