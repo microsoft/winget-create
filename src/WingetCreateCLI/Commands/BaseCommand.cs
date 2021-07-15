@@ -260,13 +260,15 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Displays the appropriate warning messages for installers with detected architecture mismatches.
         /// </summary>
-        protected static void DisplayMismatchedArchitectures()
+        /// <param name="detectedArchs">List of DetectedArch objects that represent each installers detected architectures.</param>
+        protected static void DisplayMismatchedArchitectures(List<PackageParser.DetectedArch> detectedArchs)
         {
-            if (PackageParser.ArchMismatches.Any())
+            var mismatchedArchInstallers = detectedArchs.Where(i => i.UrlArch != i.BinaryArch).ToList();
+            if (mismatchedArchInstallers.Any())
             {
                 Logger.WarnLocalized(nameof(Resources.DetectedArchMismatch_Message));
                 Console.WriteLine();
-                PackageParser.ArchMismatches.ForEach(i =>
+                mismatchedArchInstallers.ForEach(i =>
                 {
                     Logger.WarnLocalized(nameof(Resources.InstallerBinaryMismatch_Message), i.UrlArch, i.BinaryArch);
                     Logger.Warn($"{i.Url}");

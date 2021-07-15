@@ -107,13 +107,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                if (!PackageParser.ParsePackages(packageFiles, this.InstallerUrls, manifests))
+                if (!PackageParser.ParsePackages(
+                    packageFiles,
+                    this.InstallerUrls,
+                    manifests,
+                    out List<PackageParser.DetectedArch> detectedArchs))
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                     return false;
                 }
 
-                DisplayMismatchedArchitectures();
+                DisplayMismatchedArchitectures(detectedArchs);
 
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();

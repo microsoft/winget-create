@@ -622,10 +622,10 @@
     <value>Each new installer URL must have a match to an existing installer node based on installer type and architecture.</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
-    <value>The detected architecture might be different than what is specified in the installer URL for the following installers:</value>
+    <value>The architecture detected from the binary might be different than what is specified in the installer URL for the following installer(s):</value>
   </data>
   <data name="InstallerBinaryMismatch_Message" xml:space="preserve">
-    <value>Selected architecture detected from URL: {0} | Architecture detected from binary: {1}</value>
+    <value>Using architecture detected from URL ({0}), overriding architecture detected from binary ({1})</value>
     <comment>{0} - Architecture detected from the installer URL
 {1} - Architecture determined from the installer binary</comment>
   </data>

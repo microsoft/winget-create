@@ -268,7 +268,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The detected architecture might be different than what is specified in the installer URL for the following installers:.
+        ///   Looks up a localized string similar to The architecture detected from the binary might be different than what is specified in the installer URL for the following installer(s):.
         /// </summary>
         public static string DetectedArchMismatch_Message {
             get {
@@ -538,7 +538,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selected architecture detected from URL: {0} | Architecture detected from binary: {1}.
+        ///   Looks up a localized string similar to Using architecture detected from URL ({0}), overriding architecture detected from binary ({1}).
         /// </summary>
         public static string InstallerBinaryMismatch_Message {
             get {
