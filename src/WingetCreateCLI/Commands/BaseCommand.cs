@@ -263,17 +263,18 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <param name="detectedArchs">List of DetectedArch objects that represent each installers detected architectures.</param>
         protected static void DisplayMismatchedArchitectures(List<PackageParser.DetectedArch> detectedArchs)
         {
-            var mismatchedArchInstallers = detectedArchs.Where(i => i.UrlArch != i.BinaryArch).ToList();
+            var mismatchedArchInstallers = detectedArchs.Where(i => i.UrlArch != i.BinaryArch);
+
             if (mismatchedArchInstallers.Any())
             {
                 Logger.WarnLocalized(nameof(Resources.DetectedArchMismatch_Message));
                 Console.WriteLine();
-                mismatchedArchInstallers.ForEach(i =>
+                foreach (var installer in mismatchedArchInstallers)
                 {
-                    Logger.WarnLocalized(nameof(Resources.InstallerBinaryMismatch_Message), i.UrlArch, i.BinaryArch);
-                    Logger.Warn($"{i.Url}");
+                    Logger.WarnLocalized(nameof(Resources.InstallerBinaryMismatch_Message), installer.UrlArch, installer.BinaryArch);
+                    Logger.Warn($"{installer.Url}");
                     Console.WriteLine();
-                });
+                }
             }
         }
 
