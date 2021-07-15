@@ -350,9 +350,15 @@ namespace Microsoft.WingetCreateCore
                 ParseMsi(path, installer, manifests, installers);
 
             var archGuess = GetArchFromUrl(installer.InstallerUrl);
+
+            if (!archGuess.HasValue)
+            {
+                archGuess = installer.Architecture;
+            }
+
             detectedArchOfInstallers.Add(new DetectedArch(installer.InstallerUrl, archGuess.Value, installer.Architecture));
 
-            if (archGuess != null && archGuess != installer.Architecture)
+            if (archGuess != installer.Architecture)
             {
                 installer.Architecture = archGuess.Value;
             }
