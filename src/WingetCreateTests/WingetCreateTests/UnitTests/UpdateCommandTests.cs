@@ -214,12 +214,10 @@ namespace Microsoft.WingetCreateUnitTests
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
 
-            int index = 0;
-            foreach (var updatedInstaller in updatedManifests.InstallerManifest.Installers)
+            foreach (var item in expectedArchs.Zip(updatedManifests.InstallerManifest.Installers, (expectedArch, installer) => (expectedArch, installer)))
             {
-                Assert.AreEqual(expectedArchs[index], updatedInstaller.Architecture, "Architecture not parsed correctly from url string");
-                Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
-                index++;
+                Assert.AreEqual(item.expectedArch, item.installer.Architecture, "Architecture not parsed correctly from url string");
+                Assert.AreNotEqual(initialInstaller.InstallerSha256, item.installer.InstallerSha256, "InstallerSha256 should be updated");
             }
         }
 

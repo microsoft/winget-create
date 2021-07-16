@@ -213,6 +213,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 out List<WingetCreateCore.Models.Installer.Installer> multipleMatchedInstallers,
                 out List<PackageParser.DetectedArch> detectedArchOfInstallers))
             {
+                DisplayMismatchedArchitectures(detectedArchOfInstallers);
+
                 if (installerMismatch)
                 {
                     Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
@@ -239,8 +241,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                 }
-
-                DisplayMismatchedArchitectures(detectedArchOfInstallers);
 
                 return null;
             }

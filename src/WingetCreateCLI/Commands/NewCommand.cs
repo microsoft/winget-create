@@ -132,7 +132,9 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 do
                 {
-                    if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
+                    if (this.WingetRepoOwner == DefaultWingetRepoOwner &&
+                        this.WingetRepo == DefaultWingetRepo &&
+                        !await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
                     {
                         Console.WriteLine();
                         Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
@@ -382,15 +384,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             VersionManifest versionManifest = manifests.VersionManifest;
             versionManifest.PackageIdentifier = PromptProperty(versionManifest, versionManifest.PackageIdentifier, nameof(versionManifest.PackageIdentifier));
 
-            string exactMatch = string.Empty;
-            try
-            {
-                exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
-            }
-            catch (Octokit.NotFoundException)
-            {
-                Logger.ErrorLocalized(Resources.RepositoryNotFound_Error, this.WingetRepoOwner, this.WingetRepo);
-            }
+            string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
 
             if (!string.IsNullOrEmpty(exactMatch))
             {
