@@ -39,6 +39,16 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// TearDown method that resets the winget-pkts repo owner and name to their default settings.
+        /// </summary>
+        [TearDown]
+        public void TearDown()
+        {
+            UserSettings.WingetPkgsRepoOwner = BaseCommand.DefaultWingetRepoOwner;
+            UserSettings.WingetPkgsRepoName = BaseCommand.DefaultWingetRepo;
+        }
+
+        /// <summary>
         /// Runs the settings command once which should generate a new settings file.
         /// </summary>
         [Test]
