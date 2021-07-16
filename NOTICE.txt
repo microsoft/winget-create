@@ -182,10 +182,9 @@ limitations under the License.
 
 ---------------------------------------------------------
 
-RestSharp 106.11.7 - Apache-2.0
+RestSharp 106.11.8-alpha.0.13 - Apache-2.0
 
 
-(c) 2008 VeriSign, Inc.
 
 Apache License
 
