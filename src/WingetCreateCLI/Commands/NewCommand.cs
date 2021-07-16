@@ -376,7 +376,16 @@ namespace Microsoft.WingetCreateCLI.Commands
             VersionManifest versionManifest = manifests.VersionManifest;
             versionManifest.PackageIdentifier = PromptProperty(versionManifest, versionManifest.PackageIdentifier, nameof(versionManifest.PackageIdentifier));
 
-            string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
+            string exactMatch = string.Empty;
+            try
+            {
+                exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
+            }
+            catch (Octokit.NotFoundException)
+            {
+                Logger.ErrorLocalized(Resources.RepositoryNotFound_Error, this.WingetRepoOwner, this.WingetRepo);
+            }
+
             if (!string.IsNullOrEmpty(exactMatch))
             {
                 return false;

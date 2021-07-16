@@ -1132,6 +1132,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Repository &quot;{0}/{1}&quot; not found. Please verify the WingetPkgsRepoOwner and WingetPkgsRepoName in your settings file..
+        /// </summary>
+        public static string RepositoryNotFound_Error {
+            get {
+                return ResourceManager.GetString("RepositoryNotFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of restricted MSIX capabilities.
         /// </summary>
         public static string RestrictedCapabilities_KeywordDescription {

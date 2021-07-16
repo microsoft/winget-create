@@ -14,6 +14,23 @@
         }
       },
       "additionalProperties": false
+    },
+    "WingetPkgsRepo": {
+      "description": "Winget-Pkgs Repository Settings",
+      "type": "object",
+      "properties": {
+        "owner": {
+          "description": "Specifies the name of the Winget-Pkgs repository owner",
+          "type": "string",
+          "default": "microsoft"
+        },
+        "name": {
+          "description": "Specifies the name of the Winget-Pkgs repository",
+          "type": "string",
+          "default": "winget-pkgs"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "type": "object",
@@ -23,7 +40,12 @@
       "type": "string",
       "default": "https://aka.ms/wingetcreate-settings.schema.json"
     },
-    "telemetry": { "$ref": "#/definitions/Telemetry" }
+    "Telemetry": { "$ref": "#/definitions/Telemetry" },
+    "WingetPkgsRepo": { "$ref": "#/definitions/WingetPkgsRepo" }
   },
+  "required": [
+    "Telemetry",
+    "WingetPkgsRepo"
+  ],
   "additionalProperties": false
 }

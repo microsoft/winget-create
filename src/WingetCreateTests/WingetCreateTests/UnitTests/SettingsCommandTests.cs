@@ -6,10 +6,12 @@ namespace Microsoft.WingetCreateUnitTests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
+    using Microsoft.WingetCreateCLI.Properties;
     using NUnit.Framework;
 
     /// <summary>
@@ -83,9 +85,35 @@ namespace Microsoft.WingetCreateUnitTests
         public void VerifySavingTelemetrySettings()
         {
             bool isDisabled = UserSettings.TelemetryDisabled;
+            string testRepoOwner = "testRepoOwner";
+            string testRepoName = "testRepoName";
             UserSettings.TelemetryDisabled = !isDisabled;
+            UserSettings.WingetPkgsRepoOwner = testRepoOwner;
+            UserSettings.WingetPkgsRepoName = testRepoName;
             UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest);
-            Assert.IsTrue(manifest.Telemetry.Disable == !isDisabled, "Changed telemetry setting was not reflected in the settings file.");
+            Assert.IsTrue(manifest.Telemetry.Disable == !isDisabled, "Changed Telemetry setting was not reflected in the settings file.");
+            Assert.IsTrue(manifest.WingetPkgsRepo.Owner == testRepoOwner, "Changed WingetPkgsRepo.Owner setting was not reflected in the settings file.");
+            Assert.IsTrue(manifest.WingetPkgsRepo.Name == testRepoName, "Changed WingetPkgsRepo.Name setting was not reflected in the settings file.");
+        }
+
+        /// <summary>
+        /// Verifies that the RepositoryNotFound error message is shown if the repository settings are invalid.
+        /// </summary>
+        /// /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task VerifyInvalidGitHubRepoSettingShowsError()
+        {
+            string testRepoOwner = "testRepoOwner";
+            string testRepoName = "testRepoName";
+            UserSettings.WingetPkgsRepoOwner = testRepoOwner;
+            UserSettings.WingetPkgsRepoName = testRepoName;
+
+            StringWriter sw = new StringWriter();
+            System.Console.SetOut(sw);
+            UpdateCommand command = new UpdateCommand { Id = "testId" };
+            await command.Execute();
+            string result = sw.ToString();
+            Assert.That(result, Does.Contain(string.Format(Resources.RepositoryNotFound_Error, testRepoOwner, testRepoName)), "Repository not found error should be shown");
         }
     }
 }

@@ -53,6 +53,40 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
+        /// <summary>
+        /// Gets or sets the owner of the winget-pkgs repository.
+        /// </summary>
+        public static string WingetPkgsRepoOwner
+        {
+            get
+            {
+                return Settings.WingetPkgsRepo.Owner;
+            }
+
+            set
+            {
+                Settings.WingetPkgsRepo.Owner = value;
+                SaveSettings();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the winget-pkgs repository.
+        /// </summary>
+        public static string WingetPkgsRepoName
+        {
+            get
+            {
+                return Settings.WingetPkgsRepo.Name;
+            }
+
+            set
+            {
+                Settings.WingetPkgsRepo.Name = value;
+                SaveSettings();
+            }
+        }
+
         private static SettingsManifest Settings { get; set; }
 
         /// <summary>
@@ -141,7 +175,11 @@ namespace Microsoft.WingetCreateCLI
                     Logger.WarnLocalized(nameof(Resources.LoadSettingsFromDefault_Message));
                 }
 
-                Settings = new SettingsManifest { Telemetry = new Models.Settings.Telemetry() };
+                Settings = new SettingsManifest
+                {
+                    Telemetry = new Models.Settings.Telemetry(),
+                    WingetPkgsRepo = new WingetPkgsRepo(),
+                };
             }
         }
     }

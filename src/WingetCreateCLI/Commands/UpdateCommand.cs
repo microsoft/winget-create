@@ -115,7 +115,16 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
-                string exactId = await client.FindPackageId(this.Id);
+                string exactId = string.Empty;
+                try
+                {
+                    exactId = await client.FindPackageId(this.Id);
+                }
+                catch (Octokit.NotFoundException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
+                    return false;
+                }
 
                 if (!string.IsNullOrEmpty(exactId))
                 {

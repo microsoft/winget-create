@@ -52,12 +52,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets or sets the winget repo owner to use.
         /// </summary>
-        public string WingetRepoOwner { get; set; } = DefaultWingetRepoOwner;
+        public string WingetRepoOwner { get; set; } = UserSettings.WingetPkgsRepoOwner ?? DefaultWingetRepoOwner;
 
         /// <summary>
         /// Gets or sets the winget repo to use.
         /// </summary>
-        public string WingetRepo { get; set; } = DefaultWingetRepo;
+        public string WingetRepo { get; set; } = UserSettings.WingetPkgsRepoName ?? DefaultWingetRepo;
 
         /// <summary>
         /// Gets or sets the most recent pull request id associated with the command.
