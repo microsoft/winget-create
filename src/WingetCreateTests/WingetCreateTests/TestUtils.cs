@@ -19,18 +19,8 @@ namespace Microsoft.WingetCreateTests
     /// </summary>
     public static class TestUtils
     {
-        /// <summary>
-        /// The default test installer base url.
-        /// </summary>
-        public static readonly string DefaultTestInstallerBaseUrl = "https://fakedomain.com/";
-
         private static HttpMessageHandler httpMessageHandler;
         private static HttpResponseMessage httpResponseMessage;
-
-        /// <summary>
-        /// Gets or sets the test installer base url for mocking installer downloads.
-        /// </summary>
-        public static string TestInstallerBaseUrl { get; set; } = DefaultTestInstallerBaseUrl;
 
         /// <summary>
         /// Initializes and sets up the infrastructure for mocking installer downloads, and sets the mock response content for each specified file.
@@ -42,9 +32,9 @@ namespace Microsoft.WingetCreateTests
 
             foreach (var filename in files)
             {
-                string url = TestInstallerBaseUrl + filename;
+                string url = $"https://fakedomain.com/{filename}";
                 var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
-                var content = new ByteArrayContent(File.ReadAllBytes(GetTestFile(filename)));
+                var content = new ByteArrayContent(File.ReadAllBytes(GetTestFile(Path.GetFileName(filename))));
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                 httpResponse.Content = content;
 

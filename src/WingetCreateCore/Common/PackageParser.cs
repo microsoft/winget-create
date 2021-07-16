@@ -361,13 +361,9 @@ namespace Microsoft.WingetCreateCore
             if (parseMsixResult)
             {
                 // Skip architecture override for msix installers as there can be more than one installer in a bundle
-                var nonMsixInstallerUrls = detectedArchOfInstallers.Select(i => i.Url).ToList();
-                var msixInstallers = installers.Where(i => !nonMsixInstallerUrls.Contains(i.InstallerUrl));
-                foreach (var msixInstaller in msixInstallers)
-                {
-                    var msixArch = msixInstaller.Architecture;
-                    detectedArchOfInstallers.Add(new DetectedArch(msixInstaller.InstallerUrl, msixArch, msixArch));
-                }
+                detectedArchOfInstallers.AddRange(installers
+                    .Where(i => i.InstallerUrl == url)
+                    .Select(i => new DetectedArch(i.InstallerUrl, i.Architecture, i.Architecture)));
             }
             else
             {

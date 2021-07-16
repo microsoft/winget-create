@@ -56,7 +56,6 @@ namespace Microsoft.WingetCreateUnitTests
         {
             this.sw.Dispose();
             PackageParser.SetHttpMessageHandler(null);
-            TestUtils.TestInstallerBaseUrl = TestUtils.DefaultTestInstallerBaseUrl;
         }
 
         /// <summary>
@@ -197,15 +196,42 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateBasedOnInstallerUrlMatch()
         {
-            TestUtils.TestInstallerBaseUrl = "https://fakedomain.com/arm64/";
-            TestUtils.InitializeMockDownloads(TestConstants.TestMsiInstaller);
+            TestUtils.InitializeMockDownloads(
+                "arm64/" + TestConstants.TestMsiInstaller,
+                "arm/" + TestConstants.TestMsiInstaller,
+                "win64/" + TestConstants.TestMsiInstaller,
+                "win32/" + TestConstants.TestMsiInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithInstallerUrl", null, this.tempPath, null);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
 
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
-            Assert.AreNotEqual(initialInstaller.InstallerSha256 != updatedManifests.InstallerManifest.Installers.FirstOrDefault().InstallerSha256, "Installer hash should be updated.");
+            foreach (var updatedInstaller in updatedManifests.InstallerManifest.Installers)
+            {
+                Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            }
+        }
+
+        /// <summary>
+        /// Verifies that the architecture obtained from updating an msix does not come from the string.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateMsixWithNoArchitectureOverride()
+        {
+            TestUtils.InitializeMockDownloads("arm64/" + TestConstants.TestMsixInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MsixArchitectureMatch", null, this.tempPath, null);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+
+            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            foreach (var updatedInstaller in updatedManifests.InstallerManifest.Installers)
+            {
+                Assert.AreNotEqual(InstallerArchitecture.Arm64, updatedInstaller.Architecture, "Architecture should not be detected from string.");
+                Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            }
         }
 
         /// <summary>
