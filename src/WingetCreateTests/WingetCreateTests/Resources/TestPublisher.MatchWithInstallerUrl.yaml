@@ -1,0 +1,27 @@
+﻿PackageIdentifier: TestPublisher.MatchWithInstallerUrl
+PackageVersion: 0.1.2
+PackageName: Match With Installer Url
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used to test the update command by matching installers based on the URL.
+InstallerLocale: en-US
+Installers:
+  - Architecture: arm64
+    InstallerUrl: https://fakedomain.com/arm64/WingetCreateTestMsiInstaller.msi
+    InstallerType: msi
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  - Architecture: arm
+    InstallerUrl: https://fakedomain.com/arm/WingetCreateTestMsiInstaller.msi
+    InstallerType: msi
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/win64/WingetCreateTestMsiInstaller.msi
+    InstallerType: msi
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  - Architecture: x86
+    InstallerUrl: https://fakedomain.com/win32/WingetCreateTestMsiInstaller.msi
+    InstallerType: msi
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.0.0

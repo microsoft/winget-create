@@ -34,7 +34,7 @@ namespace Microsoft.WingetCreateTests
             {
                 string url = $"https://fakedomain.com/{filename}";
                 var httpResponse = new HttpResponseMessage(HttpStatusCode.OK);
-                var content = new ByteArrayContent(File.ReadAllBytes(GetTestFile(filename)));
+                var content = new ByteArrayContent(File.ReadAllBytes(GetTestFile(Path.GetFileName(filename))));
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                 httpResponse.Content = content;
 

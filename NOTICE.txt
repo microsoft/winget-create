@@ -17,6 +17,37 @@ required to debug changes to any libraries licensed under the GNU Lesser General
 
 ---------------------------------------------------------
 
+Newtonsoft.Json.Schema 3.0.14 - AGPL-3.0-only OR OTHER
+
+
+(c) 2008 VeriSign, Inc.
+Copyright Newtonsoft 2014
+Copyright (c) 2014 Newtonsoft
+Copyright (c) Newtonsoft 2014
+
+# Json.NET Schema
+
+Copyright (c) 2014 Newtonsoft
+
+This program is free software: you can redistribute it and/or modify it 
+under the terms of the GNU Affero General Public License as published by the 
+Free Software Foundation, either version 3 of the License, see 
+http://www.gnu.org/licenses/agpl-3.0.html.
+
+This program is distributed in the hope that it will be useful, but WITHOUT 
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+
+## Commercial License
+
+In addition to this license, Json.NET Schema is offered under a commercial license.
+
+
+---------------------------------------------------------
+
+---------------------------------------------------------
+
 Castle.Core 4.4.0 - Apache-2.0
 
 
@@ -151,10 +182,9 @@ limitations under the License.
 
 ---------------------------------------------------------
 
-RestSharp 106.11.7 - Apache-2.0
+RestSharp 106.11.8-alpha.0.13 - Apache-2.0
 
 
-(c) 2008 VeriSign, Inc.
 
 Apache License
 
