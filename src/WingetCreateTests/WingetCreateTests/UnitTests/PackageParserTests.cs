@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateUnitTests
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using Microsoft.WingetCreateCore;
@@ -48,7 +49,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             Manifests manifests = new Manifests();
 
-            Assert.IsTrue(PackageParser.ParsePackages(new[] { testExeInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests));
+            Assert.IsTrue(PackageParser.ParsePackages(new[] { testExeInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests, out _));
             Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
@@ -67,7 +68,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             Manifests manifests = new Manifests();
 
-            Assert.IsTrue(PackageParser.ParsePackages(new[] { testMsiInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests));
+            Assert.IsTrue(PackageParser.ParsePackages(new[] { testMsiInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests, out _));
             Assert.AreEqual("WingetCreateTestMsiInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestMsiInstaller", manifests.VersionManifest.PackageIdentifier);
@@ -86,7 +87,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             Manifests manifests = new Manifests();
 
-            Assert.IsTrue(PackageParser.ParsePackages(new[] { testMsixInstallerPath }, new[] { TestConstants.TestMsixInstaller }, manifests));
+            Assert.IsTrue(PackageParser.ParsePackages(new[] { testMsixInstallerPath }, new[] { TestConstants.TestMsixInstaller }, manifests, out _));
             Assert.AreEqual("WingetCreateTestMsixInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("1.0.1.0", manifests.VersionManifest.PackageVersion);
@@ -113,7 +114,8 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsTrue(PackageParser.ParsePackages(
                 new[] { testExeInstallerPath, testMsiInstallerPath, testMsixInstallerPath },
                 new[] { TestConstants.TestExeInstaller, TestConstants.TestMsiInstaller, TestConstants.TestMsixInstaller },
-                manifests));
+                manifests,
+                out List<PackageParser.DetectedArch> detectedArchs));
 
             // Shared properties will be parsed from all installers, with priority given to the first-parsed value.
             Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);

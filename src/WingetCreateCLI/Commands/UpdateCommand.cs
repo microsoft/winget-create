@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateCLI.Commands
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -203,20 +204,43 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            if (!PackageParser.UpdateInstallerNodes(installerManifest, this.InstallerUrls, packageFiles, out bool installerMismatch, out WingetCreateCore.Models.Installer.Installer installersMissingMatch))
+            if (!PackageParser.UpdateInstallerNodesAsync(
+                installerManifest,
+                this.InstallerUrls,
+                packageFiles,
+                out bool installerMismatch,
+                out List<WingetCreateCore.Models.Installer.Installer> unmatchedInstallers,
+                out List<WingetCreateCore.Models.Installer.Installer> multipleMatchedInstallers,
+                out List<PackageParser.DetectedArch> detectedArchOfInstallers))
             {
                 if (installerMismatch)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.MultipleInstallerUpdateDiscrepancy_Error));
-                    if (installersMissingMatch != null)
+                    Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
+
+                    if (unmatchedInstallers.Any())
                     {
-                        Logger.ErrorLocalized(nameof(Resources.MissingPackageError_Message), installersMissingMatch.InstallerType, installersMissingMatch.Architecture);
+                        Logger.ErrorLocalized(nameof(Resources.InstallerMatchFailedError_Message));
+                        Console.WriteLine();
+                        unmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl));
+                    }
+
+                    if (multipleMatchedInstallers.Any())
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.MultipleMatchingInstallerNodes_Error));
+                        Console.WriteLine();
+                        multipleMatchedInstallers.ForEach(i =>
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl);
+                            Console.WriteLine();
+                        });
                     }
                 }
                 else
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                 }
+
+                DisplayMismatchedArchitectures(detectedArchOfInstallers);
 
                 return null;
             }
@@ -253,7 +277,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 if (this.SubmitToGitHub)
                 {
-                    if (!this.VerifyUpdatedInstallerHash(originalManifests, updatedManifests.InstallerManifest))
+                    if (!VerifyUpdatedInstallerHash(originalManifests, updatedManifests.InstallerManifest))
                     {
                         Logger.ErrorLocalized(nameof(Resources.NoChangeDetectedInUpdatedManifest_Message));
                         Logger.ErrorLocalized(nameof(Resources.CompareUpdatedManifestWithExisting_Message));
@@ -316,7 +340,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <param name="oldManifest">The original manifest object model.</param>
         /// <param name="newManifest">The updated installer manifest object model.</param>
         /// <returns>A boolean value indicating whether the updated manifest has new changes compared to the original manifest.</returns>
-        private bool VerifyUpdatedInstallerHash(Manifests oldManifest, InstallerManifest newManifest)
+        private static bool VerifyUpdatedInstallerHash(Manifests oldManifest, InstallerManifest newManifest)
         {
             IEnumerable<string> oldHashes = oldManifest.InstallerManifest == null
                 ? oldManifest.SingletonManifest.Installers.Select(i => i.InstallerSha256).Distinct()

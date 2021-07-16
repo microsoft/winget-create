@@ -6,6 +6,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
     using CommandLine;
@@ -254,6 +255,27 @@ namespace Microsoft.WingetCreateCLI.Commands
             bool result = ValidateManifest(randomDirPath);
             Directory.Delete(randomDirPath, true);
             return result;
+        }
+
+        /// <summary>
+        /// Displays the appropriate warning messages for installers with detected architecture mismatches.
+        /// </summary>
+        /// <param name="detectedArchs">List of DetectedArch objects that represent each installers detected architectures.</param>
+        protected static void DisplayMismatchedArchitectures(List<PackageParser.DetectedArch> detectedArchs)
+        {
+            var mismatchedArchInstallers = detectedArchs.Where(i => i.UrlArch.HasValue && i.UrlArch != i.BinaryArch);
+
+            if (mismatchedArchInstallers.Any())
+            {
+                Logger.WarnLocalized(nameof(Resources.DetectedArchMismatch_Message));
+                Console.WriteLine();
+                foreach (var installer in mismatchedArchInstallers)
+                {
+                    Logger.WarnLocalized(nameof(Resources.InstallerBinaryMismatch_Message), installer.UrlArch, installer.BinaryArch);
+                    Logger.Warn($"{installer.Url}");
+                    Console.WriteLine();
+                }
+            }
         }
 
         /// <summary>
