@@ -196,20 +196,30 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateBasedOnInstallerUrlMatch()
         {
-            TestUtils.InitializeMockDownloads(
-                "arm64/" + TestConstants.TestMsiInstaller,
-                "arm/" + TestConstants.TestMsiInstaller,
-                "win64/" + TestConstants.TestMsiInstaller,
-                "win32/" + TestConstants.TestMsiInstaller);
+            var archs = new[] { "arm64", "arm", "win64", "win32" };
+            var expectedArchs = new[]
+            {
+                InstallerArchitecture.Arm64,
+                InstallerArchitecture.Arm,
+                InstallerArchitecture.X64,
+                InstallerArchitecture.X86,
+            };
+
+            TestUtils.InitializeMockDownloads(archs.Select(a => $"{a}/{TestConstants.TestMsiInstaller}").ToArray());
+
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithInstallerUrl", null, this.tempPath, null);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
 
             var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            int index = 0;
             foreach (var updatedInstaller in updatedManifests.InstallerManifest.Installers)
             {
+                Assert.AreEqual(expectedArchs[index], updatedInstaller.Architecture, "Architecture not parsed correctly from url string");
                 Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+                index++;
             }
         }
 
