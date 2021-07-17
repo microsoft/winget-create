@@ -41,10 +41,7 @@ namespace Microsoft.WingetCreateCLI
         /// </summary>
         public static bool TelemetryDisabled
         {
-            get
-            {
-                return Settings.Telemetry.Disable;
-            }
+            get => Settings.Telemetry.Disable;
 
             set
             {
@@ -58,10 +55,7 @@ namespace Microsoft.WingetCreateCLI
         /// </summary>
         public static string WingetPkgsRepoOwner
         {
-            get
-            {
-                return Settings.WingetPkgsRepo.Owner;
-            }
+            get => Settings.WingetPkgsRepo.Owner;
 
             set
             {
@@ -75,10 +69,7 @@ namespace Microsoft.WingetCreateCLI
         /// </summary>
         public static string WingetPkgsRepoName
         {
-            get
-            {
-                return Settings.WingetPkgsRepo.Name;
-            }
+            get => Settings.WingetPkgsRepo.Name;
 
             set
             {

@@ -116,7 +116,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
-                string exactId = string.Empty;
+                string exactId;
                 try
                 {
                     exactId = await client.FindPackageId(this.Id);
