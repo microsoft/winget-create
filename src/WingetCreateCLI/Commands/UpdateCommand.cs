@@ -116,7 +116,16 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
-                string exactId = await client.FindPackageId(this.Id);
+                string exactId;
+                try
+                {
+                    exactId = await client.FindPackageId(this.Id);
+                }
+                catch (Octokit.NotFoundException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
+                    return false;
+                }
 
                 if (!string.IsNullOrEmpty(exactId))
                 {
@@ -204,6 +213,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 out List<WingetCreateCore.Models.Installer.Installer> multipleMatchedInstallers,
                 out List<PackageParser.DetectedArch> detectedArchOfInstallers))
             {
+                DisplayMismatchedArchitectures(detectedArchOfInstallers);
+
                 if (installerMismatch)
                 {
                     Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
@@ -230,8 +241,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                 }
-
-                DisplayMismatchedArchitectures(detectedArchOfInstallers);
 
                 return null;
             }

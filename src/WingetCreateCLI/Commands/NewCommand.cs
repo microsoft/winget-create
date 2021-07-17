@@ -132,7 +132,9 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 do
                 {
-                    if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
+                    if (this.WingetRepoOwner == DefaultWingetRepoOwner &&
+                        this.WingetRepo == DefaultWingetRepo &&
+                        !await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
                     {
                         Console.WriteLine();
                         Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
@@ -383,6 +385,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             versionManifest.PackageIdentifier = PromptProperty(versionManifest, versionManifest.PackageIdentifier, nameof(versionManifest.PackageIdentifier));
 
             string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
+
             if (!string.IsNullOrEmpty(exactMatch))
             {
                 return false;

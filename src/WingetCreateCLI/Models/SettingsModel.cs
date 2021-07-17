@@ -19,6 +19,21 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
     
     }
     
+    /// <summary>Winget-Pkgs Repository Settings</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class WingetPkgsRepo 
+    {
+        /// <summary>Specifies the name of the Winget-Pkgs repository owner</summary>
+        [Newtonsoft.Json.JsonProperty("owner", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Owner { get; set; } = "microsoft";
+    
+        /// <summary>Specifies the name of the Winget-Pkgs repository</summary>
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Name { get; set; } = "winget-pkgs";
+    
+    
+    }
+    
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class SettingsManifest 
     {
@@ -26,8 +41,13 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
         [Newtonsoft.Json.JsonProperty("$schema", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Schema { get; set; } = "https://aka.ms/wingetcreate-settings.schema.json";
     
-        [Newtonsoft.Json.JsonProperty("telemetry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Telemetry Telemetry { get; set; }
+        [Newtonsoft.Json.JsonProperty("Telemetry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public Telemetry Telemetry { get; set; } = new Telemetry();
+    
+        [Newtonsoft.Json.JsonProperty("WingetPkgsRepo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public WingetPkgsRepo WingetPkgsRepo { get; set; } = new WingetPkgsRepo();
     
     
     }
