@@ -19,15 +19,15 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
     
     }
     
-    /// <summary>Winget-Pkgs Repository Settings</summary>
+    /// <summary>Windows Package Manager Repository settings</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class WingetPkgsRepo 
+    public partial class WindowsPackageManagerRepository 
     {
-        /// <summary>Specifies the name of the Winget-Pkgs repository owner</summary>
+        /// <summary>Specifies the name of the Windows Package Manager Repository owner</summary>
         [Newtonsoft.Json.JsonProperty("owner", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Owner { get; set; } = "microsoft";
     
-        /// <summary>Specifies the name of the Winget-Pkgs repository</summary>
+        /// <summary>Specifies the name of the Windows Package Manager Repository</summary>
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; } = "winget-pkgs";
     
@@ -45,9 +45,9 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
         [System.ComponentModel.DataAnnotations.Required]
         public Telemetry Telemetry { get; set; } = new Telemetry();
     
-        [Newtonsoft.Json.JsonProperty("WingetPkgsRepo", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("WindowsPackageManagerRepository", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
-        public WingetPkgsRepo WingetPkgsRepo { get; set; } = new WingetPkgsRepo();
+        public WindowsPackageManagerRepository WindowsPackageManagerRepository { get; set; } = new WindowsPackageManagerRepository();
     
     
     }

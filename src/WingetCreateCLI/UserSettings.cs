@@ -53,13 +53,13 @@ namespace Microsoft.WingetCreateCLI
         /// <summary>
         /// Gets or sets the owner of the winget-pkgs repository.
         /// </summary>
-        public static string WingetPkgsRepoOwner
+        public static string WindowsPackageManagerRepositoryOwner
         {
-            get => Settings.WingetPkgsRepo.Owner;
+            get => Settings.WindowsPackageManagerRepository.Owner;
 
             set
             {
-                Settings.WingetPkgsRepo.Owner = value;
+                Settings.WindowsPackageManagerRepository.Owner = value;
                 SaveSettings();
             }
         }
@@ -67,13 +67,13 @@ namespace Microsoft.WingetCreateCLI
         /// <summary>
         /// Gets or sets the name of the winget-pkgs repository.
         /// </summary>
-        public static string WingetPkgsRepoName
+        public static string WindowsPackageManagerRepositoryName
         {
-            get => Settings.WingetPkgsRepo.Name;
+            get => Settings.WindowsPackageManagerRepository.Name;
 
             set
             {
-                Settings.WingetPkgsRepo.Name = value;
+                Settings.WindowsPackageManagerRepository.Name = value;
                 SaveSettings();
             }
         }
@@ -169,7 +169,7 @@ namespace Microsoft.WingetCreateCLI
                 Settings = new SettingsManifest
                 {
                     Telemetry = new Models.Settings.Telemetry(),
-                    WingetPkgsRepo = new WingetPkgsRepo(),
+                    WindowsPackageManagerRepository = new WindowsPackageManagerRepository(),
                 };
             }
         }
