@@ -44,8 +44,8 @@ namespace Microsoft.WingetCreateUnitTests
         [TearDown]
         public void TearDown()
         {
-            UserSettings.WingetPkgsRepoOwner = BaseCommand.DefaultWingetRepoOwner;
-            UserSettings.WingetPkgsRepoName = BaseCommand.DefaultWingetRepo;
+            UserSettings.WindowsPackageManagerRepositoryOwner = BaseCommand.DefaultWingetRepoOwner;
+            UserSettings.WindowsPackageManagerRepositoryName = BaseCommand.DefaultWingetRepo;
         }
 
         /// <summary>
@@ -98,12 +98,12 @@ namespace Microsoft.WingetCreateUnitTests
             string testRepoOwner = "testRepoOwner";
             string testRepoName = "testRepoName";
             UserSettings.TelemetryDisabled = !isDisabled;
-            UserSettings.WingetPkgsRepoOwner = testRepoOwner;
-            UserSettings.WingetPkgsRepoName = testRepoName;
+            UserSettings.WindowsPackageManagerRepositoryOwner = testRepoOwner;
+            UserSettings.WindowsPackageManagerRepositoryName = testRepoName;
             UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest);
             Assert.IsTrue(manifest.Telemetry.Disable == !isDisabled, "Changed Telemetry setting was not reflected in the settings file.");
-            Assert.IsTrue(manifest.WingetPkgsRepo.Owner == testRepoOwner, "Changed WingetPkgsRepo.Owner setting was not reflected in the settings file.");
-            Assert.IsTrue(manifest.WingetPkgsRepo.Name == testRepoName, "Changed WingetPkgsRepo.Name setting was not reflected in the settings file.");
+            Assert.IsTrue(manifest.WindowsPackageManagerRepository.Owner == testRepoOwner, "Changed WindowsPackageManagerRepository.Owner setting was not reflected in the settings file.");
+            Assert.IsTrue(manifest.WindowsPackageManagerRepository.Name == testRepoName, "Changed WindowsPackageManagerRepository.Name setting was not reflected in the settings file.");
         }
 
         /// <summary>
@@ -115,8 +115,8 @@ namespace Microsoft.WingetCreateUnitTests
         {
             string testRepoOwner = "testRepoOwner";
             string testRepoName = "testRepoName";
-            UserSettings.WingetPkgsRepoOwner = testRepoOwner;
-            UserSettings.WingetPkgsRepoName = testRepoName;
+            UserSettings.WindowsPackageManagerRepositoryOwner = testRepoOwner;
+            UserSettings.WindowsPackageManagerRepositoryName = testRepoName;
 
             StringWriter sw = new StringWriter();
             System.Console.SetOut(sw);

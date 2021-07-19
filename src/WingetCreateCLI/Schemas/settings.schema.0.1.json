@@ -1,5 +1,5 @@
 {
-  "$id": "https://aka.ms/wingetcreate-settings.schema.json",
+  "$id": "https://aka.ms/wingetcreate-settings.schema.0.1.json",
   "$schema": "https://json-schema.org/draft/2019-09/schema#",
   "title": "Microsoft's Windows Package Manager Manifest Creator Settings Profile Schema",
   "definitions": {
@@ -15,17 +15,17 @@
       },
       "additionalProperties": false
     },
-    "WingetPkgsRepo": {
-      "description": "Winget-Pkgs Repository Settings",
+    "WindowsPackageManagerRepository": {
+      "description": "Windows Package Manager Repository settings",
       "type": "object",
       "properties": {
         "owner": {
-          "description": "Specifies the name of the Winget-Pkgs repository owner",
+          "description": "Specifies the name of the Windows Package Manager Repository owner",
           "type": "string",
           "default": "microsoft"
         },
         "name": {
-          "description": "Specifies the name of the Winget-Pkgs repository",
+          "description": "Specifies the name of the Windows Package Manager Repository",
           "type": "string",
           "default": "winget-pkgs"
         }
@@ -38,14 +38,14 @@
     "$schema": {
       "description": "The settings json schema",
       "type": "string",
-      "default": "https://aka.ms/wingetcreate-settings.schema.json"
+      "default": "https://aka.ms/wingetcreate-settings.schema.0.1.json"
     },
     "Telemetry": { "$ref": "#/definitions/Telemetry" },
-    "WingetPkgsRepo": { "$ref": "#/definitions/WingetPkgsRepo" }
+    "WindowsPackageManagerRepository": { "$ref": "#/definitions/WindowsPackageManagerRepository" }
   },
   "required": [
     "Telemetry",
-    "WingetPkgsRepo"
+    "WindowsPackageManagerRepository"
   ],
   "additionalProperties": false
 }
