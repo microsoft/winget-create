@@ -245,6 +245,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
+            DisplayMismatchedArchitectures(detectedArchOfInstallers);
+
             return manifests;
         }
 
