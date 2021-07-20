@@ -129,6 +129,12 @@ namespace Microsoft.WingetCreateCore
 
             string urlFile = Path.GetFileName(url.Split('?').Last());
             string contentDispositionFile = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
+
+            if (!Directory.Exists(InstallerDownloadPath))
+            {
+                Directory.CreateDirectory(InstallerDownloadPath);
+            }
+
             string targetFile = Path.Combine(InstallerDownloadPath, contentDispositionFile ?? urlFile);
             long? downloadSize = response.Content.Headers.ContentLength;
 

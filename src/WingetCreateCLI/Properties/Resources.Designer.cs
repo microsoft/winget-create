@@ -124,7 +124,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to List or clean out any downloaded installers in cache.
+        ///   Looks up a localized string similar to Manage downloaded installers stored in cache.
         /// </summary>
         public static string CacheCommand_HelpText {
             get {
@@ -165,6 +165,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Clean_HelpText {
             get {
                 return ResourceManager.GetString("Clean_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cleaning up installers in {0}.
+        /// </summary>
+        public static string CleaningInstallers_Message {
+            get {
+                return ResourceManager.GetString("CleaningInstallers_Message", resourceCulture);
             }
         }
         
@@ -606,6 +615,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Installers_KeywordDescription {
             get {
                 return ResourceManager.GetString("Installers_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} installers found in {1}.
+        /// </summary>
+        public static string InstallersFound_Message {
+            get {
+                return ResourceManager.GetString("InstallersFound_Message", resourceCulture);
             }
         }
         

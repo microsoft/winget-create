@@ -21,19 +21,19 @@ namespace Microsoft.WingetCreateCLI.Commands
     public class CacheCommand : BaseCommand
     {
         /// <summary>
-        /// Gets or sets a value indicating whether to clear the cached GitHub token.
+        /// Gets or sets a value indicating whether to delete all downloaded installers found in cached.
         /// </summary>
         [Option('c', "clean", SetName = nameof(Clean), Required = true, HelpText = "Clean_HelpText", ResourceType = typeof(Resources))]
         public bool Clean { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to set the cached GitHub token.
+        /// Gets or sets a value indicating whether to list all downloaded installers found in cache.
         /// </summary>
         [Option('l', "list", Required = true, SetName = nameof(List), HelpText = "List_HelpText", ResourceType = typeof(Resources))]
         public bool List { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to open the folder containing the cached downloaded installers.
+        /// Gets or sets a value indicating whether to open the cache folder containing all the downloaded installers.
         /// </summary>
         [Option('o', "open", Required = true, SetName = nameof(Open), HelpText = "Open_HelpText", ResourceType = typeof(Resources))]
         public bool Open { get; set; }
@@ -58,14 +58,20 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (this.Clean)
                 {
-                    Logger.Info($"Cleaning up installers in {PackageParser.InstallerDownloadPath}");
-                    Directory.Delete(PackageParser.InstallerDownloadPath, true);
+                    Logger.InfoLocalized(nameof(Resources.CleaningInstallers_Message), PackageParser.InstallerDownloadPath);
+                    DirectoryInfo dir = new DirectoryInfo(PackageParser.InstallerDownloadPath);
+
+                    foreach (FileInfo file in dir.GetFiles())
+                    {
+                        file.Delete();
+                    }
+
                     commandEvent.IsSuccessful = true;
                 }
                 else if (this.List)
                 {
                     string[] files = Directory.GetFiles(PackageParser.InstallerDownloadPath);
-                    Logger.Info($"{files.Length} installers found in {PackageParser.InstallerDownloadPath}");
+                    Logger.InfoLocalized(nameof(Resources.InstallersFound_Message), files.Length, PackageParser.InstallerDownloadPath);
                     Console.WriteLine();
 
                     foreach (string file in files)
