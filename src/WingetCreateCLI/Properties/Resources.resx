@@ -634,4 +634,16 @@
     <comment>{0} - will be replaced with the owner name of the Windows Package Manager repository
 {1} - will be replaced with the name of the Windows Package Manager repository</comment>
   </data>
+  <data name="CacheCommand_HelpText" xml:space="preserve">
+    <value>List or clean out any downloaded installers in cache</value>
+  </data>
+  <data name="Clean_HelpText" xml:space="preserve">
+    <value>Deletes all downloaded installers in the cache folder</value>
+  </data>
+  <data name="List_HelpText" xml:space="preserve">
+    <value>Lists out all the downloaded installers stored in cache</value>
+  </data>
+  <data name="Open_HelpText" xml:space="preserve">
+    <value>Opens the cache folder storing the downloaded installers</value>
+  </data>
 </root>

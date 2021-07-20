@@ -124,6 +124,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List or clean out any downloaded installers in cache.
+        /// </summary>
+        public static string CacheCommand_HelpText {
+            get {
+                return ResourceManager.GetString("CacheCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of MSIX capabilities.
         /// </summary>
         public static string Capabilities_KeywordDescription {
@@ -147,6 +156,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Channel_KeywordDescription {
             get {
                 return ResourceManager.GetString("Channel_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deletes all downloaded installers in the cache folder.
+        /// </summary>
+        public static string Clean_HelpText {
+            get {
+                return ResourceManager.GetString("Clean_HelpText", resourceCulture);
             }
         }
         
@@ -736,6 +754,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lists out all the downloaded installers stored in cache.
+        /// </summary>
+        public static string List_HelpText {
+            get {
+                return ResourceManager.GetString("List_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Loaded settings from backup file..
         /// </summary>
         public static string LoadSettingsFromBackup_Message {
@@ -966,6 +993,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string OctokitNotFound_Error {
             get {
                 return ResourceManager.GetString("OctokitNotFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the cache folder storing the downloaded installers.
+        /// </summary>
+        public static string Open_HelpText {
+            get {
+                return ResourceManager.GetString("Open_HelpText", resourceCulture);
             }
         }
         

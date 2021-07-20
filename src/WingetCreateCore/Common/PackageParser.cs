@@ -38,6 +38,11 @@ namespace Microsoft.WingetCreateCore
         /// </summary>
         public record DetectedArch(string Url, InstallerArchitecture? UrlArch, InstallerArchitecture BinaryArch);
 
+        /// <summary>
+        /// Gets the path in the %TEMP% directory where installers are downloaded to.
+        /// </summary>
+        public static readonly string InstallerDownloadPath = Path.Combine(Path.GetTempPath(), "wingetcreate");
+
         private const string InvalidCharacters = "©|®";
 
         private static readonly string[] KnownInstallerResourceNames = new[]
@@ -124,7 +129,7 @@ namespace Microsoft.WingetCreateCore
 
             string urlFile = Path.GetFileName(url.Split('?').Last());
             string contentDispositionFile = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
-            string targetFile = Path.Combine(Path.GetTempPath(), contentDispositionFile ?? urlFile);
+            string targetFile = Path.Combine(InstallerDownloadPath, contentDispositionFile ?? urlFile);
             long? downloadSize = response.Content.Headers.ContentLength;
 
             if (downloadSize > maxDownloadSize)
