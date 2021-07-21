@@ -9,7 +9,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using CommandLine;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;

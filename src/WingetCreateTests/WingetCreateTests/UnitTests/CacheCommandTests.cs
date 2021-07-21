@@ -3,14 +3,11 @@
 
 namespace Microsoft.WingetCreateUnitTests
 {
-    using System.Collections.Generic;
+    using System;
     using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.WingetCreateCLI;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
-    using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateTests;
@@ -31,6 +28,9 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.InitializeMockDownload();
         }
 
+        /// <summary>
+        /// Setup method for the cache command unit tests.
+        /// </summary>
         [SetUp]
         public void SetUp()
         {
@@ -40,27 +40,29 @@ namespace Microsoft.WingetCreateUnitTests
         /// <summary>
         /// Verifies that if the List flag is present, shows the downloaded installer present in the cache folder.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public void ListCachedInstallers()
+        public async Task ListCachedInstallers()
         {
             StringWriter sw = new StringWriter();
-            System.Console.SetOut(sw);
+            Console.SetOut(sw);
             CacheCommand command = new CacheCommand() { List = true };
-            command.Execute();
+            await command.Execute();
             string result = sw.ToString();
-
-            Assert.That(result, Does.Contain(string.Format(Resources.InstallersFound_Message, 1, PackageParser.InstallerDownloadPath)));
+            int installerCount = Directory.GetFiles(PackageParser.InstallerDownloadPath).Length;
+            Assert.That(result, Does.Contain(string.Format(Resources.InstallersFound_Message, installerCount, PackageParser.InstallerDownloadPath)));
             Assert.That(result, Does.Contain(TestConstants.TestMsiInstaller));
         }
 
         /// <summary>
         /// Verifies that if the Clean flag is present, deletes all downloaded installers present in the cache folder.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public void CleanCachedInstallers()
+        public async Task CleanCachedInstallers()
         {
             CacheCommand command = new CacheCommand() { Clean = true };
-            command.Execute();
+            await command.Execute();
             var installerFiles = Directory.GetFiles(PackageParser.InstallerDownloadPath);
             Assert.IsTrue(installerFiles.Length == 0, "Cached installers were not deleted.");
         }
