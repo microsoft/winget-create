@@ -10,7 +10,6 @@ namespace Microsoft.WingetCreateCLI
     using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using Newtonsoft.Json;
-    using Sharprompt;
 
     /// <summary>
     /// UserSettings configuration class for WingetCreate.
