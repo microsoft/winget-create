@@ -38,7 +38,7 @@ namespace Microsoft.WingetCreateCLI
 
             Parser myParser = new Parser(config => config.HelpWriter = null);
 
-            var types = GetVerbs();
+            var types = new Type[] { typeof(NewCommand), typeof(UpdateCommand), typeof(SubmitCommand), typeof(SettingsCommand), typeof(CacheCommand) };
             var parserResult = myParser.ParseArguments(args, types);
 
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
@@ -66,12 +66,6 @@ namespace Microsoft.WingetCreateCLI
                 Logger.Error(ex.ToString());
                 return 1;
             }
-        }
-
-        private static Type[] GetVerbs()
-        {
-            return Assembly.GetExecutingAssembly().GetTypes()
-                .Where(types => types.GetCustomAttribute<VerbAttribute>() != null).ToArray();
         }
 
         private static void DisplayHelp(NotParsed<object> result)

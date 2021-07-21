@@ -47,8 +47,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
-        [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
-        public string GitHubToken { get; set; }
+        public virtual string GitHubToken { get; set; }
 
         /// <summary>
         /// Gets or sets the winget repo owner to use.
