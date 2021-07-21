@@ -304,15 +304,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to enable telemetry?.
-        /// </summary>
-        public static string EnableTelemetryFirstRun_Message {
-            get {
-                return ResourceManager.GetString("EnableTelemetryFirstRun_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Please enter values for the following fields:.
         /// </summary>
         public static string EnterFollowingFields_Message {
@@ -1353,6 +1344,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string TelemetryAnonymous_Message {
             get {
                 return ResourceManager.GetString("TelemetryAnonymous_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to By default, telemetry is enabled but can be turned off by modifying your settings file..
+        /// </summary>
+        public static string TelemetryEnabledByDefault_Message {
+            get {
+                return ResourceManager.GetString("TelemetryEnabledByDefault_Message", resourceCulture);
             }
         }
         

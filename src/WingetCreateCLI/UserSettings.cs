@@ -118,13 +118,13 @@ namespace Microsoft.WingetCreateCLI
         {
             if (!File.Exists(SettingsJsonPath))
             {
-                Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
-                Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
                 Console.WriteLine(Resources.TelemetrySettings_Message);
                 Console.WriteLine("------------------");
                 Console.WriteLine(Resources.TelemetryJustification_Message);
                 Console.WriteLine(Resources.TelemetryAnonymous_Message);
-                TelemetryDisabled = !Prompt.Confirm(Resources.EnableTelemetryFirstRun_Message);
+                Console.WriteLine(Resources.TelemetryEnabledByDefault_Message);
+                Console.WriteLine();
+                TelemetryDisabled = true;
             }
         }
 
