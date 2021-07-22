@@ -44,7 +44,7 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void ParseExeInstallerFile()
         {
-            var testExeInstallerPath = MockDownloadFile(TestConstants.TestExeInstaller);
+            var testExeInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestExeInstaller);
             Assert.That(testExeInstallerPath, Is.Not.Null.And.Not.Empty);
 
             Manifests manifests = new Manifests();
@@ -63,7 +63,7 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void ParseMsiInstallerFile()
         {
-            var testMsiInstallerPath = MockDownloadFile(TestConstants.TestMsiInstaller);
+            var testMsiInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsiInstaller);
             Assert.That(testMsiInstallerPath, Is.Not.Null.And.Not.Empty);
 
             Manifests manifests = new Manifests();
@@ -82,7 +82,7 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void ParseMsixInstallerFile()
         {
-            var testMsixInstallerPath = MockDownloadFile(TestConstants.TestMsixInstaller);
+            var testMsixInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsixInstaller);
             Assert.That(testMsixInstallerPath, Is.Not.Null.And.Not.Empty);
 
             Manifests manifests = new Manifests();
@@ -102,11 +102,11 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void ParseMultipleInstallers()
         {
-            var testMsiInstallerPath = MockDownloadFile(TestConstants.TestMsiInstaller);
+            var testMsiInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsiInstaller);
             Assert.That(testMsiInstallerPath, Is.Not.Null.And.Not.Empty);
-            var testExeInstallerPath = MockDownloadFile(TestConstants.TestExeInstaller);
+            var testExeInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestExeInstaller);
             Assert.That(testExeInstallerPath, Is.Not.Null.And.Not.Empty);
-            var testMsixInstallerPath = MockDownloadFile(TestConstants.TestMsixInstaller);
+            var testMsixInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsixInstaller);
             Assert.That(testMsixInstallerPath, Is.Not.Null.And.Not.Empty);
 
             Manifests manifests = new Manifests();
@@ -128,14 +128,6 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.AreEqual(InstallerType.Msi, manifests.InstallerManifest.Installers.Skip(1).First().InstallerType);
             Assert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(2).First().InstallerType);
             Assert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(3).First().InstallerType);
-        }
-
-        private static string MockDownloadFile(string filename)
-        {
-            string url = $"https://fakedomain.com/{filename}";
-            TestUtils.SetMockHttpResponseContent(filename);
-            string downloadedPath = PackageParser.DownloadFileAsync(url).Result;
-            return downloadedPath;
         }
     }
 }

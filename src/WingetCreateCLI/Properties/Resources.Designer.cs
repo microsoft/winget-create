@@ -124,6 +124,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manage downloaded installers stored in cache.
+        /// </summary>
+        public static string CacheCommand_HelpText {
+            get {
+                return ResourceManager.GetString("CacheCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of MSIX capabilities.
         /// </summary>
         public static string Capabilities_KeywordDescription {
@@ -147,6 +156,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Channel_KeywordDescription {
             get {
                 return ResourceManager.GetString("Channel_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deletes all downloaded installers in the cache folder.
+        /// </summary>
+        public static string Clean_HelpText {
+            get {
+                return ResourceManager.GetString("Clean_HelpText", resourceCulture);
             }
         }
         
@@ -246,6 +264,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string DefaultLocaleManifestPreview_Message {
             get {
                 return ResourceManager.GetString("DefaultLocaleManifestPreview_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting {0}.
+        /// </summary>
+        public static string DeletingInstaller_Message {
+            get {
+                return ResourceManager.GetString("DeletingInstaller_Message", resourceCulture);
             }
         }
         
@@ -547,6 +574,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Installer cache cleaned..
+        /// </summary>
+        public static string InstallerCacheCleaned_Message {
+            get {
+                return ResourceManager.GetString("InstallerCacheCleaned_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} {1} installer detected from the url: {2}.
         /// </summary>
         public static string InstallerDetectedFromUrl_Message {
@@ -588,6 +624,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Installers_KeywordDescription {
             get {
                 return ResourceManager.GetString("Installers_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} installers found in {1}.
+        /// </summary>
+        public static string InstallersFound_Message {
+            get {
+                return ResourceManager.GetString("InstallersFound_Message", resourceCulture);
             }
         }
         
@@ -732,6 +777,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string LicenseUrl_KeywordDescription {
             get {
                 return ResourceManager.GetString("LicenseUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lists out all the downloaded installers stored in cache.
+        /// </summary>
+        public static string List_HelpText {
+            get {
+                return ResourceManager.GetString("List_HelpText", resourceCulture);
             }
         }
         
@@ -966,6 +1020,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string OctokitNotFound_Error {
             get {
                 return ResourceManager.GetString("OctokitNotFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opens the cache folder storing the downloaded installers.
+        /// </summary>
+        public static string Open_HelpText {
+            get {
+                return ResourceManager.GetString("Open_HelpText", resourceCulture);
             }
         }
         

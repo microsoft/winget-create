@@ -69,6 +69,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public bool SubmitToGitHub { get; set; }
 
         /// <summary>
+        /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
+        /// </summary>
+        [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
+        public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
+
+        /// <summary>
         /// Gets or sets the new value(s) used to update the manifest installer elements.
         /// </summary>
         [Option('u', "urls", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]

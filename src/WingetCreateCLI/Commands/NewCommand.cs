@@ -73,6 +73,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string OutputDir { get; set; }
 
         /// <summary>
+        /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
+        /// </summary>
+        [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
+        public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
+
+        /// <summary>
         /// Executes the new command flow.
         /// </summary>
         /// <returns>Boolean representing success or fail of the command.</returns>
