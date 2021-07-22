@@ -4,9 +4,7 @@
 namespace Microsoft.WingetCreateCLI
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -38,7 +36,7 @@ namespace Microsoft.WingetCreateCLI
 
             Parser myParser = new Parser(config => config.HelpWriter = null);
 
-            var types = new Type[] { typeof(NewCommand), typeof(UpdateCommand), typeof(SubmitCommand), typeof(SettingsCommand), typeof(CacheCommand) };
+            var types = new Type[] { typeof(NewCommand), typeof(UpdateCommand), typeof(SubmitCommand), typeof(SettingsCommand), typeof(TokenCommand), typeof(CacheCommand) };
             var parserResult = myParser.ParseArguments(args, types);
 
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
