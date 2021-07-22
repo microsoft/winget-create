@@ -39,9 +39,9 @@ namespace Microsoft.WingetCreateCore
         public record DetectedArch(string Url, InstallerArchitecture? UrlArch, InstallerArchitecture BinaryArch);
 
         /// <summary>
-        /// Gets the path in the %TEMP% directory where installers are downloaded to.
+        /// The default path where downloaded installers are stored.
         /// </summary>
-        public static readonly string InstallerDownloadPath = Path.Combine(Path.GetTempPath(), "wingetcreate");
+        public static readonly string DefaultInstallerDownloadPath = Path.Combine(Path.GetTempPath(), Constants.ProgramName);
 
         private const string InvalidCharacters = "©|®";
 
@@ -58,6 +58,11 @@ namespace Microsoft.WingetCreateCore
             X86 = 0x014c,
             X64 = 0x8664,
         }
+
+        /// <summary>
+        /// Gets or sets the path in the %TEMP% directory where installers are downloaded to.
+        /// </summary>
+        public static string InstallerDownloadPath { get; set; } = DefaultInstallerDownloadPath;
 
         /// <summary>
         /// Sets the HttpMessageHandler used for the static HttpClient.

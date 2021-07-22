@@ -32,7 +32,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
         [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
-        public string GitHubToken { get; set; }
+        public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
 
         /// <summary>
         /// Executes the token command flow.
@@ -57,7 +57,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 else if (this.Store)
                 {
                     Logger.InfoLocalized(nameof(Resources.StoreToken_Message));
-                    return commandEvent.IsSuccessful = await this.SetAndCheckGitHubToken(this.GitHubToken, true);
+                    return commandEvent.IsSuccessful = await this.SetAndCheckGitHubToken(true);
                 }
 
                 return false;

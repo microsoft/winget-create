@@ -44,6 +44,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         protected const string ProgramApplicationAlias = "wingetcreate.exe";
 
         /// <summary>
+        /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
+        /// </summary>
+        public virtual string GitHubToken { get; set; }
+
+        /// <summary>
         /// Gets or sets the winget repo owner to use.
         /// </summary>
         public string WingetRepoOwner { get; set; } = UserSettings.WindowsPackageManagerRepositoryOwner ?? DefaultWingetRepoOwner;
@@ -315,14 +320,13 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Otherwise, sets the instance variable to hold the validated token.
         /// If no token is present on command-line or in cache, starts the OAuth flow to retrieve one.
         /// </summary>
-        /// <param name="gitHubToken">GitHub token used to submit a pull request on behalf of the user.</param>
         /// <param name="cacheToken">Boolean to override default behavior and force caching of token.</param>
         /// <returns>True if the token is now present and valid, false otherwise.</returns>
-        protected async Task<bool> SetAndCheckGitHubToken(string gitHubToken, bool cacheToken = false)
+        protected async Task<bool> SetAndCheckGitHubToken(bool cacheToken = false)
         {
             string cachedToken = null;
-            bool hasPatToken = !string.IsNullOrEmpty(gitHubToken);
-            string token = gitHubToken;
+            bool hasPatToken = !string.IsNullOrEmpty(this.GitHubToken);
+            string token = this.GitHubToken;
 
             if (!hasPatToken)
             {
@@ -358,7 +362,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.Trace("Checking repo access using OAuth token");
                 await this.GitHubClient.CheckAccess();
                 Logger.Trace("Access check was successful, proceeding");
-                gitHubToken = token;
+                this.GitHubToken = token;
 
                 // Only cache the token if it came from Oauth, instead of PAT parameter or cache
                 if (cacheToken || (!hasPatToken && token != cachedToken))
@@ -384,7 +388,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     // There's an issue with the cached token, so let's delete it and try again
                     Logger.WarnLocalized(nameof(Resources.InvalidCachedToken));
                     GitHubOAuth.DeleteTokenCache();
-                    return await this.SetAndCheckGitHubToken(gitHubToken);
+                    return await this.SetAndCheckGitHubToken();
                 }
                 else if (e is AuthorizationException)
                 {

@@ -19,13 +19,23 @@ namespace Microsoft.WingetCreateUnitTests
     public class CacheCommandTests
     {
         /// <summary>
-        /// OneTimeSetup method for the settings command unit tests.
+        /// OneTimeSetup method for the cache command unit tests.
         /// </summary>
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             Logger.Initialize();
             TestUtils.InitializeMockDownload();
+            PackageParser.InstallerDownloadPath = Path.Combine(Path.GetTempPath(), "wingetcreatetests");
+        }
+
+        /// <summary>
+        /// OneTimeTearDown method for the cache command unit tests.
+        /// </summary>
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            PackageParser.InstallerDownloadPath = PackageParser.DefaultInstallerDownloadPath;
         }
 
         /// <summary>

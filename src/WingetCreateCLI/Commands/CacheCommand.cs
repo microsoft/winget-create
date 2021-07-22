@@ -80,7 +80,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     foreach (string file in files)
                     {
-                        Logger.Info(Path.GetFileName(file));
+                        Logger.Debug(Path.GetFileName(file));
                     }
                 }
                 else if (this.Open)

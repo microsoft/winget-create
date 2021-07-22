@@ -47,7 +47,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
         [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
-        public string GitHubToken { get; set; }
+        public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
 
         /// <summary>
         /// Gets or sets the unbound arguments that exist after the first positional parameter.
@@ -76,7 +76,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                if (!await this.SetAndCheckGitHubToken(this.GitHubToken))
+                if (!await this.SetAndCheckGitHubToken())
                 {
                     return false;
                 }
