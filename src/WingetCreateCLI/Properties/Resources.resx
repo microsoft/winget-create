@@ -646,13 +646,16 @@
   <data name="Open_HelpText" xml:space="preserve">
     <value>Opens the cache folder storing the downloaded installers</value>
   </data>
-  <data name="CleaningInstallers_Message" xml:space="preserve">
-    <value>Cleaning up installers in {0}</value>
-    <comment>{0} - Will be replaced with the path to the downloaded installer cache folder</comment>
-  </data>
   <data name="InstallersFound_Message" xml:space="preserve">
     <value>{0} installers found in {1}</value>
     <comment>{0} - Will be replaced with the number of installers found in the cache folder
 {1} - Will be replaced with the path to the downloaded installer cache folder</comment>
+  </data>
+  <data name="DeletingInstaller_Message" xml:space="preserve">
+    <value>Deleting {0}</value>
+    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+  </data>
+  <data name="InstallerCacheCleaned_Message" xml:space="preserve">
+    <value>Installer cache cleaned.</value>
   </data>
 </root>

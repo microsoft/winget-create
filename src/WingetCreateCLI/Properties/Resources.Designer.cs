@@ -169,15 +169,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cleaning up installers in {0}.
-        /// </summary>
-        public static string CleaningInstallers_Message {
-            get {
-                return ResourceManager.GetString("CleaningInstallers_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Clear the cached GitHub token.
         /// </summary>
         public static string Clear_HelpText {
@@ -273,6 +264,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string DefaultLocaleManifestPreview_Message {
             get {
                 return ResourceManager.GetString("DefaultLocaleManifestPreview_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting {0}.
+        /// </summary>
+        public static string DeletingInstaller_Message {
+            get {
+                return ResourceManager.GetString("DeletingInstaller_Message", resourceCulture);
             }
         }
         
@@ -570,6 +570,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InstallerBinaryMismatch_Message {
             get {
                 return ResourceManager.GetString("InstallerBinaryMismatch_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installer cache cleaned..
+        /// </summary>
+        public static string InstallerCacheCleaned_Message {
+            get {
+                return ResourceManager.GetString("InstallerCacheCleaned_Message", resourceCulture);
             }
         }
         

@@ -64,7 +64,7 @@ namespace Microsoft.WingetCreateUnitTests
             CacheCommand command = new CacheCommand() { Clean = true };
             await command.Execute();
             var installerFiles = Directory.GetFiles(PackageParser.InstallerDownloadPath);
-            Assert.IsTrue(installerFiles.Length == 0, "Cached installers were not deleted.");
+            Assert.AreEqual(0, installerFiles.Length, "Cached installers were not deleted.");
         }
     }
 }

@@ -58,15 +58,19 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (this.Clean)
                 {
-                    Logger.InfoLocalized(nameof(Resources.CleaningInstallers_Message), PackageParser.InstallerDownloadPath);
                     DirectoryInfo dir = new DirectoryInfo(PackageParser.InstallerDownloadPath);
+                    var files = dir.GetFiles();
+                    Logger.InfoLocalized(nameof(Resources.InstallersFound_Message), files.Length, PackageParser.InstallerDownloadPath);
+                    Console.WriteLine();
 
-                    foreach (FileInfo file in dir.GetFiles())
+                    foreach (FileInfo file in files)
                     {
+                        Logger.WarnLocalized(nameof(Resources.DeletingInstaller_Message), file.Name);
                         file.Delete();
                     }
 
-                    commandEvent.IsSuccessful = true;
+                    Console.WriteLine();
+                    Logger.InfoLocalized(nameof(Resources.InstallerCacheCleaned_Message));
                 }
                 else if (this.List)
                 {
@@ -88,7 +92,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     });
                 }
 
-                return Task.FromResult(commandEvent.IsSuccessful);
+                return Task.FromResult(commandEvent.IsSuccessful = true);
             }
             finally
             {
