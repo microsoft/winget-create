@@ -5,6 +5,7 @@ namespace Microsoft.WingetCreateCore.Common
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Threading.Tasks;
@@ -103,7 +104,7 @@ namespace Microsoft.WingetCreateCore.Common
                 .FirstOrDefault();
 
             var packageContents = (await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, version))
-                .Where(c => c.Type != ContentType.Dir);
+                .Where(c => c.Type != ContentType.Dir && Path.GetExtension(c.Name) == ".yaml");
 
             // If all contents of version directory are directories themselves, user must've provided an invalid packageId.
             if (!packageContents.Any())
