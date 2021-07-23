@@ -26,11 +26,11 @@ namespace Microsoft.WingetCreateCLI
             UserSettings.FirstRunTelemetryConsent();
             TelemetryEventListener.EventListener.IsTelemetryEnabled();
 
-            string release = await GitHub.GetLatestRelease();
-            if (!release.Contains(Utils.GetEntryAssemblyVersion()))
+            string latestVersion = await GitHub.GetLatestRelease();
+            if (!latestVersion.Contains(Utils.GetEntryAssemblyVersion()))
             {
                 Logger.WarnLocalized(nameof(Resources.OutdatedVersionNotice_Message));
-                Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), release, "https://github.com/microsoft/winget-create/releases");
+                Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), latestVersion, "https://github.com/microsoft/winget-create/releases");
                 Console.WriteLine();
             }
 
