@@ -97,7 +97,6 @@ namespace Microsoft.WingetCreateCLI
         private static void DisplayParsingErrors<T>(ParserResult<T> result)
         {
             var builder = SentenceBuilder.Create();
-
             var errorMessages = HelpText.RenderParsingErrorsTextAsLines(result, builder.FormatError, builder.FormatMutuallyExclusiveSetErrors, 1);
 
             foreach (var error in errorMessages)
