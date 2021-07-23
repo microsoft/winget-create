@@ -110,15 +110,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
+                this.CheckForGitHubToken();
 
-                if (!string.IsNullOrEmpty(this.GitHubToken))
-                {
-                    if (!await this.SetAndCheckGitHubToken())
-                    {
-                        return false;
-                    }
-                }
+                GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
 
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
@@ -127,9 +121,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     exactId = await client.FindPackageId(this.Id);
                 }
-                catch (Octokit.NotFoundException)
+                catch (Exception e)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
+                    if (e is Octokit.NotFoundException)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
+                    }
+                    else if (e is Octokit.RateLimitExceededException)
+                    {
+                        Logger.Error("GitHub api rate limit exceeded. To extend your rate limit, store or provide your GitHub token.");
+                    }
+
                     return false;
                 }
 
@@ -291,7 +293,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return false;
                     }
 
-                    return await this.SetAndCheckGitHubToken()
+                    return await this.GetTokenForSubmission()
                         ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests, this.GitHubToken))
                         : false;
                 }

@@ -161,7 +161,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (isManifestValid && Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
                 {
-                    if (await this.SetAndCheckGitHubToken())
+                    if (await this.GetTokenForSubmission())
                     {
                         return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken);
                     }
@@ -379,12 +379,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
 
-            if (!string.IsNullOrEmpty(this.GitHubToken))
+            if (string.IsNullOrEmpty(this.GitHubToken))
             {
-                if (!await this.SetAndCheckGitHubToken())
-                {
-                    return false;
-                }
+                this.GitHubToken = await this.GetTokenFromCache();
             }
 
             VersionManifest versionManifest = manifests.VersionManifest;

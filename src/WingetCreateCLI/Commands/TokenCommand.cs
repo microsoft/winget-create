@@ -56,8 +56,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 else if (this.Store)
                 {
-                    Logger.InfoLocalized(nameof(Resources.StoreToken_Message));
-                    return commandEvent.IsSuccessful = await this.SetAndCheckGitHubToken(true);
+                    Logger.InfoLocalized(nameof(Resources.SettingToken_Message));
+                    return commandEvent.IsSuccessful = string.IsNullOrEmpty(this.GitHubToken) ?
+                        await this.GetTokenFromOAuth() :
+                        await this.StoreTokenInCache();
                 }
 
                 return false;

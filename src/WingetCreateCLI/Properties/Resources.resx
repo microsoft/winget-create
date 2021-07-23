@@ -268,9 +268,6 @@
   <data name="Interactive_KeywordDescription" xml:space="preserve">
     <value>The interactive installer switches</value>
   </data>
-  <data name="InvalidCachedToken" xml:space="preserve">
-    <value>Cached token was invalid, deleting and launching OAuth flow</value>
-  </data>
   <data name="Language_KeywordDescription" xml:space="preserve">
     <value>Overrides default language</value>
   </data>
@@ -380,9 +377,6 @@
   <data name="Silent_KeywordDescription" xml:space="preserve">
     <value>The silent installer switches</value>
   </data>
-  <data name="StoreToken_Message" xml:space="preserve">
-    <value>Setting cached GitHub token</value>
-  </data>
   <data name="Store_HelpText" xml:space="preserve">
     <value>Set the cached GitHub token. Can specify token to cache with --token parameter, otherwise will initiate OAuth flow.</value>
   </data>
@@ -429,7 +423,7 @@
     <value>The package version |e.g. 1.2.3.4|</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
-    <value>Writing the OAuth token to cache failed: {0}</value>
+    <value>Writing the token to cache failed: {0}</value>
   </data>
   <data name="ConfirmManifestCreation_Message" xml:space="preserve">
     <value>Would you like to make changes to this manifest?</value>
@@ -458,9 +452,6 @@
   </data>
   <data name="ResumingCommandExecution_Message" xml:space="preserve">
     <value>Resuming command execution...</value>
-  </data>
-  <data name="UsingTokenFromCache_Message" xml:space="preserve">
-    <value>Using GitHub token from cache...</value>
   </data>
   <data name="PackageName_KeywordDescription" xml:space="preserve">
     <value>The package name |e.g. Visual Studio|</value>
@@ -657,5 +648,23 @@
   </data>
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>Installer cache cleaned.</value>
+  </data>
+  <data name="AvoidRateLimitWarning_Message" xml:space="preserve">
+    <value>To avoid this error, be sure to store or provide your GitHub token.</value>
+  </data>
+  <data name="DeletingInvalidCachedToken_Message" xml:space="preserve">
+    <value>Cached token was invalid, deleting token from cache...</value>
+  </data>
+  <data name="InvalidGitHubToken_Message" xml:space="preserve">
+    <value>Token was invalid. Please generate a new GitHub token and try again.</value>
+  </data>
+  <data name="RepeatedUseWarning_Message" xml:space="preserve">
+    <value>Repeated use of this command could trigger a GitHub rate limit exceeded error.</value>
+  </data>
+  <data name="SettingToken_Message" xml:space="preserve">
+    <value>Setting GitHub token...</value>
+  </data>
+  <data name="StoringToken_Message" xml:space="preserve">
+    <value>Token stored in cache successfully.</value>
   </data>
 </root>
