@@ -484,6 +484,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to For the latest version ({0}), go to {1}.
+        /// </summary>
+        public static string GetLatestVersion_Message {
+            get {
+                return ResourceManager.GetString("GetLatestVersion_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A GitHub account or personal access token must be linked in order to continue with this command. .
         /// </summary>
         public static string GitHubAccountMustBeLinked_Message {
@@ -1029,6 +1038,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Open_HelpText {
             get {
                 return ResourceManager.GetString("Open_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is an older version of Winget-Create and may be missing some critical features..
+        /// </summary>
+        public static string OutdatedVersionNotice_Message {
+            get {
+                return ResourceManager.GetString("OutdatedVersionNotice_Message", resourceCulture);
             }
         }
         

@@ -62,6 +62,18 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
+        /// Gets the latest release tag name of winget-create.
+        /// </summary>
+        /// <returns>Latest release tag name.</returns>
+        public static async Task<string> GetLatestRelease()
+        {
+            var github = new GitHubClient(new ProductHeaderValue(UserAgentName));
+            var releases = await github.Repository.Release.GetAll("microsoft", "winget-create");
+            var latest = releases[0];
+            return latest.TagName;
+        }
+
+        /// <summary>
         /// Gets all app manifests in the repo.
         /// </summary>
         /// <returns>A list of <see cref="PublisherAppVersion"/>, each representing a single app manifest version.</returns>

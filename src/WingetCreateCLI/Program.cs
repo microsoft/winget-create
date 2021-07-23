@@ -26,6 +26,14 @@ namespace Microsoft.WingetCreateCLI
             UserSettings.FirstRunTelemetryConsent();
             TelemetryEventListener.EventListener.IsTelemetryEnabled();
 
+            string release = await GitHub.GetLatestRelease();
+            if (!release.Contains(Utils.GetEntryAssemblyVersion()))
+            {
+                Logger.WarnLocalized(nameof(Resources.OutdatedVersionNotice_Message));
+                Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), release, "https://github.com/microsoft/winget-create/releases");
+                Console.WriteLine();
+            }
+
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
             Logger.Trace($"Command line args: {arguments}");
 
@@ -89,6 +97,7 @@ namespace Microsoft.WingetCreateCLI
         private static void DisplayParsingErrors<T>(ParserResult<T> result)
         {
             var builder = SentenceBuilder.Create();
+
             var errorMessages = HelpText.RenderParsingErrorsTextAsLines(result, builder.FormatError, builder.FormatMutuallyExclusiveSetErrors, 1);
 
             foreach (var error in errorMessages)

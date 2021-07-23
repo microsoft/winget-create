@@ -658,4 +658,12 @@
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>Installer cache cleaned.</value>
   </data>
+  <data name="GetLatestVersion_Message" xml:space="preserve">
+    <value>For the latest version ({0}), go to {1}</value>
+    <comment>{0} - Will be replaced with the latest release version
+{1} - Will be replaced with the URL to the latest version of the tool.</comment>
+  </data>
+  <data name="OutdatedVersionNotice_Message" xml:space="preserve">
+    <value>This is an older version of Winget-Create and may be missing some critical features.</value>
+  </data>
 </root>
