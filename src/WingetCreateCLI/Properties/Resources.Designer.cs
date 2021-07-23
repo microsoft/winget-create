@@ -1249,6 +1249,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GitHub api rate limit exceeded. To extend your rate limit, store or provide your GitHub token..
+        /// </summary>
+        public static string RateLimitExceeded_Message {
+            get {
+                return ResourceManager.GetString("RateLimitExceeded_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input does not match the valid format pattern for this field..
         /// </summary>
         public static string RegexFieldValidation_Error {

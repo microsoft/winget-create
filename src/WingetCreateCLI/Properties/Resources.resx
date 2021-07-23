@@ -658,6 +658,9 @@
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>Token was invalid. Please generate a new GitHub token and try again.</value>
   </data>
+  <data name="RateLimitExceeded_Message" xml:space="preserve">
+    <value>GitHub api rate limit exceeded. To extend your rate limit, store or provide your GitHub token.</value>
+  </data>
   <data name="RepeatedUseWarning_Message" xml:space="preserve">
     <value>Repeated use of this command could trigger a GitHub rate limit exceeded error.</value>
   </data>

@@ -129,7 +129,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                     else if (e is Octokit.RateLimitExceededException)
                     {
-                        Logger.Error("GitHub api rate limit exceeded. To extend your rate limit, store or provide your GitHub token.");
+                        Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
                     }
 
                     return false;
