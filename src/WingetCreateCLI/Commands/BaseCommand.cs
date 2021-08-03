@@ -315,7 +315,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Creates a new GitHub client using the provided or cached token if present.
         /// If the requireToken bool is set to TRUE, OAuth flow can be launched to acquire a new token for the client.
-        /// The OAuth flow will only be launched if no token is provided in the command line or no token is present in the token cache.
+        /// The OAuth flow will only be launched if no token is provided in the command line and no token is present in the token cache.
         /// </summary>
         /// <param name="requireToken">Boolean value indicating whether a token is required for the client and whether to initiate an OAuth flow.</param>
         /// <returns>A boolean value indicating whether a new GitHub client was created and accessed successfully.</returns>
