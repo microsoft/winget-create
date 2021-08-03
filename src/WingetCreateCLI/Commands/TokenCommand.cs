@@ -59,7 +59,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Logger.InfoLocalized(nameof(Resources.SettingToken_Message));
                     return commandEvent.IsSuccessful = string.IsNullOrEmpty(this.GitHubToken) ?
                         await this.GetTokenFromOAuth() :
-                        await this.StoreTokenInCache();
+                        this.StoreTokenInCache();
                 }
 
                 return false;

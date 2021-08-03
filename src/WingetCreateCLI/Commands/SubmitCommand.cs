@@ -76,7 +76,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                if (!await this.GetTokenForSubmission())
+                if (!await this.LoadGitHubClient(true))
                 {
                     return false;
                 }

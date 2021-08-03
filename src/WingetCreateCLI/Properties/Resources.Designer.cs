@@ -115,15 +115,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To avoid this error, be sure to store or provide your GitHub token..
-        /// </summary>
-        public static string AvoidRateLimitWarning_Message {
-            get {
-                return ResourceManager.GetString("AvoidRateLimitWarning_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Web browser failed to launch: {0}.
         /// </summary>
         public static string BrowserFailedToLaunch_Error {
@@ -1263,15 +1254,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string RegexFieldValidation_Error {
             get {
                 return ResourceManager.GetString("RegexFieldValidation_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Repeated use of this command could trigger a GitHub rate limit exceeded error..
-        /// </summary>
-        public static string RepeatedUseWarning_Message {
-            get {
-                return ResourceManager.GetString("RepeatedUseWarning_Message", resourceCulture);
             }
         }
         
