@@ -134,6 +134,11 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
+                // test optional installer manifests here
+                PromptInstallerOptionalProperties(manifests.InstallerManifest);
+
+                // test optional installer manifests here
+
                 bool isManifestValid;
 
                 do
@@ -239,6 +244,43 @@ namespace Microsoft.WingetCreateCLI.Commands
                     var result = PromptProperty(manifest, currentValue, property.Name);
                     property.SetValue(manifest, result);
                     Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
+                }
+            }
+        }
+
+        private static void PromptInstallerOptionalProperties<T>(T manifest)
+        {
+            var properties = manifest.GetType().GetProperties().ToList();
+            var optionalProperties = properties.Where(p =>
+                p.GetCustomAttribute<RequiredAttribute>() == null &&
+                p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
+
+            foreach (var property in optionalProperties)
+            {
+                if (property.PropertyType == typeof(string))
+                {
+                    Console.WriteLine(property.Name + "string");
+                }
+                else if (property.PropertyType == typeof(List<string>))
+                {
+                    Console.WriteLine(property.Name+ "list<string>");
+                }
+                else if (property.PropertyType == typeof(List<int>))
+                {
+                    Console.WriteLine(property.Name + "list<int>");
+                }
+                else if (property.PropertyType == typeof(List<Enum>))
+                {
+                    Console.WriteLine(property.Name + "list<Enum>");
+                }
+                else if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+                {
+                    Console.WriteLine(property.Name + "enum");
+
+                }
+                else
+                {
+                    Console.WriteLine("not found" + property.Name);
                 }
             }
         }

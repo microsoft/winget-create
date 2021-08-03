@@ -10,6 +10,7 @@
     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
   <ItemGroup>
