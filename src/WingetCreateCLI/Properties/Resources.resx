@@ -656,7 +656,7 @@
     <value>Token was invalid. Please generate a new GitHub token and try again.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
-    <value>GitHub api rate limit exceeded. To extend your rate limit, store or provide your GitHub token.</value>
+    <value>GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the "-t" flag or store one using the "token --store" command.</value>
   </data>
   <data name="SettingToken_Message" xml:space="preserve">
     <value>Setting GitHub token...</value>

@@ -314,7 +314,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         /// <summary>
         /// Creates a new GitHub client using the provided or cached token if present.
-        /// If the requireToken bool is set to TRUE, then the OAuth flow is launched to acquire a new token for the client.
+        /// If the requireToken bool is set to TRUE, OAuth flow can be launched to acquire a new token for the client.
+        /// The OAuth flow will only be launched if no token is provided in the command line or no token is present in the token cache.
         /// </summary>
         /// <param name="requireToken">Boolean value indicating whether a token is required for the client and whether to initiate an OAuth flow.</param>
         /// <returns>A boolean value indicating whether a new GitHub client was created and accessed successfully.</returns>
@@ -424,11 +425,11 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 if (e is AuthorizationException)
                 {
-                    Logger.WarnLocalized(nameof(Resources.InvalidGitHubToken_Message));
+                    Logger.ErrorLocalized(nameof(Resources.InvalidGitHubToken_Message));
                 }
                 else if (e is RateLimitExceededException)
                 {
-                    Logger.WarnLocalized(nameof(Resources.RateLimitExceeded_Message));
+                    Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
                 }
                 else if (e is NotFoundException)
                 {
