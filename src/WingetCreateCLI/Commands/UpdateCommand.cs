@@ -121,17 +121,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     exactId = await this.GitHubClient.FindPackageId(this.Id);
                 }
-                catch (Exception e)
+                catch (Octokit.RateLimitExceededException)
                 {
-                    if (e is Octokit.NotFoundException)
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
-                    }
-                    else if (e is Octokit.RateLimitExceededException)
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
-                    }
-
+                    Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
                     return false;
                 }
 

@@ -430,6 +430,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     Logger.WarnLocalized(nameof(Resources.RateLimitExceeded_Message));
                 }
+                else if (e is NotFoundException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
+                }
 
                 return false;
             }
