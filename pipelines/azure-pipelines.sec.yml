@@ -1,0 +1,26 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+
+- task: CredScan@2
+  inputs:
+    scanFolder: '$(Build.SourcesDirectory)'
+    debugMode: false
+  continueOnError: true
+  
+- task: Semmle@1
+  inputs:
+    sourceCodeDirectory: '$(Build.SourcesDirectory)/src/WingetCreateCLI'
+    language: 'csharp'
+    querySuite: 'Recommended'
+    timeout: '1800'
+    addProjectDirToScanningExclusionList: true
+  continueOnError: true
+
+- task: BinSkim@3
+  inputs:
+    arguments: 'analyze "$(system.defaultWorkingDirectory)\src\WingetCreate*.dll" "$(system.defaultWorkingDirectory)\src\WingetCreate*.exe" --config default --recurse' 
