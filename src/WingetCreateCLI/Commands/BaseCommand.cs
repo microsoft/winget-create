@@ -313,105 +313,142 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Validates the GitHubToken provided on the command-line, or if not present, the cached token if one exists.
-        /// Attempts a simple operation against the target repo, and if that fails, then:
-        ///     If token provided on command-line, errors out
-        ///     If not, and cached token was present, then deletes token cache, and starts OAuth flow
-        /// Otherwise, sets the instance variable to hold the validated token.
-        /// If no token is present on command-line or in cache, starts the OAuth flow to retrieve one.
+        /// Creates a new GitHub client using the provided or cached token if present.
+        /// If the requireToken bool is set to TRUE, OAuth flow can be launched to acquire a new token for the client.
+        /// The OAuth flow will only be launched if no token is provided in the command line and no token is present in the token cache.
         /// </summary>
-        /// <param name="cacheToken">Boolean to override default behavior and force caching of token.</param>
-        /// <returns>True if the token is now present and valid, false otherwise.</returns>
-        protected async Task<bool> SetAndCheckGitHubToken(bool cacheToken = false)
+        /// <param name="requireToken">Boolean value indicating whether a token is required for the client and whether to initiate an OAuth flow.</param>
+        /// <returns>A boolean value indicating whether a new GitHub client was created and accessed successfully.</returns>
+        protected async Task<bool> LoadGitHubClient(bool requireToken = false)
         {
-            string cachedToken = null;
-            bool hasPatToken = !string.IsNullOrEmpty(this.GitHubToken);
-            string token = this.GitHubToken;
+            bool isCacheToken = false;
 
-            if (!hasPatToken)
+            if (string.IsNullOrEmpty(this.GitHubToken))
             {
                 Logger.Trace("No token parameter, reading cached token");
-                token = cachedToken = GitHubOAuth.ReadTokenCache();
+                this.GitHubToken = GitHubOAuth.ReadTokenCache();
 
-                if (string.IsNullOrEmpty(token))
+                if (string.IsNullOrEmpty(this.GitHubToken))
                 {
-                    Logger.Trace("No cached token found.");
-                    Logger.DebugLocalized(nameof(Resources.GitHubAccountMustBeLinked_Message));
-                    Logger.DebugLocalized(nameof(Resources.ExecutionPaused_Message));
-                    Console.WriteLine();
-                    token = await GitHubOAuthLoginFlow();
-                    if (string.IsNullOrEmpty(token))
+                    if (requireToken)
                     {
-                        // User must've cancelled OAuth flow, we can't proceed successfully
-                        Logger.WarnLocalized(nameof(Resources.NoTokenResponse_Message));
-                        return false;
+                        Logger.Trace("No token found in cache, launching OAuth flow");
+                        if (!await this.GetTokenFromOAuth())
+                        {
+                            return false;
+                        }
                     }
-
-                    Logger.DebugLocalized(nameof(Resources.ResumingCommandExecution_Message));
                 }
                 else
                 {
-                    Logger.DebugLocalized(nameof(Resources.UsingTokenFromCache_Message));
+                    isCacheToken = true;
                 }
             }
 
-            this.GitHubClient = new GitHub(token, this.WingetRepoOwner, this.WingetRepo);
+            if (await this.CheckGitHubTokenAndSetClient())
+            {
+                return true;
+            }
+            else
+            {
+                if (isCacheToken)
+                {
+                    GitHubOAuth.DeleteTokenCache();
+                }
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Launches the GitHub OAuth flow and obtains a GitHub token.
+        /// </summary>
+        /// <returns>A boolean value indicating whether the OAuth login flow was successful.</returns>
+        protected async Task<bool> GetTokenFromOAuth()
+        {
+            Logger.DebugLocalized(nameof(Resources.GitHubAccountMustBeLinked_Message));
+            Logger.DebugLocalized(nameof(Resources.ExecutionPaused_Message));
+            Console.WriteLine();
+            this.GitHubToken = await GitHubOAuthLoginFlow();
+
+            if (string.IsNullOrEmpty(this.GitHubToken))
+            {
+                // User must've cancelled OAuth flow, we can't proceed successfully
+                Logger.WarnLocalized(nameof(Resources.NoTokenResponse_Message));
+                return false;
+            }
+
+            this.StoreTokenInCache();
+            Logger.DebugLocalized(nameof(Resources.ResumingCommandExecution_Message));
+            return true;
+        }
+
+        /// <summary>
+        /// If the provided token is valid, stores the token in cache.
+        /// </summary>
+        /// <returns>Returns a boolean value indicating whether storing the token in cache was successful.</returns>
+        protected bool StoreTokenInCache()
+        {
+            try
+            {
+                Logger.Trace("Writing token to cache");
+                GitHubOAuth.WriteTokenCache(this.GitHubToken);
+                Logger.InfoLocalized(nameof(Resources.StoringToken_Message));
+            }
+            catch (Exception ex)
+            {
+                // Failing to cache the token shouldn't be fatal.
+                Logger.WarnLocalized(nameof(Resources.WritingCacheTokenFailed_Message), ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Verifies if the GitHub token has valid access.
+        /// </summary>
+        /// <returns>A boolean value indicating whether the GitHub token had valid access.</returns>
+        protected async Task<bool> CheckGitHubTokenAndSetClient()
+        {
+            var client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
 
             try
             {
-                Logger.Trace("Checking repo access using OAuth token");
-                await this.GitHubClient.CheckAccess();
+                Logger.Trace("Checking repo access using provided token");
+                await client.CheckAccess();
                 Logger.Trace("Access check was successful, proceeding");
-                this.GitHubToken = token;
-
-                // Only cache the token if it came from Oauth, instead of PAT parameter or cache
-                if (cacheToken || (!hasPatToken && token != cachedToken))
-                {
-                    try
-                    {
-                        Logger.Trace("Writing token to cache");
-                        GitHubOAuth.WriteTokenCache(token);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Failing to cache the token shouldn't be fatal.
-                        Logger.WarnLocalized(nameof(Resources.WritingCacheTokenFailed_Message), ex.Message);
-                    }
-                }
-
-                return true;
             }
             catch (Exception e)
             {
-                if (token == cachedToken)
+                if (e is AuthorizationException)
                 {
-                    // There's an issue with the cached token, so let's delete it and try again
-                    Logger.WarnLocalized(nameof(Resources.InvalidCachedToken));
-                    GitHubOAuth.DeleteTokenCache();
-                    return await this.SetAndCheckGitHubToken();
+                    Logger.ErrorLocalized(nameof(Resources.InvalidGitHubToken_Message));
                 }
-                else if (e is AuthorizationException)
+                else if (e is RateLimitExceededException)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
-                    Logger.ErrorLocalized(nameof(Resources.InvalidTokenError_Message));
-                    return false;
+                    Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
                 }
-                else
+                else if (e is NotFoundException)
                 {
-                    throw;
+                    Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
                 }
+
+                return false;
             }
+
+            this.GitHubClient = client;
+            return true;
         }
 
         /// <summary>
         /// Submits a pull request with multifile manifests using the user's GitHub access token.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be submitted.</param>
-        /// <param name="token">Access token to allow for this tool to submit a pull request on behalf of the user.</param>
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
-        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string token)
+        protected async Task<bool> GitHubSubmitManifests(Manifests manifests)
         {
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(this.GitHubToken))
             {
                 Logger.WarnLocalized(nameof(Resources.NoTokenProvided_Message));
                 return false;

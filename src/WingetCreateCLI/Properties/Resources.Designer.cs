@@ -277,6 +277,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cached token was invalid, deleting token from cache....
+        /// </summary>
+        public static string DeletingInvalidCachedToken_Message {
+            get {
+                return ResourceManager.GetString("DeletingInvalidCachedToken_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Collection of package dependencies.
         /// </summary>
         public static string Dependencies_KeywordDescription {
@@ -718,11 +727,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cached token was invalid, deleting and launching OAuth flow.
+        ///   Looks up a localized string similar to Token was invalid. Please generate a new GitHub token and try again..
         /// </summary>
-        public static string InvalidCachedToken {
+        public static string InvalidGitHubToken_Message {
             get {
-                return ResourceManager.GetString("InvalidCachedToken", resourceCulture);
+                return ResourceManager.GetString("InvalidGitHubToken_Message", resourceCulture);
             }
         }
         
@@ -1231,6 +1240,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the &quot;-t&quot; flag or store one using the &quot;token --store&quot; command..
+        /// </summary>
+        public static string RateLimitExceeded_Message {
+            get {
+                return ResourceManager.GetString("RateLimitExceeded_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input does not match the valid format pattern for this field..
         /// </summary>
         public static string RegexFieldValidation_Error {
@@ -1290,6 +1308,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SettingsCommand_HelpText {
             get {
                 return ResourceManager.GetString("SettingsCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting GitHub token....
+        /// </summary>
+        public static string SettingToken_Message {
+            get {
+                return ResourceManager.GetString("SettingToken_Message", resourceCulture);
             }
         }
         
@@ -1357,11 +1384,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Setting cached GitHub token.
+        ///   Looks up a localized string similar to Token stored in cache successfully..
         /// </summary>
-        public static string StoreToken_Message {
+        public static string StoringToken_Message {
             get {
-                return ResourceManager.GetString("StoreToken_Message", resourceCulture);
+                return ResourceManager.GetString("StoringToken_Message", resourceCulture);
             }
         }
         
@@ -1528,15 +1555,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Using GitHub token from cache....
-        /// </summary>
-        public static string UsingTokenFromCache_Message {
-            get {
-                return ResourceManager.GetString("UsingTokenFromCache_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Please check and verify the usage of this command by passing in the --help flag..
         /// </summary>
         public static string VerifyCommandUsage_Message {
@@ -1582,7 +1600,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Writing the OAuth token to cache failed: {0}.
+        ///   Looks up a localized string similar to Writing the token to cache failed: {0}.
         /// </summary>
         public static string WritingCacheTokenFailed_Message {
             get {
