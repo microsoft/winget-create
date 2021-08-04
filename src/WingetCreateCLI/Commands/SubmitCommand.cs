@@ -95,13 +95,13 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 Manifests manifests = new Manifests();
                 manifests.SingletonManifest = Serialization.DeserializeFromPath<SingletonManifest>(this.Path);
-                return await this.GitHubSubmitManifests(manifests, this.GitHubToken);
+                return await this.GitHubSubmitManifests(manifests);
             }
             else if (Directory.Exists(this.Path) && ValidateManifest(this.Path))
             {
                 List<string> manifestContents = Directory.GetFiles(this.Path).Select(f => File.ReadAllText(f)).ToList();
                 Manifests manifests = Serialization.DeserializeManifestContents(manifestContents);
-                return await this.GitHubSubmitManifests(manifests, this.GitHubToken);
+                return await this.GitHubSubmitManifests(manifests);
             }
             else
             {

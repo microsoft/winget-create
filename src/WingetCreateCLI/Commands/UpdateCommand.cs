@@ -286,7 +286,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
 
                     return await this.LoadGitHubClient(true)
-                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests, this.GitHubToken))
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests))
                         : false;
                 }
 

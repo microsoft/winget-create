@@ -172,7 +172,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     if (await this.LoadGitHubClient(true))
                     {
-                        return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken);
+                        return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests);
                     }
 
                     return false;

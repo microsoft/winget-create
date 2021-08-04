@@ -333,7 +333,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                     if (requireToken)
                     {
                         Logger.Trace("No token found in cache, launching OAuth flow");
-                        return await this.GetTokenFromOAuth();
+                        if (!await this.GetTokenFromOAuth())
+                        {
+                            return false;
+                        }
                     }
                 }
                 else
@@ -342,7 +345,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
             }
 
-            if (await this.CheckGitHubToken())
+            if (await this.CheckGitHubTokenAndSetClient())
             {
                 return true;
             }
@@ -406,7 +409,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Verifies if the GitHub token has valid access.
         /// </summary>
         /// <returns>A boolean value indicating whether the GitHub token had valid access.</returns>
-        protected async Task<bool> CheckGitHubToken()
+        protected async Task<bool> CheckGitHubTokenAndSetClient()
         {
             var client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
 
@@ -442,11 +445,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Submits a pull request with multifile manifests using the user's GitHub access token.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be submitted.</param>
-        /// <param name="token">Access token to allow for this tool to submit a pull request on behalf of the user.</param>
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
-        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string token)
+        protected async Task<bool> GitHubSubmitManifests(Manifests manifests)
         {
-            if (string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(this.GitHubToken))
             {
                 Logger.WarnLocalized(nameof(Resources.NoTokenProvided_Message));
                 return false;
@@ -454,8 +456,6 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             Logger.InfoLocalized(nameof(Resources.SubmittingPullRequest_Message));
             Console.WriteLine();
-
-            this.GitHubClient = new GitHub(token, this.WingetRepoOwner, this.WingetRepo);
 
             try
             {
