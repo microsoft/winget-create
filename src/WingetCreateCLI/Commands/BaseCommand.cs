@@ -344,11 +344,6 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             if (await this.CheckGitHubToken())
             {
-                if (!string.IsNullOrEmpty(this.GitHubToken) && !isCacheToken)
-                {
-                    this.StoreTokenInCache();
-                }
-
                 return true;
             }
             else
