@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCore.Common
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Functionality for manipulating data related to the Manifest object model.
@@ -53,5 +54,16 @@ namespace Microsoft.WingetCreateCore.Common
         {
             return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
         }
+
+        ///// <summary>
+        ///// Determines if an object is a List type.
+        ///// </summary>
+        ///// <param name="o">Object to be determined as a list type.</param>
+        ///// <returns>A boolean value indicating whether the object is a generic list type.</returns>
+        //public static bool IsGenericList(this object o)
+        //{
+        //    var oType = o.GetType();
+        //    return oType.IsGenericType && (oType.GetGenericTypeDefinition() == typeof(List<>));
+        //}
     }
 }

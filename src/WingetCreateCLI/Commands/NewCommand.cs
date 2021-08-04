@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.IO;
@@ -136,8 +137,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 // test optional installer manifests here
                 PromptInstallerOptionalProperties(manifests.InstallerManifest);
-
-                // test optional installer manifests here
+                // test optional installer manifests here end
 
                 bool isManifestValid;
 
@@ -255,28 +255,46 @@ namespace Microsoft.WingetCreateCLI.Commands
                 p.GetCustomAttribute<RequiredAttribute>() == null &&
                 p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
 
+            Type elementType;
+
             foreach (var property in optionalProperties)
             {
                 if (property.PropertyType == typeof(string))
                 {
-                    Console.WriteLine(property.Name + "string");
+                    var value = Prompt.Input<string>(property.Name);
                 }
-                else if (property.PropertyType == typeof(List<string>))
+                else if (property.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
                 {
-                    Console.WriteLine(property.Name+ "list<string>");
-                }
-                else if (property.PropertyType == typeof(List<int>))
-                {
-                    Console.WriteLine(property.Name + "list<int>");
-                }
-                else if (property.PropertyType == typeof(List<Enum>))
-                {
-                    Console.WriteLine(property.Name + "list<Enum>");
-                }
-                else if (Nullable.GetUnderlyingType(property.PropertyType) != null)
-                {
-                    Console.WriteLine(property.Name + "enum");
+                    // determines if the property is a list
+                    elementType = property.PropertyType.GetGenericArguments()[0];
 
+                    if (elementType == typeof(string))
+                    {
+                        var value = Prompt.List<string>(property.Name, minimum: 0);
+                        property.SetValue(manifest, value);
+                    }
+                    else if (elementType == typeof(int))
+                    {
+                        var value = Prompt.List<int>(property.Name, minimum: 0);
+                        property.SetValue(manifest, value);
+                    }
+                    else if (elementType.IsEnum)
+                    {
+                        var value = Prompt.MultiSelect(property.Name, Enum.GetNames(elementType).Append("skip"), minimum: 0);
+                    }
+                    else
+                    {
+                        Console.WriteLine("failed: " + property.Name);
+                    }
+
+                }
+                else if ((elementType = Nullable.GetUnderlyingType(property.PropertyType)) != null)
+                {
+                    if (elementType.IsEnum)
+                    {
+                        Console.WriteLine(property.Name + "enum");
+                        var value = Prompt.Select(property.Name, Enum.GetNames(elementType).Append("skip"));
+                    }
                 }
                 else
                 {
