@@ -37,22 +37,19 @@ namespace Microsoft.WingetCreateCLI
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
 
             string token = command?.GitHubToken ?? GitHubOAuth.ReadTokenCache();
-            if (!string.IsNullOrEmpty(token))
+            try
             {
-                try
+                string latestVersion = await GitHub.GetLatestRelease(token);
+                if (latestVersion.TrimStart('v').Split('-').First() != Utils.GetEntryAssemblyVersion())
                 {
-                    string latestVersion = await GitHub.GetLatestRelease(token);
-                    if (latestVersion.TrimStart('v').Split('-').First() != Utils.GetEntryAssemblyVersion())
-                    {
-                        Logger.WarnLocalized(nameof(Resources.OutdatedVersionNotice_Message));
-                        Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), latestVersion, "https://github.com/microsoft/winget-create/releases");
-                        Logger.WarnLocalized(nameof(Resources.UpgradeUsingWinget_Message));
-                        Console.WriteLine();
-                    }
+                    Logger.WarnLocalized(nameof(Resources.OutdatedVersionNotice_Message));
+                    Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), latestVersion, "https://github.com/microsoft/winget-create/releases");
+                    Logger.WarnLocalized(nameof(Resources.UpgradeUsingWinget_Message));
+                    Console.WriteLine();
                 }
-                catch (Octokit.ApiException)
-                {
-                }
+            }
+            catch (Exception ex) when (ex is Octokit.ApiException || ex is Octokit.RateLimitExceededException)
+            {
             }
 
             if (command == null)

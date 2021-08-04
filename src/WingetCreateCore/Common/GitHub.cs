@@ -67,10 +67,15 @@ namespace Microsoft.WingetCreateCore.Common
         /// </summary>
         /// <param name="token">GitHub api token.</param>
         /// <returns>Latest release tag name.</returns>
-        public static async Task<string> GetLatestRelease(string token)
+        public static async Task<string> GetLatestRelease(string token = null)
         {
             var github = new GitHubClient(new ProductHeaderValue(UserAgentName));
-            github.Credentials = new Credentials(token, AuthenticationType.Bearer);
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                github.Credentials = new Credentials(token, AuthenticationType.Bearer);
+            }
+
             var latestRelease = await github.Repository.Release.GetLatest("microsoft", "winget-create");
             return latestRelease.TagName;
         }
