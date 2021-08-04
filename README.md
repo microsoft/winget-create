@@ -6,7 +6,7 @@ This repository contains the source code for the Windows Package Manager Manifes
 ## Overview
 **Windows Package Manager Manifest Creator** is an Open Source tool designed to help developers create, update, and submit manifest files to the [Windows Package Manager repository](https://github.com/microsoft/winget-pkgs).
 
-Developers will use this tool to submit their applications for use with the [Windows Package Manager](https://docs.microsoft.com/en-us/windows/package-manager/).
+Developers will use this tool to submit their applications for use with the [Windows Package Manager](https://docs.microsoft.com/windows/package-manager/).
 
 ## Getting Started
 For your convenience, **WingetCreate** can be acquired a number of ways.
@@ -41,7 +41,7 @@ Unfortunately we can't use the msixbundle in a standard Azure Pipeline pool. Ins
 
 If .NET isn't already installed, you can use https://aka.ms/wingetcreate/latest/self-contained or https://aka.ms/wingetcreate/preview/self-contained, which has .NET built-in, but is a larger download.
 
-Then simply add a new powershell task to download the exe, and run it to update your manifest. It's recommended to not hardcode your PAT in your script, but instead use a [secret pipeline variable](https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables)
+Then simply add a new powershell task to download the exe, and run it to update your manifest. It's recommended to not hardcode your PAT in your script, but instead use a [secret pipeline variable](https://docs.microsoft.com/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables)
 
     - powershell: |
         iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
@@ -108,7 +108,7 @@ The wingetcreate.exe client is instrumented to collect usage and diagnostic (err
 
 If you build the client yourself the instrumentation will not be enabled and no data will be sent to Microsoft.
 
-The wingetcreate.exe client respects machine wide privacy settings and users can opt-out on their device, as documented in the Microsoft Windows privacy statement [here](https://support.microsoft.com/en-us/help/4468236/diagnostics-feedback-and-privacy-in-windows-10-microsoft-privacy).
+The wingetcreate.exe client respects machine wide privacy settings and users can opt-out on their device, as documented in the Microsoft Windows privacy statement [here](https://support.microsoft.com/help/4468236/diagnostics-feedback-and-privacy-in-windows-10-microsoft-privacy).
 
 In short to opt-out, go to `Start`, then select `Settings` > `Privacy` > `Diagnostics & feedback`, and select `Basic`.
 

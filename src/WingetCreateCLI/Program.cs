@@ -26,14 +26,6 @@ namespace Microsoft.WingetCreateCLI
             UserSettings.FirstRunTelemetryConsent();
             TelemetryEventListener.EventListener.IsTelemetryEnabled();
 
-            string latestVersion = await GitHub.GetLatestRelease();
-            if (!latestVersion.Contains(Utils.GetEntryAssemblyVersion()))
-            {
-                Logger.WarnLocalized(nameof(Resources.OutdatedVersionNotice_Message));
-                Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), latestVersion, "https://github.com/microsoft/winget-create/releases");
-                Console.WriteLine();
-            }
-
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
             Logger.Trace($"Command line args: {arguments}");
 
@@ -43,6 +35,25 @@ namespace Microsoft.WingetCreateCLI
             var parserResult = myParser.ParseArguments(args, types);
 
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
+
+            string token = command?.GitHubToken ?? GitHubOAuth.ReadTokenCache();
+            if (!string.IsNullOrEmpty(token))
+            {
+                try
+                {
+                    string latestVersion = await GitHub.GetLatestRelease(token);
+                    if (latestVersion.TrimStart('v').Split('-').First() != Utils.GetEntryAssemblyVersion())
+                    {
+                        Logger.WarnLocalized(nameof(Resources.OutdatedVersionNotice_Message));
+                        Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), latestVersion, "https://github.com/microsoft/winget-create/releases");
+                        Logger.WarnLocalized(nameof(Resources.UpgradeUsingWinget_Message));
+                        Console.WriteLine();
+                    }
+                }
+                catch (Octokit.ApiException)
+                {
+                }
+            }
 
             if (command == null)
             {

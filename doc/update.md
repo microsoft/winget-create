@@ -1,7 +1,7 @@
 
 # update command (Winget-Create)
 
-The **update** command of the [Winget-Create](../README.md) tool is designed to update an existing manifest. The **update** command is non-interactive so that it can be seamlessly integrated into your build pipeline to assist with the publishing of your installer.  The **update** command will update the manifest with the new URL, hash and version and can automatically submit the pull request (PR) to the [Windows Package Manager repo](https://docs.microsoft.com/en-us/windows/package-manager/).  
+The **update** command of the [Winget-Create](../README.md) tool is designed to update an existing manifest. The **update** command is non-interactive so that it can be seamlessly integrated into your build pipeline to assist with the publishing of your installer.  The **update** command will update the manifest with the new URL, hash and version and can automatically submit the pull request (PR) to the [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/).  
 
 ## Usage
 
@@ -44,7 +44,7 @@ The following arguments are available:
 
 ## Submit 
 
-If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line along with the **--submit** flag, **Winget-Create** will automatically submit your PR to [Windows Package Manager repo](https://docs.microsoft.com/en-us/windows/package-manager/).  
+If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line along with the **--submit** flag, **Winget-Create** will automatically submit your PR to [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/).  
 
 ## Output 
 If you would like to write the file to disk rather than submit to the repository, you can pass in the **--output** command along with the file name to write to.

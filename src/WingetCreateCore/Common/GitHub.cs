@@ -5,6 +5,7 @@ namespace Microsoft.WingetCreateCore.Common
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Threading.Tasks;
@@ -64,13 +65,14 @@ namespace Microsoft.WingetCreateCore.Common
         /// <summary>
         /// Gets the latest release tag name of winget-create.
         /// </summary>
+        /// <param name="token">GitHub api token.</param>
         /// <returns>Latest release tag name.</returns>
-        public static async Task<string> GetLatestRelease()
+        public static async Task<string> GetLatestRelease(string token)
         {
             var github = new GitHubClient(new ProductHeaderValue(UserAgentName));
-            var releases = await github.Repository.Release.GetAll("microsoft", "winget-create");
-            var latest = releases[0];
-            return latest.TagName;
+            github.Credentials = new Credentials(token, AuthenticationType.Bearer);
+            var latestRelease = await github.Repository.Release.GetLatest("microsoft", "winget-create");
+            return latestRelease.TagName;
         }
 
         /// <summary>
@@ -115,7 +117,7 @@ namespace Microsoft.WingetCreateCore.Common
                 .FirstOrDefault();
 
             var packageContents = (await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, version))
-                .Where(c => c.Type != ContentType.Dir);
+                .Where(c => c.Type != ContentType.Dir && Path.GetExtension(c.Name).EqualsIC(".yaml"));
 
             // If all contents of version directory are directories themselves, user must've provided an invalid packageId.
             if (!packageContents.Any())
