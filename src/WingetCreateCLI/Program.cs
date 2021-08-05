@@ -35,12 +35,16 @@ namespace Microsoft.WingetCreateCLI
             var parserResult = myParser.ParseArguments(args, types);
 
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
+            if (!await command.LoadGitHubClient())
+            {
+                return 1;
+            }
 
-            string token = command?.GitHubToken ?? GitHubOAuth.ReadTokenCache();
             try
             {
-                string latestVersion = await GitHub.GetLatestRelease(token);
-                if (latestVersion.TrimStart('v').Split('-').First() != Utils.GetEntryAssemblyVersion())
+                string latestVersion = await GitHub.GetLatestRelease();
+                string trimmedVersion = latestVersion.TrimStart('v').Split('-').First();
+                if (trimmedVersion != Utils.GetEntryAssemblyVersion())
                 {
                     Logger.WarnLocalized(nameof(Resources.OutdatedVersionNotice_Message));
                     Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), latestVersion, "https://github.com/microsoft/winget-create/releases");
@@ -50,6 +54,7 @@ namespace Microsoft.WingetCreateCLI
             }
             catch (Exception ex) when (ex is Octokit.ApiException || ex is Octokit.RateLimitExceededException)
             {
+                // Since this is only notifying the user if an update is available, don't block if the token is invalid or a rate limit error is encountered.
             }
 
             if (command == null)

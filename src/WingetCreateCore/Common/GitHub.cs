@@ -21,6 +21,7 @@ namespace Microsoft.WingetCreateCore.Common
         private const string HeadMasterRef = "heads/master";
         private const string PRDescriptionRepoPath = ".github/PULL_REQUEST_TEMPLATE.md";
         private const string UserAgentName = "WingetCreate";
+        private static string githubToken;
         private readonly GitHubClient github;
         private readonly string wingetRepoOwner;
         private readonly string wingetRepo;
@@ -39,6 +40,7 @@ namespace Microsoft.WingetCreateCore.Common
             if (githubApiToken != null)
             {
                 this.github.Credentials = new Credentials(githubApiToken, AuthenticationType.Bearer);
+                githubToken = githubApiToken;
             }
         }
 
@@ -65,15 +67,14 @@ namespace Microsoft.WingetCreateCore.Common
         /// <summary>
         /// Gets the latest release tag name of winget-create.
         /// </summary>
-        /// <param name="token">GitHub api token.</param>
         /// <returns>Latest release tag name.</returns>
-        public static async Task<string> GetLatestRelease(string token = null)
+        public static async Task<string> GetLatestRelease()
         {
             var github = new GitHubClient(new ProductHeaderValue(UserAgentName));
 
-            if (!string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(githubToken))
             {
-                github.Credentials = new Credentials(token, AuthenticationType.Bearer);
+                github.Credentials = new Credentials(githubToken, AuthenticationType.Bearer);
             }
 
             var latestRelease = await github.Repository.Release.GetLatest("microsoft", "winget-create");

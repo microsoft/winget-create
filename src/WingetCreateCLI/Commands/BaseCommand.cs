@@ -76,13 +76,61 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets the GitHubClient instance to use for interacting with GitHub from the CLI.
         /// </summary>
-        protected GitHub GitHubClient { get; private set; }
+        public GitHub GitHubClient { get; private set; }
 
         /// <summary>
         /// Abstract method executing the command.
         /// </summary>
         /// <returns>Boolean representing success or fail of the command.</returns>
         public abstract Task<bool> Execute();
+
+        /// <summary>
+        /// Creates a new GitHub client using the provided or cached token if present.
+        /// If the requireToken bool is set to TRUE, OAuth flow can be launched to acquire a new token for the client.
+        /// The OAuth flow will only be launched if no token is provided in the command line and no token is present in the token cache.
+        /// </summary>
+        /// <param name="requireToken">Boolean value indicating whether a token is required for the client and whether to initiate an OAuth flow.</param>
+        /// <returns>A boolean value indicating whether a new GitHub client was created and accessed successfully.</returns>
+        public async Task<bool> LoadGitHubClient(bool requireToken = false)
+        {
+            bool isCacheToken = false;
+
+            if (string.IsNullOrEmpty(this.GitHubToken))
+            {
+                Logger.Trace("No token parameter, reading cached token");
+                this.GitHubToken = GitHubOAuth.ReadTokenCache();
+
+                if (string.IsNullOrEmpty(this.GitHubToken))
+                {
+                    if (requireToken)
+                    {
+                        Logger.Trace("No token found in cache, launching OAuth flow");
+                        if (!await this.GetTokenFromOAuth())
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    isCacheToken = true;
+                }
+            }
+
+            if (await this.CheckGitHubTokenAndSetClient())
+            {
+                return true;
+            }
+            else
+            {
+                if (isCacheToken)
+                {
+                    GitHubOAuth.DeleteTokenCache();
+                }
+
+                return false;
+            }
+        }
 
         /// <summary>
         /// Creates a formatted directory of manifest files from the manifest object models and saves the directory to a local path.
@@ -310,54 +358,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             Console.WriteLine(manifests.InstallerManifest.ToYaml());
             Logger.Info(Resources.DefaultLocaleManifestPreview_Message);
             Console.WriteLine(manifests.DefaultLocaleManifest.ToYaml());
-        }
-
-        /// <summary>
-        /// Creates a new GitHub client using the provided or cached token if present.
-        /// If the requireToken bool is set to TRUE, OAuth flow can be launched to acquire a new token for the client.
-        /// The OAuth flow will only be launched if no token is provided in the command line and no token is present in the token cache.
-        /// </summary>
-        /// <param name="requireToken">Boolean value indicating whether a token is required for the client and whether to initiate an OAuth flow.</param>
-        /// <returns>A boolean value indicating whether a new GitHub client was created and accessed successfully.</returns>
-        protected async Task<bool> LoadGitHubClient(bool requireToken = false)
-        {
-            bool isCacheToken = false;
-
-            if (string.IsNullOrEmpty(this.GitHubToken))
-            {
-                Logger.Trace("No token parameter, reading cached token");
-                this.GitHubToken = GitHubOAuth.ReadTokenCache();
-
-                if (string.IsNullOrEmpty(this.GitHubToken))
-                {
-                    if (requireToken)
-                    {
-                        Logger.Trace("No token found in cache, launching OAuth flow");
-                        if (!await this.GetTokenFromOAuth())
-                        {
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
-                    isCacheToken = true;
-                }
-            }
-
-            if (await this.CheckGitHubTokenAndSetClient())
-            {
-                return true;
-            }
-            else
-            {
-                if (isCacheToken)
-                {
-                    GitHubOAuth.DeleteTokenCache();
-                }
-
-                return false;
-            }
         }
 
         /// <summary>

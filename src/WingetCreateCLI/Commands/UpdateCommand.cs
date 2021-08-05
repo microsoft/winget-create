@@ -109,11 +109,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                if (!await this.LoadGitHubClient())
-                {
-                    return false;
-                }
-
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
                 string exactId;
