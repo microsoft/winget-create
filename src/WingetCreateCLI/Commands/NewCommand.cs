@@ -141,17 +141,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                     if (this.WingetRepoOwner == DefaultWingetRepoOwner &&
                         this.WingetRepo == DefaultWingetRepo)
                     {
-                        if (await this.LoadGitHubClient())
+                        if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
                         {
-                            if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
-                            {
-                                Console.WriteLine();
-                                Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
-                                return false;
-                            }
-                        }
-                        else
-                        {
+                            Console.WriteLine();
+                            Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
                             return false;
                         }
                     }

@@ -121,7 +121,7 @@ namespace Microsoft.WingetCreateUnitTests
             StringWriter sw = new StringWriter();
             System.Console.SetOut(sw);
             UpdateCommand command = new UpdateCommand { Id = "testId" };
-            await command.Execute();
+            await command.LoadGitHubClient();
             string result = sw.ToString();
             Assert.That(result, Does.Contain(string.Format(Resources.RepositoryNotFound_Error, testRepoOwner, testRepoName)), "Repository not found error should be shown");
         }

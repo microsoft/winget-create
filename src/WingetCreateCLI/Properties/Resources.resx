@@ -656,14 +656,28 @@
     <value>Token was invalid. Please generate a new GitHub token and try again.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
-    <value>GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the "-t" flag or store one using the "token --store" command.</value>
-    <comment>"-t" refers to a command line switch argument
-"token --store" refers to a command line argument</comment>
+    <value>GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the '-t' flag or store one using the 'token --store' command.</value>
+    <comment>'-t' refers to a command line switch argument
+'token --store' refers to a command line argument</comment>
   </data>
   <data name="SettingToken_Message" xml:space="preserve">
     <value>Setting GitHub token...</value>
   </data>
   <data name="StoringToken_Message" xml:space="preserve">
     <value>Token stored in cache successfully.</value>
+  </data>
+  <data name="GetLatestVersion_Message" xml:space="preserve">
+    <value>For the latest version ({0}), go to {1}</value>
+    <comment>{0} - Will be replaced with the latest release version
+{1} - Will be replaced with the URL to the latest version of the tool.</comment>
+  </data>
+  <data name="OutdatedVersionNotice_Message" xml:space="preserve">
+    <value>This is an older version of Winget-Create and may be missing some critical features.</value>
+  </data>
+  <data name="UpgradeUsingWinget_Message" xml:space="preserve">
+    <value>If you have the winget client installed, you can update by running the command: 'winget upgrade Microsoft.WingetCreate'</value>
+    <comment>'winget upgrade Microsoft.WingetCreate' refers to a specific command to be executed in order to upgrade the tool to the latest version.
+
+"winget" is the proper name of the tool</comment>
   </data>
 </root>

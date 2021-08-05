@@ -157,6 +157,16 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
+        /// Gets the latest release tag name of winget-create.
+        /// </summary>
+        /// <returns>Latest release tag name.</returns>
+        public async Task<string> GetLatestRelease()
+        {
+            var latestRelease = await this.github.Repository.Release.GetLatest("microsoft", "winget-create");
+            return latestRelease.TagName;
+        }
+
+        /// <summary>
         /// Closes an open pull request and deletes its branch if not on forked repo.
         /// </summary>
         /// <param name="pullRequestId">The pull request number.</param>

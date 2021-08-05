@@ -493,6 +493,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to For the latest version ({0}), go to {1}.
+        /// </summary>
+        public static string GetLatestVersion_Message {
+            get {
+                return ResourceManager.GetString("GetLatestVersion_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A GitHub account or personal access token must be linked in order to continue with this command. .
         /// </summary>
         public static string GitHubAccountMustBeLinked_Message {
@@ -1042,6 +1051,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This is an older version of Winget-Create and may be missing some critical features..
+        /// </summary>
+        public static string OutdatedVersionNotice_Message {
+            get {
+                return ResourceManager.GetString("OutdatedVersionNotice_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output directory where the newly created manifests will be saved locally.
         /// </summary>
         public static string OutputDirectory_HelpText {
@@ -1240,7 +1258,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the &quot;-t&quot; flag or store one using the &quot;token --store&quot; command..
+        ///   Looks up a localized string similar to GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the &apos;-t&apos; flag or store one using the &apos;token --store&apos; command..
         /// </summary>
         public static string RateLimitExceeded_Message {
             get {
@@ -1542,6 +1560,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UpgradeBehavior_KeywordDescription {
             get {
                 return ResourceManager.GetString("UpgradeBehavior_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you have the winget client installed, you can update by running the command: &apos;winget upgrade Microsoft.WingetCreate&apos;.
+        /// </summary>
+        public static string UpgradeUsingWinget_Message {
+            get {
+                return ResourceManager.GetString("UpgradeUsingWinget_Message", resourceCulture);
             }
         }
         
