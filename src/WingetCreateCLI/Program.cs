@@ -35,6 +35,14 @@ namespace Microsoft.WingetCreateCLI
             var parserResult = myParser.ParseArguments(args, types);
 
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
+
+            if (command == null)
+            {
+                DisplayHelp(parserResult as NotParsed<object>);
+                DisplayParsingErrors(parserResult as NotParsed<object>);
+                return args.Any() ? 1 : 0;
+            }
+
             if (!await command.LoadGitHubClient())
             {
                 return 1;
@@ -55,13 +63,6 @@ namespace Microsoft.WingetCreateCLI
             catch (Exception ex) when (ex is Octokit.ApiException || ex is Octokit.RateLimitExceededException)
             {
                 // Since this is only notifying the user if an update is available, don't block if the token is invalid or a rate limit error is encountered.
-            }
-
-            if (command == null)
-            {
-                DisplayHelp(parserResult as NotParsed<object>);
-                DisplayParsingErrors(parserResult as NotParsed<object>);
-                return args.Any() ? 1 : 0;
             }
 
             try
