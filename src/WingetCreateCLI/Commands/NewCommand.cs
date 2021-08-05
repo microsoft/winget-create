@@ -97,6 +97,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
                 Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
 
+                // test optional installer manifests here
+                DisplayOptionalPropertiesAsMenuSelection(new Installer());
+                // test optional installer manifests here end
+
                 Manifests manifests = new Manifests();
 
                 if (!this.InstallerUrls.Any())
@@ -134,10 +138,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Console.WriteLine();
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
-
-                // test optional installer manifests here
-                PromptInstallerOptionalProperties(manifests.InstallerManifest);
-                // test optional installer manifests here end
 
                 bool isManifestValid;
 
@@ -248,58 +248,94 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void PromptInstallerOptionalProperties<T>(T manifest)
+        private static void DisplayOptionalPropertiesAsMenuSelection<T>(T model)
         {
-            var properties = manifest.GetType().GetProperties().ToList();
+            var properties = model.GetType().GetProperties().ToList();
             var optionalProperties = properties.Where(p =>
                 p.GetCustomAttribute<RequiredAttribute>() == null &&
                 p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
 
+            var selectionList = properties.Select(property => property.Name).ToList().Append("Exit");
+
+            string selection;
+            do
+            {
+                selection = Prompt.Select("Which property would you like to edit?", selectionList);
+                if (selection == "Exit")
+                {
+                    break;
+                }
+
+                var selectedProperty = properties.First(p => p.Name == selection);
+                PromptOptionalInstallerProperty(model, selection);
+            }
+            while (selection != "done");
+        }
+
+        private static void PromptOptionalInstallerProperty(object model, string memberName)
+        {
+            // given the model and name, we should be able to obtain the property and its current value as well as the message string.
+            var property = model.GetType().GetProperty(memberName);
+            string message = $"[{memberName}] " + Resources.ResourceManager.GetString($"{memberName}_KeywordDescription") ?? memberName;
             Type elementType;
 
-            foreach (var property in optionalProperties)
+            if (property.PropertyType == typeof(string))
             {
-                if (property.PropertyType == typeof(string))
-                {
-                    var value = Prompt.Input<string>(property.Name);
-                }
-                else if (property.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
-                {
-                    // determines if the property is a list
-                    elementType = property.PropertyType.GetGenericArguments()[0];
+                var value = PromptProperty(model, model.GetType().GetProperty(memberName).GetValue(model), memberName);
+                property.SetValue(model, value);
+            }
+            else if (property.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
+            {
+                elementType = property.PropertyType.GetGenericArguments()[0];
 
-                    if (elementType == typeof(string))
-                    {
-                        var value = Prompt.List<string>(property.Name, minimum: 0);
-                        property.SetValue(manifest, value);
-                    }
-                    else if (elementType == typeof(int))
-                    {
-                        var value = Prompt.List<int>(property.Name, minimum: 0);
-                        property.SetValue(manifest, value);
-                    }
-                    else if (elementType.IsEnum)
-                    {
-                        var value = Prompt.MultiSelect(property.Name, Enum.GetNames(elementType).Append("skip"), minimum: 0);
-                    }
-                    else
-                    {
-                        Console.WriteLine("failed: " + property.Name);
-                    }
+                if (elementType == typeof(string))
+                {
+                    // the issue with the list is that you can't delete existing values or modify them
+                    ListOptions<string> listOptions = new ListOptions<string>() { Message = message, Minimum = 0 };
+                    var value = Prompt.List<string>(listOptions);
+                    property.SetValue(model, value);
+                }
+                else if (elementType == typeof(int))
+                {
+                    var value = Prompt.List<int>(property.Name, minimum: 0);
+                    property.SetValue(model, value);
+                }
+                else if (elementType.IsEnum)
+                {
+                    var value = Prompt.MultiSelect(property.Name, Enum.GetNames(elementType), minimum: 0);
 
-                }
-                else if ((elementType = Nullable.GetUnderlyingType(property.PropertyType)) != null)
-                {
-                    if (elementType.IsEnum)
+                    if (value.Any())
                     {
-                        Console.WriteLine(property.Name + "enum");
-                        var value = Prompt.Select(property.Name, Enum.GetNames(elementType).Append("skip"));
+                        foreach (var item in value)
+                        {
+                            // figure out how to parse and enum into a list;
+                        }
+                        var enumList = value.Select(item => Enum.Try).Parse(elementType, item)).ToList();
+                        property.SetValue(model, enumList);
                     }
                 }
-                else
+            }
+            else if ((elementType = Nullable.GetUnderlyingType(property.PropertyType)) != null)
+            {
+                if (elementType.IsEnum)
                 {
-                    Console.WriteLine("not found" + property.Name);
+                    Console.WriteLine(property.Name + "enum");
+                    var value = Prompt.Select(property.Name, Enum.GetNames(elementType).Append("Exit"));
+                    if (value != "Exit")
+                    {
+                        property.SetValue(model, Enum.Parse(elementType, value));
+                    }
                 }
+            }
+            else if (property.PropertyType == typeof(InstallerSwitches))
+            {
+                InstallerSwitches installerSwitches = (InstallerSwitches)property.GetValue(model) ?? new InstallerSwitches();
+                DisplayOptionalPropertiesAsMenuSelection(installerSwitches);
+            }
+            else if (property.PropertyType == typeof(Dependencies))
+            {
+                Dependencies dependencies = (Dependencies)property.GetValue(model) ?? new Dependencies();
+                DisplayOptionalPropertiesAsMenuSelection(dependencies);
             }
         }
 
@@ -392,6 +428,9 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         private static T PromptProperty<T>(object model, T property, string memberName, string message = null)
         {
+            // WARNING: this will throw a null exception if the property is not already instantiated.
+            //var currentValue = model.GetType().GetProperty(memberName);
+
             message ??= $"[{memberName}] " +
             Resources.ResourceManager.GetString($"{memberName}_KeywordDescription") ?? memberName;
 
