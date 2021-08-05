@@ -76,7 +76,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets the GitHubClient instance to use for interacting with GitHub from the CLI.
         /// </summary>
-        public GitHub GitHubClient { get; private set; }
+        protected GitHub GitHubClient { get; private set; }
 
         /// <summary>
         /// Abstract method executing the command.
