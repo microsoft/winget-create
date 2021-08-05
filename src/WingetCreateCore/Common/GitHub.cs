@@ -21,7 +21,6 @@ namespace Microsoft.WingetCreateCore.Common
         private const string HeadMasterRef = "heads/master";
         private const string PRDescriptionRepoPath = ".github/PULL_REQUEST_TEMPLATE.md";
         private const string UserAgentName = "WingetCreate";
-        private static string githubToken;
         private readonly GitHubClient github;
         private readonly string wingetRepoOwner;
         private readonly string wingetRepo;
@@ -40,7 +39,6 @@ namespace Microsoft.WingetCreateCore.Common
             if (githubApiToken != null)
             {
                 this.github.Credentials = new Credentials(githubApiToken, AuthenticationType.Bearer);
-                githubToken = githubApiToken;
             }
         }
 
@@ -62,23 +60,6 @@ namespace Microsoft.WingetCreateCore.Common
             var installation = await github.GitHubApps.GetRepositoryInstallationForCurrent(wingetRepoOwner, wingetRepo);
             var response = await github.GitHubApps.CreateInstallationToken(installation.Id);
             return response.Token;
-        }
-
-        /// <summary>
-        /// Gets the latest release tag name of winget-create.
-        /// </summary>
-        /// <returns>Latest release tag name.</returns>
-        public static async Task<string> GetLatestRelease()
-        {
-            var github = new GitHubClient(new ProductHeaderValue(UserAgentName));
-
-            if (!string.IsNullOrEmpty(githubToken))
-            {
-                github.Credentials = new Credentials(githubToken, AuthenticationType.Bearer);
-            }
-
-            var latestRelease = await github.Repository.Release.GetLatest("microsoft", "winget-create");
-            return latestRelease.TagName;
         }
 
         /// <summary>
@@ -173,6 +154,16 @@ namespace Microsoft.WingetCreateCore.Common
             }
 
             return this.SubmitPRAsync(id, version, contents, submitToFork);
+        }
+
+        /// <summary>
+        /// Gets the latest release tag name of winget-create.
+        /// </summary>
+        /// <returns>Latest release tag name.</returns>
+        public async Task<string> GetLatestRelease()
+        {
+            var latestRelease = await this.github.Repository.Release.GetLatest("microsoft", "winget-create");
+            return latestRelease.TagName;
         }
 
         /// <summary>

@@ -79,6 +79,7 @@ namespace Microsoft.WingetCreateE2ETests
                 OpenPRInBrowser = false,
             };
 
+            Assert.IsTrue(await updateCommand.LoadGitHubClient(), "Failed to create GitHub client");
             Assert.IsTrue(await updateCommand.Execute(), "Command should execute successfully");
 
             string pathToValidate = Path.Combine(Directory.GetCurrentDirectory(), Utils.GetAppManifestDirPath(packageId, PackageVersion));

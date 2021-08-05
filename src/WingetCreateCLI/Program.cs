@@ -42,7 +42,7 @@ namespace Microsoft.WingetCreateCLI
 
             try
             {
-                string latestVersion = await GitHub.GetLatestRelease();
+                string latestVersion = await command.GitHubClient.GetLatestRelease();
                 string trimmedVersion = latestVersion.TrimStart('v').Split('-').First();
                 if (trimmedVersion != Utils.GetEntryAssemblyVersion())
                 {
