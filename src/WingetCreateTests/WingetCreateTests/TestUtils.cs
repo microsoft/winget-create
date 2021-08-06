@@ -100,5 +100,18 @@ namespace Microsoft.WingetCreateTests
         {
             return Path.Combine(Environment.CurrentDirectory, "Resources", fileName);
         }
+
+        /// <summary>
+        /// Sets up mocking and downloads the given filename.
+        /// </summary>
+        /// <param name="filename">Filename to be mock downloaded.</param>
+        /// <returns>Path to the mock downloaded file.</returns>
+        public static string MockDownloadFile(string filename)
+        {
+            string url = $"https://fakedomain.com/{filename}";
+            SetMockHttpResponseContent(filename);
+            string downloadedPath = PackageParser.DownloadFileAsync(url).Result;
+            return downloadedPath;
+        }
     }
 }

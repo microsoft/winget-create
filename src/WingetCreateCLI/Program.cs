@@ -4,9 +4,7 @@
 namespace Microsoft.WingetCreateCLI
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -22,11 +20,6 @@ namespace Microsoft.WingetCreateCLI
     /// </summary>
     internal class Program
     {
-        /// <summary>
-        /// Program name of the app.
-        /// </summary>
-        private const string ProgramName = "wingetcreate";
-
         private static async Task<int> Main(string[] args)
         {
             Logger.Initialize();
@@ -38,7 +31,7 @@ namespace Microsoft.WingetCreateCLI
 
             Parser myParser = new Parser(config => config.HelpWriter = null);
 
-            var types = GetVerbs();
+            var types = new Type[] { typeof(NewCommand), typeof(UpdateCommand), typeof(SubmitCommand), typeof(SettingsCommand), typeof(TokenCommand), typeof(CacheCommand) };
             var parserResult = myParser.ParseArguments(args, types);
 
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
@@ -46,12 +39,35 @@ namespace Microsoft.WingetCreateCLI
             if (command == null)
             {
                 DisplayHelp(parserResult as NotParsed<object>);
+                DisplayParsingErrors(parserResult as NotParsed<object>);
                 return args.Any() ? 1 : 0;
+            }
+
+            if (!await command.LoadGitHubClient())
+            {
+                return 1;
             }
 
             try
             {
-                WingetCreateCore.Serialization.ProducedBy = string.Join(" ", ProgramName, Utils.GetEntryAssemblyVersion());
+                string latestVersion = await command.GitHubClient.GetLatestRelease();
+                string trimmedVersion = latestVersion.TrimStart('v').Split('-').First();
+                if (trimmedVersion != Utils.GetEntryAssemblyVersion())
+                {
+                    Logger.WarnLocalized(nameof(Resources.OutdatedVersionNotice_Message));
+                    Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), latestVersion, "https://github.com/microsoft/winget-create/releases");
+                    Logger.WarnLocalized(nameof(Resources.UpgradeUsingWinget_Message));
+                    Console.WriteLine();
+                }
+            }
+            catch (Exception ex) when (ex is Octokit.ApiException || ex is Octokit.RateLimitExceededException)
+            {
+                // Since this is only notifying the user if an update is available, don't block if the token is invalid or a rate limit error is encountered.
+            }
+
+            try
+            {
+                WingetCreateCore.Serialization.ProducedBy = string.Join(" ", Constants.ProgramName, Utils.GetEntryAssemblyVersion());
                 return await command.Execute() ? 0 : 1;
             }
             catch (Exception ex)
@@ -66,12 +82,6 @@ namespace Microsoft.WingetCreateCLI
                 Logger.Error(ex.ToString());
                 return 1;
             }
-        }
-
-        private static Type[] GetVerbs()
-        {
-            return Assembly.GetExecutingAssembly().GetTypes()
-                .Where(types => types.GetCustomAttribute<VerbAttribute>() != null).ToArray();
         }
 
         private static void DisplayHelp(NotParsed<object> result)
@@ -96,46 +106,16 @@ namespace Microsoft.WingetCreateCLI
                 verbsIndex: true);
             Console.WriteLine(helpText);
             Console.WriteLine();
+        }
 
-            foreach (var error in result.Errors)
+        private static void DisplayParsingErrors<T>(ParserResult<T> result)
+        {
+            var builder = SentenceBuilder.Create();
+            var errorMessages = HelpText.RenderParsingErrorsTextAsLines(result, builder.FormatError, builder.FormatMutuallyExclusiveSetErrors, 1);
+
+            foreach (var error in errorMessages)
             {
-                if (error is SetValueExceptionError sve)
-                {
-                    Utils.WriteLineColored(ConsoleColor.Red, $"{sve.NameInfo.LongName}: {sve.Exception.Message}");
-                    if (sve.Exception.InnerException != null)
-                    {
-                        Utils.WriteLineColored(ConsoleColor.Red, $"{sve.Exception.InnerException.Message}");
-                    }
-
-                    if (sve.Value is IEnumerable<object> list)
-                    {
-                        foreach (var val in list)
-                        {
-                            Utils.WriteLineColored(ConsoleColor.Red, $"\t{val}");
-                        }
-                    }
-                    else
-                    {
-                        Utils.WriteLineColored(ConsoleColor.Red, $"\t{sve.Value}");
-                    }
-                }
-                else if (error is UnknownOptionError uoe)
-                {
-                    if (uoe.Token == "?")
-                    {
-                        break;
-                    }
-
-                    Utils.WriteLineColored(ConsoleColor.Red, $"Unknown option: {uoe.Token}");
-                }
-                else if (error is NoVerbSelectedError || error is HelpRequestedError)
-                {
-                    continue;
-                }
-                else
-                {
-                    Utils.WriteLineColored(ConsoleColor.Red, $"Command line parsing error: {error.Tag}");
-                }
+                Logger.Warn(error);
             }
         }
     }

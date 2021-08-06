@@ -73,6 +73,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string OutputDir { get; set; }
 
         /// <summary>
+        /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
+        /// </summary>
+        [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
+        public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
+
+        /// <summary>
         /// Executes the new command flow.
         /// </summary>
         /// <returns>Boolean representing success or fail of the command.</returns>
@@ -133,12 +139,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                 do
                 {
                     if (this.WingetRepoOwner == DefaultWingetRepoOwner &&
-                        this.WingetRepo == DefaultWingetRepo &&
-                        !await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
+                        this.WingetRepo == DefaultWingetRepo)
                     {
-                        Console.WriteLine();
-                        Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
-                        return false;
+                        if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
+                        {
+                            Console.WriteLine();
+                            Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
+                            return false;
+                        }
                     }
 
                     PromptPropertiesAndDisplayManifests(manifests);
@@ -155,9 +163,9 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (isManifestValid && Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
                 {
-                    if (await this.SetAndCheckGitHubToken())
+                    if (await this.LoadGitHubClient(true))
                     {
-                        return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests, this.GitHubToken);
+                        return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(manifests);
                     }
 
                     return false;
@@ -371,20 +379,19 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Boolean value indicating whether the package identifier is valid.</returns>
         private async Task<bool> PromptPackageIdentifierAndCheckDuplicates(Manifests manifests)
         {
-            GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
-
-            if (!string.IsNullOrEmpty(this.GitHubToken))
-            {
-                if (!await this.SetAndCheckGitHubToken())
-                {
-                    return false;
-                }
-            }
-
             VersionManifest versionManifest = manifests.VersionManifest;
             versionManifest.PackageIdentifier = PromptProperty(versionManifest, versionManifest.PackageIdentifier, nameof(versionManifest.PackageIdentifier));
 
-            string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
+            string exactMatch;
+            try
+            {
+                exactMatch = await this.GitHubClient.FindPackageId(versionManifest.PackageIdentifier);
+            }
+            catch (Octokit.RateLimitExceededException)
+            {
+                Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                return false;
+            }
 
             if (!string.IsNullOrEmpty(exactMatch))
             {

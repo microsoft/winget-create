@@ -1,6 +1,6 @@
 # token command (Winget-Create)
 
-The **token** command of the [Winget-Create](../README.md) tool is designed to manage cached GitHub personal access tokens used by the tool for interacting with the [Windows Package Manager repo](https://docs.microsoft.com/en-us/windows/package-manager/) automatically.  
+The **token** command of the [Winget-Create](../README.md) tool is designed to manage cached GitHub personal access tokens used by the tool for interacting with the [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/) automatically.  
 To use the **token** command, you can specify whether you want to store a new [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) or clear any existing cached tokens. If you choose not to provide a token when storing, the tool will initiate an OAuth flow and prompt for your GitHub login credentials.
 
 ## Usage
