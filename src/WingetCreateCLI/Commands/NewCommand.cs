@@ -97,10 +97,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
                 Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
 
-                // test optional installer manifests here
-                DisplayOptionalPropertiesAsMenuSelection(new Installer());
-                // test optional installer manifests here end
-
                 Manifests manifests = new Manifests();
 
                 if (!this.InstallerUrls.Any())
@@ -140,6 +136,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
                 bool isManifestValid;
+
+                // test optional installer manifests here
+                DisplayInstallersAsMenuSelection(manifests.InstallerManifest);
+                // test optional installer manifests here end
 
                 do
                 {
@@ -248,6 +248,53 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
+        /// <summary>
+        /// Displays all installers from an Installer manifest as a selection menu.
+        /// </summary>
+        private static void DisplayInstallersAsMenuSelection(InstallerManifest installerManifest)
+        {
+            // foreach installerManifest show the installerurl, architecture, and installertype, which will be used for matching
+            List<string> tupleList = new List<string>();
+
+            foreach (Installer installer in installerManifest.Installers)
+            {
+                var installerTuple = string.Join('|', installer.InstallerUrl, installer.InstallerType, installer.Architecture);
+                tupleList.Add(installerTuple);
+            }
+
+            tupleList.Add("ALL INSTALLERS");
+            tupleList.Add("NONE");
+
+            while (true)
+            {
+                var selectedItem = Prompt.Select("Which installer would you like to choose?", tupleList);
+
+                if (selectedItem == "NONE")
+                {
+                    break;
+                }
+                else if (selectedItem == "ALL INSTALLERS")
+                {
+                    DisplayOptionalPropertiesAsMenuSelection(installerManifest);
+                }
+                else
+                {
+                    string[] selection = selectedItem.Split('|');
+                    var selectedInstaller = installerManifest.Installers.Single(
+                        item => item.InstallerUrl == selection[0] &&
+                        item.InstallerType == (InstallerType)Enum.Parse(typeof(InstallerType), selection[1]) &&
+                        item.Architecture == (InstallerArchitecture)Enum.Parse(typeof(InstallerArchitecture), selection[2]));
+
+                    Console.WriteLine();
+                    Console.WriteLine("Displaying a preview of the selected installer.");
+                    var serializer = Serialization.CreateSerializer();
+                    string installerString = serializer.Serialize(selectedInstaller);
+                    Console.WriteLine(installerString);
+                    DisplayOptionalPropertiesAsMenuSelection(selectedInstaller);
+                }
+            }
+        }
+
         private static void DisplayOptionalPropertiesAsMenuSelection<T>(T model)
         {
             var properties = model.GetType().GetProperties().ToList();
@@ -255,21 +302,20 @@ namespace Microsoft.WingetCreateCLI.Commands
                 p.GetCustomAttribute<RequiredAttribute>() == null &&
                 p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
 
-            var selectionList = properties.Select(property => property.Name).ToList().Append("Exit");
+            var fieldList = properties.Select(property => property.Name)
+                .Where(p => p != "AdditionalProperties").ToList()
+                .Append("NONE");
 
-            string selection;
-            do
+            while (true)
             {
-                selection = Prompt.Select("Which property would you like to edit?", selectionList);
-                if (selection == "Exit")
+                var selectedField = Prompt.Select("Which property would you like to edit?", fieldList);
+                if (selectedField == "NONE")
                 {
                     break;
                 }
-
-                var selectedProperty = properties.First(p => p.Name == selection);
-                PromptOptionalInstallerProperty(model, selection);
+                var selectedProperty = properties.First(p => p.Name == selectedField);
+                PromptOptionalInstallerProperty(model, selectedField);
             }
-            while (selection != "done");
         }
 
         private static void PromptOptionalInstallerProperty(object model, string memberName)
@@ -279,13 +325,15 @@ namespace Microsoft.WingetCreateCLI.Commands
             string message = $"[{memberName}] " + Resources.ResourceManager.GetString($"{memberName}_KeywordDescription") ?? memberName;
             Type elementType;
 
-            if (property.PropertyType == typeof(string))
+            if (property.PropertyType == typeof(string) || property.PropertyType.IsEnum)
             {
+                // Handles string type or enum type fields
                 var value = PromptProperty(model, model.GetType().GetProperty(memberName).GetValue(model), memberName);
                 property.SetValue(model, value);
             }
             else if (property.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
             {
+                // Handles fields that take in a list of values
                 elementType = property.PropertyType.GetGenericArguments()[0];
 
                 if (elementType == typeof(string))
@@ -297,31 +345,35 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 else if (elementType == typeof(int))
                 {
-                    var value = Prompt.List<int>(property.Name, minimum: 0);
+                    var value = Prompt.List<int>(message, minimum: 0);
                     property.SetValue(model, value);
                 }
                 else if (elementType.IsEnum)
                 {
-                    var value = Prompt.MultiSelect(property.Name, Enum.GetNames(elementType), minimum: 0);
+                    var value = Prompt.MultiSelect(message, Enum.GetNames(elementType), minimum: 0);
 
                     if (value.Any())
                     {
+                        Type genericListType = typeof(List<>).MakeGenericType(elementType);
+                        var enumList = (IList)Activator.CreateInstance(genericListType);
+
                         foreach (var item in value)
                         {
-                            // figure out how to parse and enum into a list;
+                            dynamic enumItem = Enum.Parse(elementType, item);
+                            enumList.Add(enumItem);
                         }
-                        var enumList = value.Select(item => Enum.Try).Parse(elementType, item)).ToList();
+
                         property.SetValue(model, enumList);
                     }
                 }
             }
             else if ((elementType = Nullable.GetUnderlyingType(property.PropertyType)) != null)
             {
+                // Handles nullable types (Enum?)
                 if (elementType.IsEnum)
                 {
-                    Console.WriteLine(property.Name + "enum");
-                    var value = Prompt.Select(property.Name, Enum.GetNames(elementType).Append("Exit"));
-                    if (value != "Exit")
+                    var value = Prompt.Select(message, Enum.GetNames(elementType).Append("NONE"));
+                    if (value != "NONE")
                     {
                         property.SetValue(model, Enum.Parse(elementType, value));
                     }
@@ -329,14 +381,23 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
             else if (property.PropertyType == typeof(InstallerSwitches))
             {
+                // Handles installer switches
                 InstallerSwitches installerSwitches = (InstallerSwitches)property.GetValue(model) ?? new InstallerSwitches();
                 DisplayOptionalPropertiesAsMenuSelection(installerSwitches);
             }
             else if (property.PropertyType == typeof(Dependencies))
             {
+                // Handles dependencies
                 Dependencies dependencies = (Dependencies)property.GetValue(model) ?? new Dependencies();
                 DisplayOptionalPropertiesAsMenuSelection(dependencies);
             }
+            else if (property.PropertyType == typeof(PackageDependencies))
+            {
+                PackageDependencies packageDependencies = (PackageDependencies)property.GetValue(model) ?? new PackageDependencies();
+                DisplayOptionalPropertiesAsMenuSelection(packageDependencies);
+            }
+
+            Console.WriteLine();
         }
 
         private static void PromptOptionalProperties<T>(T manifest)
@@ -439,7 +500,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             Type typeFromModel = model.GetType().GetProperty(memberName).PropertyType;
             if (typeFromModel.IsEnum)
             {
-                // For enums, we want to call Prompt.Select<T>, specifically the overload that takes 4 parameters
+                // For enums, we want to call Prompt.Select<T>, specifically the overload that takes 5 parameters
                 var generic = typeof(Prompt)
                     .GetMethods()
                     .Where(mi => mi.Name == nameof(Prompt.Select) && mi.GetParameters().Length == 5)
