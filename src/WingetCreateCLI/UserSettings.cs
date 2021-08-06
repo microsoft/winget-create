@@ -123,7 +123,7 @@ namespace Microsoft.WingetCreateCLI
                 Console.WriteLine(Resources.TelemetryAnonymous_Message);
                 Console.WriteLine(Resources.TelemetryEnabledByDefault_Message);
                 Console.WriteLine();
-                TelemetryDisabled = true;
+                TelemetryDisabled = false;
             }
         }
 
