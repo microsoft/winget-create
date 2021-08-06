@@ -253,21 +253,21 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         private static void DisplayInstallersAsMenuSelection(InstallerManifest installerManifest)
         {
-            // foreach installerManifest show the installerurl, architecture, and installertype, which will be used for matching
-            List<string> tupleList = new List<string>();
-
-            foreach (Installer installer in installerManifest.Installers)
-            {
-                var installerTuple = string.Join('|', installer.InstallerUrl, installer.InstallerType, installer.Architecture);
-                tupleList.Add(installerTuple);
-            }
-
-            tupleList.Add("ALL INSTALLERS");
-            tupleList.Add("NONE");
-
             while (true)
             {
-                var selectedItem = Prompt.Select("Which installer would you like to choose?", tupleList);
+                // Selection list needs to be generated every time in case the installertype and architecture are modified
+                List<string> selectionList = new List<string>();
+
+                foreach (Installer installer in installerManifest.Installers)
+                {
+                    var installerTuple = string.Join('|', installer.InstallerUrl, installer.InstallerType, installer.Architecture);
+                    selectionList.Add(installerTuple);
+                }
+
+                selectionList.Add("ALL INSTALLERS");
+                selectionList.Add("NONE");
+
+                var selectedItem = Prompt.Select("Which installer would you like to choose to edit?", selectionList);
 
                 if (selectedItem == "NONE")
                 {
@@ -292,6 +292,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Console.WriteLine(installerString);
                     DisplayOptionalPropertiesAsMenuSelection(selectedInstaller);
                 }
+
+                Console.Clear();
+                var serializer2 = Serialization.CreateSerializer();
+                string displayString = serializer2.Serialize(installerManifest);
+                Console.WriteLine(displayString);
             }
         }
 
@@ -313,6 +318,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     break;
                 }
+
                 var selectedProperty = properties.First(p => p.Name == selectedField);
                 PromptOptionalInstallerProperty(model, selectedField);
             }
@@ -366,6 +372,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                         property.SetValue(model, enumList);
                     }
                 }
+                else if (elementType == typeof(PackageDependencies))
+                {
+                    //// Unique case that needs to be handled as this needs to be appended to a list as the packageDependencies need to be added to a list.
+                    //PackageDependencies packageDependencies = (PackageDependencies)property.GetValue(model) ?? new PackageDependencies();
+                    //DisplayOptionalPropertiesAsMenuSelection(packageDependencies);
+                    //property.SetValue(model, packageDependencies);
+                }
             }
             else if ((elementType = Nullable.GetUnderlyingType(property.PropertyType)) != null)
             {
@@ -384,17 +397,15 @@ namespace Microsoft.WingetCreateCLI.Commands
                 // Handles installer switches
                 InstallerSwitches installerSwitches = (InstallerSwitches)property.GetValue(model) ?? new InstallerSwitches();
                 DisplayOptionalPropertiesAsMenuSelection(installerSwitches);
+                // only set value as long as the at least one of the values is not null.
+                property.SetValue(model, installerSwitches);
             }
             else if (property.PropertyType == typeof(Dependencies))
             {
                 // Handles dependencies
                 Dependencies dependencies = (Dependencies)property.GetValue(model) ?? new Dependencies();
                 DisplayOptionalPropertiesAsMenuSelection(dependencies);
-            }
-            else if (property.PropertyType == typeof(PackageDependencies))
-            {
-                PackageDependencies packageDependencies = (PackageDependencies)property.GetValue(model) ?? new PackageDependencies();
-                DisplayOptionalPropertiesAsMenuSelection(packageDependencies);
+                property.SetValue(model, dependencies);
             }
 
             Console.WriteLine();
