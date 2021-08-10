@@ -55,15 +55,15 @@ namespace Microsoft.WingetCreateCore.Common
             return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
         }
 
-        ///// <summary>
-        ///// Determines if an object is a List type.
-        ///// </summary>
-        ///// <param name="o">Object to be determined as a list type.</param>
-        ///// <returns>A boolean value indicating whether the object is a generic list type.</returns>
-        //public static bool IsGenericList(this object o)
-        //{
-        //    var oType = o.GetType();
-        //    return oType.IsGenericType && (oType.GetGenericTypeDefinition() == typeof(List<>));
-        //}
+        /// <summary>
+        /// Determines if the object is of dictionary type.
+        /// </summary>
+        /// <param name="o">Object to be checked.</param>
+        /// <returns>Boolean value indicating whether the object is a dictionary type.</returns>
+        public static bool IsDictionary(this object o)
+        {
+            Type t = o.GetType();
+            return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
+        }
     }
 }

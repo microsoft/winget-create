@@ -43,6 +43,21 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msix, InstallerType.Appx };
 
         /// <summary>
+        /// List of strings representing the optional fields that should not be editable.
+        /// </summary>
+        private static readonly string[] NonEditableOptionalFields = new[]
+        {
+            nameof(InstallerType),
+            nameof(InstallerManifest.Channel),
+            nameof(Installer.InstallerUrl),
+            nameof(Installer.InstallerSha256),
+            nameof(Installer.SignatureSha256),
+            nameof(Installer.ProductCode),
+            nameof(Installer.PackageFamilyName),
+            nameof(Installer.AdditionalProperties),
+        };
+
+        /// <summary>
         /// Gets the usage examples for the New command.
         /// </summary>
         [Usage(ApplicationAlias = ProgramApplicationAlias)]
@@ -126,20 +141,20 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 DisplayMismatchedArchitectures(detectedArchs);
 
-                Console.WriteLine(Resources.NewCommand_Header);
-                Console.WriteLine();
-                Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
-                Console.WriteLine();
-                Console.WriteLine(Resources.NewCommand_Description);
-                Console.WriteLine();
+                //Console.WriteLine(Resources.NewCommand_Header);
+                //Console.WriteLine();
+                //Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
+                //Console.WriteLine();
+                //Console.WriteLine(Resources.NewCommand_Description);
+                //Console.WriteLine();
 
-                Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
+                //Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
                 bool isManifestValid;
 
-                // test optional installer manifests here
+                //// test optional installer manifests here
                 DisplayInstallersAsMenuSelection(manifests.InstallerManifest);
-                // test optional installer manifests here end
+                //// test optional installer manifests here end
 
                 do
                 {
@@ -253,9 +268,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         private static void DisplayInstallersAsMenuSelection(InstallerManifest installerManifest)
         {
+            Console.Clear();
+
             while (true)
             {
-                // Selection list needs to be generated every time in case the installertype and architecture are modified
                 List<string> selectionList = new List<string>();
 
                 foreach (Installer installer in installerManifest.Installers)
@@ -265,6 +281,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 selectionList.Add("ALL INSTALLERS");
+                selectionList.Add("DISPLAY PREVIEW");
                 selectionList.Add("NONE");
 
                 var selectedItem = Prompt.Select("Which installer would you like to choose to edit?", selectionList);
@@ -277,6 +294,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     DisplayOptionalPropertiesAsMenuSelection(installerManifest);
                 }
+                else if (selectedItem == "DISPLAY PREVIEW")
+                {
+                    Console.Clear();
+                    Console.WriteLine();
+                    Console.WriteLine("Displaying a preview of the selected installer.");
+                    var serializer = Serialization.CreateSerializer();
+                    string installerString = serializer.Serialize(installerManifest);
+                    Console.WriteLine(installerString);
+                    Console.WriteLine();
+                }
                 else
                 {
                     string[] selection = selectedItem.Split('|');
@@ -285,35 +312,41 @@ namespace Microsoft.WingetCreateCLI.Commands
                         item.InstallerType == (InstallerType)Enum.Parse(typeof(InstallerType), selection[1]) &&
                         item.Architecture == (InstallerArchitecture)Enum.Parse(typeof(InstallerArchitecture), selection[2]));
 
-                    Console.WriteLine();
-                    Console.WriteLine("Displaying a preview of the selected installer.");
-                    var serializer = Serialization.CreateSerializer();
-                    string installerString = serializer.Serialize(selectedInstaller);
-                    Console.WriteLine(installerString);
                     DisplayOptionalPropertiesAsMenuSelection(selectedInstaller);
                 }
-
-                Console.Clear();
-                var serializer2 = Serialization.CreateSerializer();
-                string displayString = serializer2.Serialize(installerManifest);
-                Console.WriteLine(displayString);
             }
         }
 
         private static void DisplayOptionalPropertiesAsMenuSelection<T>(T model)
         {
+            Console.Clear();
+
             var properties = model.GetType().GetProperties().ToList();
             var optionalProperties = properties.Where(p =>
                 p.GetCustomAttribute<RequiredAttribute>() == null &&
                 p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
 
-            var fieldList = properties.Select(property => property.Name)
-                .Where(p => p != "AdditionalProperties").ToList()
-                .Append("NONE");
+            var fieldList = properties
+                .Select(property => property.Name)
+                .Where(pName => !NonEditableOptionalFields.Any(field => field == pName))
+                .ToList();
+
+            InstallerType installerType = (InstallerType)model.GetType().GetProperty(nameof(InstallerType)).GetValue(model);
+            if (installerType == InstallerType.Msi)
+            {
+                fieldList.Add(nameof(Installer.ProductCode));
+            }
+            else if (installerType == InstallerType.Msix)
+            {
+                fieldList.Add(nameof(Installer.PackageFamilyName));
+            }
 
             while (true)
             {
-                var selectedField = Prompt.Select("Which property would you like to edit?", fieldList);
+                Console.WriteLine("Which property would you like to edit?");
+                var selectedField = Prompt.Select("Type for search results", fieldList);
+                Console.Clear();
+
                 if (selectedField == "NONE")
                 {
                     break;
@@ -328,12 +361,14 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             // given the model and name, we should be able to obtain the property and its current value as well as the message string.
             var property = model.GetType().GetProperty(memberName);
-            string message = $"[{memberName}] " + Resources.ResourceManager.GetString($"{memberName}_KeywordDescription") ?? memberName;
+            //string message = $"[{memberName}] " + Resources.ResourceManager.GetString($"{memberName}_KeywordDescription") ?? memberName;
+
+            Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
+            string message = $"[{memberName}] value is";
             Type elementType;
 
             if (property.PropertyType == typeof(string) || property.PropertyType.IsEnum)
             {
-                // Handles string type or enum type fields
                 var value = PromptProperty(model, model.GetType().GetProperty(memberName).GetValue(model), memberName);
                 property.SetValue(model, value);
             }
@@ -344,9 +379,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (elementType == typeof(string))
                 {
-                    // the issue with the list is that you can't delete existing values or modify them
-                    ListOptions<string> listOptions = new ListOptions<string>() { Message = message, Minimum = 0 };
-                    var value = Prompt.List<string>(listOptions);
+                    var value = Prompt.List<string>(message, minimum: 0);
                     property.SetValue(model, value);
                 }
                 else if (elementType == typeof(int))
@@ -374,15 +407,19 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 else if (elementType == typeof(PackageDependencies))
                 {
+                    PackageDependencies packageDependencies = (PackageDependencies)property.GetValue(model) ?? new PackageDependencies();
+                    DisplayOptionalPropertiesAsMenuSelection(packageDependencies);
+                    property.SetValue(model, packageDependencies);
+
+                    // Handle this uniquely
+                    // Have a value for Add, Remove  and NONE
                     //// Unique case that needs to be handled as this needs to be appended to a list as the packageDependencies need to be added to a list.
-                    //PackageDependencies packageDependencies = (PackageDependencies)property.GetValue(model) ?? new PackageDependencies();
-                    //DisplayOptionalPropertiesAsMenuSelection(packageDependencies);
-                    //property.SetValue(model, packageDependencies);
+
                 }
             }
             else if ((elementType = Nullable.GetUnderlyingType(property.PropertyType)) != null)
             {
-                // Handles nullable types (Enum?)
+                // Handles nullable types (Enum?) // create a method that appends a NONE value to the results;
                 if (elementType.IsEnum)
                 {
                     var value = Prompt.Select(message, Enum.GetNames(elementType).Append("NONE"));
@@ -392,23 +429,33 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                 }
             }
-            else if (property.PropertyType == typeof(InstallerSwitches))
+            else
             {
-                // Handles installer switches
-                InstallerSwitches installerSwitches = (InstallerSwitches)property.GetValue(model) ?? new InstallerSwitches();
-                DisplayOptionalPropertiesAsMenuSelection(installerSwitches);
-                // only set value as long as the at least one of the values is not null.
-                property.SetValue(model, installerSwitches);
-            }
-            else if (property.PropertyType == typeof(Dependencies))
-            {
-                // Handles dependencies
-                Dependencies dependencies = (Dependencies)property.GetValue(model) ?? new Dependencies();
-                DisplayOptionalPropertiesAsMenuSelection(dependencies);
-                property.SetValue(model, dependencies);
+                if (property.PropertyType == typeof(InstallerSwitches))
+                {
+                    InstallerSwitches installerSwitches = (InstallerSwitches)property.GetValue(model) ?? new InstallerSwitches();
+                    PromptSubfieldProperties(installerSwitches, property, model);
+                }
+                else if (property.PropertyType == typeof(Dependencies))
+                {
+                    Dependencies dependencies = (Dependencies)property.GetValue(model) ?? new Dependencies();
+                    PromptSubfieldProperties(dependencies, property, model);
+                }
             }
 
             Console.WriteLine();
+        }
+
+        private static void PromptSubfieldProperties<T>(T field, PropertyInfo property, object model)
+        {
+            DisplayOptionalPropertiesAsMenuSelection(field);
+            if (field.GetType().GetProperties()
+                .Where(pi => !pi.PropertyType.IsDictionary())
+                .Select(pi => pi.GetValue(field))
+                .Any(value => value == null))
+            {
+                property.SetValue(model, field);
+            }
         }
 
         private static void PromptOptionalProperties<T>(T manifest)
@@ -503,8 +550,14 @@ namespace Microsoft.WingetCreateCLI.Commands
             // WARNING: this will throw a null exception if the property is not already instantiated.
             //var currentValue = model.GetType().GetProperty(memberName);
 
-            message ??= $"[{memberName}] " +
-            Resources.ResourceManager.GetString($"{memberName}_KeywordDescription") ?? memberName;
+            //message ??= $"[{memberName}] " +
+            //Resources.ResourceManager.GetString($"{memberName}_KeywordDescription") ?? memberName;
+
+            message = $"[{memberName}] value is";
+
+            // print out the description first and read it only once
+            // only use the member in the prompt so that it is less noisy.
+            Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
 
             // Because some properties don't have a current value, we can't rely on T or the property to obtain the type.
             // Use reflection to obtain the type by looking up the property type by membername based on the model.
