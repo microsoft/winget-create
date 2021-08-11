@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCore.Common
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
 
     /// <summary>
@@ -64,6 +65,16 @@ namespace Microsoft.WingetCreateCore.Common
         {
             Type t = o.GetType();
             return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
+        }
+
+        /// <summary>
+        /// Determines if the type is a List type.
+        /// </summary>
+        /// <param name="type">Type to be evaluated.</param>
+        /// <returns>Boolean value indicating whether the type is a List.</returns>
+        public static bool IsList(this Type type)
+        {
+            return type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type);
         }
     }
 }
