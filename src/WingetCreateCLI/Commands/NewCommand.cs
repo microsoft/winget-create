@@ -100,7 +100,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (!this.InstallerUrls.Any())
                 {
-                    PromptHelper.PromptAndSetPropertyValue(this, nameof(this.InstallerUrls), validationModel: new Installer(), validationName: nameof(Installer.InstallerUrl));
+                    PromptHelper.PromptAndSetPropertyValue(this, nameof(this.InstallerUrls), minimum: 1, validationModel: new Installer(), validationName: nameof(Installer.InstallerUrl));
                     Console.Clear();
                 }
 

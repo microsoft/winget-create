@@ -1,4 +1,7 @@
-﻿namespace Microsoft.WingetCreateCLI
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license.
+
+namespace Microsoft.WingetCreateCLI
 {
     using System;
     using System.Collections;
@@ -94,10 +97,10 @@
         /// </summary>
         /// <param name="model">Object model to be modified.</param>
         /// <param name="memberName">Name of the selected property field.</param>
+        /// <param name="minimum">Specifies the minimum number of entries if the property is a list.</param>
         /// <param name="validationModel">Object model to be validated against if the target field differs from what is specified in the model (i.e. NewCommand.InstallerUrls).</param>
         /// <param name="validationName">Name of the property field to be used for looking up validation constraints if the target field name differs from what specified in the model.</param>
-        /// <param name="message">Prompt message shown to the user.</param>
-        public static void PromptAndSetPropertyValue(object model, string memberName, object validationModel = null, string validationName = null, string message = null)
+        public static void PromptAndSetPropertyValue(object model, string memberName, int minimum = 0, object validationModel = null, string validationName = null)
         {
             if (string.IsNullOrEmpty(validationName))
             {
@@ -109,12 +112,12 @@
                 validationModel = model;
             }
 
+            string message = string.Format(Resources.FieldValueIs_Message, memberName);
+            Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
             var property = model.GetType().GetProperty(memberName);
             var defaultValue = property.GetValue(model);
             Type propertyType = property.PropertyType;
             Type elementType;
-            message = string.Format(Resources.FieldValueIs_Message, memberName);
-            Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
 
             if (propertyType == typeof(string))
             {
@@ -137,7 +140,7 @@
                 elementType = propertyType.GetGenericArguments().SingleOrDefault();
                 if (elementType == typeof(string) || typeof(IEnumerable<string>).IsAssignableFrom(propertyType))
                 {
-                    var value = Prompt.List<string>(message, minimum: 0, validators: new[] { FieldValidation.ValidateProperty(validationModel, validationName, defaultValue) });
+                    var value = Prompt.List<string>(message, minimum: minimum, validators: new[] { FieldValidation.ValidateProperty(validationModel, validationName, defaultValue) });
                     if (!value.Any())
                     {
                         value = null;
@@ -149,7 +152,7 @@
                 {
                     // The only field that takes in List<int> is InstallerSuccessCodes, which only has constraints on the number of entries.
                     // TODO: Add validation for checking the number of entries in the list.
-                    var value = Prompt.List<int>(message, minimum: 0);
+                    var value = Prompt.List<int>(message, minimum: minimum);
                     property.SetValue(model, value);
                 }
                 else if (elementType.IsEnum)
