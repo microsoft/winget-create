@@ -564,7 +564,7 @@
     <value>Loaded settings from default factory settings.</value>
   </data>
   <data name="TelemetryAnonymous_Message" xml:space="preserve">
-    <value>The data is collected by Microsoft and is anonymous.</value>
+    <value>The data is anonymous and collected only by Microsoft.</value>
   </data>
   <data name="TelemetryJustification_Message" xml:space="preserve">
     <value>The Windows Package Manager Manifest Creator collects usage data in order to improve your experience.</value>
@@ -672,12 +672,13 @@
     <value>This is an older version of Winget-Create and may be missing some critical features.</value>
   </data>
   <data name="UpgradeUsingWinget_Message" xml:space="preserve">
-    <value>If you have the winget client installed, you can update by running the command: 'winget upgrade Microsoft.WingetCreate'</value>
-    <comment>'winget upgrade Microsoft.WingetCreate' refers to a specific command to be executed in order to upgrade the tool to the latest version.
+    <value>If you have the winget client installed, you can update by running the command: `winget upgrade Microsoft.WingetCreate`</value>
+    <comment>`winget upgrade Microsoft.WingetCreate` refers to a specific command to be executed in order to upgrade the tool to the latest version.
 
 "winget" is the proper name of the tool</comment>
   </data>
   <data name="TelemetryEnabledByDefault_Message" xml:space="preserve">
-    <value>By default, telemetry is enabled but can be disabled by running 'wingetcreate settings' and editing your settings file.</value>
+    <value>By default, telemetry is enabled but can be disabled by running `wingetcreate settings` and editing your settings file.</value>
+    <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
   </data>
 </root>

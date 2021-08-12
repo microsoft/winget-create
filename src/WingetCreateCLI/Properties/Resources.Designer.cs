@@ -1447,7 +1447,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The data is collected by Microsoft and is anonymous..
+        ///   Looks up a localized string similar to The data is anonymous and collected only by Microsoft..
         /// </summary>
         public static string TelemetryAnonymous_Message {
             get {
@@ -1456,7 +1456,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to By default, telemetry is enabled but can be disabled by running &apos;wingetcreate settings&apos; and editing your settings file..
+        ///   Looks up a localized string similar to By default, telemetry is enabled but can be disabled by running `wingetcreate settings` and editing your settings file..
         /// </summary>
         public static string TelemetryEnabledByDefault_Message {
             get {
@@ -1564,7 +1564,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If you have the winget client installed, you can update by running the command: &apos;winget upgrade Microsoft.WingetCreate&apos;.
+        ///   Looks up a localized string similar to If you have the winget client installed, you can update by running the command: `winget upgrade Microsoft.WingetCreate`.
         /// </summary>
         public static string UpgradeUsingWinget_Message {
             get {
