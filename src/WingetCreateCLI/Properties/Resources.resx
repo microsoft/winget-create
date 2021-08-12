@@ -658,4 +658,52 @@
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>Installer cache cleaned.</value>
   </data>
+  <data name="AdditionalMetadataNeeded_Message" xml:space="preserve">
+    <value>Additional metadata needed for installer from {0}</value>
+    <comment>{0} - Installer URL of the installer</comment>
+  </data>
+  <data name="Add_MenuItem" xml:space="preserve">
+    <value>ADD</value>
+  </data>
+  <data name="AllInstallers_MenuItem" xml:space="preserve">
+    <value>ALL INSTALLERS</value>
+  </data>
+  <data name="Back_MenuItem" xml:space="preserve">
+    <value>BACK</value>
+  </data>
+  <data name="DisplayPreviewOfPackageDependencies_Message" xml:space="preserve">
+    <value>Displaying preview of [{0}]:</value>
+    <comment>{0} - Name of the PackageDependencies field</comment>
+  </data>
+  <data name="DisplayPreviewOfSelectedInstaller_Message" xml:space="preserve">
+    <value>Displaying a preview of the selected installer:</value>
+  </data>
+  <data name="DisplayPreview_MenuItem" xml:space="preserve">
+    <value>DISPLAY PREVIEW</value>
+  </data>
+  <data name="Done_MenuItem" xml:space="preserve">
+    <value>DONE</value>
+  </data>
+  <data name="FieldValueIs_Message" xml:space="preserve">
+    <value>[{0}] value is</value>
+    <comment>{0} - Name of the field</comment>
+  </data>
+  <data name="FilterMenuItems_Message" xml:space="preserve">
+    <value>Filter menu items by typing a search query below.</value>
+  </data>
+  <data name="None_MenuItem" xml:space="preserve">
+    <value>NONE</value>
+  </data>
+  <data name="RemoveLastEntry_MenuItem" xml:space="preserve">
+    <value>REMOVE LAST ENTRY</value>
+  </data>
+  <data name="SelectAction_Message" xml:space="preserve">
+    <value>What would you like to do?</value>
+  </data>
+  <data name="SelectInstallerToEdit_Message" xml:space="preserve">
+    <value>Which installer would you like to edit?</value>
+  </data>
+  <data name="SelectPropertyToEdit_Message" xml:space="preserve">
+    <value>Which property would you like to edit?</value>
+  </data>
 </root>

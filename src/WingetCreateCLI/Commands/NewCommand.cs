@@ -4,7 +4,6 @@
 namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.IO;
@@ -41,31 +40,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Installer types for which we can trust that the detected architecture is correct, so don't need to prompt the user to confirm.
         /// </summary>
         private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msix, InstallerType.Appx };
-
-        /// <summary>
-        /// List of strings representing the optional fields that should not be editable.
-        /// </summary>
-        private static readonly string[] NonEditableOptionalFields = new[]
-        {
-            nameof(InstallerType),
-            nameof(InstallerManifest.Channel),
-            nameof(Installer.InstallerUrl),
-            nameof(Installer.InstallerSha256),
-            nameof(Installer.SignatureSha256),
-            nameof(Installer.ProductCode),
-            nameof(Installer.PackageFamilyName),
-            nameof(Installer.AdditionalProperties),
-        };
-
-        /// <summary>
-        /// List of strings re
-        /// </summary>
-        private static readonly string[] InstallerMenuDefaultItems = new[]
-        {
-            "ALL INSTALLERS",
-            "DISPLAY PREVIEW",
-            "NONE",
-        };
 
         /// <summary>
         /// Gets the usage examples for the New command.
@@ -126,7 +100,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (!this.InstallerUrls.Any())
                 {
-                    PromptAndSetPropertyValue(this, nameof(this.InstallerUrls), validationModel: new Installer(), validationName: nameof(Installer.InstallerUrl));
+                    PromptHelper.PromptAndSetPropertyValue(this, nameof(this.InstallerUrls), validationModel: new Installer(), validationName: nameof(Installer.InstallerUrl));
                     Console.Clear();
                 }
 
@@ -159,6 +133,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 bool isManifestValid;
 
+                // move this to suitable location
                 DisplayInstallersAsMenuSelection(manifests.InstallerManifest);
 
                 do
@@ -260,8 +235,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                         continue;
                     }
 
-                    PromptAndSetPropertyValue(manifest, property.Name);
-                    //Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
+                    PromptHelper.PromptAndSetPropertyValue(manifest, property.Name);
+                    Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
                 }
             }
         }
@@ -275,32 +250,24 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             while (true)
             {
-                List<string> selectionList = new List<string>();
+                List<string> selectionList = GenerateInstallerSelectionList(installerManifest.Installers);
+                var selectedItem = Prompt.Select(Resources.SelectInstallerToEdit_Message, selectionList);
 
-                foreach (Installer installer in installerManifest.Installers)
-                {
-                    var installerTuple = string.Join('|', installer.InstallerUrl, installer.InstallerType, installer.Architecture);
-                    selectionList.Add(installerTuple);
-                }
-
-                selectionList.AddRange(InstallerMenuDefaultItems);
-                var selectedItem = Prompt.Select("Which installer would you like to choose to edit?", selectionList);
-
-                if (selectedItem == "NONE")
+                if (selectedItem == Resources.None_MenuItem)
                 {
                     break;
                 }
-                else if (selectedItem == "ALL INSTALLERS")
+                else if (selectedItem == Resources.AllInstallers_MenuItem)
                 {
                     Installer installerCopy = new Installer();
-                    DisplayOptionalPropertiesAsMenuSelection(installerCopy);
+                    PromptHelper.DisplayPropertiesAsMenuSelection(installerCopy, Resources.None_MenuItem);
                     ApplyChangesToIndividualInstallers(installerCopy, installerManifest.Installers);
                 }
-                else if (selectedItem == "DISPLAY PREVIEW")
+                else if (selectedItem == Resources.DisplayPreview_MenuItem)
                 {
                     Console.Clear();
                     Console.WriteLine();
-                    Console.WriteLine("Displaying a preview of the selected installer.");
+                    Logger.InfoLocalized(nameof(Resources.DisplayPreviewOfSelectedInstaller_Message));
                     var serializer = Serialization.CreateSerializer();
                     string installerString = serializer.Serialize(installerManifest);
                     Console.WriteLine(installerString);
@@ -308,20 +275,83 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 else
                 {
-                    string[] selection = selectedItem.Split('|');
-                    var selectedInstaller = installerManifest.Installers.Single(
-                        item => item.InstallerUrl == selection[0] &&
-                        item.InstallerType == (InstallerType)Enum.Parse(typeof(InstallerType), selection[1]) &&
-                        item.Architecture == (InstallerArchitecture)Enum.Parse(typeof(InstallerArchitecture), selection[2]));
-
-                    DisplayOptionalPropertiesAsMenuSelection(selectedInstaller);
+                    Installer selectedInstaller = MatchMenuSelectionToInstaller(selectedItem, installerManifest);
+                    PromptHelper.DisplayPropertiesAsMenuSelection(selectedInstaller, Resources.None_MenuItem);
                 }
             }
         }
 
+        private static Installer MatchMenuSelectionToInstaller(string selectedItem, InstallerManifest installerManifest)
+        {
+            string[] selection = selectedItem.Split('|');
+            var matchedInstallers = installerManifest.Installers.Where(
+                item => item.Architecture == (InstallerArchitecture)Enum.Parse(typeof(InstallerArchitecture), selection[0]) &&
+                item.InstallerType == (InstallerType)Enum.Parse(typeof(InstallerType), selection[1], true) &&
+                item.InstallerUrl == selection[2]);
+
+            Installer selectedInstaller;
+            if (matchedInstallers.Count() > 1)
+            {
+                Scope scope;
+                Scope? nullableScope = null;
+                string installerLocale = string.Empty;
+
+                for (int i = 3; i < selection.Length; i++)
+                {
+                    // if parsing for scope enum fails, value must be an installer locale
+                    if (Enum.TryParse(selection[i], true, out scope))
+                    {
+                        nullableScope = scope;
+                    }
+                    else
+                    {
+                        installerLocale = selection[i];
+                    }
+                }
+
+                selectedInstaller = matchedInstallers.Single(
+                    item => nullableScope != null && item.Scope == nullableScope &&
+                    !string.IsNullOrEmpty(installerLocale) && item.InstallerLocale == installerLocale);
+            }
+            else
+            {
+                selectedInstaller = matchedInstallers.Single();
+            }
+
+            return selectedInstaller;
+        }
+
+        private static List<string> GenerateInstallerSelectionList(List<Installer> installers)
+        {
+            List<string> selectionList = new List<string>();
+            selectionList.Add(Resources.AllInstallers_MenuItem);
+
+            foreach (Installer installer in installers)
+            {
+                var installerTuple = string.Join('|', installer.Architecture, installer.InstallerType.PrintEnumMember(), installer.InstallerUrl);
+                if (installer.Scope != null)
+                {
+                    installerTuple = string.Join('|', installerTuple, installer.Scope);
+                }
+
+                if (installer.InstallerLocale != null)
+                {
+                    installerTuple = string.Join('|', installerTuple, installer.InstallerLocale);
+                }
+
+                selectionList.Add(installerTuple);
+            }
+
+            selectionList.Add(Resources.DisplayPreview_MenuItem);
+            selectionList.Add(Resources.None_MenuItem);
+            return selectionList;
+        }
+
         private static void ApplyChangesToIndividualInstallers(Installer installerCopy, List<Installer> installers)
         {
-            var modifiedFields = installerCopy.GetType().GetProperties().Select(prop => prop).Where(pi => pi.GetValue(installerCopy) != null);
+            var modifiedFields = installerCopy.GetType().GetProperties()
+                .Select(prop => prop)
+                .Where(pi => pi.GetValue(installerCopy) != null && pi.Name != nameof(Installer.Architecture));
 
             foreach (var field in modifiedFields)
             {
@@ -330,67 +360,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                     var fieldValue = field.GetValue(installerCopy);
                     installer.GetType().GetProperty(field.Name).SetValue(installer, fieldValue);
                 }
-            }
-        }
-
-        private static void DisplayOptionalPropertiesAsMenuSelection<T>(T model)
-        {
-            Console.Clear();
-
-            var properties = model.GetType().GetProperties().ToList();
-            var optionalProperties = properties.Where(p =>
-                p.GetCustomAttribute<RequiredAttribute>() == null &&
-                p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
-
-            var fieldList = properties
-                .Select(property => property.Name)
-                .Where(pName => !NonEditableOptionalFields.Any(field => field == pName))
-                .Append("NONE")
-                .ToList();
-
-            var installerTypeProperty = model.GetType().GetProperty(nameof(InstallerType));
-            if (installerTypeProperty != null)
-            {
-                var installerType = installerTypeProperty.GetValue(model);
-                if (installerType != null)
-                {
-                    if ((InstallerType)installerType == InstallerType.Msi)
-                    {
-                        fieldList.Add(nameof(Installer.ProductCode));
-                    }
-                    else if ((InstallerType)installerType == InstallerType.Msix)
-                    {
-                        fieldList.Add(nameof(Installer.PackageFamilyName));
-                    }
-                }
-            }
-
-            while (true)
-            {
-                Console.WriteLine("Which property would you like to edit?");
-                var selectedField = Prompt.Select("Type for search results", fieldList);
-                Console.Clear();
-
-                if (selectedField == "NONE")
-                {
-                    break;
-                }
-
-                var selectedProperty = properties.First(p => p.Name == selectedField);
-
-                PromptAndSetPropertyValue(model, selectedField);
-            }
-        }
-
-        private static void PromptSubfieldProperties<T>(T field, PropertyInfo property, object model)
-        {
-            DisplayOptionalPropertiesAsMenuSelection(field);
-            if (field.GetType().GetProperties()
-                .Where(pi => !pi.PropertyType.IsDictionary())
-                .Select(pi => pi.GetValue(field))
-                .Any(value => value == null))
-            {
-                property.SetValue(model, field);
             }
         }
 
@@ -403,8 +372,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var property in optionalProperties)
             {
-                PromptAndSetPropertyValue(manifest, property.Name);
-                //Logger.Trace($"Property [{property.Name}] set to the value [{result}]");
+                PromptHelper.PromptAndSetPropertyValue(manifest, property.Name);
+                Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
             }
         }
 
@@ -424,9 +393,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (installer.InstallerType == InstallerType.Exe)
                 {
                     Console.WriteLine();
-                    Logger.Debug($"Additional metadata needed for installer from {installer.InstallerUrl}");
+                    Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
                     prompted = true;
-
                     PromptInstallerSwitchesForExe(manifest);
                 }
 
@@ -441,11 +409,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                         if (!prompted)
                         {
                             Console.WriteLine();
-                            Logger.Debug($"Additional metadata needed for installer from {installer.InstallerUrl}");
+                            Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
                             prompted = true;
                         }
 
-                        PromptAndSetPropertyValue(installer, requiredProperty.Name);
+                        PromptHelper.PromptAndSetPropertyValue(installer, requiredProperty.Name);
                     }
                 }
             }
@@ -455,164 +423,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             InstallerSwitches installerSwitches = new InstallerSwitches();
 
-            PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.Silent));
-            PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.SilentWithProgress));
+            PromptHelper.PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.Silent));
+            PromptHelper.PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.SilentWithProgress));
 
             if (!string.IsNullOrEmpty(installerSwitches.Silent) || !string.IsNullOrEmpty(installerSwitches.SilentWithProgress))
             {
                 manifest.GetType().GetProperty(nameof(InstallerSwitches)).SetValue(manifest, installerSwitches);
-            }
-        }
-
-        private static void PromptAndSetPropertyValue(object model, string memberName, object validationModel = null, string validationName = null, string message = null)
-        {
-            if (string.IsNullOrEmpty(validationName))
-            {
-                validationName = memberName;
-            }
-
-            if (validationModel == null)
-            {
-                validationModel = model;
-            }
-
-            var property = model.GetType().GetProperty(memberName);
-            var defaultValue = property.GetValue(model);
-            Type propertyType = property.PropertyType;
-            Type elementType;
-            message = $"[{memberName}] value is";
-            Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
-
-            if (propertyType == typeof(string))
-            {
-                var result = Prompt.Input<string>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(validationModel, validationName, defaultValue) });
-                property.SetValue(model, result);
-            }
-            else if (propertyType.IsEnum)
-            {
-                PromptEnum(model, property, defaultValue.GetType(), true, message, defaultValue.ToString());
-            }
-            else if ((elementType = Nullable.GetUnderlyingType(propertyType)) != null)
-            {
-                if (elementType.IsEnum)
-                {
-                    PromptEnum(model, property, elementType, false, message: message);
-                }
-            }
-            else if (propertyType.IsList())
-            {
-                elementType = propertyType.GetGenericArguments().SingleOrDefault();
-                if (elementType == typeof(string) || typeof(IEnumerable<string>).IsAssignableFrom(propertyType))
-                {
-                    var value = Prompt.List<string>(message, minimum: 0, validators: new[] { FieldValidation.ValidateProperty(validationModel, validationName, defaultValue) });
-                    property.SetValue(model, value);
-                }
-                else if (elementType == typeof(int))
-                {
-                    // The only field that takes in List<int> is InstallerSuccessCodes, which only has constraints on the number of entries.
-                    // TODO: Add validation for checking the number of entries in the list.
-                    var value = Prompt.List<int>(message, minimum: 0);
-                    property.SetValue(model, value);
-                }
-                else if (elementType.IsEnum)
-                {
-                    var value = Prompt.MultiSelect(message, Enum.GetNames(elementType), minimum: 0);
-
-                    if (value.Any())
-                    {
-                        Type genericListType = typeof(List<>).MakeGenericType(elementType);
-                        var enumList = (IList)Activator.CreateInstance(genericListType);
-
-                        foreach (var item in value)
-                        {
-                            var enumItem = Enum.Parse(elementType, item);
-                            enumList.Add(enumItem);
-                        }
-
-                        property.SetValue(model, enumList);
-                    }
-                }
-                else if (elementType == typeof(PackageDependencies))
-                {
-                    List<PackageDependencies> packageDependencies = (List<PackageDependencies>)property.GetValue(model) ?? new List<PackageDependencies>();
-
-                    PromptForPackageDependencies(packageDependencies);
-                    if (packageDependencies.Any())
-                    {
-                        property.SetValue(model, packageDependencies);
-                    }
-                    else
-                    {
-                        property.SetValue(model, null);
-                    }
-                }
-            }
-            else
-            {
-                if (property.PropertyType == typeof(InstallerSwitches))
-                {
-                    InstallerSwitches installerSwitches = (InstallerSwitches)property.GetValue(model) ?? new InstallerSwitches();
-                    PromptSubfieldProperties(installerSwitches, property, model);
-                }
-                else if (property.PropertyType == typeof(Dependencies))
-                {
-                    Dependencies dependencies = (Dependencies)property.GetValue(model) ?? new Dependencies();
-                    PromptSubfieldProperties(dependencies, property, model);
-                }
-            }
-        }
-
-        private static void PromptForPackageDependencies(List<PackageDependencies> packageDependencies)
-        {
-
-            var serializer = Serialization.CreateSerializer();
-
-
-            string selection = string.Empty;
-            while (selection != "NONE")
-            {
-                Console.Clear();
-                if (packageDependencies.Any())
-                {
-                    Logger.Info($"Showing preview of [{nameof(PackageDependencies)}]");
-                    string serializedString = serializer.Serialize(packageDependencies);
-                    Console.WriteLine(serializedString);
-                    Console.WriteLine();
-                }
-
-                selection = Prompt.Select("What would you like to do?", new[] { "ADD", "REMOVE LAST ENTRY", "NONE" });
-                if (selection == "ADD")
-                {
-                    PackageDependencies newDependency = new PackageDependencies();
-                    DisplayOptionalPropertiesAsMenuSelection(newDependency);
-                    if (!string.IsNullOrEmpty(newDependency.PackageIdentifier) && !string.IsNullOrEmpty(newDependency.MinimumVersion))
-                    {
-                        packageDependencies.Add(newDependency);
-                    }
-                }
-                else if (selection == "REMOVE LAST ENTRY")
-                {
-                    if (packageDependencies.Any())
-                    {
-                        packageDependencies.RemoveAt(packageDependencies.Count - 1);
-                    }
-                }
-            }
-        }
-
-        private static void PromptEnum(object model, PropertyInfo property, Type enumType, bool required, string message, string defaultValue = null)
-        {
-            var enumList = Enum.GetNames(enumType);
-
-            if (!required)
-            {
-                enumList.Append("NONE");
-            }
-
-            var value = Prompt.Select(message, enumList, defaultValue: defaultValue);
-            if (value != "NONE")
-            {
-                property.SetValue(model, Enum.Parse(enumType, value));
             }
         }
 
@@ -635,7 +451,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             VersionManifest versionManifest = manifests.VersionManifest;
-            PromptAndSetPropertyValue(versionManifest, nameof(versionManifest.PackageIdentifier));
+            PromptHelper.PromptAndSetPropertyValue(versionManifest, nameof(versionManifest.PackageIdentifier));
 
             string exactMatch = await client.FindPackageId(versionManifest.PackageIdentifier);
 
