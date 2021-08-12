@@ -133,9 +133,6 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 bool isManifestValid;
 
-                // move this to suitable location
-                DisplayInstallersAsMenuSelection(manifests.InstallerManifest);
-
                 do
                 {
                     if (this.WingetRepoOwner == DefaultWingetRepoOwner &&
@@ -188,9 +185,14 @@ namespace Microsoft.WingetCreateCLI.Commands
             PromptRequiredProperties(manifests.DefaultLocaleManifest, manifests.VersionManifest);
 
             Console.WriteLine();
-            if (Prompt.Confirm(Resources.ModifyOptionalFields_Message))
+            if (Prompt.Confirm(Resources.ModifyOptionalDefaultLocaleFields_Message))
             {
                 PromptOptionalProperties(manifests.DefaultLocaleManifest);
+            }
+
+            if (Prompt.Confirm(Resources.ModifyOptionalInstallerFields_Message))
+            {
+                DisplayInstallersAsMenuSelection(manifests.InstallerManifest);
             }
 
             Console.WriteLine();
@@ -328,7 +330,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (Installer installer in installers)
             {
-                var installerTuple = string.Join('|', installer.Architecture, installer.InstallerType.PrintEnumMember(), installer.InstallerUrl);
+                var installerTuple = string.Join('|', installer.Architecture, installer.InstallerType.ToEnumAttributeValue(), installer.InstallerUrl);
                 if (installer.Scope != null)
                 {
                     installerTuple = string.Join('|', installerTuple, installer.Scope);

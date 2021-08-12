@@ -196,10 +196,6 @@
                 {
                     Dependencies dependencies = (Dependencies)property.GetValue(model) ?? new Dependencies();
                     PromptSubfieldProperties(dependencies, property, model);
-                    if (dependencies.IsEmptyObject())
-                    {
-                        property.SetValue(model, null);
-                    }
                 }
             }
         }
@@ -258,7 +254,11 @@
         private static void PromptSubfieldProperties<T>(T field, PropertyInfo property, object model)
         {
             DisplayPropertiesAsMenuSelection(field, Resources.None_MenuItem);
-            if (!field.IsEmptyObject())
+            if (field.IsEmptyObject())
+            {
+                property.SetValue(model, null);
+            }
+            else
             {
                 property.SetValue(model, field);
             }

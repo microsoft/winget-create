@@ -65,9 +65,9 @@ namespace Microsoft.WingetCreateCore.Common
         /// <returns>Boolean value indicating whether the object is a dictionary type.</returns>
         public static bool IsDictionary(this object o)
         {
-            Type t = o.GetType();
-            Type genericType = t.GetGenericTypeDefinition();
-            return t.IsGenericType && (genericType == typeof(Dictionary<,>) || genericType == typeof(IDictionary<,>));
+            return o is IDictionary &&
+                       o.GetType().IsGenericType &&
+                       o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>));
         }
 
         /// <summary>
@@ -80,7 +80,12 @@ namespace Microsoft.WingetCreateCore.Common
             return type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type);
         }
 
-        public static string PrintEnumMember(this Enum enumVal)
+        /// <summary>
+        /// Returns the enum member attribute value if one exists.
+        /// </summary>
+        /// <param name="enumVal">Target enum value.</param>
+        /// <returns>Enum member attribute string value.</returns>
+        public static string ToEnumAttributeValue(this Enum enumVal)
         {
             var type = enumVal.GetType();
             var memInfo = type.GetMember(enumVal.ToString());
@@ -93,14 +98,10 @@ namespace Microsoft.WingetCreateCore.Common
         /// Determines if the properties of an object are all equal to null excluding properties with dictionary type if needed.
         /// </summary>
         /// <param name="o">Object to be evaluated.</param>
-        /// <param name="ignoreDictionaryType">Boolean value indicating whether to consider dictionary types.</param>
         /// <returns>Boolean value indicating whether the object is empty.</returns>
-        public static bool IsEmptyObject(this object o, bool ignoreDictionaryType = true)
+        public static bool IsEmptyObject(this object o)
         {
-            var nonNullValues = o.GetType().GetProperties().Select(pi => pi.GetValue(o)).Where(value => value != null);
-
-
-            return ignoreDictionaryType ? !nonNullValues.Any() : !nonNullValues.Select(p => p).Where(value => !value.IsDictionary()).Any();
+            return !o.GetType().GetProperties().Select(pi => pi.GetValue(o)).Where(value => !value.IsDictionary() && value != null).Any();
         }
     }
 }

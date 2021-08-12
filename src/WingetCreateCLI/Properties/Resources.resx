@@ -606,8 +606,8 @@
   <data name="VerifyCommandUsage_Message" xml:space="preserve">
     <value>Please check and verify the usage of this command by passing in the --help flag.</value>
   </data>
-  <data name="ModifyOptionalFields_Message" xml:space="preserve">
-    <value>Would you like to modify the optional fields?</value>
+  <data name="ModifyOptionalDefaultLocaleFields_Message" xml:space="preserve">
+    <value>Would you like to modify the optional default locale fields?</value>
   </data>
   <data name="InstallerDetectedFromUrl_Message" xml:space="preserve">
     <value>{0} {1} installer detected from the url: {2}</value>
@@ -690,6 +690,9 @@
   </data>
   <data name="FilterMenuItems_Message" xml:space="preserve">
     <value>Filter menu items by typing a search query below.</value>
+  </data>
+  <data name="ModifyOptionalInstallerFields_Message" xml:space="preserve">
+    <value>Would you like to modify the optional installer fields?</value>
   </data>
   <data name="None_MenuItem" xml:space="preserve">
     <value>NONE</value>

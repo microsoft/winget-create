@@ -988,11 +988,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to modify the optional fields?.
+        ///   Looks up a localized string similar to Would you like to modify the optional default locale fields?.
         /// </summary>
-        public static string ModifyOptionalFields_Message {
+        public static string ModifyOptionalDefaultLocaleFields_Message {
             get {
-                return ResourceManager.GetString("ModifyOptionalFields_Message", resourceCulture);
+                return ResourceManager.GetString("ModifyOptionalDefaultLocaleFields_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to modify the optional installer fields?.
+        /// </summary>
+        public static string ModifyOptionalInstallerFields_Message {
+            get {
+                return ResourceManager.GetString("ModifyOptionalInstallerFields_Message", resourceCulture);
             }
         }
         
