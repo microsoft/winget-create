@@ -16,7 +16,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
-    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -110,26 +109,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                GitHub client = new GitHub(this.GitHubToken, this.WingetRepoOwner, this.WingetRepo);
-
-                if (!string.IsNullOrEmpty(this.GitHubToken))
-                {
-                    if (!await this.SetAndCheckGitHubToken())
-                    {
-                        return false;
-                    }
-                }
-
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
                 string exactId;
                 try
                 {
-                    exactId = await client.FindPackageId(this.Id);
+                    exactId = await this.GitHubClient.FindPackageId(this.Id);
                 }
-                catch (Octokit.NotFoundException)
+                catch (Octokit.RateLimitExceededException)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
+                    Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
                     return false;
                 }
 
@@ -142,7 +131,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 try
                 {
-                    latestManifestContent = await client.GetLatestManifestContentAsync(this.Id);
+                    latestManifestContent = await this.GitHubClient.GetLatestManifestContentAsync(this.Id);
                 }
                 catch (Octokit.NotFoundException e)
                 {
@@ -291,8 +280,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return false;
                     }
 
-                    return await this.SetAndCheckGitHubToken()
-                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests, this.GitHubToken))
+                    return await this.LoadGitHubClient(true)
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests))
                         : false;
                 }
 
