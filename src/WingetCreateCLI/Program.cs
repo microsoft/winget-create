@@ -110,12 +110,16 @@ namespace Microsoft.WingetCreateCLI
 
         private static void DisplayParsingErrors<T>(ParserResult<T> result)
         {
-            var builder = SentenceBuilder.Create();
-            var errorMessages = HelpText.RenderParsingErrorsTextAsLines(result, builder.FormatError, builder.FormatMutuallyExclusiveSetErrors, 1);
-
-            foreach (var error in errorMessages)
+            NotParsed<object> notParsed = result as NotParsed<object>;
+            if (!notParsed.Errors.Any(e => e is NoVerbSelectedError))
             {
-                Logger.Warn(error);
+                var builder = SentenceBuilder.Create();
+                var errorMessages = HelpText.RenderParsingErrorsTextAsLines(result, builder.FormatError, builder.FormatMutuallyExclusiveSetErrors, 1);
+
+                foreach (var error in errorMessages)
+                {
+                    Logger.Warn(error);
+                }
             }
         }
     }
