@@ -55,6 +55,21 @@
     <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.0.0\manifest.version.1.0.0.json" ModelName="Version" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(SchemaFiles)" Outputs="@(SchemaFiles -> '$(ProjectDir)Models\%(ModelName)ManifestModels.cs')">
     <Message Importance="high" Text="Rebuilding: %(SchemaFiles.ModelName) because $(ProjectDir)Models\%(ModelName)ManifestModels.cs is older than %(FullPath)" />
 

@@ -592,15 +592,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {1} installer detected from the url: {2}.
-        /// </summary>
-        public static string InstallerDetectedFromUrl_Message {
-            get {
-                return ResourceManager.GetString("InstallerDetectedFromUrl_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The package installer locale.
         /// </summary>
         public static string InstallerLocale_KeywordDescription {
@@ -619,20 +610,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following installers failed to match an existing installer node:.
-        /// </summary>
-        public static string InstallerMatchFailedError_Message {
-            get {
-                return ResourceManager.GetString("InstallerMatchFailedError_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Collection of installers.
         /// </summary>
         public static string Installers_KeywordDescription {
             get {
                 return ResourceManager.GetString("Installers_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following installers failed to match an existing installer:.
+        /// </summary>
+        public static string InstallersFailedToMatch_Message {
+            get {
+                return ResourceManager.GetString("InstallersFailedToMatch_Message", resourceCulture);
             }
         }
         
@@ -939,15 +930,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string MultipleInstallerUpdateDiscrepancy_Error {
             get {
                 return ResourceManager.GetString("MultipleInstallerUpdateDiscrepancy_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Multiple existing installer nodes matched the following installer(s):.
-        /// </summary>
-        public static string MultipleMatchingInstallerNodes_Error {
-            get {
-                return ResourceManager.GetString("MultipleMatchingInstallerNodes_Error", resourceCulture);
             }
         }
         

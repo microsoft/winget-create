@@ -584,9 +584,6 @@
   <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
     <value>Submitting a manifest without any updated changes is not allowed. </value>
   </data>
-  <data name="InstallerMatchFailedError_Message" xml:space="preserve">
-    <value>The following installers failed to match an existing installer node:</value>
-  </data>
   <data name="UnboundArguments_Message" xml:space="preserve">
     <value>The following unbound argument(s) were detected: "{0}"</value>
     <comment>{0} - The additional unbound arguments present in the command line arguments.</comment>
@@ -596,15 +593,6 @@
   </data>
   <data name="ModifyOptionalFields_Message" xml:space="preserve">
     <value>Would you like to modify the optional fields?</value>
-  </data>
-  <data name="InstallerDetectedFromUrl_Message" xml:space="preserve">
-    <value>{0} {1} installer detected from the url: {2}</value>
-    <comment>{0} - will be replaced with installer architecture
-{1} - will be replaced with the installer type 
-{2} - will be replaced with the installer url</comment>
-  </data>
-  <data name="MultipleMatchingInstallerNodes_Error" xml:space="preserve">
-    <value>Multiple existing installer nodes matched the following installer(s):</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
     <value>Each new installer URL must have a match to an existing installer node based on installer type and architecture.</value>
@@ -680,5 +668,8 @@
   <data name="TelemetryEnabledByDefault_Message" xml:space="preserve">
     <value>By default, telemetry is enabled but can be disabled by running `wingetcreate settings` and editing your settings file.</value>
     <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
+  </data>
+  <data name="InstallersFailedToMatch_Message" xml:space="preserve">
+    <value>The following installers failed to match an existing installer:</value>
   </data>
 </root>

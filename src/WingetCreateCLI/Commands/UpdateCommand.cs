@@ -199,44 +199,26 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            if (!PackageParser.UpdateInstallerNodesAsync(
-                installerManifest,
-                this.InstallerUrls,
-                packageFiles,
-                out bool installerMismatch,
-                out List<WingetCreateCore.Models.Installer.Installer> unmatchedInstallers,
-                out List<WingetCreateCore.Models.Installer.Installer> multipleMatchedInstallers,
-                out List<PackageParser.DetectedArch> detectedArchOfInstallers))
+            List<PackageParser.DetectedArch> detectedArchOfInstallers;
+
+            try
             {
-                DisplayMismatchedArchitectures(detectedArchOfInstallers);
-
-                if (installerMismatch)
+                if (!PackageParser.UpdateInstallerNodesAsync(
+                    installerManifest,
+                    this.InstallerUrls,
+                    packageFiles,
+                    out detectedArchOfInstallers))
                 {
-                    Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
-
-                    if (unmatchedInstallers.Any())
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.InstallerMatchFailedError_Message));
-                        Console.WriteLine();
-                        unmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl));
-                    }
-
-                    if (multipleMatchedInstallers.Any())
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.MultipleMatchingInstallerNodes_Error));
-                        Console.WriteLine();
-                        multipleMatchedInstallers.ForEach(i =>
-                        {
-                            Logger.ErrorLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl);
-                            Console.WriteLine();
-                        });
-                    }
-                }
-                else
-                {
+                    DisplayMismatchedArchitectures(detectedArchOfInstallers);
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
+                    return null;
                 }
-
+            }
+            catch (InvalidOperationException e)
+            {
+                Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
+                Logger.ErrorLocalized(nameof(Resources.InstallersFailedToMatch_Message));
+                Logger.Error(e.Message);
                 return null;
             }
 
