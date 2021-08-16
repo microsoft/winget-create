@@ -108,10 +108,9 @@ namespace Microsoft.WingetCreateCLI
             Console.WriteLine();
         }
 
-        private static void DisplayParsingErrors<T>(ParserResult<T> result)
+        private static void DisplayParsingErrors<T>(NotParsed<T> result)
         {
-            NotParsed<object> notParsed = result as NotParsed<object>;
-            if (!notParsed.Errors.Any(e => e is NoVerbSelectedError))
+            if (!result.Errors.Any(e => e is NoVerbSelectedError))
             {
                 var builder = SentenceBuilder.Create();
                 var errorMessages = HelpText.RenderParsingErrorsTextAsLines(result, builder.FormatError, builder.FormatMutuallyExclusiveSetErrors, 1);
