@@ -288,6 +288,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return null;
                 }
 
+                if (e is InvalidDataException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadFileExceedsMaxSize_Error), e.Message);
+                    return null;
+                }
+
                 if (e is InvalidOperationException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.InvalidUrl_Error));

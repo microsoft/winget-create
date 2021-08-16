@@ -145,8 +145,7 @@ namespace Microsoft.WingetCreateCore
 
             if (downloadSize > maxDownloadSize)
             {
-                string invalidDataExceptionMessage = $"URL points to file larger than the maximum size of {maxDownloadSize / 1024 / 1024}MB";
-                throw new InvalidDataException(invalidDataExceptionMessage);
+                throw new InvalidDataException($"{maxDownloadSize / 1024 / 1024}");
             }
 
             if (!File.Exists(targetFile) || new FileInfo(targetFile).Length != downloadSize)
@@ -178,27 +177,21 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerManifest"><see cref="InstallerManifest"/> to update.</param>
         /// <param name="installerUrls">InstallerUrls where installers can be downloaded.</param>
         /// <param name="paths">Paths to packages to extract metadata from.</param>
-        /// <param name="installerMismatch">If set, the failure was due to an installer count or type mismatch.</param>
-        /// <param name="unmatchedInstallers">If populated, all packages were successfully parsed, but at least one without a match in the existing manifest.</param>
-        /// <param name="multipleMatchedInstallers">If populated, all packages were successfully parsed, but at least one with multiple matches in the existing manifest.</param>
         /// <param name="detectedArchOfInstallers">List of DetectedArch objects that represent each installers detected architectures.</param>
         /// <returns>True if update succeeded, false otherwise.</returns>
         public static bool UpdateInstallerNodesAsync(
             InstallerManifest installerManifest,
             IEnumerable<string> installerUrls,
             IEnumerable<string> paths,
-            out bool installerMismatch,
-            out List<Installer> unmatchedInstallers,
-            out List<Installer> multipleMatchedInstallers,
             out List<DetectedArch> detectedArchOfInstallers)
         {
             var newPackages = paths.Zip(installerUrls, (path, url) => (path, url)).ToList();
             var newInstallers = new List<Installer>();
             detectedArchOfInstallers = new List<DetectedArch>();
             var existingInstallers = new List<Installer>(installerManifest.Installers);
-            installerMismatch = false;
-            unmatchedInstallers = new List<Installer>();
-            multipleMatchedInstallers = new List<Installer>();
+            bool installerMismatch = false;
+            List<Installer> unmatchedInstallers = new List<Installer>();
+            List<Installer> multipleMatchedInstallers = new List<Installer>();
 
             foreach (var (path, url) in newPackages)
             {
@@ -211,8 +204,7 @@ namespace Microsoft.WingetCreateCore
             // We only allow updating manifests with the same package count
             if (newInstallers.Count != existingInstallers.Count)
             {
-                installerMismatch = true;
-                return false;
+                throw new InvalidOperationException();
             }
 
             // Update previous installers with parsed data from downloaded packages
@@ -275,7 +267,14 @@ namespace Microsoft.WingetCreateCore
                 matchingExistingInstaller.Platform = newInstaller.Platform;
             }
 
-            installerMismatch = unmatchedInstallers.Any() || multipleMatchedInstallers.Any();
+            if (installerMismatch = unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
+            {
+                List<Exception> exceptionList = new List<Exception>();
+                unmatchedInstallers.ForEach(i => exceptionList.Add(new InstallerExceptions.UnmatchedInstallerException(i)));
+                multipleMatchedInstallers.ForEach(i => exceptionList.Add(new InstallerExceptions.MultipleMatchedInstallerException(i)));
+                throw new AggregateException(exceptionList);
+            }
+
             return !installerMismatch;
         }
 
