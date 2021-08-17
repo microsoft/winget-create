@@ -15,7 +15,9 @@ For your convenience, **WingetCreate** can be acquired a number of ways.
 The **Windows Package Manager Manifest Creator** is available for download from the [winget-create](https://github.com/microsoft/winget-create/releases) repository.  To install the package, simply click the the MSIX file in your browser.  Once it has downloaded, click open.
 
 ### Install with Windows Package Manager ###
-`winget install wingetcreate`
+```powershell
+winget install wingetcreate
+```
 
 ## Using Windows Package Manager Manifest Creator
 
