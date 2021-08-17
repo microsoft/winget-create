@@ -43,7 +43,7 @@ namespace Microsoft.WingetCreateCLI
         /// <typeparam name="T">Model type.</typeparam>
         /// <param name="model">Instance of object model.</param>
         /// <param name="exitMenuWord">Exit keyword to be shown to the user to exit the navigational menu.</param>
-        public static void DisplayPropertiesAsMenuSelection<T>(T model, string exitMenuWord)
+        public static void PromptPropertiesWithMenu<T>(T model, string exitMenuWord)
         {
             Console.Clear();
 
@@ -238,7 +238,7 @@ namespace Microsoft.WingetCreateCLI
                 if (selection == Resources.Add_MenuItem)
                 {
                     PackageDependencies newDependency = new PackageDependencies();
-                    DisplayPropertiesAsMenuSelection(newDependency, Resources.Done_MenuItem);
+                    PromptPropertiesWithMenu(newDependency, Resources.Done_MenuItem);
                     if (!string.IsNullOrEmpty(newDependency.PackageIdentifier) && !string.IsNullOrEmpty(newDependency.MinimumVersion))
                     {
                         packageDependencies.Add(newDependency);
@@ -256,7 +256,7 @@ namespace Microsoft.WingetCreateCLI
 
         private static void PromptSubfieldProperties<T>(T field, PropertyInfo property, object model)
         {
-            DisplayPropertiesAsMenuSelection(field, Resources.None_MenuItem);
+            PromptPropertiesWithMenu(field, Resources.None_MenuItem);
             if (field.IsEmptyObject())
             {
                 property.SetValue(model, null);

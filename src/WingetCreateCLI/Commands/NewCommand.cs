@@ -264,7 +264,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 else if (selectedItem == Resources.AllInstallers_MenuItem)
                 {
                     Installer installerCopy = new Installer();
-                    PromptHelper.DisplayPropertiesAsMenuSelection(installerCopy, Resources.None_MenuItem);
+                    PromptHelper.PromptPropertiesWithMenu(installerCopy, Resources.None_MenuItem);
                     ApplyChangesToIndividualInstallers(installerCopy, installerManifest.Installers);
                 }
                 else if (selectedItem == Resources.DisplayPreview_MenuItem)
@@ -280,7 +280,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 else
                 {
                     Installer selectedInstaller = MatchMenuSelectionToInstaller(selectedItem, installerManifest);
-                    PromptHelper.DisplayPropertiesAsMenuSelection(selectedInstaller, Resources.None_MenuItem);
+                    PromptHelper.PromptPropertiesWithMenu(selectedInstaller, Resources.None_MenuItem);
                 }
             }
         }
@@ -289,21 +289,20 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             string[] selection = selectedItem.Split('|');
             var matchedInstallers = installerManifest.Installers.Where(
-                item => item.Architecture == (InstallerArchitecture)Enum.Parse(typeof(InstallerArchitecture), selection[0]) &&
+                item => item.Architecture == Enum.Parse<InstallerArchitecture>(selection[0]) &&
                 item.InstallerType == (InstallerType)Enum.Parse(typeof(InstallerType), selection[1], true) &&
                 item.InstallerUrl == selection[2]);
 
             Installer selectedInstaller;
             if (matchedInstallers.Count() > 1)
             {
-                Scope scope;
                 Scope? nullableScope = null;
                 string installerLocale = string.Empty;
 
                 for (int i = 3; i < selection.Length; i++)
                 {
                     // if parsing for scope enum fails, value must be an installer locale
-                    if (Enum.TryParse(selection[i], true, out scope))
+                    if (Enum.TryParse(selection[i], true, out Scope scope))
                     {
                         nullableScope = scope;
                     }
@@ -332,16 +331,14 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (Installer installer in installers)
             {
-                var installerTuple = string.Join('|', installer.Architecture, installer.InstallerType.ToEnumAttributeValue(), installer.InstallerUrl);
-                if (installer.Scope != null)
-                {
-                    installerTuple = string.Join('|', installerTuple, installer.Scope);
-                }
-
-                if (installer.InstallerLocale != null)
-                {
-                    installerTuple = string.Join('|', installerTuple, installer.InstallerLocale);
-                }
+                var installerTuple = string.Join(" | ", new[]
+                    {
+                        installer.Architecture.ToEnumAttributeValue(),
+                        installer.InstallerType.ToEnumAttributeValue(),
+                        installer.Scope.ToEnumAttributeValue(),
+                        installer.InstallerLocale,
+                        installer.InstallerUrl,
+                    });
 
                 selectionList.Add(installerTuple);
             }
@@ -353,6 +350,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         private static void ApplyChangesToIndividualInstallers(Installer installerCopy, List<Installer> installers)
         {
+            // Skip architecture as the default value when instantiated is x86, which we don't want to override other installer archs with.
             var modifiedFields = installerCopy.GetType().GetProperties()
                 .Select(prop => prop)
                 .Where(pi => pi.GetValue(installerCopy) != null && pi.Name != nameof(Installer.Architecture));
