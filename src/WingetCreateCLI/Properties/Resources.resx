@@ -694,9 +694,9 @@
   <data name="Back_MenuItem" xml:space="preserve">
     <value>BACK</value>
   </data>
-  <data name="DisplayPreviewOfPackageDependencies_Message" xml:space="preserve">
+  <data name="DisplayPreviewOfItems" xml:space="preserve">
     <value>Displaying preview of [{0}]:</value>
-    <comment>{0} - Name of the PackageDependencies field</comment>
+    <comment>{0} - Name of field with list of items</comment>
   </data>
   <data name="DisplayPreviewOfSelectedInstaller_Message" xml:space="preserve">
     <value>Displaying a preview of the selected installer:</value>

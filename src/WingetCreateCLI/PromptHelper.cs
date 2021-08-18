@@ -88,118 +88,137 @@ namespace Microsoft.WingetCreateCLI
 
                 var selectedProperty = properties.First(p => p.Name == selectedField);
 
-                PromptAndSetPropertyValue(model, selectedField);
+                PromptAndSetPropertyValue(model, selectedField, selectedProperty.GetValue(model));
             }
         }
 
+        //public static void PromptPropertyAndSetValue<T>(object model, string memberName, T instance, int minimum = 0, object validationModel = null, string validationName = null)
+        //{
+        //    string message = string.Format(Resources.FieldValueIs_Message, memberName);
+        //    Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
+        //    var property = model.GetType().GetProperty(memberName);
+        //    var test = property.GetValue(model);
+        //    if (typeof(T).IsList())
+        //    {
+        //        PromptAsList(model, memberName, message, instance: test, minimum, validationModel, validationName);
+        //    }
+        //}
+
         /// <summary>
-        /// Displays a prompt to the user to enter in a value for the selected field.
+        /// Displays a prompt to the user to enter in a value for the selected field (excludes List properties) and sets the value of the property.
         /// </summary>
+        /// <typeparam name="T">Type of the property instance.</typeparam>
         /// <param name="model">Object model to be modified.</param>
         /// <param name="memberName">Name of the selected property field.</param>
-        /// <param name="minimum">Specifies the minimum number of entries if the property is a list.</param>
-        /// <param name="validationModel">Object model to be validated against if the target field differs from what is specified in the model (i.e. NewCommand.InstallerUrls).</param>
-        /// <param name="validationName">Name of the property field to be used for looking up validation constraints if the target field name differs from what specified in the model.</param>
-        public static void PromptAndSetPropertyValue(object model, string memberName, int minimum = 0, object validationModel = null, string validationName = null)
+        /// <param name="instance">Instance value of the property.</param>
+        public static void PromptAndSetPropertyValue<T>(object model, string memberName, T instance)
         {
-            if (string.IsNullOrEmpty(validationName))
-            {
-                validationName = memberName;
-            }
-
-            if (validationModel == null)
-            {
-                validationModel = model;
-            }
-
             string message = string.Format(Resources.FieldValueIs_Message, memberName);
             Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
             var property = model.GetType().GetProperty(memberName);
-            var defaultValue = property.GetValue(model);
-            Type propertyType = property.PropertyType;
             Type elementType;
 
-            if (propertyType == typeof(string))
+            if (typeof(T) == typeof(string))
             {
-                var result = Prompt.Input<string>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(validationModel, validationName, defaultValue) });
+                var result = Prompt.Input<T>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
                 property.SetValue(model, result);
             }
-            else if (propertyType.IsEnum)
+            else if (typeof(T).IsEnum)
             {
-                PromptEnum(model, property, defaultValue.GetType(), true, message, defaultValue.ToString());
+                PromptEnum(model, property, typeof(T), true, message, instance.ToString());
             }
-            else if ((elementType = Nullable.GetUnderlyingType(propertyType)) != null)
+            else if ((elementType = Nullable.GetUnderlyingType(typeof(T))) != null)
             {
                 if (elementType.IsEnum)
                 {
                     PromptEnum(model, property, elementType, false, message: message);
                 }
             }
-            else if (propertyType.IsList())
+            else if (property.PropertyType.IsClass)
             {
-                elementType = propertyType.GetGenericArguments().SingleOrDefault();
-                if (elementType == typeof(string) || typeof(IEnumerable<string>).IsAssignableFrom(propertyType))
+                // Handles InstallerSwitches and Dependencies which both have their own unique class.
+                var newInstance = (T)Activator.CreateInstance(typeof(T));
+                var initialValue = (T)property.GetValue(model) ?? newInstance;
+                PromptSubfieldProperties(initialValue, property, model);
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user for input for a field that takes in a list a values and sets the value of the property.
+        /// </summary>
+        /// <typeparam name="T">Type of the property instance.</typeparam>
+        /// <param name="model">Object model to be modified.</param>
+        /// <param name="memberName">Name of the selected property field.</param>
+        /// <param name="instance">Instance value of the property.</param>
+        /// <param name="minimum">Minimum number of entries required for the list.</param>
+        /// <param name="validationModel">Object model to be validated against if the target field differs from what is specified in the model (i.e. NewCommand.InstallerUrls).</param>
+        /// <param name="validationName">Name of the property field to be used for looking up validation constraints if the target field name differs from what specified in the model.</param>
+        public static void PromptAsList<T>(object model, string memberName, string message, List<T> instance, int minimum = 0, object validationModel = null, string validationName = null)
+        {
+            var property = model.GetType().GetProperty(memberName);
+
+            if (typeof(T).IsEnum)
+            {
+                // Handles List<Enum> properties
+                var value = Prompt.MultiSelect(message, Enum.GetNames(typeof(T)), minimum: 0);
+
+                if (value.Any())
                 {
-                    var value = Prompt.List<string>(message, minimum: minimum, validators: new[] { FieldValidation.ValidateProperty(validationModel, validationName, defaultValue) });
-                    if (!value.Any())
+                    Type genericListType = typeof(List<>).MakeGenericType(typeof(T));
+                    var enumList = (IList)Activator.CreateInstance(genericListType);
+
+                    foreach (var item in value)
                     {
-                        value = null;
+                        var enumItem = Enum.Parse(typeof(T), item);
+                        enumList.Add(enumItem);
                     }
 
-                    property.SetValue(model, value);
+                    property.SetValue(model, enumList);
                 }
-                else if (elementType == typeof(int))
+            }
+            else if (typeof(T) == typeof(PackageDependencies))
+            {
+                // Handles List<PackageDependency>
+                List<PackageDependencies> packageDependencies = (List<PackageDependencies>)property.GetValue(model) ?? new List<PackageDependencies>();
+
+                PromptForItemList(packageDependencies);
+                if (packageDependencies.Any())
                 {
-                    // The only field that takes in List<int> is InstallerSuccessCodes, which only has constraints on the number of entries.
-                    // TODO: Add validation for checking the number of entries in the list.
-                    var value = Prompt.List<int>(message, minimum: minimum);
-                    property.SetValue(model, value);
+                    property.SetValue(model, packageDependencies);
                 }
-                else if (elementType.IsEnum)
+                else
                 {
-                    var value = Prompt.MultiSelect(message, Enum.GetNames(elementType), minimum: 0);
-
-                    if (value.Any())
-                    {
-                        Type genericListType = typeof(List<>).MakeGenericType(elementType);
-                        var enumList = (IList)Activator.CreateInstance(genericListType);
-
-                        foreach (var item in value)
-                        {
-                            var enumItem = Enum.Parse(elementType, item);
-                            enumList.Add(enumItem);
-                        }
-
-                        property.SetValue(model, enumList);
-                    }
-                }
-                else if (elementType == typeof(PackageDependencies))
-                {
-                    List<PackageDependencies> packageDependencies = (List<PackageDependencies>)property.GetValue(model) ?? new List<PackageDependencies>();
-
-                    PromptForPackageDependencies(packageDependencies);
-                    if (packageDependencies.Any())
-                    {
-                        property.SetValue(model, packageDependencies);
-                    }
-                    else
-                    {
-                        property.SetValue(model, null);
-                    }
+                    property.SetValue(model, null);
                 }
             }
             else
             {
-                if (property.PropertyType == typeof(InstallerSwitches))
+                // Handles all other cases such as List<string>, List<int>, etc.
+                var maxLengthAttribute = property.GetCustomAttribute<MaxLengthAttribute>();
+                int maxEntries = int.MaxValue;
+                if (maxLengthAttribute != null)
                 {
-                    InstallerSwitches installerSwitches = (InstallerSwitches)property.GetValue(model) ?? new InstallerSwitches();
-                    PromptSubfieldProperties(installerSwitches, property, model);
+                    maxEntries = maxLengthAttribute.Length;
                 }
-                else if (property.PropertyType == typeof(Dependencies))
+
+                IEnumerable<T> value;
+                if (validationModel == null && string.IsNullOrEmpty(validationName))
                 {
-                    Dependencies dependencies = (Dependencies)property.GetValue(model) ?? new Dependencies();
-                    PromptSubfieldProperties(dependencies, property, model);
+                    // Fields that take in a list don't have restrictions on values, only restrictions on the number of entries.
+                    value = Prompt.List<T>(message, minimum: minimum, maximum: maxEntries);
                 }
+                else
+                {
+                    // Special case when the validation name differs from what is specified in the model (i.e. NewCommand.InstallerUrls needs to use Installer.InstallerUrl for validation)
+                    value = Prompt.List<T>(message, minimum: minimum, maximum: maxEntries, validators: new[] { FieldValidation.ValidateProperty(validationModel, validationName, instance) });
+                }
+
+                if (!value.Any())
+                {
+                    value = null;
+                }
+
+                property.SetValue(model, value);
             }
         }
 
@@ -219,17 +238,18 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
-        private static void PromptForPackageDependencies(List<PackageDependencies> packageDependencies)
+        private static void PromptForItemList<T>(List<T> items)
+            where T : new()
         {
             var serializer = Serialization.CreateSerializer();
             string selection = string.Empty;
             while (selection != Resources.Back_MenuItem)
             {
                 Console.Clear();
-                if (packageDependencies.Any())
+                if (items.Any())
                 {
-                    Logger.InfoLocalized(nameof(Resources.DisplayPreviewOfPackageDependencies_Message), nameof(PackageDependencies));
-                    string serializedString = serializer.Serialize(packageDependencies);
+                    Logger.InfoLocalized(nameof(Resources.DisplayPreviewOfItems), typeof(T).Name);
+                    string serializedString = serializer.Serialize(items);
                     Console.WriteLine(serializedString);
                     Console.WriteLine();
                 }
@@ -237,18 +257,23 @@ namespace Microsoft.WingetCreateCLI
                 selection = Prompt.Select(Resources.SelectAction_Message, new[] { Resources.Add_MenuItem, Resources.RemoveLastEntry_MenuItem, Resources.Back_MenuItem });
                 if (selection == Resources.Add_MenuItem)
                 {
-                    PackageDependencies newDependency = new PackageDependencies();
-                    PromptPropertiesWithMenu(newDependency, Resources.Done_MenuItem);
-                    if (!string.IsNullOrEmpty(newDependency.PackageIdentifier) && !string.IsNullOrEmpty(newDependency.MinimumVersion))
+                    T newItem = new T();
+                    PromptPropertiesWithMenu(newItem, Resources.Done_MenuItem);
+
+                    // Ignore dictionary types as we don't want to take into account the AdditionalProperties field.
+                    var properties = newItem.GetType().GetProperties().Select(p => p).Where(p => !p.GetValue(newItem).IsDictionary());
+
+                    // Check that all values are present before appending to list.
+                    if (!properties.Any(p => p.GetValue(newItem) == null))
                     {
-                        packageDependencies.Add(newDependency);
+                        items.Add(newItem);
                     }
                 }
                 else if (selection == Resources.RemoveLastEntry_MenuItem)
                 {
-                    if (packageDependencies.Any())
+                    if (items.Any())
                     {
-                        packageDependencies.RemoveAt(packageDependencies.Count - 1);
+                        items.RemoveAt(items.Count - 1);
                     }
                 }
             }

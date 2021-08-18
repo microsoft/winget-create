@@ -360,9 +360,9 @@ namespace Microsoft.WingetCreateCLI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Displaying preview of [{0}]:.
         /// </summary>
-        public static string DisplayPreviewOfPackageDependencies_Message {
+        public static string DisplayPreviewOfItems {
             get {
-                return ResourceManager.GetString("DisplayPreviewOfPackageDependencies_Message", resourceCulture);
+                return ResourceManager.GetString("DisplayPreviewOfItems", resourceCulture);
             }
         }
         

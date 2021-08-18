@@ -100,7 +100,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (!this.InstallerUrls.Any())
                 {
-                    PromptHelper.PromptAndSetPropertyValue(this, nameof(this.InstallerUrls), minimum: 1, validationModel: new Installer(), validationName: nameof(Installer.InstallerUrl));
+                    PromptHelper.PromptAndSetPropertyValue(this, nameof(this.InstallerUrls), this.InstallerUrls, minimum: 1, validationModel: new Installer(), validationName: nameof(Installer.InstallerUrl));
                     Console.Clear();
                 }
 
@@ -128,6 +128,26 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Console.WriteLine();
                 Console.WriteLine(Resources.NewCommand_Description);
                 Console.WriteLine();
+
+                //Test code here
+                //PromptHelper.PromptAndSetPropertyValue(manifests.InstallerManifest, nameof(manifests.InstallerManifest.Dependencies), manifests.InstallerManifest.Dependencies);\
+                // test string
+                //PromptHelper.PromptAndSetPropertyValue(manifests.InstallerManifest, nameof(manifests.InstallerManifest.InstallerLocale), manifests.InstallerManifest.InstallerLocale);
+
+                //Installer installer = new Installer();
+                // test of enum
+                //PromptHelper.PromptAndSetPropertyValue(installer, nameof(installer.Architecture), installer.Architecture);
+
+                // test of nullable enum
+                //PromptHelper.PromptAndSetPropertyValue(installer, nameof(installer.Scope), installer.Scope);
+
+                // test list of enum
+                PromptHelper.PromptAsList(manifests.InstallerManifest, nameof(manifests.InstallerManifest.InstallModes), manifests.InstallerManifest.InstallModes, 0);
+
+                // test of list of int
+                PromptHelper.PromptAsList(manifests.InstallerManifest, nameof(manifests.InstallerManifest.InstallerSuccessCodes), manifests.InstallerManifest.InstallerSuccessCodes, 0);
+
+                //End of test need to delete
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
@@ -239,7 +259,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         continue;
                     }
 
-                    PromptHelper.PromptAndSetPropertyValue(manifest, property.Name);
+                    PromptHelper.PromptAndSetPropertyValue(manifest, property.Name, property.GetValue(manifest));
                     Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
                 }
             }
@@ -374,7 +394,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var property in optionalProperties)
             {
-                PromptHelper.PromptAndSetPropertyValue(manifest, property.Name);
+                PromptHelper.PromptAndSetPropertyValue(manifest, property.Name, property.GetValue(manifest));
                 Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
             }
         }
@@ -415,7 +435,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                             prompted = true;
                         }
 
-                        PromptHelper.PromptAndSetPropertyValue(installer, requiredProperty.Name);
+                        PromptHelper.PromptAndSetPropertyValue(installer, requiredProperty.Name, requiredProperty.GetValue(installer));
                     }
                 }
             }
@@ -425,8 +445,8 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             InstallerSwitches installerSwitches = new InstallerSwitches();
 
-            PromptHelper.PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.Silent));
-            PromptHelper.PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.SilentWithProgress));
+            PromptHelper.PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.Silent), installerSwitches.Silent);
+            PromptHelper.PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.SilentWithProgress), installerSwitches.SilentWithProgress);
 
             if (!string.IsNullOrEmpty(installerSwitches.Silent) || !string.IsNullOrEmpty(installerSwitches.SilentWithProgress))
             {
@@ -443,7 +463,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         private async Task<bool> PromptPackageIdentifierAndCheckDuplicates(Manifests manifests)
         {
             VersionManifest versionManifest = manifests.VersionManifest;
-            PromptHelper.PromptAndSetPropertyValue(versionManifest, nameof(versionManifest.PackageIdentifier));
+            PromptHelper.PromptAndSetPropertyValue(versionManifest, nameof(versionManifest.PackageIdentifier), versionManifest.PackageIdentifier);
 
             string exactMatch;
             try

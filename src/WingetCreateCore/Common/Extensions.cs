@@ -78,6 +78,7 @@ namespace Microsoft.WingetCreateCore.Common
         public static bool IsList(this Type type)
         {
             return type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type);
+            //return value is IList && value.GetType().IsGenericType;
         }
 
         /// <summary>
