@@ -108,14 +108,17 @@ namespace Microsoft.WingetCreateCLI
             Console.WriteLine();
         }
 
-        private static void DisplayParsingErrors<T>(ParserResult<T> result)
+        private static void DisplayParsingErrors<T>(NotParsed<T> result)
         {
-            var builder = SentenceBuilder.Create();
-            var errorMessages = HelpText.RenderParsingErrorsTextAsLines(result, builder.FormatError, builder.FormatMutuallyExclusiveSetErrors, 1);
-
-            foreach (var error in errorMessages)
+            if (!result.Errors.Any(e => e is NoVerbSelectedError))
             {
-                Logger.Warn(error);
+                var builder = SentenceBuilder.Create();
+                var errorMessages = HelpText.RenderParsingErrorsTextAsLines(result, builder.FormatError, builder.FormatMutuallyExclusiveSetErrors, 1);
+
+                foreach (var error in errorMessages)
+                {
+                    Logger.Warn(error);
+                }
             }
         }
     }
