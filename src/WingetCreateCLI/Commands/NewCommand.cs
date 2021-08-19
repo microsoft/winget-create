@@ -100,7 +100,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (!this.InstallerUrls.Any())
                 {
-                    PromptHelper.PromptAndSetPropertyValue(this, nameof(this.InstallerUrls), this.InstallerUrls, minimum: 1, validationModel: new Installer(), validationName: nameof(Installer.InstallerUrl));
+                    PromptHelper.PromptProperty(this, nameof(this.InstallerUrls), this.InstallerUrls, minimum: 1, validationModel: new Installer(), validationName: nameof(Installer.InstallerUrl));
                     Console.Clear();
                 }
 
@@ -128,26 +128,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Console.WriteLine();
                 Console.WriteLine(Resources.NewCommand_Description);
                 Console.WriteLine();
-
-                //Test code here
-                //PromptHelper.PromptAndSetPropertyValue(manifests.InstallerManifest, nameof(manifests.InstallerManifest.Dependencies), manifests.InstallerManifest.Dependencies);\
-                // test string
-                //PromptHelper.PromptAndSetPropertyValue(manifests.InstallerManifest, nameof(manifests.InstallerManifest.InstallerLocale), manifests.InstallerManifest.InstallerLocale);
-
-                //Installer installer = new Installer();
-                // test of enum
-                //PromptHelper.PromptAndSetPropertyValue(installer, nameof(installer.Architecture), installer.Architecture);
-
-                // test of nullable enum
-                //PromptHelper.PromptAndSetPropertyValue(installer, nameof(installer.Scope), installer.Scope);
-
-                // test list of enum
-                PromptHelper.PromptAsList(manifests.InstallerManifest, nameof(manifests.InstallerManifest.InstallModes), manifests.InstallerManifest.InstallModes, 0);
-
-                // test of list of int
-                PromptHelper.PromptAsList(manifests.InstallerManifest, nameof(manifests.InstallerManifest.InstallerSuccessCodes), manifests.InstallerManifest.InstallerSuccessCodes, 0);
-
-                //End of test need to delete
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
@@ -259,7 +239,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         continue;
                     }
 
-                    PromptHelper.PromptAndSetPropertyValue(manifest, property.Name, property.GetValue(manifest));
+                    PromptHelper.PromptProperty(manifest, property.Name, property.GetValue(manifest));
                     Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
                 }
             }
@@ -305,45 +285,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static Installer MatchMenuSelectionToInstaller(string selectedItem, InstallerManifest installerManifest)
-        {
-            string[] selection = selectedItem.Split('|');
-            var matchedInstallers = installerManifest.Installers.Where(
-                item => item.Architecture == Enum.Parse<InstallerArchitecture>(selection[0]) &&
-                item.InstallerType == (InstallerType)Enum.Parse(typeof(InstallerType), selection[1], true) &&
-                item.InstallerUrl == selection[2]);
-
-            Installer selectedInstaller;
-            if (matchedInstallers.Count() > 1)
-            {
-                Scope? nullableScope = null;
-                string installerLocale = string.Empty;
-
-                for (int i = 3; i < selection.Length; i++)
-                {
-                    // if parsing for scope enum fails, value must be an installer locale
-                    if (Enum.TryParse(selection[i], true, out Scope scope))
-                    {
-                        nullableScope = scope;
-                    }
-                    else
-                    {
-                        installerLocale = selection[i];
-                    }
-                }
-
-                selectedInstaller = matchedInstallers.Single(
-                    item => nullableScope != null && item.Scope == nullableScope &&
-                    !string.IsNullOrEmpty(installerLocale) && item.InstallerLocale == installerLocale);
-            }
-            else
-            {
-                selectedInstaller = matchedInstallers.Single();
-            }
-
-            return selectedInstaller;
-        }
-
         private static List<string> GenerateInstallerSelectionList(List<Installer> installers)
         {
             List<string> selectionList = new List<string>();
@@ -355,10 +296,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                     {
                         installer.Architecture.ToEnumAttributeValue(),
                         installer.InstallerType.ToEnumAttributeValue(),
-                        installer.Scope.ToEnumAttributeValue(),
+                        installer.Scope?.ToEnumAttributeValue(),
                         installer.InstallerLocale,
                         installer.InstallerUrl,
-                    });
+                    }.Where(s => !string.IsNullOrEmpty(s)));
 
                 selectionList.Add(installerTuple);
             }
@@ -366,6 +307,53 @@ namespace Microsoft.WingetCreateCLI.Commands
             selectionList.Add(Resources.DisplayPreview_MenuItem);
             selectionList.Add(Resources.None_MenuItem);
             return selectionList;
+        }
+
+        private static Installer MatchMenuSelectionToInstaller(string selectedItem, InstallerManifest installerManifest)
+        {
+            string[] selection = selectedItem.Split('|').Select(i => i.Trim()).ToArray();
+
+            // Each installer is displayed in the following order: [architecture, installerType, Scope?, InstallerLocale?, InstallerUrl]
+            // Architecture, installertype, and installerURL are always defined.
+            // Scope and locale may sometimes be defined [either index 2 or 3]
+            InstallerArchitecture arch = Enum.Parse<InstallerArchitecture>(selection[0], true);
+            InstallerType installerType = Enum.Parse<InstallerType>(selection[1], true);
+
+            int length = selection.Length;
+            string installerUrl = selection[length - 1];
+
+            Scope? nullableScope = null;
+            string installerLocale = string.Empty;
+
+            // starting at index 2, iterate until one before the last value since we know the last value must be the installerURL;
+            for (int i = 2; i < length - 1; i++)
+            {
+                if (Enum.TryParse(selection[i], true, out Scope scope))
+                {
+                    nullableScope = scope;
+                }
+                else
+                {
+                    installerLocale = selection[i];
+                }
+            }
+
+            var installerMatch = installerManifest.Installers.Where(
+                item => item.Architecture == arch &&
+                item.InstallerType == installerType &&
+                item.InstallerUrl == installerUrl);
+
+            if (nullableScope != null)
+            {
+                installerMatch = installerMatch.Where(item => item.Scope == nullableScope);
+            }
+
+            if (!string.IsNullOrEmpty(installerLocale))
+            {
+                installerMatch = installerMatch.Where(item => item.InstallerLocale == installerLocale);
+            }
+
+            return installerMatch.Single();
         }
 
         private static void ApplyChangesToIndividualInstallers(Installer installerCopy, List<Installer> installers)
@@ -394,7 +382,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var property in optionalProperties)
             {
-                PromptHelper.PromptAndSetPropertyValue(manifest, property.Name, property.GetValue(manifest));
+                PromptHelper.PromptProperty(manifest, property.Name, property.GetValue(manifest));
                 Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
             }
         }
@@ -435,7 +423,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                             prompted = true;
                         }
 
-                        PromptHelper.PromptAndSetPropertyValue(installer, requiredProperty.Name, requiredProperty.GetValue(installer));
+                        PromptHelper.PromptProperty(installer, requiredProperty.Name, requiredProperty.GetValue(installer));
                     }
                 }
             }
@@ -445,8 +433,8 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             InstallerSwitches installerSwitches = new InstallerSwitches();
 
-            PromptHelper.PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.Silent), installerSwitches.Silent);
-            PromptHelper.PromptAndSetPropertyValue(installerSwitches, nameof(InstallerSwitches.SilentWithProgress), installerSwitches.SilentWithProgress);
+            PromptHelper.PromptProperty(installerSwitches, nameof(InstallerSwitches.Silent), installerSwitches.Silent);
+            PromptHelper.PromptProperty(installerSwitches, nameof(InstallerSwitches.SilentWithProgress), installerSwitches.SilentWithProgress);
 
             if (!string.IsNullOrEmpty(installerSwitches.Silent) || !string.IsNullOrEmpty(installerSwitches.SilentWithProgress))
             {
@@ -463,7 +451,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         private async Task<bool> PromptPackageIdentifierAndCheckDuplicates(Manifests manifests)
         {
             VersionManifest versionManifest = manifests.VersionManifest;
-            PromptHelper.PromptAndSetPropertyValue(versionManifest, nameof(versionManifest.PackageIdentifier), versionManifest.PackageIdentifier);
+            PromptHelper.PromptProperty(versionManifest, nameof(versionManifest.PackageIdentifier), versionManifest.PackageIdentifier);
 
             string exactMatch;
             try

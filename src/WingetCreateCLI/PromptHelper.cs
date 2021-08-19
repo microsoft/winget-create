@@ -35,6 +35,24 @@ namespace Microsoft.WingetCreateCLI
             nameof(Installer.ProductCode),
             nameof(Installer.PackageFamilyName),
             nameof(Installer.AdditionalProperties),
+            nameof(Installer.Capabilities),
+            nameof(Installer.RestrictedCapabilities),
+        };
+
+        private static readonly string[] MsixExclusionList = new[]
+        {
+            nameof(Installer.Scope),
+            nameof(Installer.InstallerSwitches),
+            nameof(Installer.InstallerSuccessCodes),
+            nameof(Installer.UpgradeBehavior),
+            nameof(Installer.InstallModes),
+        };
+
+        private static readonly string[] MsixInclusionList = new[]
+        {
+            nameof(Installer.PackageFamilyName),
+            nameof(Installer.Capabilities),
+            nameof(Installer.RestrictedCapabilities),
         };
 
         /// <summary>
@@ -54,26 +72,29 @@ namespace Microsoft.WingetCreateCLI
 
             var fieldList = properties
                 .Select(property => property.Name)
-                .Where(pName => !NonEditableOptionalFields.Any(field => field == pName))
-                .Append(exitMenuWord)
-                .ToList();
+                .Where(pName => !NonEditableOptionalFields.Any(field => field == pName)).ToList();
+
 
             var installerTypeProperty = model.GetType().GetProperty(nameof(InstallerType));
             if (installerTypeProperty != null)
             {
-                var installerType = installerTypeProperty.GetValue(model);
-                if (installerType != null)
+                var installerTypeValue = installerTypeProperty.GetValue(model);
+                if (installerTypeValue != null)
                 {
-                    if ((InstallerType)installerType == InstallerType.Msi)
+                    var installerType = (InstallerType)installerTypeValue;
+                    if (installerType == InstallerType.Msi)
                     {
                         fieldList.Add(nameof(Installer.ProductCode));
                     }
-                    else if ((InstallerType)installerType == InstallerType.Msix)
+                    else if (installerType == InstallerType.Msix || installerType == InstallerType.Appx)
                     {
-                        fieldList.Add(nameof(Installer.PackageFamilyName));
+                        fieldList = fieldList.Where(pName => !MsixExclusionList.Any(field => field == pName)).ToList();
+                        fieldList.AddRange(MsixInclusionList);
                     }
                 }
             }
+
+            fieldList.Add(exitMenuWord);
 
             while (true)
             {
@@ -87,47 +108,72 @@ namespace Microsoft.WingetCreateCLI
                 }
 
                 var selectedProperty = properties.First(p => p.Name == selectedField);
-
-                PromptAndSetPropertyValue(model, selectedField, selectedProperty.GetValue(model));
+                PromptProperty(model, selectedField, selectedProperty.GetValue(model));
             }
         }
 
-        //public static void PromptPropertyAndSetValue<T>(object model, string memberName, T instance, int minimum = 0, object validationModel = null, string validationName = null)
-        //{
-        //    string message = string.Format(Resources.FieldValueIs_Message, memberName);
-        //    Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
-        //    var property = model.GetType().GetProperty(memberName);
-        //    var test = property.GetValue(model);
-        //    if (typeof(T).IsList())
-        //    {
-        //        PromptAsList(model, memberName, message, instance: test, minimum, validationModel, validationName);
-        //    }
-        //}
-
         /// <summary>
-        /// Displays a prompt to the user to enter in a value for the selected field (excludes List properties) and sets the value of the property.
+        /// Generic method for prompting for a property value of any type.
         /// </summary>
         /// <typeparam name="T">Type of the property instance.</typeparam>
         /// <param name="model">Object model to be modified.</param>
         /// <param name="memberName">Name of the selected property field.</param>
         /// <param name="instance">Instance value of the property.</param>
-        public static void PromptAndSetPropertyValue<T>(object model, string memberName, T instance)
+        /// <param name="minimum">Minimum number of entries required for the list.</param>
+        /// <param name="validationModel">Object model to be validated against if the target field differs from what is specified in the model (i.e. NewCommand.InstallerUrls).</param>
+        /// <param name="validationName">Name of the property field to be used for looking up validation constraints if the target field name differs from what specified in the model.</param>
+        public static void PromptProperty<T>(object model, string memberName, T instance, int minimum = 0, object validationModel = null, string validationName = null)
         {
+            Type instanceType = typeof(T);
             string message = string.Format(Resources.FieldValueIs_Message, memberName);
             Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
+
+            if (instanceType == typeof(object))
+            {
+                // if the instance type is an object, obtain the type from the property.
+                instanceType = model.GetType().GetProperty(memberName).PropertyType;
+            }
+
+            if (instanceType.IsEnumerable())
+            {
+                // elementType is needed so that Prompt.List prompts for type T and not type List<T>
+                Type elementType = instanceType.GetGenericArguments().SingleOrDefault();
+                var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptList));
+                var generic = mi.MakeGenericMethod(elementType);
+                generic.Invoke(instance, new[] { message, model, memberName, instance, minimum, validationModel, validationName });
+            }
+            else
+            {
+                var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptValue));
+                var generic = mi.MakeGenericMethod(instanceType);
+                generic.Invoke(instance, new[] { message, model, memberName, instance });
+            }
+        }
+
+        /// <summary>
+        /// Displays a prompt to the user to enter in a value for the selected field (excludes List properties) and sets the value of the property.
+        /// </summary>
+        /// <typeparam name="T">Type of the property instance.</typeparam>
+        /// <param name="message">Prompt message to be displayed to the user.</param>
+        /// <param name="model">Object model to be modified.</param>
+        /// <param name="memberName">Name of the selected property field.</param>
+        /// <param name="instance">Instance value of the property.</param>
+        public static void PromptValue<T>(string message, object model, string memberName, T instance)
+        {
             var property = model.GetType().GetProperty(memberName);
+            Type instanceType = typeof(T);
             Type elementType;
 
-            if (typeof(T) == typeof(string))
+            if (instanceType == typeof(string))
             {
                 var result = Prompt.Input<T>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
                 property.SetValue(model, result);
             }
-            else if (typeof(T).IsEnum)
+            else if (instanceType.IsEnum)
             {
-                PromptEnum(model, property, typeof(T), true, message, instance.ToString());
+                PromptEnum(model, property, instanceType, true, message, instance.ToString());
             }
-            else if ((elementType = Nullable.GetUnderlyingType(typeof(T))) != null)
+            else if ((elementType = Nullable.GetUnderlyingType(instanceType)) != null)
             {
                 if (elementType.IsEnum)
                 {
@@ -137,7 +183,7 @@ namespace Microsoft.WingetCreateCLI
             else if (property.PropertyType.IsClass)
             {
                 // Handles InstallerSwitches and Dependencies which both have their own unique class.
-                var newInstance = (T)Activator.CreateInstance(typeof(T));
+                var newInstance = (T)Activator.CreateInstance(instanceType);
                 var initialValue = (T)property.GetValue(model) ?? newInstance;
                 PromptSubfieldProperties(initialValue, property, model);
             }
@@ -147,36 +193,38 @@ namespace Microsoft.WingetCreateCLI
         /// Prompts the user for input for a field that takes in a list a values and sets the value of the property.
         /// </summary>
         /// <typeparam name="T">Type of the property instance.</typeparam>
+        /// <param name="message">Prompt message to be displayed to the user.</param>
         /// <param name="model">Object model to be modified.</param>
         /// <param name="memberName">Name of the selected property field.</param>
         /// <param name="instance">Instance value of the property.</param>
         /// <param name="minimum">Minimum number of entries required for the list.</param>
         /// <param name="validationModel">Object model to be validated against if the target field differs from what is specified in the model (i.e. NewCommand.InstallerUrls).</param>
         /// <param name="validationName">Name of the property field to be used for looking up validation constraints if the target field name differs from what specified in the model.</param>
-        public static void PromptAsList<T>(object model, string memberName, string message, List<T> instance, int minimum = 0, object validationModel = null, string validationName = null)
+        public static void PromptList<T>(string message, object model, string memberName, List<T> instance, int minimum = 0, object validationModel = null, string validationName = null)
         {
             var property = model.GetType().GetProperty(memberName);
+            Type instanceType = typeof(T);
 
-            if (typeof(T).IsEnum)
+            if (instanceType.IsEnum)
             {
                 // Handles List<Enum> properties
-                var value = Prompt.MultiSelect(message, Enum.GetNames(typeof(T)), minimum: 0);
+                var value = Prompt.MultiSelect(message, Enum.GetNames(instanceType), minimum: 0);
 
                 if (value.Any())
                 {
-                    Type genericListType = typeof(List<>).MakeGenericType(typeof(T));
+                    Type genericListType = typeof(List<>).MakeGenericType(instanceType);
                     var enumList = (IList)Activator.CreateInstance(genericListType);
 
                     foreach (var item in value)
                     {
-                        var enumItem = Enum.Parse(typeof(T), item);
+                        var enumItem = Enum.Parse(instanceType, item);
                         enumList.Add(enumItem);
                     }
 
                     property.SetValue(model, enumList);
                 }
             }
-            else if (typeof(T) == typeof(PackageDependencies))
+            else if (instanceType == typeof(PackageDependencies))
             {
                 // Handles List<PackageDependency>
                 List<PackageDependencies> packageDependencies = (List<PackageDependencies>)property.GetValue(model) ?? new List<PackageDependencies>();

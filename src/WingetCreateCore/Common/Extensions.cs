@@ -75,10 +75,9 @@ namespace Microsoft.WingetCreateCore.Common
         /// </summary>
         /// <param name="type">Type to be evaluated.</param>
         /// <returns>Boolean value indicating whether the type is a List.</returns>
-        public static bool IsList(this Type type)
+        public static bool IsEnumerable(this Type type)
         {
             return type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type);
-            //return value is IList && value.GetType().IsGenericType;
         }
 
         /// <summary>
