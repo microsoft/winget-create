@@ -200,15 +200,15 @@ namespace Microsoft.WingetCreateCore
                 }
             }
 
-            if (parseFailedInstallerUrls.Any())
-            {
-                throw new Exceptions.ParsePackageException(parseFailedInstallerUrls);
-            }
-
             // We only allow updating manifests with the same package count
             if (newInstallers.Count != existingInstallers.Count)
             {
                 throw new InvalidOperationException();
+            }
+
+            if (parseFailedInstallerUrls.Any())
+            {
+                throw new Exceptions.ParsePackageException(parseFailedInstallerUrls);
             }
 
             // Update previous installers with parsed data from downloaded packages
