@@ -282,15 +282,15 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.ErrorLocalized(nameof(Resources.DownloadFile_Error));
 
-                if (e is HttpRequestException exception)
+                if (e is HttpRequestException httpRequestException)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.HttpResponseUnsuccessful_Error), exception.StatusCode);
+                    Logger.ErrorLocalized(nameof(Resources.HttpResponseUnsuccessful_Error), httpRequestException.StatusCode);
                     return null;
                 }
 
-                if (e is InvalidDataException)
+                if (e is Exceptions.DownloadSizeExceededException downloadSizeExceededException)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.DownloadFileExceedsMaxSize_Error), e.Message);
+                    Logger.ErrorLocalized(nameof(Resources.DownloadFileExceedsMaxSize_Error), $"{downloadSizeExceededException.MaxDownloadSize / 1024 / 1024}");
                     return null;
                 }
 

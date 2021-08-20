@@ -220,23 +220,22 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
                 return null;
             }
-            catch (AggregateException ae)
+            catch (Exceptions.InstallerMatchException e)
             {
+                var multipleMatchedInstallers = e.MultipleMatchedInstallers;
+                var unmatchedInstallers = e.UnmatchedInstallers;
+
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
                 Logger.ErrorLocalized(nameof(Resources.InstallersFailedToMatch_Message));
 
-                foreach (var ex in ae.InnerExceptions)
+                if (multipleMatchedInstallers.Any())
                 {
-                    if (ex is InstallerExceptions.UnmatchedInstallerException unmatchedException)
-                    {
-                        var unmatchedInstaller = unmatchedException.UnmatchedInstaller;
-                        Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), unmatchedInstaller.Architecture, unmatchedInstaller.InstallerType, unmatchedInstaller.InstallerUrl);
-                    }
-                    else if (ex is InstallerExceptions.MultipleMatchedInstallerException multipleMatchedException)
-                    {
-                        var multipleMatchedInstaller = multipleMatchedException.MultipleMatchedInstaller;
-                        Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), multipleMatchedInstaller.Architecture, multipleMatchedInstaller.InstallerType, multipleMatchedInstaller.InstallerUrl);
-                    }
+                    multipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                }
+
+                if (unmatchedInstallers.Any())
+                {
+                    unmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 }
 
                 return null;

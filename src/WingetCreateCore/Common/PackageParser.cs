@@ -145,7 +145,7 @@ namespace Microsoft.WingetCreateCore
 
             if (downloadSize > maxDownloadSize)
             {
-                throw new InvalidDataException($"{maxDownloadSize / 1024 / 1024}");
+                throw new Exceptions.DownloadSizeExceededException(maxDownloadSize);
             }
 
             if (!File.Exists(targetFile) || new FileInfo(targetFile).Length != downloadSize)
@@ -197,6 +197,10 @@ namespace Microsoft.WingetCreateCore
             {
                 if (!ParsePackageAndGenerateInstallerNodes(path, url, newInstallers, null, ref detectedArchOfInstallers))
                 {
+                    // throw exception here ParsePackageException 
+                    // Reasons: would give us more information about the specific package that failed as well as specific error message.
+                    // would include the list of packages that failed to parse.
+
                     return false;
                 }
             }
@@ -269,10 +273,7 @@ namespace Microsoft.WingetCreateCore
 
             if (installerMismatch = unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
             {
-                List<Exception> exceptionList = new List<Exception>();
-                unmatchedInstallers.ForEach(i => exceptionList.Add(new InstallerExceptions.UnmatchedInstallerException(i)));
-                multipleMatchedInstallers.ForEach(i => exceptionList.Add(new InstallerExceptions.MultipleMatchedInstallerException(i)));
-                throw new AggregateException(exceptionList);
+                throw new Exceptions.InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers);
             }
 
             return !installerMismatch;
