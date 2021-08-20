@@ -542,7 +542,8 @@
     <value>Invalid URL provided. Please check the URL and try again.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>Unable to successfully parse the package and determine the installer type.</value>
+    <value>Failed to parse the package from [{0}]</value>
+    <comment>{0} - will be replaced with the failed installer url</comment>
   </data>
   <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
     <value>We have detected that this package identifier already exists. If you intend to update an existing package, please use the update command.</value>

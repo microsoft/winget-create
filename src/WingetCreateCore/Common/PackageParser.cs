@@ -178,8 +178,7 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerUrls">InstallerUrls where installers can be downloaded.</param>
         /// <param name="paths">Paths to packages to extract metadata from.</param>
         /// <param name="detectedArchOfInstallers">List of DetectedArch objects that represent each installers detected architectures.</param>
-        /// <returns>True if update succeeded, false otherwise.</returns>
-        public static bool UpdateInstallerNodesAsync(
+        public static void UpdateInstallerNodesAsync(
             InstallerManifest installerManifest,
             IEnumerable<string> installerUrls,
             IEnumerable<string> paths,
@@ -189,20 +188,21 @@ namespace Microsoft.WingetCreateCore
             var newInstallers = new List<Installer>();
             detectedArchOfInstallers = new List<DetectedArch>();
             var existingInstallers = new List<Installer>(installerManifest.Installers);
-            bool installerMismatch = false;
             List<Installer> unmatchedInstallers = new List<Installer>();
             List<Installer> multipleMatchedInstallers = new List<Installer>();
+            List<string> parseFailedInstallerUrls = new List<string>();
 
             foreach (var (path, url) in newPackages)
             {
                 if (!ParsePackageAndGenerateInstallerNodes(path, url, newInstallers, null, ref detectedArchOfInstallers))
                 {
-                    // throw exception here ParsePackageException 
-                    // Reasons: would give us more information about the specific package that failed as well as specific error message.
-                    // would include the list of packages that failed to parse.
-
-                    return false;
+                    parseFailedInstallerUrls.Add(url);
                 }
+            }
+
+            if (parseFailedInstallerUrls.Any())
+            {
+                throw new Exceptions.ParsePackageException(parseFailedInstallerUrls);
             }
 
             // We only allow updating manifests with the same package count
@@ -271,12 +271,10 @@ namespace Microsoft.WingetCreateCore
                 matchingExistingInstaller.Platform = newInstaller.Platform;
             }
 
-            if (installerMismatch = unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
+            if (unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
             {
                 throw new Exceptions.InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers);
             }
-
-            return !installerMismatch;
         }
 
         /// <summary>

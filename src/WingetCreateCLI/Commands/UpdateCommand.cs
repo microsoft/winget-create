@@ -204,26 +204,27 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                if (!PackageParser.UpdateInstallerNodesAsync(
+                PackageParser.UpdateInstallerNodesAsync(
                     installerManifest,
                     this.InstallerUrls,
                     packageFiles,
-                    out detectedArchOfInstallers))
-                {
-                    DisplayMismatchedArchitectures(detectedArchOfInstallers);
-                    Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
-                    return null;
-                }
+                    out detectedArchOfInstallers);
             }
             catch (InvalidOperationException)
             {
                 Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
                 return null;
             }
-            catch (Exceptions.InstallerMatchException e)
+            catch (Exceptions.ParsePackageException parsePackageException)
             {
-                var multipleMatchedInstallers = e.MultipleMatchedInstallers;
-                var unmatchedInstallers = e.UnmatchedInstallers;
+                var parseFailedInstallerUrls = parsePackageException.ParseFailedInstallerUrls;
+                parseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
+                return null;
+            }
+            catch (Exceptions.InstallerMatchException installerMatchException)
+            {
+                var multipleMatchedInstallers = installerMatchException.MultipleMatchedInstallers;
+                var unmatchedInstallers = installerMatchException.UnmatchedInstallers;
 
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
                 Logger.ErrorLocalized(nameof(Resources.InstallersFailedToMatch_Message));

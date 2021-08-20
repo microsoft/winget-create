@@ -1141,7 +1141,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to successfully parse the package and determine the installer type..
+        ///   Looks up a localized string similar to Failed to parse the package from [{0}].
         /// </summary>
         public static string PackageParsing_Error {
             get {

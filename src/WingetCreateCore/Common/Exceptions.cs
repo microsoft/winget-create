@@ -13,6 +13,26 @@ namespace Microsoft.WingetCreateCore.Common
     public class Exceptions
     {
         /// <summary>
+        /// The exception that is thrown when the download size of the installer exceeds the max download size.
+        /// </summary>
+        public class DownloadSizeExceededException : Exception
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DownloadSizeExceededException"/> class.
+            /// </summary>
+            /// <param name="maxDownloadSize">The maximum file size in bytes.</param>
+            public DownloadSizeExceededException(long? maxDownloadSize)
+            {
+                this.MaxDownloadSize = maxDownloadSize;
+            }
+
+            /// <summary>
+            /// Gets the maximum file size in bytes.
+            /// </summary>
+            public long? MaxDownloadSize { get; private set; }
+        }
+
+        /// <summary>
         /// The exception that is thrown when new installers fail to match existing installers.
         /// </summary>
         public class InstallerMatchException : Exception
@@ -40,23 +60,23 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
-        /// The exception that is thrown when the download size of the installer exceeds the max download size.
+        /// The exception that is thrown when installers fail to parse.
         /// </summary>
-        public class DownloadSizeExceededException : Exception
+        public class ParsePackageException : Exception
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="DownloadSizeExceededException"/> class.
+            /// Initializes a new instance of the <see cref="ParsePackageException"/> class.
             /// </summary>
-            /// <param name="maxDownloadSize">The maximum file size in bytes.</param>
-            public DownloadSizeExceededException(long? maxDownloadSize)
+            /// <param name="parseFailedInstallerUrls">List of installer urls that failed to parse.</param>
+            public ParsePackageException(List<string> parseFailedInstallerUrls)
             {
-                this.MaxDownloadSize = maxDownloadSize;
+                this.ParseFailedInstallerUrls = parseFailedInstallerUrls;
             }
 
             /// <summary>
-            /// Gets the maximum file size in bytes.
+            /// Gets a list of installer urls that failed to parse.
             /// </summary>
-            public long? MaxDownloadSize { get; private set; }
+            public List<string> ParseFailedInstallerUrls { get; private set; }
         }
     }
 }
