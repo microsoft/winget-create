@@ -59,7 +59,7 @@ When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.
 - [Authorizing your personal access token for use with SAML single sign-on](https://docs.github.com/en/github/authenticating-to-github/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on)
 - Selecting the **public_repo** scope to allow access to public repositories
 
-![public_repo scope](./images/tokenscope-publicrepo.png)
+![public_repo scope](./doc/images/tokenscope-publicrepo.png)
 
 - (Optional) Selecting the **delete_repo** scope permission if you want WingetCreate to automatically delete the forked repo that it created if the PR submission fails.
 
