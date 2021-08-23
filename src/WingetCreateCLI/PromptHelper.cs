@@ -32,6 +32,7 @@ namespace Microsoft.WingetCreateCLI
             nameof(Installer.InstallerUrl),
             nameof(Installer.InstallerSha256),
             nameof(Installer.SignatureSha256),
+            nameof(Installer.Platform),
             nameof(Installer.ProductCode),
             nameof(Installer.PackageFamilyName),
             nameof(Installer.AdditionalProperties),
@@ -50,7 +51,7 @@ namespace Microsoft.WingetCreateCLI
 
         private static readonly string[] MsixInclusionList = new[]
         {
-            nameof(Installer.PackageFamilyName),
+            nameof(Installer.Platform),
             nameof(Installer.Capabilities),
             nameof(Installer.RestrictedCapabilities),
         };
@@ -82,7 +83,7 @@ namespace Microsoft.WingetCreateCLI
                 if (installerTypeValue != null)
                 {
                     var installerType = (InstallerType)installerTypeValue;
-                    if (installerType == InstallerType.Msi)
+                    if (installerType == InstallerType.Msi || installerType == InstallerType.Exe)
                     {
                         fieldList.Add(nameof(Installer.ProductCode));
                     }
@@ -108,7 +109,7 @@ namespace Microsoft.WingetCreateCLI
                 }
 
                 var selectedProperty = properties.First(p => p.Name == selectedField);
-                PromptProperty(model, selectedField, selectedProperty.GetValue(model));
+                PromptPropertyAndSetValue(model, selectedField, selectedProperty.GetValue(model));
             }
         }
 
@@ -122,7 +123,7 @@ namespace Microsoft.WingetCreateCLI
         /// <param name="minimum">Minimum number of entries required for the list.</param>
         /// <param name="validationModel">Object model to be validated against if the target field differs from what is specified in the model (i.e. NewCommand.InstallerUrls).</param>
         /// <param name="validationName">Name of the property field to be used for looking up validation constraints if the target field name differs from what specified in the model.</param>
-        public static void PromptProperty<T>(object model, string memberName, T instance, int minimum = 0, object validationModel = null, string validationName = null)
+        public static void PromptPropertyAndSetValue<T>(object model, string memberName, T instance, int minimum = 0, object validationModel = null, string validationName = null)
         {
             Type instanceType = typeof(T);
             string message = string.Format(Resources.FieldValueIs_Message, memberName);
