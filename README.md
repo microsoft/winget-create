@@ -39,7 +39,7 @@ Click on the individual commands to learn more.
 
 You can use WingetCreate to update your existing app manifest as part of your CI/CD pipeline. For reference, see the final task in this repo's [release Azure pipeline](https://github.com/microsoft/winget-create/blob/main/pipelines/azure-pipelines.release.yml).
 
-Unfortunately we can't use the msixbundle in a standard Azure Pipeline pool. Instead, use the standalone exe, the latest version of which can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview, both of these require .NET to be installed on the build machine.
+Unfortunately, we can't use the msixbundle in a standard Azure Pipeline pool. Instead, use the standalone exe, the latest version of which can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview, both of these require .NET to be installed on the build machine.
 
 If .NET isn't already installed, you can use https://aka.ms/wingetcreate/latest/self-contained or https://aka.ms/wingetcreate/preview/self-contained, which has .NET built-in, but is a larger download.
 
@@ -51,6 +51,17 @@ Then simply add a new powershell task to download the exe, and run it to update 
       displayName: Update package manifest in the OWC
 
 The CLI also supports creating or updating manifests with multiple installer URLs. You can either create new manifests with multiple installer nodes using the [New Command](doc/new.md) or update existing manifests with multiple installer URLs using the [Update Command](doc/update.md). 
+
+## Using your GitHub Personal Access Token
+
+When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) to be used with WingetCreate, make sure you verify the following steps are completed:
+
+- [Authorizing your personal access token for use with SAML single sign-on](https://docs.github.com/en/github/authenticating-to-github/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on)
+- Selecting the **public_repo** scope to allow access to public repositories
+
+![public_repo scope](./images/tokenscope-publicrepo.png)
+
+- (Optional) Selecting the **delete_repo** scope permission if you want WingetCreate to automatically delete the forked repo that it created if the PR submission fails.
 
 ## Building the client
 
