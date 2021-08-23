@@ -16,6 +16,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -199,44 +200,31 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            if (!PackageParser.UpdateInstallerNodesAsync(
-                installerManifest,
-                this.InstallerUrls,
-                packageFiles,
-                out bool installerMismatch,
-                out List<WingetCreateCore.Models.Installer.Installer> unmatchedInstallers,
-                out List<WingetCreateCore.Models.Installer.Installer> multipleMatchedInstallers,
-                out List<PackageParser.DetectedArch> detectedArchOfInstallers))
+            List<PackageParser.DetectedArch> detectedArchOfInstallers;
+
+            try
             {
-                DisplayMismatchedArchitectures(detectedArchOfInstallers);
-
-                if (installerMismatch)
-                {
-                    Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
-
-                    if (unmatchedInstallers.Any())
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.InstallerMatchFailedError_Message));
-                        Console.WriteLine();
-                        unmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl));
-                    }
-
-                    if (multipleMatchedInstallers.Any())
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.MultipleMatchingInstallerNodes_Error));
-                        Console.WriteLine();
-                        multipleMatchedInstallers.ForEach(i =>
-                        {
-                            Logger.ErrorLocalized(nameof(Resources.InstallerDetectedFromUrl_Message), i.Architecture, i.InstallerType, i.InstallerUrl);
-                            Console.WriteLine();
-                        });
-                    }
-                }
-                else
-                {
-                    Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
-                }
-
+                PackageParser.UpdateInstallerNodesAsync(
+                    installerManifest,
+                    this.InstallerUrls,
+                    packageFiles,
+                    out detectedArchOfInstallers);
+            }
+            catch (InvalidOperationException)
+            {
+                Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
+                return null;
+            }
+            catch (ParsePackageException parsePackageException)
+            {
+                parsePackageException.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
+                return null;
+            }
+            catch (InstallerMatchException installerMatchException)
+            {
+                Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
+                installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 return null;
             }
 

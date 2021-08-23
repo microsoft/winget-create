@@ -21,6 +21,7 @@ namespace Microsoft.WingetCreateCore
     using Microsoft.Msix.Utils.AppxPackaging;
     using Microsoft.Msix.Utils.AppxPackagingInterop;
     using Microsoft.WingetCreateCore.Common;
+    using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -145,8 +146,7 @@ namespace Microsoft.WingetCreateCore
 
             if (downloadSize > maxDownloadSize)
             {
-                string invalidDataExceptionMessage = $"URL points to file larger than the maximum size of {maxDownloadSize / 1024 / 1024}MB";
-                throw new InvalidDataException(invalidDataExceptionMessage);
+                throw new DownloadSizeExceededException(maxDownloadSize.Value);
             }
 
             if (!File.Exists(targetFile) || new FileInfo(targetFile).Length != downloadSize)
@@ -178,41 +178,38 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerManifest"><see cref="InstallerManifest"/> to update.</param>
         /// <param name="installerUrls">InstallerUrls where installers can be downloaded.</param>
         /// <param name="paths">Paths to packages to extract metadata from.</param>
-        /// <param name="installerMismatch">If set, the failure was due to an installer count or type mismatch.</param>
-        /// <param name="unmatchedInstallers">If populated, all packages were successfully parsed, but at least one without a match in the existing manifest.</param>
-        /// <param name="multipleMatchedInstallers">If populated, all packages were successfully parsed, but at least one with multiple matches in the existing manifest.</param>
         /// <param name="detectedArchOfInstallers">List of DetectedArch objects that represent each installers detected architectures.</param>
-        /// <returns>True if update succeeded, false otherwise.</returns>
-        public static bool UpdateInstallerNodesAsync(
+        public static void UpdateInstallerNodesAsync(
             InstallerManifest installerManifest,
             IEnumerable<string> installerUrls,
             IEnumerable<string> paths,
-            out bool installerMismatch,
-            out List<Installer> unmatchedInstallers,
-            out List<Installer> multipleMatchedInstallers,
             out List<DetectedArch> detectedArchOfInstallers)
         {
             var newPackages = paths.Zip(installerUrls, (path, url) => (path, url)).ToList();
             var newInstallers = new List<Installer>();
             detectedArchOfInstallers = new List<DetectedArch>();
             var existingInstallers = new List<Installer>(installerManifest.Installers);
-            installerMismatch = false;
-            unmatchedInstallers = new List<Installer>();
-            multipleMatchedInstallers = new List<Installer>();
+            List<Installer> unmatchedInstallers = new List<Installer>();
+            List<Installer> multipleMatchedInstallers = new List<Installer>();
+            List<string> parseFailedInstallerUrls = new List<string>();
 
             foreach (var (path, url) in newPackages)
             {
                 if (!ParsePackageAndGenerateInstallerNodes(path, url, newInstallers, null, ref detectedArchOfInstallers))
                 {
-                    return false;
+                    parseFailedInstallerUrls.Add(url);
                 }
             }
 
             // We only allow updating manifests with the same package count
             if (newInstallers.Count != existingInstallers.Count)
             {
-                installerMismatch = true;
-                return false;
+                throw new InvalidOperationException();
+            }
+
+            if (parseFailedInstallerUrls.Any())
+            {
+                throw new ParsePackageException(parseFailedInstallerUrls);
             }
 
             // Update previous installers with parsed data from downloaded packages
@@ -275,8 +272,10 @@ namespace Microsoft.WingetCreateCore
                 matchingExistingInstaller.Platform = newInstaller.Platform;
             }
 
-            installerMismatch = unmatchedInstallers.Any() || multipleMatchedInstallers.Any();
-            return !installerMismatch;
+            if (unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
+            {
+                throw new InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers);
+            }
         }
 
         /// <summary>
