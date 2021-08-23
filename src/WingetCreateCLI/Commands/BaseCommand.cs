@@ -15,6 +15,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
+    using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -288,7 +289,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return null;
                 }
 
-                if (e is Exceptions.DownloadSizeExceededException downloadSizeExceededException)
+                if (e is DownloadSizeExceededException downloadSizeExceededException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.DownloadFileExceedsMaxSize_Error), $"{downloadSizeExceededException.MaxDownloadSize / 1024 / 1024}");
                     return null;

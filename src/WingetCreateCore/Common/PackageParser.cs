@@ -21,6 +21,7 @@ namespace Microsoft.WingetCreateCore
     using Microsoft.Msix.Utils.AppxPackaging;
     using Microsoft.Msix.Utils.AppxPackagingInterop;
     using Microsoft.WingetCreateCore.Common;
+    using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -145,7 +146,7 @@ namespace Microsoft.WingetCreateCore
 
             if (downloadSize > maxDownloadSize)
             {
-                throw new Exceptions.DownloadSizeExceededException(maxDownloadSize);
+                throw new DownloadSizeExceededException(maxDownloadSize);
             }
 
             if (!File.Exists(targetFile) || new FileInfo(targetFile).Length != downloadSize)
@@ -208,7 +209,7 @@ namespace Microsoft.WingetCreateCore
 
             if (parseFailedInstallerUrls.Any())
             {
-                throw new Exceptions.ParsePackageException(parseFailedInstallerUrls);
+                throw new ParsePackageException(parseFailedInstallerUrls);
             }
 
             // Update previous installers with parsed data from downloaded packages
@@ -273,7 +274,7 @@ namespace Microsoft.WingetCreateCore
 
             if (unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
             {
-                throw new Exceptions.InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers);
+                throw new InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers);
             }
         }
 

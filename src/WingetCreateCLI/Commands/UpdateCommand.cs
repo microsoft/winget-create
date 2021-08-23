@@ -16,7 +16,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
-    using Microsoft.WingetCreateCore.Common;
+    using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -215,30 +215,18 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
                 return null;
             }
-            catch (Exceptions.ParsePackageException parsePackageException)
+            catch (ParsePackageException parsePackageException)
             {
-                var parseFailedInstallerUrls = parsePackageException.ParseFailedInstallerUrls;
-                parseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
+                parsePackageException.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
                 return null;
             }
-            catch (Exceptions.InstallerMatchException installerMatchException)
+            catch (InstallerMatchException installerMatchException)
             {
-                var multipleMatchedInstallers = installerMatchException.MultipleMatchedInstallers;
-                var unmatchedInstallers = installerMatchException.UnmatchedInstallers;
-
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
                 Logger.ErrorLocalized(nameof(Resources.InstallersFailedToMatch_Message));
 
-                if (multipleMatchedInstallers.Any())
-                {
-                    multipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
-                }
-
-                if (unmatchedInstallers.Any())
-                {
-                    unmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
-                }
-
+                installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 return null;
             }
 
