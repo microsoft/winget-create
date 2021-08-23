@@ -15,6 +15,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
+    using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -282,9 +283,15 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.ErrorLocalized(nameof(Resources.DownloadFile_Error));
 
-                if (e is HttpRequestException exception)
+                if (e is HttpRequestException httpRequestException)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.HttpResponseUnsuccessful_Error), exception.StatusCode);
+                    Logger.ErrorLocalized(nameof(Resources.HttpResponseUnsuccessful_Error), httpRequestException.StatusCode);
+                    return null;
+                }
+
+                if (e is DownloadSizeExceededException downloadSizeExceededException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadFileExceedsMaxSize_Error), $"{downloadSizeExceededException.MaxDownloadSizeInBytes / 1024 / 1024}");
                     return null;
                 }
 

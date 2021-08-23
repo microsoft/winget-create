@@ -542,7 +542,8 @@
     <value>Invalid URL provided. Please check the URL and try again.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>Unable to successfully parse the package and determine the installer type.</value>
+    <value>Failed to parse the package from [{0}]</value>
+    <comment>{0} - will be replaced with the failed installer url</comment>
   </data>
   <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
     <value>We have detected that this package identifier already exists. If you intend to update an existing package, please use the update command.</value>
@@ -597,17 +598,8 @@
   <data name="ModifyOptionalFields_Message" xml:space="preserve">
     <value>Would you like to modify the optional fields?</value>
   </data>
-  <data name="InstallerDetectedFromUrl_Message" xml:space="preserve">
-    <value>{0} {1} installer detected from the url: {2}</value>
-    <comment>{0} - will be replaced with installer architecture
-{1} - will be replaced with the installer type 
-{2} - will be replaced with the installer url</comment>
-  </data>
-  <data name="MultipleMatchingInstallerNodes_Error" xml:space="preserve">
-    <value>Multiple existing installer nodes matched the following installer(s):</value>
-  </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>Each new installer URL must have a match to an existing installer node based on installer type and architecture.</value>
+    <value>Each new installer URL must have a single match to an existing installer based on installer type and architecture. The following installers failed to match an existing installer:</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>The architecture detected from the binary might be different than what is specified in the installer URL for the following installer(s):</value>
@@ -680,5 +672,27 @@
   <data name="TelemetryEnabledByDefault_Message" xml:space="preserve">
     <value>By default, telemetry is enabled but can be disabled by running `wingetcreate settings` and editing your settings file.</value>
     <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
+  </data>
+  <data name="DownloadFileExceedsMaxSize_Error" xml:space="preserve">
+    <value>URL points to file larger than the maximum size of {0}MB</value>
+    <comment>{0} - represents the maximum size of a downloaded file</comment>
+  </data>
+  <data name="InstallerCountMustMatch_Error" xml:space="preserve">
+    <value>The number of new installer packages must match the number of existing installer packages.</value>
+  </data>
+  <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
+    <value>Multiple matches found for {0} {1} installer detected from the url: {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type
+
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="UnmatchedInstaller_Error" xml:space="preserve">
+    <value>No matches found for {0} {1} installer detected from url: {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type 
+{2} - will be replaced with the installer</comment>
   </data>
 </root>
