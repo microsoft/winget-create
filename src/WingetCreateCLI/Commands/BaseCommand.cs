@@ -291,7 +291,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (e is DownloadSizeExceededException downloadSizeExceededException)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.DownloadFileExceedsMaxSize_Error), $"{downloadSizeExceededException.MaxDownloadSize / 1024 / 1024}");
+                    Logger.ErrorLocalized(nameof(Resources.DownloadFileExceedsMaxSize_Error), $"{downloadSizeExceededException.MaxDownloadSizeInBytes / 1024 / 1024}");
                     return null;
                 }
 

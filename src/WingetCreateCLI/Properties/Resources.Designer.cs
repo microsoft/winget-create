@@ -646,15 +646,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following installers failed to match an existing installer:.
-        /// </summary>
-        public static string InstallersFailedToMatch_Message {
-            get {
-                return ResourceManager.GetString("InstallersFailedToMatch_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} installers found in {1}.
         /// </summary>
         public static string InstallersFound_Message {
@@ -1006,7 +997,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Each new installer URL must have a match to an existing installer node based on installer type and architecture..
+        ///   Looks up a localized string similar to Each new installer URL must have a single match to an existing installer based on installer type and architecture. The following installers failed to match an existing installer:.
         /// </summary>
         public static string NewInstallerUrlMustMatchExisting_Message {
             get {

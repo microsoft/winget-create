@@ -146,7 +146,7 @@ namespace Microsoft.WingetCreateCore
 
             if (downloadSize > maxDownloadSize)
             {
-                throw new DownloadSizeExceededException(maxDownloadSize);
+                throw new DownloadSizeExceededException(maxDownloadSize.Value);
             }
 
             if (!File.Exists(targetFile) || new FileInfo(targetFile).Length != downloadSize)

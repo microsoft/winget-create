@@ -223,8 +223,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             catch (InstallerMatchException installerMatchException)
             {
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
-                Logger.ErrorLocalized(nameof(Resources.InstallersFailedToMatch_Message));
-
                 installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 return null;

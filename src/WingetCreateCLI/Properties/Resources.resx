@@ -599,7 +599,7 @@
     <value>Would you like to modify the optional fields?</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>Each new installer URL must have a match to an existing installer node based on installer type and architecture.</value>
+    <value>Each new installer URL must have a single match to an existing installer based on installer type and architecture. The following installers failed to match an existing installer:</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>The architecture detected from the binary might be different than what is specified in the installer URL for the following installer(s):</value>
@@ -679,9 +679,6 @@
   </data>
   <data name="InstallerCountMustMatch_Error" xml:space="preserve">
     <value>The number of new installer packages must match the number of existing installer packages.</value>
-  </data>
-  <data name="InstallersFailedToMatch_Message" xml:space="preserve">
-    <value>The following installers failed to match an existing installer:</value>
   </data>
   <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
     <value>Multiple matches found for {0} {1} installer detected from the url: {2}</value>

@@ -13,15 +13,15 @@ namespace Microsoft.WingetCreateCore.Common.Exceptions
         /// <summary>
         /// Initializes a new instance of the <see cref="DownloadSizeExceededException"/> class.
         /// </summary>
-        /// <param name="maxDownloadSize">The maximum file size in bytes.</param>
-        public DownloadSizeExceededException(long? maxDownloadSize)
+        /// <param name="maxDownloadSizeInBytes">The maximum file size in bytes.</param>
+        public DownloadSizeExceededException(long maxDownloadSizeInBytes)
         {
-            this.MaxDownloadSize = maxDownloadSize;
+            this.MaxDownloadSizeInBytes = maxDownloadSizeInBytes;
         }
 
         /// <summary>
         /// Gets the maximum file size in bytes.
         /// </summary>
-        public long? MaxDownloadSize { get; private set; }
+        public long MaxDownloadSizeInBytes { get; private set; }
     }
 }
