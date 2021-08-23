@@ -304,7 +304,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             List<string> selectionList = new List<string>() { Resources.AllInstallers_MenuItem };
-            selectionList.AddRange(new List<string>(installerSelectionMap.Keys));
+            selectionList.AddRange(installerSelectionMap.Keys);
             selectionList.AddRange(new[] { Resources.DisplayPreview_MenuItem, Resources.None_MenuItem });
             return selectionList;
         }

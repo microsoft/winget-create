@@ -51,7 +51,6 @@ namespace Microsoft.WingetCreateCLI
 
         private static readonly string[] MsixInclusionList = new[]
         {
-            nameof(Installer.Platform),
             nameof(Installer.Capabilities),
             nameof(Installer.RestrictedCapabilities),
         };
