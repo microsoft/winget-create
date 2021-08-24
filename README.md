@@ -52,16 +52,15 @@ Then simply add a new powershell task to download the exe, and run it to update 
 
 The CLI also supports creating or updating manifests with multiple installer URLs. You can either create new manifests with multiple installer nodes using the [New Command](doc/new.md) or update existing manifests with multiple installer URLs using the [Update Command](doc/update.md). 
 
-## Using your GitHub Personal Access Token
+## GitHub Personal Access Token Permissions
 
-When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) to be used with WingetCreate, make sure you verify the following steps are completed:
+When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) to be used with WingetCreate, make sure the following permissions are selected.
 
-- [Authorizing your personal access token for use with SAML single sign-on](https://docs.github.com/en/github/authenticating-to-github/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on)
-- Selecting the **public_repo** scope to allow access to public repositories
+- Select the **public_repo** scope to allow access to public repositories
 
 ![public_repo scope](./doc/images/tokenscope-publicrepo.png)
 
-- (Optional) Selecting the **delete_repo** scope permission if you want WingetCreate to automatically delete the forked repo that it created if the PR submission fails.
+- (Optional) Select the **delete_repo** scope permission if you want WingetCreate to automatically delete the forked repo that it created if the PR submission fails.
 
 ## Building the client
 

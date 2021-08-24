@@ -308,7 +308,7 @@ namespace Microsoft.WingetCreateCore.Common
             Reference newBranch = null;
             try
             {
-                var retryPolicy = Policy.Handle<ApiException>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(2));
+                var retryPolicy = Policy.Handle<ApiException>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
                 await retryPolicy.ExecuteAsync(async () =>
                 {
                     await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
