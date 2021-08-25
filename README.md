@@ -43,7 +43,7 @@ Unfortunately, we can't use the msixbundle in a standard Azure Pipeline pool. In
 
 If .NET isn't already installed, you can use https://aka.ms/wingetcreate/latest/self-contained or https://aka.ms/wingetcreate/preview/self-contained, which has .NET built-in, but is a larger download.
 
-> When using either the framework-dependent or self-contained exe, make sure your build machine has the [VC++ v14 Desktop Framework Package](https://docs.microsoft.com/troubleshoot/cpp/c-runtime-packages-desktop-bridge#how-to-install-and-update-desktop-framework-packages) already installed. Without this package dependency, WingetCreate will fail to execute and likely show a "DllNotFoundException" error.
+> When using either the framework-dependent or self-contained exe, make sure your build machine has the [Microsoft Visual C++ Redistributable for Visual Studio](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) already installed. Without this, the standalone WingetCreate exe will fail to execute and likely show a "DllNotFoundException" error.
 
 Then simply add a new powershell task to download the exe, and run it to update your manifest. It's recommended to not hardcode your PAT in your script, but instead use a [secret pipeline variable](https://docs.microsoft.com/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables)
 
