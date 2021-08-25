@@ -61,11 +61,38 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ADD.
+        /// </summary>
+        public static string Add_MenuItem {
+            get {
+                return ResourceManager.GetString("Add_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional metadata needed for installer from {0}.
+        /// </summary>
+        public static string AdditionalMetadataNeeded_Message {
+            get {
+                return ResourceManager.GetString("AdditionalMetadataNeeded_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The additional properties for future minor version compatibility.
         /// </summary>
         public static string AdditionalProperties_KeywordDescription {
             get {
                 return ResourceManager.GetString("AdditionalProperties_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ALL INSTALLERS.
+        /// </summary>
+        public static string AllInstallers_MenuItem {
+            get {
+                return ResourceManager.GetString("AllInstallers_MenuItem", resourceCulture);
             }
         }
         
@@ -111,6 +138,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Author_KeywordDescription {
             get {
                 return ResourceManager.GetString("Author_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BACK.
+        /// </summary>
+        public static string Back_MenuItem {
+            get {
+                return ResourceManager.GetString("Back_MenuItem", resourceCulture);
             }
         }
         
@@ -313,6 +349,42 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DISPLAY PREVIEW.
+        /// </summary>
+        public static string DisplayPreview_MenuItem {
+            get {
+                return ResourceManager.GetString("DisplayPreview_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displaying preview of [{0}]:.
+        /// </summary>
+        public static string DisplayPreviewOfItems {
+            get {
+                return ResourceManager.GetString("DisplayPreviewOfItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Displaying a preview of the selected installer:.
+        /// </summary>
+        public static string DisplayPreviewOfSelectedInstaller_Message {
+            get {
+                return ResourceManager.GetString("DisplayPreviewOfSelectedInstaller_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DONE.
+        /// </summary>
+        public static string Done_MenuItem {
+            get {
+                return ResourceManager.GetString("Done_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DONE.
         /// </summary>
         public static string DoneSymbol_String {
@@ -466,11 +538,29 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [{0}] value is.
+        /// </summary>
+        public static string FieldValueIs_Message {
+            get {
+                return ResourceManager.GetString("FieldValueIs_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of file extensions the package could support.
         /// </summary>
         public static string FileExtensions_KeywordDescription {
             get {
                 return ResourceManager.GetString("FileExtensions_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter menu items by typing a search query below..
+        /// </summary>
+        public static string FilterMenuItems_Message {
+            get {
+                return ResourceManager.GetString("FilterMenuItems_Message", resourceCulture);
             }
         }
         
@@ -916,11 +1006,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to modify the optional fields?.
+        ///   Looks up a localized string similar to Would you like to modify the optional default locale fields?.
         /// </summary>
-        public static string ModifyOptionalFields_Message {
+        public static string ModifyOptionalDefaultLocaleFields_Message {
             get {
-                return ResourceManager.GetString("ModifyOptionalFields_Message", resourceCulture);
+                return ResourceManager.GetString("ModifyOptionalDefaultLocaleFields_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to modify the optional installer fields?.
+        /// </summary>
+        public static string ModifyOptionalInstallerFields_Message {
+            get {
+                return ResourceManager.GetString("ModifyOptionalInstallerFields_Message", resourceCulture);
             }
         }
         
@@ -1011,6 +1110,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NoChangeDetectedInUpdatedManifest_Message {
             get {
                 return ResourceManager.GetString("NoChangeDetectedInUpdatedManifest_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NONE.
+        /// </summary>
+        public static string None_MenuItem {
+            get {
+                return ResourceManager.GetString("None_MenuItem", resourceCulture);
             }
         }
         
@@ -1276,6 +1384,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to REMOVE LAST ENTRY.
+        /// </summary>
+        public static string RemoveLastEntry_MenuItem {
+            get {
+                return ResourceManager.GetString("RemoveLastEntry_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repository &quot;{0}/{1}&quot; not found. Please verify the Windows Package Manager repository owner and name in your settings file..
         /// </summary>
         public static string RepositoryNotFound_Error {
@@ -1317,6 +1434,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Scope_KeywordDescription {
             get {
                 return ResourceManager.GetString("Scope_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What would you like to do?.
+        /// </summary>
+        public static string SelectAction_Message {
+            get {
+                return ResourceManager.GetString("SelectAction_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Which installer would you like to edit?.
+        /// </summary>
+        public static string SelectInstallerToEdit_Message {
+            get {
+                return ResourceManager.GetString("SelectInstallerToEdit_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Which property would you like to edit?.
+        /// </summary>
+        public static string SelectPropertyToEdit_Message {
+            get {
+                return ResourceManager.GetString("SelectPropertyToEdit_Message", resourceCulture);
             }
         }
         

@@ -4,6 +4,10 @@
 namespace Microsoft.WingetCreateCore.Common
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// Functionality for manipulating data related to the Manifest object model.
@@ -52,6 +56,52 @@ namespace Microsoft.WingetCreateCore.Common
         public static bool EqualsIC(this string a, string b)
         {
             return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Determines if the object is of dictionary type.
+        /// </summary>
+        /// <param name="o">Object to be checked.</param>
+        /// <returns>Boolean value indicating whether the object is a dictionary type.</returns>
+        public static bool IsDictionary(this object o)
+        {
+            return o is IDictionary &&
+                       o.GetType().IsGenericType &&
+                       o.GetType().GetGenericTypeDefinition().IsAssignableFrom(typeof(Dictionary<,>));
+        }
+
+        /// <summary>
+        /// Determines if the type is a List type.
+        /// </summary>
+        /// <param name="type">Type to be evaluated.</param>
+        /// <returns>Boolean value indicating whether the type is a List.</returns>
+        public static bool IsEnumerable(this Type type)
+        {
+            return type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Returns the enum member attribute value if one exists.
+        /// </summary>
+        /// <param name="enumVal">Target enum value.</param>
+        /// <returns>Enum member attribute string value.</returns>
+        public static string ToEnumAttributeValue(this Enum enumVal)
+        {
+            var type = enumVal.GetType();
+            var memInfo = type.GetMember(enumVal.ToString());
+            var attributes = memInfo[0].GetCustomAttributes(typeof(EnumMemberAttribute), false);
+            EnumMemberAttribute attributeValue = (attributes.Length > 0) ? (EnumMemberAttribute)attributes[0] : null;
+            return attributeValue?.Value ?? enumVal.ToString();
+        }
+
+        /// <summary>
+        /// Determines if the properties of an object are all equal to null excluding properties with dictionary type if needed.
+        /// </summary>
+        /// <param name="o">Object to be evaluated.</param>
+        /// <returns>Boolean value indicating whether the object is empty.</returns>
+        public static bool IsEmptyObject(this object o)
+        {
+            return !o.GetType().GetProperties().Select(pi => pi.GetValue(o)).Where(value => !value.IsDictionary() && value != null).Any();
         }
     }
 }
