@@ -12,6 +12,7 @@ namespace Microsoft.WingetCreateCore.Common
     using Jose;
     using Microsoft.WingetCreateCore.Models;
     using Octokit;
+    using Polly;
 
     /// <summary>
     /// Provides functionality for interacting a user's GitHub account.
@@ -307,8 +308,11 @@ namespace Microsoft.WingetCreateCore.Common
             Reference newBranch = null;
             try
             {
-                // Create new branch synced to upstream master
-                await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
+                var retryPolicy = Policy.Handle<ApiException>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
+                await retryPolicy.ExecuteAsync(async () =>
+                {
+                    await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
+                });
 
                 // Update from upstream branch master
                 newBranch = await this.github.Git.Reference.Update(repo.Id, newBranchNameHeads, new ReferenceUpdate(upstreamMasterSha));
@@ -344,7 +348,14 @@ namespace Microsoft.WingetCreateCore.Common
                 // On error, cleanup created branch/repo before re-throwing
                 if (createdRepo)
                 {
-                    await this.github.Repository.Delete(repo.Id);
+                    try
+                    {
+                        await this.github.Repository.Delete(repo.Id);
+                    }
+                    catch (ForbiddenException)
+                    {
+                        // If we fail to delete the fork, the user did not provide a token with the "delete_repo" permission. Do nothing.
+                    }
                 }
                 else if (newBranch != null)
                 {

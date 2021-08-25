@@ -403,6 +403,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to URL points to file larger than the maximum size of {0}MB.
+        /// </summary>
+        public static string DownloadFileExceedsMaxSize_Error {
+            get {
+                return ResourceManager.GetString("DownloadFileExceedsMaxSize_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloading and parsing: {0}....
         /// </summary>
         public static string DownloadInstaller_Message {
@@ -682,11 +691,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {1} installer detected from the url: {2}.
+        ///   Looks up a localized string similar to The number of new installer packages must match the number of existing installer packages..
         /// </summary>
-        public static string InstallerDetectedFromUrl_Message {
+        public static string InstallerCountMustMatch_Error {
             get {
-                return ResourceManager.GetString("InstallerDetectedFromUrl_Message", resourceCulture);
+                return ResourceManager.GetString("InstallerCountMustMatch_Error", resourceCulture);
             }
         }
         
@@ -1042,11 +1051,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple existing installer nodes matched the following installer(s):.
+        ///   Looks up a localized string similar to Multiple matches found for {0} {1} installer detected from the url: {2}.
         /// </summary>
-        public static string MultipleMatchingInstallerNodes_Error {
+        public static string MultipleMatchedInstaller_Error {
             get {
-                return ResourceManager.GetString("MultipleMatchingInstallerNodes_Error", resourceCulture);
+                return ResourceManager.GetString("MultipleMatchedInstaller_Error", resourceCulture);
             }
         }
         
@@ -1087,7 +1096,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Each new installer URL must have a match to an existing installer node based on installer type and architecture..
+        ///   Looks up a localized string similar to Each new installer URL must have a single match to an existing installer based on installer type and architecture. The following installers failed to match an existing installer:.
         /// </summary>
         public static string NewInstallerUrlMustMatchExisting_Message {
             get {
@@ -1231,7 +1240,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to successfully parse the package and determine the installer type..
+        ///   Looks up a localized string similar to Failed to parse the package from [{0}].
         /// </summary>
         public static string PackageParsing_Error {
             get {
@@ -1659,6 +1668,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UnexpectedErrorLoadSettings_Message {
             get {
                 return ResourceManager.GetString("UnexpectedErrorLoadSettings_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No matches found for {0} {1} installer detected from url: {2}.
+        /// </summary>
+        public static string UnmatchedInstaller_Error {
+            get {
+                return ResourceManager.GetString("UnmatchedInstaller_Error", resourceCulture);
             }
         }
         
