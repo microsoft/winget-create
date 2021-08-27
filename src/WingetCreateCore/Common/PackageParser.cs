@@ -183,10 +183,11 @@ namespace Microsoft.WingetCreateCore
             InstallerManifest installerManifest,
             IEnumerable<string> installerUrls,
             IEnumerable<string> paths,
-            out List<DetectedArch> detectedArchOfInstallers)
+            out List<DetectedArch> detectedArchOfInstallers,
+            out List<Installer> newInstallers)
         {
             var newPackages = paths.Zip(installerUrls, (path, url) => (path, url)).ToList();
-            var newInstallers = new List<Installer>();
+            newInstallers = new List<Installer>();
             detectedArchOfInstallers = new List<DetectedArch>();
             var existingInstallers = new List<Installer>(installerManifest.Installers);
             List<Installer> unmatchedInstallers = new List<Installer>();
@@ -211,6 +212,8 @@ namespace Microsoft.WingetCreateCore
             {
                 throw new ParsePackageException(parseFailedInstallerUrls);
             }
+
+            Dictionary<Installer, Installer> installerMatchDict = new Dictionary<Installer, Installer>();
 
             // Update previous installers with parsed data from downloaded packages
             foreach (var newInstaller in newInstallers)
@@ -260,22 +263,41 @@ namespace Microsoft.WingetCreateCore
                 }
                 else
                 {
+                    installerMatchDict.Add(matchingExistingInstaller, newInstaller); // add the match to the map.
                     existingInstallers.Remove(matchingExistingInstaller);
                 }
 
-                matchingExistingInstaller.InstallerUrl = newInstaller.InstallerUrl;
-                matchingExistingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
-                matchingExistingInstaller.SignatureSha256 = newInstaller.SignatureSha256;
-                matchingExistingInstaller.ProductCode = newInstaller.ProductCode;
-                matchingExistingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion;
-                matchingExistingInstaller.PackageFamilyName = newInstaller.PackageFamilyName;
-                matchingExistingInstaller.Platform = newInstaller.Platform;
+                //matchingExistingInstaller.InstallerUrl = newInstaller.InstallerUrl;
+                //matchingExistingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
+                //matchingExistingInstaller.SignatureSha256 = newInstaller.SignatureSha256;
+                //matchingExistingInstaller.ProductCode = newInstaller.ProductCode;
+                //matchingExistingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion;
+                //matchingExistingInstaller.PackageFamilyName = newInstaller.PackageFamilyName;
+                //matchingExistingInstaller.Platform = newInstaller.Platform;
             }
 
             if (unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
             {
                 throw new InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers);
             }
+            else
+            {
+                foreach (var existingInstaller in installerMatchDict.Keys)
+                {
+                    UpdateInstallerNode(existingInstaller, installerMatchDict[existingInstaller]);
+                }
+            }
+        }
+
+        public static void UpdateInstallerNode(Installer existingInstaller, Installer newInstaller)
+        {
+            existingInstaller.InstallerUrl = newInstaller.InstallerUrl;
+            existingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
+            existingInstaller.SignatureSha256 = newInstaller.SignatureSha256;
+            existingInstaller.ProductCode = newInstaller.ProductCode;
+            existingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion;
+            existingInstaller.PackageFamilyName = newInstaller.PackageFamilyName;
+            existingInstaller.Platform = newInstaller.Platform;
         }
 
         /// <summary>

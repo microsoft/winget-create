@@ -21,8 +21,8 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Locale;
-    using Microsoft.WingetCreateCore.Models.Singleton;
     using Microsoft.WingetCreateCore.Models.Version;
+    using Sharprompt;
 
     /// <summary>
     /// Command for updating the elements of an existing or local manifest.
@@ -67,6 +67,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         [Option('s', "submit", Required = false, HelpText = "SubmitToWinget_HelpText", ResourceType = typeof(Resources))]
         public bool SubmitToGitHub { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to launch an interactive mode for users to clarify update heuristics.
+        /// </summary>
+        [Option('i', "interactive", Required = false, HelpText = "SubmitToWinget_HelpText", ResourceType = typeof(Resources))]
+        public bool Interactive { get; set; }
 
         /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
@@ -201,6 +207,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             List<PackageParser.DetectedArch> detectedArchOfInstallers;
+            List<WingetCreateCore.Models.Installer.Installer> newInstallers = new List<WingetCreateCore.Models.Installer.Installer>();
 
             try
             {
@@ -208,7 +215,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                     installerManifest,
                     this.InstallerUrls,
                     packageFiles,
-                    out detectedArchOfInstallers);
+                    out detectedArchOfInstallers,
+                    out newInstallers);
             }
             catch (InvalidOperationException)
             {
@@ -225,11 +233,59 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
                 installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+
+                this.InteractiveMatchInstallers(installerManifest.Installers, newInstallers);
                 return null;
             }
 
             DisplayMismatchedArchitectures(detectedArchOfInstallers);
             return manifests;
+        }
+
+        public void InteractiveMatchInstallers(List<Installer> existingInstallers, List<Installer> newInstallers)
+        {
+            List<string> newInstallerUrls = newInstallers.Select(i => i.InstallerUrl).ToList();
+            List<string> matchedInstallers = new List<string>();
+
+            Installer[] installers = existingInstallers.ToArray();
+            // needs to add a back so that users have a way to go to the previous prompt
+            // if the user goes back, the most recently matched item, gets added back to the currentList, with back appended to the end
+
+            int index = 0;
+            while (index <= newInstallerUrls.Count)
+            {
+                newInstallerUrls.Sort();
+                List<string> selectionList;
+                // don't add back to the first question
+                selectionList = index != 0 ? newInstallerUrls.Append("BACK").ToList() : newInstallerUrls;
+
+                Console.Clear();
+                Console.WriteLine(installers[index].ToYaml()); // print out the existing installer;
+
+                var selectedNewInstallerUrl = Prompt.Select("Which new installer matches the following", selectionList);
+
+                if (selectedNewInstallerUrl == "BACK")
+                {
+                    index--;
+                    // add back the last url.
+                    string lastSelectedInstaller = matchedInstallers[matchedInstallers.Count - 1];
+                    newInstallerUrls.Add(lastSelectedInstaller);
+                    matchedInstallers.RemoveAt(matchedInstallers.Count - 1); // remove that last installer added.
+                }
+                else // a selection was made
+                {
+                    newInstallerUrls.Remove(selectedNewInstallerUrl);
+                    matchedInstallers.Add(selectedNewInstallerUrl);
+                    index++;
+                }
+            }
+
+            // begin updating installers based on the selected installer URL
+            //var matches = existingInstallers.Zip(matchedInstallers, (existingInstaller, newInstallerUrl) => (existingInstaller, newInstallerUrl)).ToList();
+            //foreach(var match in matches)
+            //{
+            //    matches.
+            //}
         }
 
         /// <summary>
@@ -281,15 +337,15 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static Manifests ConvertSingletonToMultifileManifest(SingletonManifest singletonManifest)
+        private static Manifests ConvertSingletonToMultifileManifest(WingetCreateCore.Models.Singleton.SingletonManifest singletonManifest)
         {
             // Create automapping configuration
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AllowNullCollections = true;
-                cfg.CreateMap<SingletonManifest, VersionManifest>().ForMember(dest => dest.DefaultLocale, opt => { opt.MapFrom(src => src.PackageLocale); });
-                cfg.CreateMap<SingletonManifest, DefaultLocaleManifest>();
-                cfg.CreateMap<SingletonManifest, InstallerManifest>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, VersionManifest>().ForMember(dest => dest.DefaultLocale, opt => { opt.MapFrom(src => src.PackageLocale); });
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, DefaultLocaleManifest>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, InstallerManifest>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
