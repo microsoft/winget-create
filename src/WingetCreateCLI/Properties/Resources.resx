@@ -746,4 +746,20 @@
   <data name="SelectPropertyToEdit_Message" xml:space="preserve">
     <value>Which property would you like to edit?</value>
   </data>
+  <data name="InteractiveUpdate_HelpText" xml:space="preserve">
+    <value>Boolean value for making the update command interactive. If true,  the user will be prompted for input to resolve any conflicts. Default is false.</value>
+  </data>
+  <data name="LaunchInteractiveUpdate_Warning" xml:space="preserve">
+    <value>Failed to match the installers. WingetCreate will now launch an interactive menu for manually matching installers.</value>
+    <comment>`WingetCreate` refers to the name of the tool.</comment>
+  </data>
+  <data name="PressKeyToContinue_Message" xml:space="preserve">
+    <value>Press any key to continue...</value>
+  </data>
+  <data name="SelectInstallerForUpdate_Message" xml:space="preserve">
+    <value>Select the new installer URL that you would like to update the above installer with.</value>
+  </data>
+  <data name="TypeToFilterInstallers_Message" xml:space="preserve">
+    <value>Type to filter installers</value>
+  </data>
 </root>

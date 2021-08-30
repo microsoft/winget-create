@@ -69,9 +69,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         public bool SubmitToGitHub { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to launch an interactive mode for users to clarify update heuristics.
+        /// Gets or sets a value indicating whether to launch an interactive mode for users to manually select which installers to update.
         /// </summary>
-        [Option('i', "interactive", Required = false, HelpText = "SubmitToWinget_HelpText", ResourceType = typeof(Resources))]
+        [Option('i', "interactive", Required = false, HelpText = "InteractiveUpdate_HelpText", ResourceType = typeof(Resources))]
         public bool Interactive { get; set; }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             List<PackageParser.DetectedArch> detectedArchOfInstallers;
-            List<WingetCreateCore.Models.Installer.Installer> newInstallers = new List<WingetCreateCore.Models.Installer.Installer>();
+            List<Installer> newInstallers = new List<Installer>();
 
             try
             {
@@ -217,6 +217,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                     packageFiles,
                     out detectedArchOfInstallers,
                     out newInstallers);
+
+                DisplayMismatchedArchitectures(detectedArchOfInstallers);
             }
             catch (InvalidOperationException)
             {
@@ -230,62 +232,23 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
             catch (InstallerMatchException installerMatchException)
             {
-                Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
-                installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
-                installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
-
-                this.InteractiveMatchInstallers(installerManifest.Installers, newInstallers);
-                return null;
+                if (this.Interactive)
+                {
+                    Logger.WarnLocalized(nameof(Resources.LaunchInteractiveUpdate_Warning));
+                    Logger.WarnLocalized(nameof(Resources.PressKeyToContinue_Message));
+                    Console.ReadKey();
+                    this.InteractiveMatchInstallers(installerManifest.Installers, newInstallers);
+                }
+                else
+                {
+                    Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
+                    installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                    installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                    return null;
+                }
             }
 
-            DisplayMismatchedArchitectures(detectedArchOfInstallers);
             return manifests;
-        }
-
-        public void InteractiveMatchInstallers(List<Installer> existingInstallers, List<Installer> newInstallers)
-        {
-            List<string> newInstallerUrls = newInstallers.Select(i => i.InstallerUrl).ToList();
-            List<string> matchedInstallers = new List<string>();
-
-            Installer[] installers = existingInstallers.ToArray();
-            // needs to add a back so that users have a way to go to the previous prompt
-            // if the user goes back, the most recently matched item, gets added back to the currentList, with back appended to the end
-
-            int index = 0;
-            while (index <= newInstallerUrls.Count)
-            {
-                newInstallerUrls.Sort();
-                List<string> selectionList;
-                // don't add back to the first question
-                selectionList = index != 0 ? newInstallerUrls.Append("BACK").ToList() : newInstallerUrls;
-
-                Console.Clear();
-                Console.WriteLine(installers[index].ToYaml()); // print out the existing installer;
-
-                var selectedNewInstallerUrl = Prompt.Select("Which new installer matches the following", selectionList);
-
-                if (selectedNewInstallerUrl == "BACK")
-                {
-                    index--;
-                    // add back the last url.
-                    string lastSelectedInstaller = matchedInstallers[matchedInstallers.Count - 1];
-                    newInstallerUrls.Add(lastSelectedInstaller);
-                    matchedInstallers.RemoveAt(matchedInstallers.Count - 1); // remove that last installer added.
-                }
-                else // a selection was made
-                {
-                    newInstallerUrls.Remove(selectedNewInstallerUrl);
-                    matchedInstallers.Add(selectedNewInstallerUrl);
-                    index++;
-                }
-            }
-
-            // begin updating installers based on the selected installer URL
-            //var matches = existingInstallers.Zip(matchedInstallers, (existingInstaller, newInstallerUrl) => (existingInstaller, newInstallerUrl)).ToList();
-            //foreach(var match in matches)
-            //{
-            //    matches.
-            //}
         }
 
         /// <summary>
@@ -388,6 +351,59 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             var newHashes = newManifest.Installers.Select(i => i.InstallerSha256).Distinct();
             return newHashes.Except(oldHashes).Any();
+        }
+
+        /// <summary>
+        /// Launches an interactive flow to allow the user to select which existing installer to update with.
+        /// </summary>
+        /// <param name="existingInstallers">List of existing installer nodes.</param>
+        /// <param name="newInstallers">List of new installer nodes.</param>
+        private void InteractiveMatchInstallers(List<Installer> existingInstallers, List<Installer> newInstallers)
+        {
+            Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
+            Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
+            List<string> newInstallerUrls = newInstallers.Select(i => i.InstallerUrl).ToList();
+            List<string> matchedInstallerUrls = new List<string>();
+
+            // Select installer Urls to update.
+            var serializer = Serialization.CreateSerializer();
+            int index = 0;
+            while (newInstallerUrls.Any())
+            {
+                newInstallerUrls.Sort();
+                List<string> selectionList;
+                selectionList = index != 0 ? newInstallerUrls.Append(Resources.Back_MenuItem).ToList() : newInstallerUrls;
+
+                Console.Clear();
+                Console.WriteLine(serializer.Serialize(existingInstallers[index]));
+
+                Logger.InfoLocalized(nameof(Resources.SelectInstallerForUpdate_Message));
+                var selectedUrl = Prompt.Select(Resources.TypeToFilterInstallers_Message, selectionList);
+
+                if (selectedUrl == Resources.Back_MenuItem)
+                {
+                    index--;
+                    string lastSelectedInstaller = matchedInstallerUrls[matchedInstallerUrls.Count - 1];
+                    newInstallerUrls.Add(lastSelectedInstaller);
+                    matchedInstallerUrls.RemoveAt(matchedInstallerUrls.Count - 1);
+                }
+                else
+                {
+                    newInstallerUrls.Remove(selectedUrl);
+                    matchedInstallerUrls.Add(selectedUrl);
+                    index++;
+                }
+            }
+
+            // Execute installer update.
+            var matches = existingInstallers.Zip(matchedInstallerUrls, (existingInstaller, matchedInstallerUrl) => (existingInstaller, matchedInstallerUrl)).ToList();
+            foreach (var (existingInstaller, matchedInstallerUrl) in matches)
+            {
+                var newInstaller = newInstallers.Find(x => x.InstallerUrl == matchedInstallerUrl);
+                PackageParser.UpdateInstallerNode(existingInstaller, newInstaller);
+            }
+
+            Console.Clear();
         }
     }
 }

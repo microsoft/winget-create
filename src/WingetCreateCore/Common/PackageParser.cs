@@ -179,6 +179,7 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerUrls">InstallerUrls where installers can be downloaded.</param>
         /// <param name="paths">Paths to packages to extract metadata from.</param>
         /// <param name="detectedArchOfInstallers">List of DetectedArch objects that represent each installers detected architectures.</param>
+        /// <param name="newInstallers">List of newly parsed installer nodes.</param>
         public static void UpdateInstallerNodesAsync(
             InstallerManifest installerManifest,
             IEnumerable<string> installerUrls,
@@ -266,14 +267,6 @@ namespace Microsoft.WingetCreateCore
                     installerMatchDict.Add(matchingExistingInstaller, newInstaller); // add the match to the map.
                     existingInstallers.Remove(matchingExistingInstaller);
                 }
-
-                //matchingExistingInstaller.InstallerUrl = newInstaller.InstallerUrl;
-                //matchingExistingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
-                //matchingExistingInstaller.SignatureSha256 = newInstaller.SignatureSha256;
-                //matchingExistingInstaller.ProductCode = newInstaller.ProductCode;
-                //matchingExistingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion;
-                //matchingExistingInstaller.PackageFamilyName = newInstaller.PackageFamilyName;
-                //matchingExistingInstaller.Platform = newInstaller.Platform;
             }
 
             if (unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
@@ -289,6 +282,11 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
+        /// <summary>
+        /// Updates the metadata from an existing installer node with the metadata from a new installer node.
+        /// </summary>
+        /// <param name="existingInstaller">Existing installer node.</param>
+        /// <param name="newInstaller">New installer node.</param>
         public static void UpdateInstallerNode(Installer existingInstaller, Installer newInstaller)
         {
             existingInstaller.InstallerUrl = newInstaller.InstallerUrl;

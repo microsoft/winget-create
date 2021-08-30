@@ -826,6 +826,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boolean value for making the update command interactive. If true,  the user will be prompted for input to resolve any conflicts. Default is false..
+        /// </summary>
+        public static string InteractiveUpdate_HelpText {
+            get {
+                return ResourceManager.GetString("InteractiveUpdate_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Token was invalid. Please generate a new GitHub token and try again..
         /// </summary>
         public static string InvalidGitHubToken_Message {
@@ -867,6 +876,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string LaunchBrowser_Message {
             get {
                 return ResourceManager.GetString("LaunchBrowser_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to match the installers. WingetCreate will now launch an interactive menu for manually matching installers..
+        /// </summary>
+        public static string LaunchInteractiveUpdate_Warning {
+            get {
+                return ResourceManager.GetString("LaunchInteractiveUpdate_Warning", resourceCulture);
             }
         }
         
@@ -1294,6 +1312,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Press any key to continue....
+        /// </summary>
+        public static string PressKeyToContinue_Message {
+            get {
+                return ResourceManager.GetString("PressKeyToContinue_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Privacy statement: https://aka.ms/privacy.
         /// </summary>
         public static string PrivacyStatement_HelpText {
@@ -1443,6 +1470,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SelectAction_Message {
             get {
                 return ResourceManager.GetString("SelectAction_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the new installer URL that you would like to update the above installer with..
+        /// </summary>
+        public static string SelectInstallerForUpdate_Message {
+            get {
+                return ResourceManager.GetString("SelectInstallerForUpdate_Message", resourceCulture);
             }
         }
         
@@ -1650,6 +1686,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string TokenExpired_Message {
             get {
                 return ResourceManager.GetString("TokenExpired_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type to filter installers.
+        /// </summary>
+        public static string TypeToFilterInstallers_Message {
+            get {
+                return ResourceManager.GetString("TypeToFilterInstallers_Message", resourceCulture);
             }
         }
         
