@@ -156,37 +156,65 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Convert list of yaml contents to Manifests object model, and then update them.
+        /// Executes the manifest update flow.
         /// </summary>
         /// <param name="latestManifestContent">List of manifests to be updated.</param>
-        /// <returns>Manifests object representing the updates manifest content, or null if the update failed.</returns>
-        public async Task<Manifests> DeserializeExistingManifestsAndUpdate(List<string> latestManifestContent)
+        /// <param name="commandEvent">CommandExecuted telemetry event.</param>
+        /// <returns>Boolean representing whether the manifest was updated successfully or not.</returns>
+        public async Task<bool> ExecuteManifestUpdate(List<string> latestManifestContent, CommandExecutedEvent commandEvent)
         {
-            Manifests manifests = Serialization.DeserializeManifestContents(latestManifestContent);
+            Manifests originalManifests = Serialization.DeserializeManifestContents(latestManifestContent);
+            Manifests initialManifests = this.DeserializeManifestContentAndApplyInitialUpdate(latestManifestContent);
+            Manifests updatedManifests = this.Interactive ?
+                await this.UpdateManifestsInteractively(initialManifests) :
+                await this.UpdateManifestsAutonomously(initialManifests);
 
-            if (manifests.SingletonManifest != null)
+            if (updatedManifests == null)
             {
-                manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
+                return false;
             }
 
-            VersionManifest versionManifest = manifests.VersionManifest;
+            DisplayManifestPreview(updatedManifests);
+
+            if (string.IsNullOrEmpty(this.OutputDir))
+            {
+                this.OutputDir = Directory.GetCurrentDirectory();
+            }
+
+            string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, this.OutputDir);
+
+            if (ValidateManifest(manifestDirectoryPath))
+            {
+                if (this.SubmitToGitHub)
+                {
+                    if (!VerifyUpdatedInstallerHash(originalManifests, updatedManifests.InstallerManifest))
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.NoChangeDetectedInUpdatedManifest_Message));
+                        Logger.ErrorLocalized(nameof(Resources.CompareUpdatedManifestWithExisting_Message));
+                        return false;
+                    }
+
+                    return await this.LoadGitHubClient(true)
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests))
+                        : false;
+                }
+
+                return commandEvent.IsSuccessful = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Updates the Manifest object model with the user-provided installer urls.
+        /// </summary>s
+        /// <param name="manifests">Manifest object model to be updated.</param>
+        /// <returns>Manifests object representing the updates manifest content, or null if the update failed.</returns>
+        public async Task<Manifests> UpdateManifestsAutonomously(Manifests manifests)
+        {
             InstallerManifest installerManifest = manifests.InstallerManifest;
-            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
-            List<LocaleManifest> localeManifests = manifests.LocaleManifests;
-
-            // Ensure that capitalization matches between folder structure and package ID
-            versionManifest.PackageIdentifier = this.Id;
-            installerManifest.PackageIdentifier = this.Id;
-            defaultLocaleManifest.PackageIdentifier = this.Id;
-            UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageIdentifier), this.Id, localeManifests);
-
-            if (!string.IsNullOrEmpty(this.Version))
-            {
-                versionManifest.PackageVersion = this.Version;
-                installerManifest.PackageVersion = this.Version;
-                defaultLocaleManifest.PackageVersion = this.Version;
-                UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
-            }
 
             if (!this.InstallerUrls.Any())
             {
@@ -232,72 +260,13 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
             catch (InstallerMatchException installerMatchException)
             {
-                if (this.Interactive)
-                {
-                    Logger.WarnLocalized(nameof(Resources.LaunchInteractiveUpdate_Warning));
-                    Logger.WarnLocalized(nameof(Resources.PressKeyToContinue_Message));
-                    Console.ReadKey();
-                    this.InteractiveMatchInstallers(installerManifest.Installers, newInstallers);
-                }
-                else
-                {
-                    Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
-                    installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
-                    installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
-                    return null;
-                }
+                Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
+                installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                return null;
             }
 
             return manifests;
-        }
-
-        /// <summary>
-        /// Executes the manifest update flow.
-        /// </summary>
-        /// <param name="latestManifestContent">List of manifests to be updated.</param>
-        /// <param name="commandEvent">CommandExecuted telemetry event.</param>
-        /// <returns>Boolean representing whether the manifest was updated successfully or not.</returns>
-        public async Task<bool> ExecuteManifestUpdate(List<string> latestManifestContent, CommandExecutedEvent commandEvent)
-        {
-            Manifests originalManifests = Serialization.DeserializeManifestContents(latestManifestContent);
-            Manifests updatedManifests = await this.DeserializeExistingManifestsAndUpdate(latestManifestContent);
-
-            if (updatedManifests == null)
-            {
-                return false;
-            }
-
-            DisplayManifestPreview(updatedManifests);
-
-            if (string.IsNullOrEmpty(this.OutputDir))
-            {
-                this.OutputDir = Directory.GetCurrentDirectory();
-            }
-
-            string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, this.OutputDir);
-
-            if (ValidateManifest(manifestDirectoryPath))
-            {
-                if (this.SubmitToGitHub)
-                {
-                    if (!VerifyUpdatedInstallerHash(originalManifests, updatedManifests.InstallerManifest))
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.NoChangeDetectedInUpdatedManifest_Message));
-                        Logger.ErrorLocalized(nameof(Resources.CompareUpdatedManifestWithExisting_Message));
-                        return false;
-                    }
-
-                    return await this.LoadGitHubClient(true)
-                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests))
-                        : false;
-                }
-
-                return commandEvent.IsSuccessful = true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         private static Manifests ConvertSingletonToMultifileManifest(WingetCreateCore.Models.Singleton.SingletonManifest singletonManifest)
@@ -353,56 +322,99 @@ namespace Microsoft.WingetCreateCLI.Commands
             return newHashes.Except(oldHashes).Any();
         }
 
+        public Manifests DeserializeManifestContentAndApplyInitialUpdate(List<string> latestManifestContent)
+        {
+            Manifests manifests = Serialization.DeserializeManifestContents(latestManifestContent);
+
+            if (manifests.SingletonManifest != null)
+            {
+                manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
+            }
+
+            VersionManifest versionManifest = manifests.VersionManifest;
+            InstallerManifest installerManifest = manifests.InstallerManifest;
+            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
+            List<LocaleManifest> localeManifests = manifests.LocaleManifests;
+
+            // Ensure that capitalization matches between folder structure and package ID
+            versionManifest.PackageIdentifier = this.Id;
+            installerManifest.PackageIdentifier = this.Id;
+            defaultLocaleManifest.PackageIdentifier = this.Id;
+            UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageIdentifier), this.Id, localeManifests);
+
+            if (!string.IsNullOrEmpty(this.Version))
+            {
+                versionManifest.PackageVersion = this.Version;
+                installerManifest.PackageVersion = this.Version;
+                defaultLocaleManifest.PackageVersion = this.Version;
+                UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
+            }
+
+            return manifests;
+        }
+
         /// <summary>
-        /// Launches an interactive flow to allow the user to select which existing installer to update with.
-        /// </summary>
-        /// <param name="existingInstallers">List of existing installer nodes.</param>
-        /// <param name="newInstallers">List of new installer nodes.</param>
-        private void InteractiveMatchInstallers(List<Installer> existingInstallers, List<Installer> newInstallers)
+        /// Update flow for interactively updating the manifest.
+        /// </summary>s
+        /// <param name="manifests">Manifest object model to be updated.</param>
+        /// <returns>The updated manifest.</returns>
+        private async Task<Manifests> UpdateManifestsInteractively(Manifests manifests)
         {
             Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
             Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
-            List<string> newInstallerUrls = newInstallers.Select(i => i.InstallerUrl).ToList();
-            List<string> matchedInstallerUrls = new List<string>();
 
-            // Select installer Urls to update.
-            var serializer = Serialization.CreateSerializer();
-            int index = 0;
-            while (newInstallerUrls.Any())
+            do
             {
-                newInstallerUrls.Sort();
-                List<string> selectionList;
-                selectionList = index != 0 ? newInstallerUrls.Append(Resources.Back_MenuItem).ToList() : newInstallerUrls;
+                await this.UpdateInstallersInteractively(manifests.InstallerManifest.Installers);
+                DisplayManifestPreview(manifests);
+                ValidateManifestsInTempDir(manifests);
+            }
+            while (Prompt.Confirm(Resources.ConfirmManifestCreation_Message));
+            Console.Clear();
+            return manifests;
+        }
 
-                Console.Clear();
-                Console.WriteLine(serializer.Serialize(existingInstallers[index]));
+        private async Task UpdateInstallersInteractively(List<Installer> existingInstallers)
+        {
+            var serializer = Serialization.CreateSerializer();
+            int numOfExistingInstallers = existingInstallers.Count;
+            int index = 1;
 
-                Logger.InfoLocalized(nameof(Resources.SelectInstallerForUpdate_Message));
-                var selectedUrl = Prompt.Select(Resources.TypeToFilterInstallers_Message, selectionList);
+            foreach (var installer in existingInstallers)
+            {
+                Logger.InfoLocalized(nameof(Resources.UpdatingInstallerOutOfTotal_Message), index, numOfExistingInstallers);
+                Console.WriteLine(serializer.Serialize(installer));
+                await this.UpdateSingleInstallerInteractively(installer);
+                index++;
+            }
+        }
 
-                if (selectedUrl == Resources.Back_MenuItem)
+        private async Task UpdateSingleInstallerInteractively(Installer installer)
+        {
+            Installer newInstaller = new Installer();
+
+            while (true)
+            {
+                string url = Prompt.Input<string>(Resources.NewInstallerUrl_Message, null, new[] { FieldValidation.ValidateProperty(newInstaller, nameof(Installer.InstallerUrl)) });
+                string packageFile = await DownloadPackageFile(url);
+
+                if (string.IsNullOrEmpty(packageFile))
                 {
-                    index--;
-                    string lastSelectedInstaller = matchedInstallerUrls[matchedInstallerUrls.Count - 1];
-                    newInstallerUrls.Add(lastSelectedInstaller);
-                    matchedInstallerUrls.RemoveAt(matchedInstallerUrls.Count - 1);
+                    continue;
+                }
+                else if (!PackageParser.ParsePackageAndUpdateInstallerNode(installer, packageFile, url))
+                {
+                    Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
                 }
                 else
                 {
-                    newInstallerUrls.Remove(selectedUrl);
-                    matchedInstallerUrls.Add(selectedUrl);
-                    index++;
+                    break;
                 }
             }
 
-            // Execute installer update.
-            var matches = existingInstallers.Zip(matchedInstallerUrls, (existingInstaller, matchedInstallerUrl) => (existingInstaller, matchedInstallerUrl)).ToList();
-            foreach (var (existingInstaller, matchedInstallerUrl) in matches)
-            {
-                var newInstaller = newInstallers.Find(x => x.InstallerUrl == matchedInstallerUrl);
-                PackageParser.UpdateInstallerNode(existingInstaller, newInstaller);
-            }
-
+            Logger.InfoLocalized(nameof(Resources.InstallerUpdatedSuccessfully_Message));
+            Console.WriteLine(Resources.PressKeyToContinue_Message);
+            Console.ReadKey();
             Console.Clear();
         }
     }

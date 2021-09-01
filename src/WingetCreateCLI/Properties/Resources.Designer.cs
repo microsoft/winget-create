@@ -781,6 +781,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Installer updated successfully!.
+        /// </summary>
+        public static string InstallerUpdatedSuccessfully_Message {
+            get {
+                return ResourceManager.GetString("InstallerUpdatedSuccessfully_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Installer Url(s) used to extract relevant metadata for generating a manifest.
         /// </summary>
         public static string InstallerUrl_HelpText {
@@ -876,15 +885,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string LaunchBrowser_Message {
             get {
                 return ResourceManager.GetString("LaunchBrowser_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Failed to match the installers. WingetCreate will now launch an interactive menu for manually matching installers..
-        /// </summary>
-        public static string LaunchInteractiveUpdate_Warning {
-            get {
-                return ResourceManager.GetString("LaunchInteractiveUpdate_Warning", resourceCulture);
             }
         }
         
@@ -1110,6 +1110,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NewCommand_HelpText {
             get {
                 return ResourceManager.GetString("NewCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What is the new installer url?.
+        /// </summary>
+        public static string NewInstallerUrl_Message {
+            get {
+                return ResourceManager.GetString("NewInstallerUrl_Message", resourceCulture);
             }
         }
         
@@ -1474,15 +1483,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select the new installer URL that you would like to update the above installer with..
-        /// </summary>
-        public static string SelectInstallerForUpdate_Message {
-            get {
-                return ResourceManager.GetString("SelectInstallerForUpdate_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Which installer would you like to edit?.
         /// </summary>
         public static string SelectInstallerToEdit_Message {
@@ -1690,15 +1690,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type to filter installers.
-        /// </summary>
-        public static string TypeToFilterInstallers_Message {
-            get {
-                return ResourceManager.GetString("TypeToFilterInstallers_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The following unbound argument(s) were detected: &quot;{0}&quot;.
         /// </summary>
         public static string UnboundArguments_Message {
@@ -1749,6 +1740,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UpdateCommand_HelpText {
             get {
                 return ResourceManager.GetString("UpdateCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating {0} of {1} installers:.
+        /// </summary>
+        public static string UpdatingInstallerOutOfTotal_Message {
+            get {
+                return ResourceManager.GetString("UpdatingInstallerOutOfTotal_Message", resourceCulture);
             }
         }
         

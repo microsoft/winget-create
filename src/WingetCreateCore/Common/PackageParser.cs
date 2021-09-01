@@ -375,6 +375,32 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
+        // Method for parsing a package and updating the installer node. 
+        public static bool ParsePackageAndUpdateInstallerNode(Installer installer, string path, string url)
+        {
+            // check parsing first to see if its a valid installer.
+            List<Installer> installers = new List<Installer>();
+            bool parseMsixResult = false;
+            bool parseResult = ParseExeInstallerType(path, installer, installers) ||
+                (parseMsixResult = ParseMsix(path, installer, null, installers)) ||
+                ParseMsi(path, installer, null, installers);
+
+            if (!parseResult)
+            {
+                return false;
+            }
+
+            installer.InstallerUrl = url;
+            installer.InstallerSha256 = GetFileHash(path);
+
+            if (parseMsixResult)
+            {
+                installer.SignatureSha256 = installers.First().SignatureSha256;
+            }
+
+            return true;
+        }
+
         private static bool ParsePackageAndGenerateInstallerNodes(
             string path,
             string url,
