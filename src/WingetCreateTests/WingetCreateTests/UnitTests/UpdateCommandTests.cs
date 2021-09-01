@@ -67,7 +67,6 @@ namespace Microsoft.WingetCreateUnitTests
         {
             string version = "1.2.3.4";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestPackageIdentifier, version, this.tempPath, null);
-
             var updatedManifests = await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent);
             Assert.IsTrue(updatedManifests, "Command should have succeeded");
 
@@ -149,7 +148,6 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMultipleInstallerPackageIdentifier, null, this.tempPath, new[] { "fakeurl" });
-            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
@@ -165,7 +163,6 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.SingleMsixInExistingBundle", null, this.tempPath, null);
-            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
@@ -185,7 +182,7 @@ namespace Microsoft.WingetCreateUnitTests
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.InstallerCountMustMatch_Error), "Installer must have match error should be thrown");
+            Assert.That(result, Does.Contain(Resources.NewInstallerUrlMustMatchExisting_Message), "New installer must match error should be thrown");
         }
 
         /// <summary>
