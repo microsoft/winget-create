@@ -82,8 +82,7 @@ namespace Microsoft.WingetCreateCore
         /// <param name="urls">Installer urls. </param>
         /// <param name="manifests">Wrapper object for manifest object models.</param>
         /// <param name="detectedArchOfInstallers">List of DetectedArch objects that represent each installers detected architectures.</param>
-        /// <returns>True if packages were successfully parsed and metadata extracted, false otherwise.</returns>
-        public static bool ParsePackages(
+        public static void ParsePackages(
             IEnumerable<string> paths,
             IEnumerable<string> urls,
             Manifests manifests,
@@ -97,16 +96,20 @@ namespace Microsoft.WingetCreateCore
 
             InstallerManifest installerManifest = manifests.InstallerManifest = new InstallerManifest();
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest = new DefaultLocaleManifest();
+            List<string> parseFailedInstallerUrls = new List<string>();
 
             foreach (var package in paths.Zip(urls, (path, url) => (path, url)))
             {
                 if (!ParsePackage(package.path, package.url, manifests, ref detectedArchOfInstallers))
                 {
-                    return false;
+                    parseFailedInstallerUrls.Add(package.url);
                 }
             }
 
-            return true;
+            if (parseFailedInstallerUrls.Any())
+            {
+                throw new ParsePackageException(parseFailedInstallerUrls);
+            }
         }
 
         /// <summary>
