@@ -48,8 +48,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.That(testExeInstallerPath, Is.Not.Null.And.Not.Empty);
 
             Manifests manifests = new Manifests();
-
-            Assert.IsTrue(PackageParser.ParsePackages(new[] { testExeInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests, out _));
+            Assert.DoesNotThrow(() => PackageParser.ParsePackages(new[] { testExeInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests, out _));
             Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
@@ -65,10 +64,8 @@ namespace Microsoft.WingetCreateUnitTests
         {
             var testMsiInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsiInstaller);
             Assert.That(testMsiInstallerPath, Is.Not.Null.And.Not.Empty);
-
             Manifests manifests = new Manifests();
-
-            Assert.IsTrue(PackageParser.ParsePackages(new[] { testMsiInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests, out _));
+            Assert.DoesNotThrow(() => PackageParser.ParsePackages(new[] { testMsiInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests, out _));
             Assert.AreEqual("WingetCreateTestMsiInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestMsiInstaller", manifests.VersionManifest.PackageIdentifier);
@@ -84,10 +81,8 @@ namespace Microsoft.WingetCreateUnitTests
         {
             var testMsixInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsixInstaller);
             Assert.That(testMsixInstallerPath, Is.Not.Null.And.Not.Empty);
-
             Manifests manifests = new Manifests();
-
-            Assert.IsTrue(PackageParser.ParsePackages(new[] { testMsixInstallerPath }, new[] { TestConstants.TestMsixInstaller }, manifests, out _));
+            Assert.DoesNotThrow(() => PackageParser.ParsePackages(new[] { testMsixInstallerPath }, new[] { TestConstants.TestMsixInstaller }, manifests, out _));
             Assert.AreEqual("WingetCreateTestMsixInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("1.0.1.0", manifests.VersionManifest.PackageVersion);
@@ -110,8 +105,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.That(testMsixInstallerPath, Is.Not.Null.And.Not.Empty);
 
             Manifests manifests = new Manifests();
-
-            Assert.IsTrue(PackageParser.ParsePackages(
+            Assert.DoesNotThrow(() => PackageParser.ParsePackages(
                 new[] { testExeInstallerPath, testMsiInstallerPath, testMsixInstallerPath },
                 new[] { TestConstants.TestExeInstaller, TestConstants.TestMsiInstaller, TestConstants.TestMsixInstaller },
                 manifests,

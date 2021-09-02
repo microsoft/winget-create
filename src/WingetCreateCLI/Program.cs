@@ -110,7 +110,10 @@ namespace Microsoft.WingetCreateCLI
 
         private static void DisplayParsingErrors<T>(NotParsed<T> result)
         {
-            if (!result.Errors.Any(e => e is NoVerbSelectedError))
+            if (!result.Errors.Any(
+                e => e is NoVerbSelectedError ||
+                (e is BadVerbSelectedError badVerbError && badVerbError.Token == "-?") ||
+                (e is UnknownOptionError unknownOptionError && unknownOptionError.Token == "?")))
             {
                 var builder = SentenceBuilder.Create();
                 var errorMessages = HelpText.RenderParsingErrorsTextAsLines(result, builder.FormatError, builder.FormatMutuallyExclusiveSetErrors, 1);
