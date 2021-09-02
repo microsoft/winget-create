@@ -835,7 +835,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Boolean value for making the update command interactive. If true,  the user will be prompted for input to resolve any conflicts. Default is false..
+        ///   Looks up a localized string similar to Boolean value for making the update command interactive. If true, the user will be prompted for input to resolve any conflicts. Default is false..
         /// </summary>
         public static string InteractiveUpdate_HelpText {
             get {

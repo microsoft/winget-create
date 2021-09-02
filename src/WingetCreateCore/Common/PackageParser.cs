@@ -302,6 +302,38 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
+        /// Parses the package and updates the metadata of the provided installer node.
+        /// </summary>
+        /// <param name="installer">Installer node.</param>
+        /// <param name="path">Path to package file.</param>
+        /// <param name="url">Installer url.</param>
+        /// <returns>Boolean indicating whether the package parse was successful.</returns>
+        public static bool ParsePackageAndUpdateInstallerNode(Installer installer, string path, string url)
+        {
+            // check parsing first to see if its a valid installer.
+            List<Installer> installers = new List<Installer>();
+            bool parseMsixResult = false;
+            bool parseResult = ParseExeInstallerType(path, installer, installers) ||
+                (parseMsixResult = ParseMsix(path, installer, null, installers)) ||
+                ParseMsi(path, installer, null, installers);
+
+            if (!parseResult)
+            {
+                return false;
+            }
+
+            installer.InstallerUrl = url;
+            installer.InstallerSha256 = GetFileHash(path);
+
+            if (parseMsixResult)
+            {
+                installer.SignatureSha256 = installers.First().SignatureSha256;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Performs a regex match to determine the installer architecture based on the url string.
         /// </summary>
         /// <param name="url">Installer url string.</param>
@@ -378,36 +410,19 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
-        // Method for parsing a package and updating the installer node. 
-        public static bool ParsePackageAndUpdateInstallerNode(Installer installer, string path, string url)
-        {
-            // check parsing first to see if its a valid installer.
-            List<Installer> installers = new List<Installer>();
-            bool parseMsixResult = false;
-            bool parseResult = ParseExeInstallerType(path, installer, installers) ||
-                (parseMsixResult = ParseMsix(path, installer, null, installers)) ||
-                ParseMsi(path, installer, null, installers);
-
-            if (!parseResult)
-            {
-                return false;
-            }
-
-            installer.InstallerUrl = url;
-            installer.InstallerSha256 = GetFileHash(path);
-
-            if (parseMsixResult)
-            {
-                installer.SignatureSha256 = installers.First().SignatureSha256;
-            }
-
-            return true;
-        }
-
+        /// <summary>
+        /// Parses a package for relevant metadata and generates a new installer node for each installer file (MSIX can have multiple installers).
+        /// </summary>
+        /// <param name="path">Path to package file.</param>
+        /// <param name="url">Installer url.</param>
+        /// <param name="newInstallers">List of new installers.</param>
+        /// <param name="manifests">Manifests object model.</param>
+        /// <param name="detectedArchOfInstallers">List of DetectedArch objects representing detected architecture of each installer.</param>
+        /// <returns>Boolean value indicating whether the function was successful or not.</returns>
         private static bool ParsePackageAndGenerateInstallerNodes(
             string path,
             string url,
-            List<Installer> installers,
+            List<Installer> newInstallers,
             Manifests manifests,
             ref List<DetectedArch> detectedArchOfInstallers)
         {
@@ -418,14 +433,14 @@ namespace Microsoft.WingetCreateCore
 
             bool parseMsixResult = false;
 
-            bool parseResult = ParseExeInstallerType(path, installer, installers) ||
-                (parseMsixResult = ParseMsix(path, installer, manifests, installers)) ||
-                ParseMsi(path, installer, manifests, installers);
+            bool parseResult = ParseExeInstallerType(path, installer, newInstallers) ||
+                (parseMsixResult = ParseMsix(path, installer, manifests, newInstallers)) ||
+                ParseMsi(path, installer, manifests, newInstallers);
 
             if (parseMsixResult)
             {
                 // Skip architecture override for msix installers as there can be more than one installer in a bundle
-                detectedArchOfInstallers.AddRange(installers
+                detectedArchOfInstallers.AddRange(newInstallers
                     .Where(i => i.InstallerUrl == url)
                     .Select(i => new DetectedArch(i.InstallerUrl, i.Architecture, i.Architecture)));
             }

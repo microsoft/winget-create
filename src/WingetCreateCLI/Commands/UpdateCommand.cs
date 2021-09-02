@@ -269,6 +269,43 @@ namespace Microsoft.WingetCreateCLI.Commands
             return manifests;
         }
 
+        /// <summary>
+        /// Deserializes the manifest string content, converts the manifest to multifile,
+        /// and ensures package id and version are consistent across the manifests.
+        /// </summary>
+        /// <param name="latestManifestContent">List of latest manifest content strings.</param>
+        /// <returns>Manifests object model.</returns>
+        public Manifests DeserializeManifestContentAndApplyInitialUpdate(List<string> latestManifestContent)
+        {
+            Manifests manifests = Serialization.DeserializeManifestContents(latestManifestContent);
+
+            if (manifests.SingletonManifest != null)
+            {
+                manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
+            }
+
+            VersionManifest versionManifest = manifests.VersionManifest;
+            InstallerManifest installerManifest = manifests.InstallerManifest;
+            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
+            List<LocaleManifest> localeManifests = manifests.LocaleManifests;
+
+            // Ensure that capitalization matches between folder structure and package ID
+            versionManifest.PackageIdentifier = this.Id;
+            installerManifest.PackageIdentifier = this.Id;
+            defaultLocaleManifest.PackageIdentifier = this.Id;
+            UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageIdentifier), this.Id, localeManifests);
+
+            if (!string.IsNullOrEmpty(this.Version))
+            {
+                versionManifest.PackageVersion = this.Version;
+                installerManifest.PackageVersion = this.Version;
+                defaultLocaleManifest.PackageVersion = this.Version;
+                UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
+            }
+
+            return manifests;
+        }
+
         private static Manifests ConvertSingletonToMultifileManifest(WingetCreateCore.Models.Singleton.SingletonManifest singletonManifest)
         {
             // Create automapping configuration
@@ -322,37 +359,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             return newHashes.Except(oldHashes).Any();
         }
 
-        public Manifests DeserializeManifestContentAndApplyInitialUpdate(List<string> latestManifestContent)
-        {
-            Manifests manifests = Serialization.DeserializeManifestContents(latestManifestContent);
-
-            if (manifests.SingletonManifest != null)
-            {
-                manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
-            }
-
-            VersionManifest versionManifest = manifests.VersionManifest;
-            InstallerManifest installerManifest = manifests.InstallerManifest;
-            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
-            List<LocaleManifest> localeManifests = manifests.LocaleManifests;
-
-            // Ensure that capitalization matches between folder structure and package ID
-            versionManifest.PackageIdentifier = this.Id;
-            installerManifest.PackageIdentifier = this.Id;
-            defaultLocaleManifest.PackageIdentifier = this.Id;
-            UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageIdentifier), this.Id, localeManifests);
-
-            if (!string.IsNullOrEmpty(this.Version))
-            {
-                versionManifest.PackageVersion = this.Version;
-                installerManifest.PackageVersion = this.Version;
-                defaultLocaleManifest.PackageVersion = this.Version;
-                UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
-            }
-
-            return manifests;
-        }
-
         /// <summary>
         /// Update flow for interactively updating the manifest.
         /// </summary>s
@@ -374,6 +380,11 @@ namespace Microsoft.WingetCreateCLI.Commands
             return manifests;
         }
 
+        /// <summary>
+        /// Interactive flow when updating installers.
+        /// </summary>
+        /// <param name="existingInstallers">List of existing installers to be updated.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         private async Task UpdateInstallersInteractively(List<Installer> existingInstallers)
         {
             var serializer = Serialization.CreateSerializer();
@@ -389,6 +400,11 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
+        /// <summary>
+        /// Prompts the user for the new installer url to update the provided installer.
+        /// </summary>
+        /// <param name="installer">The installer to be updated.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         private async Task UpdateSingleInstallerInteractively(Installer installer)
         {
             Installer newInstaller = new Installer();
@@ -404,7 +420,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 else if (!PackageParser.ParsePackageAndUpdateInstallerNode(installer, packageFile, url))
                 {
-                    Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
+                    Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), url);
                 }
                 else
                 {
