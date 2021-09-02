@@ -18,6 +18,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
+    using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -110,17 +111,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                if (!PackageParser.ParsePackages(
-                    packageFiles,
-                    this.InstallerUrls,
-                    manifests,
-                    out List<PackageParser.DetectedArch> detectedArchs))
+                try
                 {
-                    Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error));
+                    PackageParser.ParsePackages(packageFiles, this.InstallerUrls, manifests, out List<PackageParser.DetectedArch> detectedArchs);
+                    DisplayMismatchedArchitectures(detectedArchs);
+                }
+                catch (ParsePackageException exception)
+                {
+                    exception.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
                     return false;
                 }
-
-                DisplayMismatchedArchitectures(detectedArchs);
 
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
