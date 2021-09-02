@@ -46,7 +46,6 @@ namespace Microsoft.WingetCreateUnitTests
         {
             var testExeInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestExeInstaller);
             Assert.That(testExeInstallerPath, Is.Not.Null.And.Not.Empty);
-
             Manifests manifests = new Manifests();
             Assert.DoesNotThrow(() => PackageParser.ParsePackages(new[] { testExeInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests, out _));
             Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
@@ -103,7 +102,6 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.That(testExeInstallerPath, Is.Not.Null.And.Not.Empty);
             var testMsixInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsixInstaller);
             Assert.That(testMsixInstallerPath, Is.Not.Null.And.Not.Empty);
-
             Manifests manifests = new Manifests();
             Assert.DoesNotThrow(() => PackageParser.ParsePackages(
                 new[] { testExeInstallerPath, testMsiInstallerPath, testMsixInstallerPath },
