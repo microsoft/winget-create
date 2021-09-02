@@ -502,20 +502,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search for an existing manifest and update the installer url.
+        ///   Looks up a localized string similar to Search for an existing manifest and update the installer url and version.
         /// </summary>
-        public static string Example_UpdateCommand_SearchAndUpdateInstallerURL {
+        public static string Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL {
             get {
-                return ResourceManager.GetString("Example_UpdateCommand_SearchAndUpdateInstallerURL", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Search for an existing manifest and update the version.
-        /// </summary>
-        public static string Example_UpdateCommand_SearchAndUpdateVersion {
-            get {
-                return ResourceManager.GetString("Example_UpdateCommand_SearchAndUpdateVersion", resourceCulture);
+                return ResourceManager.GetString("Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL", resourceCulture);
             }
         }
         
