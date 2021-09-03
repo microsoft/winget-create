@@ -280,9 +280,39 @@ namespace Microsoft.WingetCreateCore
             {
                 foreach (var existingInstaller in installerMatchDict.Keys)
                 {
-                    UpdateInstallerNode(existingInstaller, installerMatchDict[existingInstaller]);
+                    UpdateInstallerMetadata(existingInstaller, installerMatchDict[existingInstaller]);
                 }
             }
+        }
+
+        /// <summary>
+        /// Parses the package for relevant metadata and and updates the metadata of the provided installer node.
+        /// </summary>
+        /// <param name="installer">Installer node.</param>
+        /// <param name="path">Path to package file.</param>
+        /// <param name="url">Installer url.</param>
+        /// <returns>Boolean indicating whether the package parse was successful.</returns>
+        public static bool ParsePackageAndUpdateInstallerNode(Installer installer, string path, string url)
+        {
+            // Clean out values from installer which could be present from 
+            InstallerType initialInstallerType = installer.InstallerType.Value;
+
+            List<Installer> newInstallers = new List<Installer>();
+            bool parseResult = ParseExeInstallerType(path, installer, newInstallers) ||
+                ParseMsix(path, installer, null, newInstallers) ||
+                ParseMsi(path, installer, null, newInstallers);
+
+            if (!parseResult || !newInstallers.Any())
+            {
+                return false;
+            }
+
+            Installer newInstaller = newInstallers.First();
+            newInstaller.InstallerUrl = url;
+            newInstaller.InstallerSha256 = GetFileHash(path);
+
+            UpdateInstallerMetadata(installer, newInstallers.First());
+            return true;
         }
 
         /// <summary>
@@ -290,7 +320,7 @@ namespace Microsoft.WingetCreateCore
         /// </summary>
         /// <param name="existingInstaller">Existing installer node.</param>
         /// <param name="newInstaller">New installer node.</param>
-        public static void UpdateInstallerNode(Installer existingInstaller, Installer newInstaller)
+        private static void UpdateInstallerMetadata(Installer existingInstaller, Installer newInstaller)
         {
             existingInstaller.InstallerUrl = newInstaller.InstallerUrl;
             existingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
@@ -299,70 +329,6 @@ namespace Microsoft.WingetCreateCore
             existingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion;
             existingInstaller.PackageFamilyName = newInstaller.PackageFamilyName;
             existingInstaller.Platform = newInstaller.Platform;
-        }
-
-        /// <summary>
-        /// Parses the package and updates the metadata of the provided installer node.
-        /// </summary>
-        /// <param name="installer">Installer node.</param>
-        /// <param name="path">Path to package file.</param>
-        /// <param name="url">Installer url.</param>
-        /// <returns>Boolean indicating whether the package parse was successful.</returns>
-        public static bool ParsePackageAndUpdateInstallerNode(Installer installer, string path, string url)
-        {
-            // check parsing first to see if its a valid installer.
-            List<Installer> installers = new List<Installer>();
-            bool parseMsixResult = false;
-            bool parseResult = ParseExeInstallerType(path, installer, installers) ||
-                (parseMsixResult = ParseMsix(path, installer, null, installers)) ||
-                ParseMsi(path, installer, null, installers);
-
-            if (!parseResult)
-            {
-                return false;
-            }
-
-            installer.InstallerUrl = url;
-            installer.InstallerSha256 = GetFileHash(path);
-
-            if (parseMsixResult)
-            {
-                installer.SignatureSha256 = installers.First().SignatureSha256;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Performs a regex match to determine the installer architecture based on the url string.
-        /// </summary>
-        /// <param name="url">Installer url string.</param>
-        /// <returns>Installer architecture enum.</returns>
-        private static InstallerArchitecture? GetArchFromUrl(string url)
-        {
-            List<InstallerArchitecture> archMatches = new List<InstallerArchitecture>();
-
-            // Arm must only be checked if arm64 check fails, otherwise it'll match for arm64 too
-            if (Regex.Match(url, "arm64|aarch64", RegexOptions.IgnoreCase).Success)
-            {
-                archMatches.Add(InstallerArchitecture.Arm64);
-            }
-            else if (Regex.Match(url, @"\barm\b", RegexOptions.IgnoreCase).Success)
-            {
-                archMatches.Add(InstallerArchitecture.Arm);
-            }
-
-            if (Regex.Match(url, "x64|win64|_64", RegexOptions.IgnoreCase).Success)
-            {
-                archMatches.Add(InstallerArchitecture.X64);
-            }
-
-            if (Regex.Match(url, "x86|win32|ia32|_86", RegexOptions.IgnoreCase).Success)
-            {
-                archMatches.Add(InstallerArchitecture.X86);
-            }
-
-            return archMatches.Count == 1 ? archMatches.Single() : null;
         }
 
         /// <summary>
@@ -459,6 +425,39 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
+        /// Performs a regex match to determine the installer architecture based on the url string.
+        /// </summary>
+        /// <param name="url">Installer url string.</param>
+        /// <returns>Installer architecture enum.</returns>
+        private static InstallerArchitecture? GetArchFromUrl(string url)
+        {
+            List<InstallerArchitecture> archMatches = new List<InstallerArchitecture>();
+
+            // Arm must only be checked if arm64 check fails, otherwise it'll match for arm64 too
+            if (Regex.Match(url, "arm64|aarch64", RegexOptions.IgnoreCase).Success)
+            {
+                archMatches.Add(InstallerArchitecture.Arm64);
+            }
+            else if (Regex.Match(url, @"\barm\b", RegexOptions.IgnoreCase).Success)
+            {
+                archMatches.Add(InstallerArchitecture.Arm);
+            }
+
+            if (Regex.Match(url, "x64|win64|_64", RegexOptions.IgnoreCase).Success)
+            {
+                archMatches.Add(InstallerArchitecture.X64);
+            }
+
+            if (Regex.Match(url, "x86|win32|ia32|_86", RegexOptions.IgnoreCase).Success)
+            {
+                archMatches.Add(InstallerArchitecture.X86);
+            }
+
+            return archMatches.Count == 1 ? archMatches.Single() : null;
+        }
+
+
+        /// <summary>
         /// Computes the SHA256 hash value for the specified byte array.
         /// </summary>
         /// <param name="buffer">The input to compute the hash code for.</param>
@@ -508,7 +507,7 @@ namespace Microsoft.WingetCreateCore
             return null;
         }
 
-        private static bool ParseExeInstallerType(string path, Installer baseInstaller, List<Installer> installers)
+        private static bool ParseExeInstallerType(string path, Installer baseInstaller, List<Installer> newInstallers)
         {
             try
             {
@@ -537,7 +536,7 @@ namespace Microsoft.WingetCreateCore
                     baseInstaller.InstallerType = InstallerType.Exe;
                 }
 
-                installers.Add(baseInstaller);
+                newInstallers.Add(baseInstaller);
 
                 return true;
             }
@@ -548,7 +547,7 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
-        private static bool ParseMsi(string path, Installer baseInstaller, Manifests manifests, List<Installer> installers)
+        private static bool ParseMsi(string path, Installer baseInstaller, Manifests manifests, List<Installer> newInstallers)
         {
             DefaultLocaleManifest defaultLocaleManifest = manifests?.DefaultLocaleManifest;
 
@@ -596,7 +595,7 @@ namespace Microsoft.WingetCreateCore
                     }
                 }
 
-                installers?.Add(baseInstaller);
+                newInstallers?.Add(baseInstaller);
 
                 return true;
             }
@@ -607,12 +606,12 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
-        private static bool ParseMsix(string path, Installer baseInstaller, Manifests manifests, List<Installer> installers)
+        private static bool ParseMsix(string path, Installer baseInstaller, Manifests manifests, List<Installer> newInstallers)
         {
             InstallerManifest installerManifest = manifests?.InstallerManifest;
             DefaultLocaleManifest defaultLocaleManifest = manifests?.DefaultLocaleManifest;
 
-            AppxMetadata metadata = GetAppxMetadataAndSetInstallerProperties(path, installerManifest, baseInstaller, installers);
+            AppxMetadata metadata = GetAppxMetadataAndSetInstallerProperties(path, installerManifest, baseInstaller, newInstallers);
             if (metadata == null)
             {
                 // Binary wasn't an MSIX, skip

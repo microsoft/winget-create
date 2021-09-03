@@ -349,6 +349,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to discard this update and start over?.
+        /// </summary>
+        public static string DiscardUpdateAndStartOver_Message {
+            get {
+                return ResourceManager.GetString("DiscardUpdateAndStartOver_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DISPLAY PREVIEW.
         /// </summary>
         public static string DisplayPreview_MenuItem {

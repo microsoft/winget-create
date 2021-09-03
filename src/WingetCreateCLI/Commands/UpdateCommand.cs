@@ -302,6 +302,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                 UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
             }
 
+            // TODO: Move relevant metadata from root node to installer node.
+            if (installerManifest.InstallerType != null)
+            {
+                installerManifest.Installers.ForEach(i => i.InstallerType = installerManifest.InstallerType);
+                installerManifest.InstallerType = null;
+            }
+
             return manifests;
         }
 
@@ -368,13 +375,19 @@ namespace Microsoft.WingetCreateCLI.Commands
             Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
             Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
 
+            // Clone the list of installers in order to preserve initial values.
+            Manifests originalManifest = new Manifests { InstallerManifest = new InstallerManifest() };
+            originalManifest.InstallerManifest.Installers = manifests.CloneInstallers();
+
             do
             {
+                Console.Clear();
+                manifests.InstallerManifest.Installers = originalManifest.CloneInstallers();
                 await this.UpdateInstallersInteractively(manifests.InstallerManifest.Installers);
                 DisplayManifestPreview(manifests);
                 ValidateManifestsInTempDir(manifests);
             }
-            while (Prompt.Confirm(Resources.ConfirmManifestCreation_Message));
+            while (Prompt.Confirm(Resources.DiscardUpdateAndStartOver_Message));
             Console.Clear();
             return manifests;
         }

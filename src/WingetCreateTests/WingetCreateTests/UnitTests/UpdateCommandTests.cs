@@ -253,13 +253,6 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.That(result, Does.Contain(Resources.NoChangeDetectedInUpdatedManifest_Message), "Failed to block manifests without updates from submitting.");
         }
 
-        private static List<string> GetInitialManifestContent(string manifestFileName)
-        {
-            string testFilePath = TestUtils.GetTestFile(manifestFileName);
-            var initialManifestContent = new List<string> { File.ReadAllText(testFilePath) };
-            return initialManifestContent;
-        }
-
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls)
         {
             var updateCommand = new UpdateCommand
@@ -274,7 +267,7 @@ namespace Microsoft.WingetCreateUnitTests
                 updateCommand.InstallerUrls = installerUrls;
             }
 
-            var initialManifestContent = GetInitialManifestContent($"{id}.yaml");
+            var initialManifestContent = TestUtils.GetInitialManifestContent($"{id}.yaml");
 
             return (updateCommand, initialManifestContent);
         }

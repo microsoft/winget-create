@@ -759,4 +759,7 @@
     <comment>{0} - represents the current installer index that is being updated
 {1} - represents the total number of installers to be updated</comment>
   </data>
+  <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
+    <value>Would you like to discard this update and start over?</value>
+  </data>
 </root>
