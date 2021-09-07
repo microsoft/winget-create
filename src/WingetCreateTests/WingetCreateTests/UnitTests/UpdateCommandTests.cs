@@ -67,7 +67,6 @@ namespace Microsoft.WingetCreateUnitTests
         {
             string version = "1.2.3.4";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestPackageIdentifier, version, this.tempPath, null);
-
             var updatedManifests = await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent);
             Assert.IsTrue(updatedManifests, "Command should have succeeded");
 
@@ -79,9 +78,9 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Tests the <see cref="UpdateCommand.DeserializeExistingManifestsAndUpdate"/> command, ensuring that it updates properties as expected.
+        /// Tests the <see cref="UpdateCommand.UpdateManifestsAutonomously"/> command, ensuring that it updates properties as expected.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
         public async Task UpdateAndVerifyUpdatedProperties()
         {
@@ -91,11 +90,9 @@ namespace Microsoft.WingetCreateUnitTests
 
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
-
-            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
             var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
-
             Assert.AreEqual(version, updatedManifests.VersionManifest.PackageVersion, "Version should be updated");
             Assert.AreNotEqual(initialInstaller.ProductCode, updatedInstaller.ProductCode, "ProductCode should be updated");
             Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
@@ -115,8 +112,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
-
-            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
 
             Assert.AreEqual(version, updatedManifests.VersionManifest.PackageVersion, "Version should be updated");
@@ -152,7 +148,7 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMultipleInstallerPackageIdentifier, null, this.tempPath, new[] { "fakeurl" });
-            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
@@ -167,7 +163,7 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.SingleMsixInExistingBundle", null, this.tempPath, null);
-            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.InstallerCountMustMatch_Error), "Installer count must match error should be thrown");
@@ -182,10 +178,11 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MismatchedMsixInExistingBundle", null, this.tempPath, null);
-            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.NewInstallerUrlMustMatchExisting_Message), "Installer must have match error should be thrown");
+            Assert.That(result, Does.Contain(Resources.NewInstallerUrlMustMatchExisting_Message), "New installer must match error should be thrown");
         }
 
         /// <summary>
@@ -210,8 +207,7 @@ namespace Microsoft.WingetCreateUnitTests
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithInstallerUrl", null, this.tempPath, null);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
-
-            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
 
             foreach (var item in expectedArchs.Zip(updatedManifests.InstallerManifest.Installers, (expectedArch, installer) => (expectedArch, installer)))
@@ -232,8 +228,7 @@ namespace Microsoft.WingetCreateUnitTests
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MsixArchitectureMatch", null, this.tempPath, null);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
-
-            var updatedManifests = await command.DeserializeExistingManifestsAndUpdate(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
             foreach (var updatedInstaller in updatedManifests.InstallerManifest.Installers)
             {
@@ -258,13 +253,6 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.That(result, Does.Contain(Resources.NoChangeDetectedInUpdatedManifest_Message), "Failed to block manifests without updates from submitting.");
         }
 
-        private static List<string> GetInitialManifestContent(string manifestFileName)
-        {
-            string testFilePath = TestUtils.GetTestFile(manifestFileName);
-            var initialManifestContent = new List<string> { File.ReadAllText(testFilePath) };
-            return initialManifestContent;
-        }
-
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls)
         {
             var updateCommand = new UpdateCommand
@@ -279,9 +267,15 @@ namespace Microsoft.WingetCreateUnitTests
                 updateCommand.InstallerUrls = installerUrls;
             }
 
-            var initialManifestContent = GetInitialManifestContent($"{id}.yaml");
+            var initialManifestContent = TestUtils.GetInitialManifestContent($"{id}.yaml");
 
             return (updateCommand, initialManifestContent);
+        }
+
+        private static async Task<Manifests> RunUpdateCommand(UpdateCommand updateCommand, List<string> initialManifestContent)
+        {
+            Manifests initialManifests = updateCommand.DeserializeManifestContentAndApplyInitialUpdate(initialManifestContent);
+            return await updateCommand.UpdateManifestsAutonomously(initialManifests);
         }
     }
 }

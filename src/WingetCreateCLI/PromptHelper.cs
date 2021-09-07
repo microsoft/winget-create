@@ -74,7 +74,6 @@ namespace Microsoft.WingetCreateCLI
                 .Select(property => property.Name)
                 .Where(pName => !NonEditableOptionalFields.Any(field => field == pName)).ToList();
 
-
             var installerTypeProperty = model.GetType().GetProperty(nameof(InstallerType));
             if (installerTypeProperty != null)
             {

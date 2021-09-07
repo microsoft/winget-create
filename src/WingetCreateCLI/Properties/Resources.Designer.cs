@@ -349,6 +349,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to discard this update and start over?.
+        /// </summary>
+        public static string DiscardUpdateAndStartOver_Message {
+            get {
+                return ResourceManager.GetString("DiscardUpdateAndStartOver_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DISPLAY PREVIEW.
         /// </summary>
         public static string DisplayPreview_MenuItem {
@@ -772,6 +781,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Installer updated successfully!.
+        /// </summary>
+        public static string InstallerUpdatedSuccessfully_Message {
+            get {
+                return ResourceManager.GetString("InstallerUpdatedSuccessfully_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Installer Url(s) used to extract relevant metadata for generating a manifest.
         /// </summary>
         public static string InstallerUrl_HelpText {
@@ -813,6 +831,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Interactive_KeywordDescription {
             get {
                 return ResourceManager.GetString("Interactive_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boolean value for making the update command interactive. If true, the tool will prompt the user for input. Default is false..
+        /// </summary>
+        public static string InteractiveUpdate_HelpText {
+            get {
+                return ResourceManager.GetString("InteractiveUpdate_HelpText", resourceCulture);
             }
         }
         
@@ -1087,6 +1114,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to What is the new installer url?.
+        /// </summary>
+        public static string NewInstallerUrl_Message {
+            get {
+                return ResourceManager.GetString("NewInstallerUrl_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Each new installer URL must have a single match to an existing installer based on installer type and architecture. The following installers failed to match an existing installer:.
         /// </summary>
         public static string NewInstallerUrlMustMatchExisting_Message {
@@ -1281,6 +1317,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Platform_KeywordDescription {
             get {
                 return ResourceManager.GetString("Platform_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press any key to continue....
+        /// </summary>
+        public static string PressKeyToContinue_Message {
+            get {
+                return ResourceManager.GetString("PressKeyToContinue_Message", resourceCulture);
             }
         }
         
@@ -1695,6 +1740,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UpdateCommand_HelpText {
             get {
                 return ResourceManager.GetString("UpdateCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating {0} of {1} installers:.
+        /// </summary>
+        public static string UpdatingInstallerOutOfTotal_Message {
+            get {
+                return ResourceManager.GetString("UpdatingInstallerOutOfTotal_Message", resourceCulture);
             }
         }
         

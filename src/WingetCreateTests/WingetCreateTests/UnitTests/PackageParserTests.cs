@@ -6,7 +6,9 @@ namespace Microsoft.WingetCreateUnitTests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using AutoMapper;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateTests;
@@ -120,6 +122,46 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.AreEqual(InstallerType.Msi, manifests.InstallerManifest.Installers.Skip(1).First().InstallerType);
             Assert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(2).First().InstallerType);
             Assert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(3).First().InstallerType);
+        }
+
+        /// <summary>
+        /// Validates that the ParsePackageAndUpdateInstallerNode function works as expected.
+        /// </summary>
+        [Test]
+        public void ParseAndUpdateInstaller()
+        {
+            var testMsiInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsiInstaller);
+            Assert.That(testMsiInstallerPath, Is.Not.Null.And.Not.Empty);
+
+            List<string> initialManifestContent = TestUtils.GetInitialManifestContent($"TestPublisher.SingleMsixInExistingBundle.yaml");
+            Manifests initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            WingetCreateCore.Models.Singleton.Installer initialInstaller = initialManifests.SingletonManifest.Installers.First();
+            Installer installer = ConvertSingletonInstaller(initialInstaller);
+
+            PackageParser.ParsePackageAndUpdateInstallerNode(installer, testMsiInstallerPath, installer.InstallerUrl);
+            Assert.AreEqual(InstallerType.Msi, installer.InstallerType, "InstallerType should be updated.");
+            Assert.AreEqual(initialInstaller.Architecture.ToEnumAttributeValue(), installer.Architecture.ToEnumAttributeValue(), "Architecture should not change.");
+            Assert.AreNotEqual(initialInstaller.InstallerSha256, installer.InstallerSha256, "InstallerSha256 should be updated.");
+            Assert.AreEqual("{E2650EFC-DCD3-4FAA-BBAC-FD1812B03A61}", installer.ProductCode, "ProductCode should be updated");
+        }
+
+        /// <summary>
+        /// Converts the SingletonManifest Installer object model to the InstallerManifest Installer object model.
+        /// </summary>
+        /// <param name="installer">Singleton Manifest Installer object model.</param>
+        /// <returns>Installer Manifest Installer object model.</returns>
+        private static Installer ConvertSingletonInstaller(WingetCreateCore.Models.Singleton.Installer installer)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AllowNullCollections = true;
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
+            });
+            var mapper = config.CreateMapper();
+
+            return mapper.Map<Installer>(installer);
         }
     }
 }

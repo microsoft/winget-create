@@ -742,4 +742,24 @@
   <data name="SelectPropertyToEdit_Message" xml:space="preserve">
     <value>Which property would you like to edit?</value>
   </data>
+  <data name="InteractiveUpdate_HelpText" xml:space="preserve">
+    <value>Boolean value for making the update command interactive. If true, the tool will prompt the user for input. Default is false.</value>
+  </data>
+  <data name="InstallerUpdatedSuccessfully_Message" xml:space="preserve">
+    <value>Installer updated successfully!</value>
+  </data>
+  <data name="NewInstallerUrl_Message" xml:space="preserve">
+    <value>What is the new installer url?</value>
+  </data>
+  <data name="PressKeyToContinue_Message" xml:space="preserve">
+    <value>Press any key to continue...</value>
+  </data>
+  <data name="UpdatingInstallerOutOfTotal_Message" xml:space="preserve">
+    <value>Updating {0} of {1} installers:</value>
+    <comment>{0} - represents the current installer index that is being updated
+{1} - represents the total number of installers to be updated</comment>
+  </data>
+  <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
+    <value>Would you like to discard this update and start over?</value>
+  </data>
 </root>
