@@ -743,7 +743,7 @@
     <value>Which property would you like to edit?</value>
   </data>
   <data name="InteractiveUpdate_HelpText" xml:space="preserve">
-    <value>Boolean value for making the update command interactive. If true, the user will be prompted for input to resolve any conflicts. Default is false.</value>
+    <value>Boolean value for making the update command interactive. If true, the tool will prompt the user for input. Default is false.</value>
   </data>
   <data name="InstallerUpdatedSuccessfully_Message" xml:space="preserve">
     <value>Installer updated successfully!</value>
