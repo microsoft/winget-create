@@ -1222,7 +1222,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This package identifier already exists. Do you want to continue?.
+        ///   Looks up a localized string similar to This package identifier already exists in the repository. Are you sure you want to continue?.
         /// </summary>
         public static string PackageIdAlreadyExists_Message {
             get {

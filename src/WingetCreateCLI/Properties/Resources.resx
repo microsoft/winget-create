@@ -542,7 +542,7 @@
     <comment>{0} - will be replaced with the failed installer url</comment>
   </data>
   <data name="PackageIdAlreadyExists_Message" xml:space="preserve">
-    <value>This package identifier already exists. Do you want to continue?</value>
+    <value>This package identifier already exists in the repository. Are you sure you want to continue?</value>
   </data>
   <data name="SettingsCommand_HelpText" xml:space="preserve">
     <value>Open settings</value>
