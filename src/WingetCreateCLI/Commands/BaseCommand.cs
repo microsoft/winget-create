@@ -430,17 +430,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (e is AuthorizationException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.InvalidGitHubToken_Message));
-                    return false;
                 }
                 else if (e is RateLimitExceededException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
-                    return false;
                 }
                 else if (e is NotFoundException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
                 }
+
+                return false;
             }
 
             this.GitHubClient = client;

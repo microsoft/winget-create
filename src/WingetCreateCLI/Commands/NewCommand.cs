@@ -413,18 +413,9 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 exactMatch = await this.GitHubClient.FindPackageId(versionManifest.PackageIdentifier);
             }
-            catch (Exception e)
+            catch (Octokit.RateLimitExceededException)
             {
-                if (e is Octokit.RateLimitExceededException)
-                {
-                    Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
-                }
-                else if (e is Octokit.NotFoundException)
-                {
-                    // This exception will only be thrown if repository is invalid.
-                    Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
-                }
-
+                Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
                 return false;
             }
 
