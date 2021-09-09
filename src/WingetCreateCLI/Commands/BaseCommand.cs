@@ -263,7 +263,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         protected static async Task<string> DownloadPackageFile(string installerUrl)
         {
             Logger.InfoLocalized(nameof(Resources.DownloadInstaller_Message), installerUrl);
-            Console.WriteLine();
 
             try
             {
@@ -431,17 +430,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (e is AuthorizationException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.InvalidGitHubToken_Message));
+                    return false;
                 }
                 else if (e is RateLimitExceededException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                    return false;
                 }
                 else if (e is NotFoundException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
                 }
-
-                return false;
             }
 
             this.GitHubClient = client;

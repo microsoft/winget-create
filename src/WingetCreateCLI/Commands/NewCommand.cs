@@ -141,8 +141,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                         if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
                         {
                             Console.WriteLine();
-                            Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
-                            return false;
+                            if (!Prompt.Confirm(Resources.PackageIdAlreadyExists_Message))
+                            {
+                                return false;
+                            }
                         }
                     }
 
@@ -411,9 +413,18 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 exactMatch = await this.GitHubClient.FindPackageId(versionManifest.PackageIdentifier);
             }
-            catch (Octokit.RateLimitExceededException)
+            catch (Exception e)
             {
-                Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                if (e is Octokit.RateLimitExceededException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                }
+                else if (e is Octokit.NotFoundException)
+                {
+                    // This exception will only be thrown if repository is invalid.
+                    Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
+                }
+
                 return false;
             }
 

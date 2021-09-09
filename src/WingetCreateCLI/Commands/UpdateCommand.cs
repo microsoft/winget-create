@@ -122,9 +122,18 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     exactId = await this.GitHubClient.FindPackageId(this.Id);
                 }
-                catch (Octokit.RateLimitExceededException)
+                catch (Exception e)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                    if (e is Octokit.RateLimitExceededException)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                    }
+                    else if (e is Octokit.NotFoundException)
+                    {
+                        // This exception will only be thrown if repository is invalid.
+                        Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
+                    }
+
                     return false;
                 }
 
@@ -259,9 +268,12 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
             catch (InstallerMatchException installerMatchException)
             {
+                Console.WriteLine();
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
                 installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                Console.WriteLine();
+                Logger.WarnLocalized(nameof(Resources.ResolveMatchingConflicts_Message));
                 return null;
             }
 

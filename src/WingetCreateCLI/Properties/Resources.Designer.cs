@@ -1222,11 +1222,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to We have detected that this package identifier already exists. If you intend to update an existing package, please use the update command..
+        ///   Looks up a localized string similar to This package identifier already exists. Do you want to continue?.
         /// </summary>
-        public static string PackageIdAlreadyExists_Error {
+        public static string PackageIdAlreadyExists_Message {
             get {
-                return ResourceManager.GetString("PackageIdAlreadyExists_Error", resourceCulture);
+                return ResourceManager.GetString("PackageIdAlreadyExists_Message", resourceCulture);
             }
         }
         
@@ -1434,6 +1434,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string RepositoryNotFound_Error {
             get {
                 return ResourceManager.GetString("RepositoryNotFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To resolve matching conflicts manually, use the --interactive flag.
+        /// </summary>
+        public static string ResolveMatchingConflicts_Message {
+            get {
+                return ResourceManager.GetString("ResolveMatchingConflicts_Message", resourceCulture);
             }
         }
         
