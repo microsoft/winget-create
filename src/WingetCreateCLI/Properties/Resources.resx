@@ -392,7 +392,7 @@
     <value>Collection of installer switches</value>
   </data>
   <data name="Tags_KeywordDescription" xml:space="preserve">
-    <value>List of additional package search terms |e.g. Tag1, Tag2, Tag3|</value>
+    <value>List of additional package search terms</value>
   </data>
   <data name="TokenCommand_HelpText" xml:space="preserve">
     <value>Modifies the GitHub auth token cache</value>

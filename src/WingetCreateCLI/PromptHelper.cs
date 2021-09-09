@@ -199,7 +199,7 @@ namespace Microsoft.WingetCreateCLI
         /// <param name="minimum">Minimum number of entries required for the list.</param>
         /// <param name="validationModel">Object model to be validated against if the target field differs from what is specified in the model (i.e. NewCommand.InstallerUrls).</param>
         /// <param name="validationName">Name of the property field to be used for looking up validation constraints if the target field name differs from what specified in the model.</param>
-        public static void PromptList<T>(string message, object model, string memberName, List<T> instance, int minimum = 0, object validationModel = null, string validationName = null)
+        public static void PromptList<T>(string message, object model, string memberName, IEnumerable<T> instance, int minimum = 0, object validationModel = null, string validationName = null)
         {
             var property = model.GetType().GetProperty(memberName);
             Type instanceType = typeof(T);
