@@ -1627,7 +1627,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to List of additional package search terms |e.g. Tag1, Tag2, Tag3|.
+        ///   Looks up a localized string similar to List of additional package search terms.
         /// </summary>
         public static string Tags_KeywordDescription {
             get {
