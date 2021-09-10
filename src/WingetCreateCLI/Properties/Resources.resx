@@ -762,4 +762,8 @@
   <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
     <value>Would you like to discard this update and start over?</value>
   </data>
+  <data name="ResolveMatchingConflicts_Message" xml:space="preserve">
+    <value>To resolve matching conflicts manually, use the --interactive flag.</value>
+    <comment>`--interactive` - refers to a flag that can be included with the command</comment>
+  </data>
 </root>
