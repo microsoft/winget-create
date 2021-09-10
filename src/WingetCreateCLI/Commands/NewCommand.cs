@@ -122,6 +122,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
+                Console.WriteLine();
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
                 Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
@@ -141,10 +142,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                         if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
                         {
                             Console.WriteLine();
-                            if (!Prompt.Confirm(Resources.PackageIdAlreadyExists_Message))
-                            {
-                                return false;
-                            }
+                            Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
+                            return false;
                         }
                     }
 

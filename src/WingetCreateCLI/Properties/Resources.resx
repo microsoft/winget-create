@@ -392,7 +392,7 @@
     <value>Collection of installer switches</value>
   </data>
   <data name="Tags_KeywordDescription" xml:space="preserve">
-    <value>List of additional package search terms</value>
+    <value>List of additional package search terms |e.g. Tag1, Tag2, Tag3|</value>
   </data>
   <data name="TokenCommand_HelpText" xml:space="preserve">
     <value>Modifies the GitHub auth token cache</value>
@@ -541,8 +541,8 @@
     <value>Failed to parse the package from [{0}]</value>
     <comment>{0} - will be replaced with the failed installer url</comment>
   </data>
-  <data name="PackageIdAlreadyExists_Message" xml:space="preserve">
-    <value>This package identifier already exists in the repository. Are you sure you want to continue?</value>
+  <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
+    <value>We have detected that this package identifier already exists. If you intend to update an existing package, please use the update command.</value>
   </data>
   <data name="SettingsCommand_HelpText" xml:space="preserve">
     <value>Open settings</value>
@@ -763,7 +763,7 @@
     <value>Would you like to discard this update and start over?</value>
   </data>
   <data name="ResolveMatchingConflicts_Message" xml:space="preserve">
-    <value>To resolve matching conflicts manually, use the --interactive flag</value>
+    <value>To resolve matching conflicts manually, use the --interactive flag.</value>
     <comment>`--interactive` - refers to a flag that can be included with the command</comment>
   </data>
 </root>

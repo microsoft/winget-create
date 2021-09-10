@@ -1222,11 +1222,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This package identifier already exists in the repository. Are you sure you want to continue?.
+        ///   Looks up a localized string similar to We have detected that this package identifier already exists. If you intend to update an existing package, please use the update command..
         /// </summary>
-        public static string PackageIdAlreadyExists_Message {
+        public static string PackageIdAlreadyExists_Error {
             get {
-                return ResourceManager.GetString("PackageIdAlreadyExists_Message", resourceCulture);
+                return ResourceManager.GetString("PackageIdAlreadyExists_Error", resourceCulture);
             }
         }
         
@@ -1438,7 +1438,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To resolve matching conflicts manually, use the --interactive flag.
+        ///   Looks up a localized string similar to To resolve matching conflicts manually, use the --interactive flag..
         /// </summary>
         public static string ResolveMatchingConflicts_Message {
             get {
@@ -1636,7 +1636,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to List of additional package search terms.
+        ///   Looks up a localized string similar to List of additional package search terms |e.g. Tag1, Tag2, Tag3|.
         /// </summary>
         public static string Tags_KeywordDescription {
             get {
