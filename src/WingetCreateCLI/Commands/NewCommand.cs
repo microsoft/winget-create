@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.IO;
@@ -321,7 +322,55 @@ namespace Microsoft.WingetCreateCLI.Commands
                 foreach (Installer installer in installers)
                 {
                     var fieldValue = field.GetValue(installerCopy);
-                    installer.GetType().GetProperty(field.Name).SetValue(installer, fieldValue);
+                    var prop = installer.GetType().GetProperty(field.Name);
+                    if (prop.PropertyType.IsValueType)
+                    {
+                        prop.SetValue(installer, fieldValue);
+                    }
+                    else if (fieldValue is IList)
+                    {
+                        Type elementType = prop.PropertyType.GetGenericArguments()[0];
+                        Type listType = typeof(List<>).MakeGenericType(elementType);
+                        var list = Activator.CreateInstance(listType, fieldValue);
+                        prop.SetValue(installer, list);
+                    }else if (fieldValue is Dependencies dependencies)
+                    {
+                        ApplyDependencyChangesToInstaller(dependencies, installer);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clones any non-null property values of the dependencies object and assigns them to the provided installer object.
+        /// </summary>
+        /// <param name="dependencies">Dependencies object with new values.</param>
+        /// <param name="installer">Installer object to assign new changes to.</param>
+        private static void ApplyDependencyChangesToInstaller(Dependencies dependencies, Installer installer)
+        {
+            var modifiedFields = dependencies.GetType().GetProperties()
+                .Select(prop => prop)
+                .Where(pi => pi.GetValue(dependencies) != null);
+
+            foreach (var field in modifiedFields)
+            {
+                var fieldValue = field.GetValue(dependencies);
+                installer.Dependencies ??= new Dependencies();
+                var prop = installer.Dependencies.GetType().GetProperty(field.Name);
+
+                if (fieldValue is List<PackageDependencies> packageDependencies)
+                {
+                    List<PackageDependencies> packageDependenciesList = new List<PackageDependencies>();
+                    packageDependencies.ForEach(i => packageDependenciesList.Add(
+                        new PackageDependencies { PackageIdentifier = i.PackageIdentifier, MinimumVersion = i.MinimumVersion }));
+                    prop.SetValue(installer.Dependencies, packageDependenciesList);
+                }
+                else if (fieldValue is IList)
+                {
+                    Type elementType = prop.PropertyType.GetGenericArguments()[0];
+                    Type listType = typeof(List<>).MakeGenericType(elementType);
+                    var list = Activator.CreateInstance(listType, fieldValue);
+                    prop.SetValue(installer.Dependencies, list);
                 }
             }
         }
