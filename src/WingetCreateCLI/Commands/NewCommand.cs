@@ -116,9 +116,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                     PackageParser.ParsePackages(packageFiles, this.InstallerUrls, manifests, out List<PackageParser.DetectedArch> detectedArchs);
                     DisplayMismatchedArchitectures(detectedArchs);
                 }
-                catch (ParsePackageException exception)
+                catch (Exception e)
                 {
-                    exception.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
+                    if (e is ParsePackageException exception)
+                    {
+                        exception.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
+                    }
+                    else if (e is IOException)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
+                    }
+
                     return false;
                 }
 

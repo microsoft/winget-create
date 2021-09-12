@@ -304,6 +304,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operation did not complete successfully because the downloaded file contains a virus or potentially unwanted software. For more information on potentially unwanted software and what options are available, see https://aka.ms/winget-create-security.
+        /// </summary>
+        public static string DefenderVirus_ErrorMessage {
+            get {
+                return ResourceManager.GetString("DefenderVirus_ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deleting {0}.
         /// </summary>
         public static string DeletingInstaller_Message {

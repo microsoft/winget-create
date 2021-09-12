@@ -247,21 +247,27 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 DisplayMismatchedArchitectures(detectedArchOfInstallers);
             }
-            catch (InvalidOperationException)
+            catch (Exception e)
             {
-                Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
-                return null;
-            }
-            catch (ParsePackageException parsePackageException)
-            {
-                parsePackageException.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
-                return null;
-            }
-            catch (InstallerMatchException installerMatchException)
-            {
-                Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
-                installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
-                installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                if (e is InvalidOperationException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
+                }
+                else if (e is IOException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
+                }
+                else if (e is ParsePackageException parsePackageException)
+                {
+                    parsePackageException.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
+                }
+                else if (e is InstallerMatchException installerMatchException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
+                    installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                    installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                }
+
                 return null;
             }
 
@@ -433,6 +439,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 else if (!PackageParser.ParsePackageAndUpdateInstallerNode(installer, packageFile, url))
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), url);
+                    Console.WriteLine();
                 }
                 else
                 {

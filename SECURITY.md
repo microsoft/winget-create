@@ -30,6 +30,10 @@ This information will help us triage your report more quickly.
 
 If you are reporting for a bug bounty, more complete reports can contribute to a higher bounty award. Please visit our [Microsoft Bug Bounty Program](https://microsoft.com/msrc/bounty) page for more details about our active programs.
 
+## Virus and Threat Protection
+
+Winget-Create relies on downloading installers and parsing the package for relevant metadata. **Winget-Create does not scan or protect the user from files that may contain viruses.** As with any downloaded file, please verify that the provided installer URL points to a trusted and verified source. If the installer you have provided is blocked due to virus scanning, please take necessary precautions to protect your machine and visit [Virus Threat Protection in Windows Security](https://support.microsoft.com/en-us/windows/virus-threat-protection-in-windows-security-1362f4cd-d71a-b52a-0b66-c2820032b65e) for more details.
+
 ## Preferred Languages
 
 We prefer all communications to be in English.

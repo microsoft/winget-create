@@ -294,9 +294,6 @@ namespace Microsoft.WingetCreateCore
         /// <returns>Boolean indicating whether the package parse was successful.</returns>
         public static bool ParsePackageAndUpdateInstallerNode(Installer installer, string path, string url)
         {
-            // Clean out values from installer which could be present from 
-            InstallerType initialInstallerType = installer.InstallerType.Value;
-
             List<Installer> newInstallers = new List<Installer>();
             bool parseResult = ParseExeInstallerType(path, installer, newInstallers) ||
                 ParseMsix(path, installer, null, newInstallers) ||
