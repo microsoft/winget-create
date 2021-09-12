@@ -130,6 +130,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
+                Console.WriteLine();
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
                 Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
