@@ -312,10 +312,13 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         private static void ApplyChangesToIndividualInstallers(Installer installerCopy, List<Installer> installers)
         {
-            // Skip architecture as the default value when instantiated is x86, which we don't want to override other installer archs with.
+            // Skip architecture as the default value when instantiated is x86.
             var modifiedFields = installerCopy.GetType().GetProperties()
                 .Select(prop => prop)
-                .Where(pi => pi.GetValue(installerCopy) != null && pi.Name != nameof(Installer.Architecture));
+                .Where(pi =>
+                    pi.GetValue(installerCopy) != null &&
+                    pi.Name != nameof(Installer.Architecture) &&
+                    pi.Name != nameof(Installer.AdditionalProperties));
 
             foreach (var field in modifiedFields)
             {
@@ -327,13 +330,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                     {
                         prop.SetValue(installer, fieldValue);
                     }
-                    else if (fieldValue is IList)
+                    else if (fieldValue is IList list)
                     {
-                        Type elementType = prop.PropertyType.GetGenericArguments()[0];
-                        Type listType = typeof(List<>).MakeGenericType(elementType);
-                        var list = Activator.CreateInstance(listType, fieldValue);
-                        prop.SetValue(installer, list);
-                    }else if (fieldValue is Dependencies dependencies)
+                        prop.SetValue(installer, list.DeepClone());
+                    }
+                    else if (fieldValue is Dependencies dependencies)
                     {
                         ApplyDependencyChangesToInstaller(dependencies, installer);
                     }
@@ -352,25 +353,15 @@ namespace Microsoft.WingetCreateCLI.Commands
                 .Select(prop => prop)
                 .Where(pi => pi.GetValue(dependencies) != null);
 
-            foreach (var field in modifiedFields)
+            foreach (var field in modifiedFields.Where(f => f.Name != nameof(Installer.AdditionalProperties)))
             {
                 var fieldValue = field.GetValue(dependencies);
                 installer.Dependencies ??= new Dependencies();
                 var prop = installer.Dependencies.GetType().GetProperty(field.Name);
 
-                if (fieldValue is List<PackageDependencies> packageDependencies)
+                if (fieldValue is IList list)
                 {
-                    List<PackageDependencies> packageDependenciesList = new List<PackageDependencies>();
-                    packageDependencies.ForEach(i => packageDependenciesList.Add(
-                        new PackageDependencies { PackageIdentifier = i.PackageIdentifier, MinimumVersion = i.MinimumVersion }));
-                    prop.SetValue(installer.Dependencies, packageDependenciesList);
-                }
-                else if (fieldValue is IList)
-                {
-                    Type elementType = prop.PropertyType.GetGenericArguments()[0];
-                    Type listType = typeof(List<>).MakeGenericType(elementType);
-                    var list = Activator.CreateInstance(listType, fieldValue);
-                    prop.SetValue(installer.Dependencies, list);
+                    prop.SetValue(installer.Dependencies, list.DeepClone());
                 }
             }
         }
