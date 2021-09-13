@@ -117,25 +117,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                     PackageParser.ParsePackages(packageFiles, this.InstallerUrls, manifests, out List<PackageParser.DetectedArch> detectedArchs);
                     DisplayMismatchedArchitectures(detectedArchs);
                 }
-                catch (Exception e)
+                catch (IOException iOException) when (iOException.HResult == -2147024671)
                 {
-                    if (e is ParsePackageException parsePackageException)
-                    {
-                        parsePackageException.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
-                    }
-                    else if (e is IOException iOException)
-                    {
-                        if (iOException.HResult == -2147024671)
-                        {
-                            // This HResult indicates the installer was blocked by defender scan due to virus detection.
-                            Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
-                        }
-                        else
-                        {
-                            Logger.ErrorLocalized(nameof(Resources.Error_Prefix), iOException.Message);
-                        }
-                    }
-
+                    Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
+                    return false;
+                }
+                catch (ParsePackageException parsePackageException)
+                {
+                    parsePackageException.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
                     return false;
                 }
 
