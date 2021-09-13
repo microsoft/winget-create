@@ -6,6 +6,7 @@ namespace Microsoft.WingetCreateCore.Common
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -102,6 +103,43 @@ namespace Microsoft.WingetCreateCore.Common
         public static bool IsEmptyObject(this object o)
         {
             return !o.GetType().GetProperties().Select(pi => pi.GetValue(o)).Where(value => !value.IsDictionary() && value != null).Any();
+        }
+
+        /// <summary>
+        /// Creates a new List object that is a deep clone copy of the current list object instance.
+        /// </summary>
+        /// <param name="list">List object to be cloned.</param>
+        /// <returns>New List object that is a copy of this instance.</returns>
+        public static IList DeepClone(this IList list)
+        {
+            if (list == null)
+            {
+                return null;
+            }
+
+            Type elementType = list.GetType().GetGenericArguments()[0];
+            Type listType = typeof(List<>).MakeGenericType(elementType);
+            var newList = (IList)Activator.CreateInstance(listType);
+            foreach (var item in list)
+            {
+                object toAdd;
+                if (item.GetType().IsValueType)
+                {
+                    toAdd = item;
+                }
+                else if (item is ICloneable clonableItem)
+                {
+                    toAdd = clonableItem.Clone();
+                }
+                else
+                {
+                    throw new InvalidDataException();
+                }
+
+                newList.Add(toAdd);
+            }
+
+            return newList;
         }
     }
 }

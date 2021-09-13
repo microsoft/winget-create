@@ -762,6 +762,10 @@
   <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
     <value>Would you like to discard this update and start over?</value>
   </data>
+  <data name="ResolveMatchingConflicts_Message" xml:space="preserve">
+    <value>To resolve matching conflicts manually, use the --interactive flag.</value>
+    <comment>`--interactive` - refers to a flag that can be included with the command</comment>
+  </data>
   <data name="DefenderVirus_ErrorMessage" xml:space="preserve">
     <value>Operation did not complete successfully because the downloaded file contains a virus or potentially unwanted software. For more information on potentially unwanted software and what options are available, see https://aka.ms/winget-create-security</value>
   </data>

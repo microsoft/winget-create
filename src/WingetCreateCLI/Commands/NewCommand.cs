@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.IO;
@@ -118,18 +119,27 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 catch (Exception e)
                 {
-                    if (e is ParsePackageException exception)
+                    if (e is ParsePackageException parsePackageException)
                     {
-                        exception.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
+                        parsePackageException.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
                     }
-                    else if (e is IOException)
+                    else if (e is IOException iOException)
                     {
-                        Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
+                        if (iOException.HResult == -2147024671)
+                        {
+                            // This HResult indicates the installer was blocked by defender scan due to virus detection.
+                            Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
+                        }
+                        else
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.Error_Prefix), iOException.Message);
+                        }
                     }
 
                     return false;
                 }
 
+                Console.WriteLine();
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
                 Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
@@ -319,17 +329,56 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         private static void ApplyChangesToIndividualInstallers(Installer installerCopy, List<Installer> installers)
         {
-            // Skip architecture as the default value when instantiated is x86, which we don't want to override other installer archs with.
+            // Skip architecture as the default value when instantiated is x86.
             var modifiedFields = installerCopy.GetType().GetProperties()
                 .Select(prop => prop)
-                .Where(pi => pi.GetValue(installerCopy) != null && pi.Name != nameof(Installer.Architecture));
+                .Where(pi =>
+                    pi.GetValue(installerCopy) != null &&
+                    pi.Name != nameof(Installer.Architecture) &&
+                    pi.Name != nameof(Installer.AdditionalProperties));
 
             foreach (var field in modifiedFields)
             {
                 foreach (Installer installer in installers)
                 {
                     var fieldValue = field.GetValue(installerCopy);
-                    installer.GetType().GetProperty(field.Name).SetValue(installer, fieldValue);
+                    var prop = installer.GetType().GetProperty(field.Name);
+                    if (prop.PropertyType.IsValueType)
+                    {
+                        prop.SetValue(installer, fieldValue);
+                    }
+                    else if (fieldValue is IList list)
+                    {
+                        prop.SetValue(installer, list.DeepClone());
+                    }
+                    else if (fieldValue is Dependencies dependencies)
+                    {
+                        ApplyDependencyChangesToInstaller(dependencies, installer);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clones any non-null property values of the dependencies object and assigns them to the provided installer object.
+        /// </summary>
+        /// <param name="dependencies">Dependencies object with new values.</param>
+        /// <param name="installer">Installer object to assign new changes to.</param>
+        private static void ApplyDependencyChangesToInstaller(Dependencies dependencies, Installer installer)
+        {
+            var modifiedFields = dependencies.GetType().GetProperties()
+                .Select(prop => prop)
+                .Where(pi => pi.GetValue(dependencies) != null);
+
+            foreach (var field in modifiedFields.Where(f => f.Name != nameof(Installer.AdditionalProperties)))
+            {
+                var fieldValue = field.GetValue(dependencies);
+                installer.Dependencies ??= new Dependencies();
+                var prop = installer.Dependencies.GetType().GetProperty(field.Name);
+
+                if (fieldValue is IList list)
+                {
+                    prop.SetValue(installer.Dependencies, list.DeepClone());
                 }
             }
         }

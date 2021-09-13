@@ -1447,6 +1447,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To resolve matching conflicts manually, use the --interactive flag..
+        /// </summary>
+        public static string ResolveMatchingConflicts_Message {
+            get {
+                return ResourceManager.GetString("ResolveMatchingConflicts_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of restricted MSIX capabilities.
         /// </summary>
         public static string RestrictedCapabilities_KeywordDescription {
