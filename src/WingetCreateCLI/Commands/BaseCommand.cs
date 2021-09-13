@@ -263,7 +263,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         protected static async Task<string> DownloadPackageFile(string installerUrl)
         {
             Logger.InfoLocalized(nameof(Resources.DownloadInstaller_Message), installerUrl);
-            Console.WriteLine();
 
             try
             {
