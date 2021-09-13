@@ -206,13 +206,9 @@
   <data name="Example_UpdateCommand_SaveAndPublish" xml:space="preserve">
     <value>Enregistrer et publier le manifeste mis à jour</value>
   </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateInstallerURL" xml:space="preserve">
-    <value>Rechercher un manifeste existant et mettre à jour l’URL du programme d’installation</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field with the value provided by the user.</comment>
-  </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateVersion" xml:space="preserve">
-    <value>Rechercher un manifeste existant et mettre à jour la version</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the Version field with the value provided by the user.</comment>
+  <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
+    <value>Rechercher un manifeste existant et mettre à jour l’URL et la version du programme d’installation</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>Liste des extensions de fichiers que le package peut prendre en charge</value>
@@ -260,16 +256,13 @@
     <value>Le type du programme d’installation</value>
   </data>
   <data name="InstallerUrl_HelpText" xml:space="preserve">
-    <value>URL du programme d’installation utilisée pour extraire les métadonnées appropriées pour la génération d’un manifeste</value>
+    <value>URL(s) du programme d’installation utilisées pour extraire les métadonnées pertinentes pour générer un manifeste</value>
   </data>
   <data name="InstallLocation_KeywordDescription" xml:space="preserve">
     <value>Le chemin d’accès de redirection de l’emplacement du programme d’installation</value>
   </data>
   <data name="Interactive_KeywordDescription" xml:space="preserve">
     <value>Les commutateurs du programme d’installation interactif</value>
-  </data>
-  <data name="InvalidCachedToken" xml:space="preserve">
-    <value>Le jeton mis en cache était non valide, supprimant et lançant le flux OAuth</value>
   </data>
   <data name="Language_KeywordDescription" xml:space="preserve">
     <value>Remplace la langue par défaut</value>
@@ -332,7 +325,7 @@
     <value>Les paramètres régionaux des métadonnées du package</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
-    <value>La page d’accueil du package.</value>
+    <value>La page d’accueil du package</value>
   </data>
   <data name="Platform_KeywordDescription" xml:space="preserve">
     <value>La plateforme d’installation</value>
@@ -380,9 +373,6 @@
   <data name="Silent_KeywordDescription" xml:space="preserve">
     <value>Les commutateurs du programme d’installation silencieuse</value>
   </data>
-  <data name="StoreToken_Message" xml:space="preserve">
-    <value>Définition du jeton GitHub mis en cache</value>
-  </data>
   <data name="Store_HelpText" xml:space="preserve">
     <value>Définissez le jeton GitHub mis en cache. Peut spécifier un jeton à mettre en cache avec le paramètre --Token, sinon démarrera le flux OAuth.</value>
   </data>
@@ -429,7 +419,7 @@
     <value>La version du package | par exemple, 1.2.3.4 |</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
-    <value>Échec de l’écriture du jeton OAuth dans le cache : {0}</value>
+    <value>Échec de l’écriture du jeton dans le cache:{0}</value>
   </data>
   <data name="ConfirmManifestCreation_Message" xml:space="preserve">
     <value>Voulez-vous apporter des modifications à ce manifeste ?</value>
@@ -458,9 +448,6 @@
   </data>
   <data name="ResumingCommandExecution_Message" xml:space="preserve">
     <value>Reprise de l’exécution de la commande...</value>
-  </data>
-  <data name="UsingTokenFromCache_Message" xml:space="preserve">
-    <value>Utilisation du jeton GitHub à partir du cache...</value>
   </data>
   <data name="PackageName_KeywordDescription" xml:space="preserve">
     <value>Le nom du package |par exemple, Visual Studio|</value>
@@ -495,6 +482,9 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>La version minimale du système d’exploitation du programme d’installation</value>
   </data>
+  <data name="MultipleInstallerUpdateDiscrepancy_Error" xml:space="preserve">
+    <value>La mise à jour d’un manifeste n’est prise en charge qu’avec le même nombre d’URL de programme d’installation.</value>
+  </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>Les commutateurs de mise à niveau</value>
   </data>
@@ -511,7 +501,7 @@
     <value>Liste des dépendances de package externe</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>L’URL du programme d’installation (par exemple, https://microsoft.com/downloads|</value>
+    <value>La ou les URL du programme d’installation |.g. https://microsoft.com/foo.exe, https://microsoft.com/bar.msix|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>Le type de manifeste</value>
@@ -538,7 +528,7 @@
     <value>Vous trouverez plus d’aide sur : https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>Déclaration de confidentialité : https://aka.ms/winget-create-privacy</value>
+    <value>Déclaration de confidentialité : https://aka.ms/privacy</value>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>La réponse HTTP a échoué. Code d’État : {0}</value>
@@ -548,6 +538,228 @@
     <value>URL non valide spécifiée. Vérifiez l’URL et réessayez.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>Impossible d’analyser le package avec succès et de déterminer le type du programme d’installation.</value>
+    <value>Échec de l’analyse du package à partir de [{0}]</value>
+    <comment>{0} - will be replaced with the failed installer url</comment>
+  </data>
+  <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
+    <value>Nous avons détecté que cet identificateur de package existe déjà. Si vous prévoyez de mettre à jour un package existant, utilisez la commande de mise à jour.</value>
+  </data>
+  <data name="SettingsCommand_HelpText" xml:space="preserve">
+    <value>Ouvrir les paramètres</value>
+  </data>
+  <data name="ErrorParsingSettingsFile_Message" xml:space="preserve">
+    <value>Erreur lors de l’analyse du message : {0}.</value>
+    <comment>{0} - will be replaced with the path to the settings file.</comment>
+  </data>
+  <data name="GenerateNewSettingsFile_Message" xml:space="preserve">
+    <value>Fichier de paramètres introuvable, génération en cours d’un nouveau fichier de paramètres à partir des paramètres chargés...</value>
+  </data>
+  <data name="LoadSettingsFromBackup_Message" xml:space="preserve">
+    <value>Paramètres chargés à partir du fichier de sauvegarde.</value>
+  </data>
+  <data name="LoadSettingsFromDefault_Message" xml:space="preserve">
+    <value>Paramètres chargés à partir des paramètres par défaut.</value>
+  </data>
+  <data name="TelemetryAnonymous_Message" xml:space="preserve">
+    <value>Les données sont anonymes et sont collectées par Microsoft.</value>
+  </data>
+  <data name="TelemetryJustification_Message" xml:space="preserve">
+    <value>Le créateur du manifeste Gestionnaire de package Windows collecte les données d’utilisation afin d’améliorer votre expérience.</value>
+  </data>
+  <data name="TelemetrySettings_Message" xml:space="preserve">
+    <value>Paramètres de télémétrie</value>
+  </data>
+  <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
+    <value>Erreur inattendue lors du chargement des paramètres. Vérifiez vos paramètres en exécutant la commande settings.</value>
+  </data>
+  <data name="CompareUpdatedManifestWithExisting_Message" xml:space="preserve">
+    <value>Vérifiez que le manifeste mis à jour que vous envoyez est différent du package existant.</value>
+  </data>
+  <data name="InvalidTokenError_Message" xml:space="preserve">
+    <value>Jeton non valide fourni. Générez un nouveau jeton GitHub et réessayez.</value>
+  </data>
+  <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
+    <value>L’envoi d’un manifeste sans modification mise à jour n’est pas autorisé. </value>
+  </data>
+  <data name="InstallerMatchFailedError_Message" xml:space="preserve">
+    <value>Les programmes d’installation suivants n’ont pas pu correspondre à un nœud de programme d’installation existant :</value>
+  </data>
+  <data name="UnboundArguments_Message" xml:space="preserve">
+    <value>Les arguments non liés suivants ont été détectés : «{0}»</value>
+    <comment>{0} - The additional unbound arguments present in the command line arguments.</comment>
+  </data>
+  <data name="VerifyCommandUsage_Message" xml:space="preserve">
+    <value>Vérifiez et vérifiez l’utilisation de cette commande en transmettant l’indicateur --help.</value>
+  </data>
+  <data name="ModifyOptionalDefaultLocaleFields_Message" xml:space="preserve">
+    <value>Voulez-vous modifier les champs de paramètres régionaux par défaut facultatifs ?</value>
+  </data>
+  <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
+    <value>Chaque nouvelle URL du programme d’installation doit avoir une correspondance unique avec un programme d’installation existant en fonction du type et de l’architecture du programme d’installation. Les programmes d’installation suivants n’ont pas pu correspondre à un programme d’installation existant :</value>
+  </data>
+  <data name="DetectedArchMismatch_Message" xml:space="preserve">
+    <value>L’architecture détectée à partir du fichier binaire peut être différente de celle spécifiée dans l’URL du programme d’installation pour le ou les programmes d’installation suivants :</value>
+  </data>
+  <data name="InstallerBinaryMismatch_Message" xml:space="preserve">
+    <value>Utilisation de l’architecture détectée à partir de l’URL ({0}), remplacement de l’architecture détectée à partir du binaire ({1})</value>
+    <comment>{0} - Architecture detected from the installer URL
+{1} - Architecture determined from the installer binary</comment>
+  </data>
+  <data name="RepositoryNotFound_Error" xml:space="preserve">
+    <value>Dépôt « {0}/{1} » introuvable. Vérifiez le propriétaire et le nom du dépôt Gestionnaire de package Windows dans votre fichier de paramètres.</value>
+    <comment>{0} - will be replaced with the owner name of the Windows Package Manager repository
+{1} - will be replaced with the name of the Windows Package Manager repository</comment>
+  </data>
+  <data name="CacheCommand_HelpText" xml:space="preserve">
+    <value>Gérer les programmes d’installation téléchargés stockés dans le cache</value>
+  </data>
+  <data name="Clean_HelpText" xml:space="preserve">
+    <value>Supprime tous les programmes d’installation téléchargés dans le dossier du cache</value>
+  </data>
+  <data name="List_HelpText" xml:space="preserve">
+    <value>Répertorie tous les programmes d’installation téléchargés stockés dans le cache</value>
+  </data>
+  <data name="Open_HelpText" xml:space="preserve">
+    <value>Ouvre le dossier du cache stockant les programmes d’installation téléchargés</value>
+  </data>
+  <data name="InstallersFound_Message" xml:space="preserve">
+    <value>{0} programmes d’installation trouvés dans {1}</value>
+    <comment>{0} - Will be replaced with the number of installers found in the cache folder
+{1} - Will be replaced with the path to the downloaded installer cache folder</comment>
+  </data>
+  <data name="DeletingInstaller_Message" xml:space="preserve">
+    <value>Suppression en cours de {0}</value>
+    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+  </data>
+  <data name="InstallerCacheCleaned_Message" xml:space="preserve">
+    <value>Le cache du programme d’installation est nettoyé.</value>
+  </data>
+  <data name="DeletingInvalidCachedToken_Message" xml:space="preserve">
+    <value>Le jeton mis cache n’est pas valide, ce qui supprime le jeton du cache...</value>
+  </data>
+  <data name="InvalidGitHubToken_Message" xml:space="preserve">
+    <value>Le jeton n’était pas valide. Veuillez générez un nouveau jeton GitHub et réessayez.</value>
+  </data>
+  <data name="RateLimitExceeded_Message" xml:space="preserve">
+    <value>Limite de débit de l’API GitHub dépassée. Pour étendre votre limite de débit, fournissez le « -t » à votre jeton GitHub. marquer ou stocker un à l’aide du « jeton --store » commande.</value>
+    <comment>'-t' refers to a command line switch argument
+'token --store' refers to a command line argument</comment>
+  </data>
+  <data name="SettingToken_Message" xml:space="preserve">
+    <value>Définition de jeton GitHub...</value>
+  </data>
+  <data name="StoringToken_Message" xml:space="preserve">
+    <value>Jeton stocké dans le cache avec succès.</value>
+  </data>
+  <data name="GetLatestVersion_Message" xml:space="preserve">
+    <value>Pour obtenir la dernière version ({0}), accédez à {1}</value>
+    <comment>{0} - Will be replaced with the latest release version
+{1} - Will be replaced with the URL to the latest version of the tool.</comment>
+  </data>
+  <data name="OutdatedVersionNotice_Message" xml:space="preserve">
+    <value>Il s’agit d’une version antérieure de Winget-Create et il manque peut-être certaines fonctionnalités critiques.</value>
+  </data>
+  <data name="UpgradeUsingWinget_Message" xml:space="preserve">
+    <value>Si vous avez installé le client winget, vous pouvez effectuer la mise à jour en exécutant la commande : « winget upgrade Microsoft.WingetCreate »</value>
+    <comment>`winget upgrade Microsoft.WingetCreate` refers to a specific command to be executed in order to upgrade the tool to the latest version.
+
+"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="TelemetryEnabledByDefault_Message" xml:space="preserve">
+    <value>Par défaut, la télémétrie est activée, mais peut être désactivée en exécutant « wingetcreate settings » et en modifiant votre fichier de paramètres.</value>
+    <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
+  </data>
+  <data name="DownloadFileExceedsMaxSize_Error" xml:space="preserve">
+    <value>L’URL pointe vers un fichier dont la taille est supérieure à la taille maximale de {0}Mo</value>
+    <comment>{0} - represents the maximum size of a downloaded file</comment>
+  </data>
+  <data name="InstallerCountMustMatch_Error" xml:space="preserve">
+    <value>Le nombre de nouveaux packages d’installation doit correspondre au nombre de packages d’installation existants.</value>
+  </data>
+  <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
+    <value>Plusieurs correspondances trouvées pour {0} {1} programme d’installation détecté à partir de l’URL : {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type
+
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="UnmatchedInstaller_Error" xml:space="preserve">
+    <value>Aucune correspondance trouvée pour {0} {1} programme d’installation détecté à partir de l’URL : {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type 
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="AdditionalMetadataNeeded_Message" xml:space="preserve">
+    <value>Métadonnées supplémentaires nécessaires au programme d’installation à partir de {0}</value>
+    <comment>{0} - Installer URL of the installer</comment>
+  </data>
+  <data name="Add_MenuItem" xml:space="preserve">
+    <value>AJOUTER</value>
+  </data>
+  <data name="AllInstallers_MenuItem" xml:space="preserve">
+    <value>TOUS LES PROGRAMMES D’INSTALLATION</value>
+  </data>
+  <data name="Back_MenuItem" xml:space="preserve">
+    <value>RETOUR</value>
+  </data>
+  <data name="DisplayPreviewOfItems" xml:space="preserve">
+    <value>Affichage d’un aperçu de [{0}] :</value>
+    <comment>{0} - Name of field with list of items</comment>
+  </data>
+  <data name="DisplayPreviewOfSelectedInstaller_Message" xml:space="preserve">
+    <value>Affichage d’un aperçu du programme d’installation sélectionné:</value>
+  </data>
+  <data name="DisplayPreview_MenuItem" xml:space="preserve">
+    <value>AFFICHER L’APERÇU</value>
+  </data>
+  <data name="Done_MenuItem" xml:space="preserve">
+    <value>TERMINÉ</value>
+  </data>
+  <data name="FieldValueIs_Message" xml:space="preserve">
+    <value>[{0}]valeur est</value>
+    <comment>{0} - Name of the field</comment>
+  </data>
+  <data name="FilterMenuItems_Message" xml:space="preserve">
+    <value>Filtrez les éléments de menu en tapant une requête de recherche ci-dessous.</value>
+  </data>
+  <data name="ModifyOptionalInstallerFields_Message" xml:space="preserve">
+    <value>Voulez-vous modifier les champs facultatifs du programme d’installation ?</value>
+  </data>
+  <data name="None_MenuItem" xml:space="preserve">
+    <value>AUCUN</value>
+  </data>
+  <data name="RemoveLastEntry_MenuItem" xml:space="preserve">
+    <value>SUPPRIMER LA DERNIÈRE ENTRÉE</value>
+  </data>
+  <data name="SelectAction_Message" xml:space="preserve">
+    <value>Que souhaitez-vous faire?</value>
+  </data>
+  <data name="SelectInstallerToEdit_Message" xml:space="preserve">
+    <value>Quel programme d’installation voulez-vous modifier?</value>
+  </data>
+  <data name="SelectPropertyToEdit_Message" xml:space="preserve">
+    <value>Quelle propriété souhaitez-vous modifier?</value>
+  </data>
+  <data name="InteractiveUpdate_HelpText" xml:space="preserve">
+    <value>Valeur booléenne pour rendre la commande de mise à jour interactive. Si la valeur est true, l’outil demande l’entrée à l’utilisateur. La valeur par défaut est false.</value>
+  </data>
+  <data name="InstallerUpdatedSuccessfully_Message" xml:space="preserve">
+    <value>L'installateur a été mis à jour avec succès !</value>
+  </data>
+  <data name="NewInstallerUrl_Message" xml:space="preserve">
+    <value>Quelle est la nouvelle URL du programme d'installation ?</value>
+  </data>
+  <data name="PressKeyToContinue_Message" xml:space="preserve">
+    <value>Appuyez sur n'importe quelle touche pour continuer...</value>
+  </data>
+  <data name="UpdatingInstallerOutOfTotal_Message" xml:space="preserve">
+    <value>Mise à jour {0} des {1} installateurs :</value>
+    <comment>{0} - represents the current installer index that is being updated
+{1} - represents the total number of installers to be updated</comment>
+  </data>
+  <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
+    <value>Voulez-vous ignorer cette mise à jour et recommencer ?</value>
   </data>
 </root>

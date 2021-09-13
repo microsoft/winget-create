@@ -206,13 +206,9 @@
   <data name="Example_UpdateCommand_SaveAndPublish" xml:space="preserve">
     <value>Сохранить и опубликовать обновленный манифест</value>
   </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateInstallerURL" xml:space="preserve">
-    <value>Поиск существующего манифеста и обновление URL-адреса установщика</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field with the value provided by the user.</comment>
-  </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateVersion" xml:space="preserve">
-    <value>Поиск существующего манифеста и обновление версии</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the Version field with the value provided by the user.</comment>
+  <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
+    <value>Поиск существующего манифеста и обновление URL-адреса и версии установщика</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>Список расширений файлов, которые поддерживает пакет</value>
@@ -260,16 +256,13 @@
     <value>Тип установщика</value>
   </data>
   <data name="InstallerUrl_HelpText" xml:space="preserve">
-    <value>URL-адрес установщика для извлечения метаданных, необходимых для создания манифеста</value>
+    <value>URL-адреса установщика для извлечения метаданных, необходимых для создания манифеста</value>
   </data>
   <data name="InstallLocation_KeywordDescription" xml:space="preserve">
     <value>Путь перенаправления расположения установщика</value>
   </data>
   <data name="Interactive_KeywordDescription" xml:space="preserve">
     <value>Интерактивные ключи установщика</value>
-  </data>
-  <data name="InvalidCachedToken" xml:space="preserve">
-    <value>Кэшированный токен недействителен, поток OAuth удаляется и запускается</value>
   </data>
   <data name="Language_KeywordDescription" xml:space="preserve">
     <value>Переопределяет язык по умолчанию</value>
@@ -332,7 +325,7 @@
     <value>Языковой стандарт метаданных пакета</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
-    <value>Домашняя страница пакета.</value>
+    <value>Домашняя страница пакета</value>
   </data>
   <data name="Platform_KeywordDescription" xml:space="preserve">
     <value>Платформа установщика</value>
@@ -380,9 +373,6 @@
   <data name="Silent_KeywordDescription" xml:space="preserve">
     <value>Переключатели автоматической установки</value>
   </data>
-  <data name="StoreToken_Message" xml:space="preserve">
-    <value>Настройка кэшированного токена GitHub</value>
-  </data>
   <data name="Store_HelpText" xml:space="preserve">
     <value>Установите кешированный токен GitHub. Можно указать токен для кеширования с параметром --token, в противном случае будет инициирован поток OAuth.</value>
   </data>
@@ -429,7 +419,7 @@
     <value>Версия пакета | например, 1.2.3.4 |</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
-    <value>Сбой при записи маркера OAuth для кэша: {0}</value>
+    <value>Не удалось записать токен в кэш: {0}</value>
   </data>
   <data name="ConfirmManifestCreation_Message" xml:space="preserve">
     <value>Внести изменения в этот манифест?</value>
@@ -458,9 +448,6 @@
   </data>
   <data name="ResumingCommandExecution_Message" xml:space="preserve">
     <value>Возобновление выполнения команды...</value>
-  </data>
-  <data name="UsingTokenFromCache_Message" xml:space="preserve">
-    <value>Использование токена GitHub из кеша...</value>
   </data>
   <data name="PackageName_KeywordDescription" xml:space="preserve">
     <value>Название пакета |например, Visual Studio|</value>
@@ -495,8 +482,8 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>Минимальная версия операционной системы установщика</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>Обновление существующего манифеста с несколькими URL-адресами установщика в настоящее время не поддерживается.</value>
+  <data name="MultipleInstallerUpdateDiscrepancy_Error" xml:space="preserve">
+    <value>Обновление манифеста поддерживается только при одинаковом количестве URL-адресов установщика.</value>
   </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>Обновленные переключатели</value>
@@ -514,7 +501,7 @@
     <value>Список зависимостей внешнего пакета</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>URL-адрес установщика | например https://microsoft.com/downloads|</value>
+    <value>URL-адреса установщика | например:  https://microsoft.com/foo.exe, https://microsoft.com/bar.msix |</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>Тип манифеста</value>
@@ -541,7 +528,7 @@
     <value>Дополнительную помощь можно найти по адресу: https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>Заявление о конфиденциальности: https://aka.ms/winget-create-privacy</value>
+    <value>Заявление о конфиденциальности: https://aka.ms/privacy</value>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>Ответ HTTP не выполнен. Код состояния: {0}</value>
@@ -551,6 +538,228 @@
     <value>Указан недопустимый URL-адрес. Проверьте URL-адрес и повторите попытку.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>Не удалось успешно проанализировать пакет и определить тип установщика.</value>
+    <value>Не далось проанализировать пакет из [{0}]</value>
+    <comment>{0} - will be replaced with the failed installer url</comment>
+  </data>
+  <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
+    <value>Мы обнаружили, что этот идентификатор пакета уже существует. Если вы собираетесь обновить существующий пакет, воспользуйтесь командой "Обновить".</value>
+  </data>
+  <data name="SettingsCommand_HelpText" xml:space="preserve">
+    <value>Открыть параметры</value>
+  </data>
+  <data name="ErrorParsingSettingsFile_Message" xml:space="preserve">
+    <value>Ошибка при анализе файла: {0}.</value>
+    <comment>{0} - will be replaced with the path to the settings file.</comment>
+  </data>
+  <data name="GenerateNewSettingsFile_Message" xml:space="preserve">
+    <value>Файл параметров не найден, создание нового файла параметров на основе загруженных параметров…</value>
+  </data>
+  <data name="LoadSettingsFromBackup_Message" xml:space="preserve">
+    <value>Загружены параметры из файла резервной копии.</value>
+  </data>
+  <data name="LoadSettingsFromDefault_Message" xml:space="preserve">
+    <value>Загружены параметры из заводских параметров по умолчанию.</value>
+  </data>
+  <data name="TelemetryAnonymous_Message" xml:space="preserve">
+    <value>Данные анонимны и собираются только корпорацией Майкрософт.</value>
+  </data>
+  <data name="TelemetryJustification_Message" xml:space="preserve">
+    <value>Создатель манифестов Диспетчера пакетов Windows собирает данные об использовании для улучшения работы.</value>
+  </data>
+  <data name="TelemetrySettings_Message" xml:space="preserve">
+    <value>Параметры телеметрии</value>
+  </data>
+  <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
+    <value>Непредвиденная ошибка при загрузке параметров. Проверьте параметры, выполнив команду "Параметры".</value>
+  </data>
+  <data name="CompareUpdatedManifestWithExisting_Message" xml:space="preserve">
+    <value>Убедитесь, что отправляемый измененный манифест отличается от существующего пакета.</value>
+  </data>
+  <data name="InvalidTokenError_Message" xml:space="preserve">
+    <value>Предоставлен недопустимый токен. Создайте новый маркер GitHub и повторите попытку.</value>
+  </data>
+  <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
+    <value>Отправка манифеста без внесения изменений не допускается.</value>
+  </data>
+  <data name="InstallerMatchFailedError_Message" xml:space="preserve">
+    <value>Следующим установщикам не удалось сопоставить существующий узел установщика:</value>
+  </data>
+  <data name="UnboundArguments_Message" xml:space="preserve">
+    <value>Обнаружены следующие непривязанные аргументы: "{0}"</value>
+    <comment>{0} - The additional unbound arguments present in the command line arguments.</comment>
+  </data>
+  <data name="VerifyCommandUsage_Message" xml:space="preserve">
+    <value>Проверьте правильность использования этой команды, передав флаг --help.</value>
+  </data>
+  <data name="ModifyOptionalDefaultLocaleFields_Message" xml:space="preserve">
+    <value>Изменить необязательные поля языкового стандарта по умолчанию?</value>
+  </data>
+  <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
+    <value>Каждый новый URL-адрес установщика должен совпадать с одним существующим установщиков в соответствии с его типом и архитектурой. Для следующих установщиков отсутствуют совпадения с существующими:</value>
+  </data>
+  <data name="DetectedArchMismatch_Message" xml:space="preserve">
+    <value>Архитектура, обнаруженная в двоичном файле, может отличаться от той, которая указана в URL-адресе установщика, для следующих установщиков:</value>
+  </data>
+  <data name="InstallerBinaryMismatch_Message" xml:space="preserve">
+    <value>Использование архитектуры, обнаруженной по URL-адресу ({0}), переопределение архитектуры, обнаруженной из двоичного файла ({1})</value>
+    <comment>{0} - Architecture detected from the installer URL
+{1} - Architecture determined from the installer binary</comment>
+  </data>
+  <data name="RepositoryNotFound_Error" xml:space="preserve">
+    <value>Репозиторий "{0}/{1}" не найден. Проверьте владельца Диспетчер пакетов Windows и имя репозитория в файле параметров.</value>
+    <comment>{0} - will be replaced with the owner name of the Windows Package Manager repository
+{1} - will be replaced with the name of the Windows Package Manager repository</comment>
+  </data>
+  <data name="CacheCommand_HelpText" xml:space="preserve">
+    <value>Управление скачанными установщиками, сохраненными в кэше</value>
+  </data>
+  <data name="Clean_HelpText" xml:space="preserve">
+    <value>Удаляет все скачанные установщики в папке кэша</value>
+  </data>
+  <data name="List_HelpText" xml:space="preserve">
+    <value>Вывод списка всех скачанных установщиков, сохраненных в кэше</value>
+  </data>
+  <data name="Open_HelpText" xml:space="preserve">
+    <value>Открывает папку кэша, в которой хранятся скачанные установщики</value>
+  </data>
+  <data name="InstallersFound_Message" xml:space="preserve">
+    <value>{0} установщики, найденные в {1}</value>
+    <comment>{0} - Will be replaced with the number of installers found in the cache folder
+{1} - Will be replaced with the path to the downloaded installer cache folder</comment>
+  </data>
+  <data name="DeletingInstaller_Message" xml:space="preserve">
+    <value>Удаление {0}.</value>
+    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+  </data>
+  <data name="InstallerCacheCleaned_Message" xml:space="preserve">
+    <value>Кэш с установщиками очищен.</value>
+  </data>
+  <data name="DeletingInvalidCachedToken_Message" xml:space="preserve">
+    <value>Кэшированный токен был недействительным, токен удаляется из кэша...</value>
+  </data>
+  <data name="InvalidGitHubToken_Message" xml:space="preserve">
+    <value>Недопустимый токен. Создайте новый токен GitHub и повторите попытку.</value>
+  </data>
+  <data name="RateLimitExceeded_Message" xml:space="preserve">
+    <value>Превышено ограничение скорости API GitHub. Чтобы увеличить ограничение скорости, укажите токен GitHub с флагом "-t" или храните его с помощью команды "token --store".</value>
+    <comment>'-t' refers to a command line switch argument
+'token --store' refers to a command line argument</comment>
+  </data>
+  <data name="SettingToken_Message" xml:space="preserve">
+    <value>Настройка токена GitHub...</value>
+  </data>
+  <data name="StoringToken_Message" xml:space="preserve">
+    <value>Токен успешно сохранен в кэше.</value>
+  </data>
+  <data name="GetLatestVersion_Message" xml:space="preserve">
+    <value>Для получения последней версии ({0}) перейдите на страницу {1}</value>
+    <comment>{0} - Will be replaced with the latest release version
+{1} - Will be replaced with the URL to the latest version of the tool.</comment>
+  </data>
+  <data name="OutdatedVersionNotice_Message" xml:space="preserve">
+    <value>Это более старая версия Winget-Create, в которой могут отсутствовать некоторые важные функции.</value>
+  </data>
+  <data name="UpgradeUsingWinget_Message" xml:space="preserve">
+    <value>Если у вас установлен клиент WinGet, вы можете выполнить обновление с помощью команды "winget upgrade Microsoft.WingetCreate"</value>
+    <comment>`winget upgrade Microsoft.WingetCreate` refers to a specific command to be executed in order to upgrade the tool to the latest version.
+
+"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="TelemetryEnabledByDefault_Message" xml:space="preserve">
+    <value>По умолчанию телеметрия включена, но ее можно отключить, запустив "wingetcreate settings" и изменив файл параметров.</value>
+    <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
+  </data>
+  <data name="DownloadFileExceedsMaxSize_Error" xml:space="preserve">
+    <value>URL-адрес указывает на файл размером более {0}МБ</value>
+    <comment>{0} - represents the maximum size of a downloaded file</comment>
+  </data>
+  <data name="InstallerCountMustMatch_Error" xml:space="preserve">
+    <value>Количество пакетов новых установщиков должно совпадать с количеством пакетов существующих установщиков.</value>
+  </data>
+  <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
+    <value>Обнаружено несколько совпадений для {0} {1} , обнаруженных по URL-адресу: {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type
+
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="UnmatchedInstaller_Error" xml:space="preserve">
+    <value>Не найдено совпадений для установщика {0} {1} по URL-адресу: {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type 
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="AdditionalMetadataNeeded_Message" xml:space="preserve">
+    <value>Дополнительные метаданные, необходимые для установщика из {0}</value>
+    <comment>{0} - Installer URL of the installer</comment>
+  </data>
+  <data name="Add_MenuItem" xml:space="preserve">
+    <value>ДОБАВИТЬ</value>
+  </data>
+  <data name="AllInstallers_MenuItem" xml:space="preserve">
+    <value>ВСЕ УСТАНОВЩИКИ</value>
+  </data>
+  <data name="Back_MenuItem" xml:space="preserve">
+    <value>НАЗАД</value>
+  </data>
+  <data name="DisplayPreviewOfItems" xml:space="preserve">
+    <value>Отображение предварительного просмотра [{0}]:</value>
+    <comment>{0} - Name of field with list of items</comment>
+  </data>
+  <data name="DisplayPreviewOfSelectedInstaller_Message" xml:space="preserve">
+    <value>Отображение предварительного просмотра выбранного установщика:</value>
+  </data>
+  <data name="DisplayPreview_MenuItem" xml:space="preserve">
+    <value>ПРЕДВАРИТЕЛЬНЫЙ ПРОСМОТР ЭКРАНА</value>
+  </data>
+  <data name="Done_MenuItem" xml:space="preserve">
+    <value>ГОТОВО</value>
+  </data>
+  <data name="FieldValueIs_Message" xml:space="preserve">
+    <value>[{0}] значение</value>
+    <comment>{0} - Name of the field</comment>
+  </data>
+  <data name="FilterMenuItems_Message" xml:space="preserve">
+    <value>Фильтрация элементов меню путем ввода поискового запроса ниже.</value>
+  </data>
+  <data name="ModifyOptionalInstallerFields_Message" xml:space="preserve">
+    <value>Изменить необязательные поля установщика?</value>
+  </data>
+  <data name="None_MenuItem" xml:space="preserve">
+    <value>НЕТ</value>
+  </data>
+  <data name="RemoveLastEntry_MenuItem" xml:space="preserve">
+    <value>УДАЛИТЬ ПОСЛЕДНЮЮ ЗАПИСЬ</value>
+  </data>
+  <data name="SelectAction_Message" xml:space="preserve">
+    <value>Что вы хотели бы сделать?</value>
+  </data>
+  <data name="SelectInstallerToEdit_Message" xml:space="preserve">
+    <value>Какой установщик вы хотите изменить?</value>
+  </data>
+  <data name="SelectPropertyToEdit_Message" xml:space="preserve">
+    <value>Какое свойство вы хотите изменить?</value>
+  </data>
+  <data name="InteractiveUpdate_HelpText" xml:space="preserve">
+    <value>Логическое значение интерактивности команды обновления. При значении true инструмент запросит ввод данных пользователем. Значение по умолчанию — false.</value>
+  </data>
+  <data name="InstallerUpdatedSuccessfully_Message" xml:space="preserve">
+    <value>Установщик успешно обновлен.</value>
+  </data>
+  <data name="NewInstallerUrl_Message" xml:space="preserve">
+    <value>Какой новый URL-адрес установщика?</value>
+  </data>
+  <data name="PressKeyToContinue_Message" xml:space="preserve">
+    <value>Для продолжения нажмите любую клавишу...</value>
+  </data>
+  <data name="UpdatingInstallerOutOfTotal_Message" xml:space="preserve">
+    <value>Обновление {0} из {1} установщиков:</value>
+    <comment>{0} - represents the current installer index that is being updated
+{1} - represents the total number of installers to be updated</comment>
+  </data>
+  <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
+    <value>Отменить это обновление и начать заново?</value>
   </data>
 </root>

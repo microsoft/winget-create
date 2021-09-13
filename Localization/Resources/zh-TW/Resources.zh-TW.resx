@@ -206,13 +206,9 @@
   <data name="Example_UpdateCommand_SaveAndPublish" xml:space="preserve">
     <value>儲存並發佈更新的資訊清單</value>
   </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateInstallerURL" xml:space="preserve">
-    <value>搜尋現有的資訊清單及更新安裝程式 URL</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field with the value provided by the user.</comment>
-  </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateVersion" xml:space="preserve">
-    <value>搜尋現有的資訊清單及更新版本</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the Version field with the value provided by the user.</comment>
+  <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
+    <value>搜尋現有的資訊清單及更新安裝程式 URL 和版本</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>封裝可支援的副檔名清單</value>
@@ -260,16 +256,13 @@
     <value>安裝程式類型</value>
   </data>
   <data name="InstallerUrl_HelpText" xml:space="preserve">
-    <value>安裝程式 URL，用來解壓縮相關中繼資料以產生顯示清單</value>
+    <value>安裝程式 URL 是用於解壓縮相關中繼資料以產生資訊清單</value>
   </data>
   <data name="InstallLocation_KeywordDescription" xml:space="preserve">
     <value>安裝程式位置重新導向路徑</value>
   </data>
   <data name="Interactive_KeywordDescription" xml:space="preserve">
     <value>互動式安裝程式切換</value>
-  </data>
-  <data name="InvalidCachedToken" xml:space="preserve">
-    <value>已快取的權杖無效，正在刪除和啟動 OAuth 流程</value>
   </data>
   <data name="Language_KeywordDescription" xml:space="preserve">
     <value>覆蓋預設語言</value>
@@ -332,7 +325,7 @@
     <value>封裝中繼資料地區設定</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
-    <value>封裝首頁。</value>
+    <value>套件首頁</value>
   </data>
   <data name="Platform_KeywordDescription" xml:space="preserve">
     <value>安裝程式平台</value>
@@ -380,9 +373,6 @@
   <data name="Silent_KeywordDescription" xml:space="preserve">
     <value>無訊息安裝程式切換</value>
   </data>
-  <data name="StoreToken_Message" xml:space="preserve">
-    <value>設定快取的 GitHub 權杖</value>
-  </data>
   <data name="Store_HelpText" xml:space="preserve">
     <value>設定已快取的 GitHub 權杖。可以使用 --token 參數指定要快取的權杖，否則會初始化 OAuth 流程。</value>
   </data>
@@ -429,7 +419,7 @@
     <value>封裝版本 |例如 1.2.3.4|</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
-    <value>將 OAuth 權杖寫入到快取失敗： {0}</value>
+    <value>無法將權杖寫入快取：{0}</value>
   </data>
   <data name="ConfirmManifestCreation_Message" xml:space="preserve">
     <value>您要對此資訊清單進行變更嗎？</value>
@@ -458,9 +448,6 @@
   </data>
   <data name="ResumingCommandExecution_Message" xml:space="preserve">
     <value>正在繼續命令執行...</value>
-  </data>
-  <data name="UsingTokenFromCache_Message" xml:space="preserve">
-    <value>正在使用來自快取的 GitHub 權杖...</value>
   </data>
   <data name="PackageName_KeywordDescription" xml:space="preserve">
     <value>封裝名稱 |例如 Visual Studio|</value>
@@ -495,6 +482,9 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>安裝程式最低作業系統版本</value>
   </data>
+  <data name="MultipleInstallerUpdateDiscrepancy_Error" xml:space="preserve">
+    <value>更新清單只支援相同數量的安裝程式 URL。</value>
+  </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>升級切換</value>
   </data>
@@ -511,7 +501,7 @@
     <value>外部封裝相依性清單</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>安裝程式 URL | 例如 https://microsoft.com/downloads|</value>
+    <value>安裝程式 URL(s) |e.g. https://microsoft.com/foo.exe, https://microsoft.com/bar.msix|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>資訊清單類型</value>
@@ -538,7 +528,7 @@
     <value>您可以在此處找到更多說明：https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>隱私權聲明：https://aka.ms/winget-create-privacy</value>
+    <value>隱私權聲明：https://aka.ms/privacy</value>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>HTTP 回應失敗。狀態碼：{0}</value>
@@ -548,6 +538,228 @@
     <value>提供的 URL 無效。請檢查 URL，然後再試一次。</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>無法成功剖析封裝及判斷安裝程式類型。</value>
+    <value>無法從 [{0}] 剖析套件</value>
+    <comment>{0} - will be replaced with the failed installer url</comment>
+  </data>
+  <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
+    <value>我們偵測到此封裝識別碼已存在。如果您想要更新現有的封裝，請使用 [更新] 命令。</value>
+  </data>
+  <data name="SettingsCommand_HelpText" xml:space="preserve">
+    <value>開啟設定</value>
+  </data>
+  <data name="ErrorParsingSettingsFile_Message" xml:space="preserve">
+    <value>剖析檔案時發生錯誤: {0}。</value>
+    <comment>{0} - will be replaced with the path to the settings file.</comment>
+  </data>
+  <data name="GenerateNewSettingsFile_Message" xml:space="preserve">
+    <value>找不到設定檔，正在從載入的設定產生新的設定檔...</value>
+  </data>
+  <data name="LoadSettingsFromBackup_Message" xml:space="preserve">
+    <value>已載入備份檔案中的設定。</value>
+  </data>
+  <data name="LoadSettingsFromDefault_Message" xml:space="preserve">
+    <value>已載入預設原廠設定中的設定。</value>
+  </data>
+  <data name="TelemetryAnonymous_Message" xml:space="preserve">
+    <value>資料為匿名且僅由 Microsoft 收集。</value>
+  </data>
+  <data name="TelemetryJustification_Message" xml:space="preserve">
+    <value>Windows 封裝管理員資訊清單建立者會收集使用量資料，以便改善您的體驗。</value>
+  </data>
+  <data name="TelemetrySettings_Message" xml:space="preserve">
+    <value>遙測設定</value>
+  </data>
+  <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
+    <value>載入設定時發生未預期的錯誤。請執行 settings 命令來驗證您的設定。</value>
+  </data>
+  <data name="CompareUpdatedManifestWithExisting_Message" xml:space="preserve">
+    <value>請確定您提交的更新資訊清單與現有的套件不同。</value>
+  </data>
+  <data name="InvalidTokenError_Message" xml:space="preserve">
+    <value>提供的權杖無效，請產生新的 GitHub 權杖，然後再試一次。</value>
+  </data>
+  <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
+    <value>不允許提交沒有更新變更的資訊清單。 </value>
+  </data>
+  <data name="InstallerMatchFailedError_Message" xml:space="preserve">
+    <value>下列安裝程式無法比對現有的安裝程式節點：</value>
+  </data>
+  <data name="UnboundArguments_Message" xml:space="preserve">
+    <value>偵測到下列未繫結引數: "{0}"</value>
+    <comment>{0} - The additional unbound arguments present in the command line arguments.</comment>
+  </data>
+  <data name="VerifyCommandUsage_Message" xml:space="preserve">
+    <value>請傳入 --help 旗標，以檢查及驗證此命令的使用方式。</value>
+  </data>
+  <data name="ModifyOptionalDefaultLocaleFields_Message" xml:space="preserve">
+    <value>您要修改選擇性預設地區設定欄位嗎?</value>
+  </data>
+  <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
+    <value>每個新的安裝程式 URL 都必須有一個符合根據安裝程式類型和架構的現有安裝程式。下列安裝程式不符合現有的安裝程式：</value>
+  </data>
+  <data name="DetectedArchMismatch_Message" xml:space="preserve">
+    <value>從二進位檔偵測到的架構可能與下列安裝程式的安裝程式 URL 中指定的架構不同：</value>
+  </data>
+  <data name="InstallerBinaryMismatch_Message" xml:space="preserve">
+    <value>使用從 URL ({0}) 偵測到的架構，從二進位({1})偵測到覆寫架構</value>
+    <comment>{0} - Architecture detected from the installer URL
+{1} - Architecture determined from the installer binary</comment>
+  </data>
+  <data name="RepositoryNotFound_Error" xml:space="preserve">
+    <value>找不到存放庫 "{0}/{1}"。請確認Windows 封裝管理員存放庫擁有者與設定檔案中的名稱。</value>
+    <comment>{0} - will be replaced with the owner name of the Windows Package Manager repository
+{1} - will be replaced with the name of the Windows Package Manager repository</comment>
+  </data>
+  <data name="CacheCommand_HelpText" xml:space="preserve">
+    <value>管理儲存在快取中的下載安裝程式</value>
+  </data>
+  <data name="Clean_HelpText" xml:space="preserve">
+    <value>刪除快取資料夾中所有下載的安裝程式</value>
+  </data>
+  <data name="List_HelpText" xml:space="preserve">
+    <value>列出儲存在快取中所有下載的安裝程式</value>
+  </data>
+  <data name="Open_HelpText" xml:space="preserve">
+    <value>開啟儲存下載安裝程式的快取資料夾</value>
+  </data>
+  <data name="InstallersFound_Message" xml:space="preserve">
+    <value>在 {1} 中找到 {0} 個安裝程式</value>
+    <comment>{0} - Will be replaced with the number of installers found in the cache folder
+{1} - Will be replaced with the path to the downloaded installer cache folder</comment>
+  </data>
+  <data name="DeletingInstaller_Message" xml:space="preserve">
+    <value>正在刪除 {0}</value>
+    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+  </data>
+  <data name="InstallerCacheCleaned_Message" xml:space="preserve">
+    <value>已清除安裝程式快取。</value>
+  </data>
+  <data name="DeletingInvalidCachedToken_Message" xml:space="preserve">
+    <value>快取權杖無效，正在從快取刪除權杖...</value>
+  </data>
+  <data name="InvalidGitHubToken_Message" xml:space="preserve">
+    <value>權杖無效。請產生新的 GitHub 權杖，然後再試一次。</value>
+  </data>
+  <data name="RateLimitExceeded_Message" xml:space="preserve">
+    <value>已超過 GitHub API 速率限制。若要擴充您的速率限制，請提供具 '-t' 旗標的 GitHub 權杖，或使用 'token --store'命令儲存。</value>
+    <comment>'-t' refers to a command line switch argument
+'token --store' refers to a command line argument</comment>
+  </data>
+  <data name="SettingToken_Message" xml:space="preserve">
+    <value>正在設定 GitHub 權杖...</value>
+  </data>
+  <data name="StoringToken_Message" xml:space="preserve">
+    <value>已成功將權杖儲存在快取中。</value>
+  </data>
+  <data name="GetLatestVersion_Message" xml:space="preserve">
+    <value>如需最新版本的({0})，請移至 {1}</value>
+    <comment>{0} - Will be replaced with the latest release version
+{1} - Will be replaced with the URL to the latest version of the tool.</comment>
+  </data>
+  <data name="OutdatedVersionNotice_Message" xml:space="preserve">
+    <value>這是舊版 Winget-Create，可能會遺失某些重要功能。</value>
+  </data>
+  <data name="UpgradeUsingWinget_Message" xml:space="preserve">
+    <value>如果您已安裝 winget 用戶端，您可以執行此命令進行更新：'winget upgrade Microsoft.WingetCreate'</value>
+    <comment>`winget upgrade Microsoft.WingetCreate` refers to a specific command to be executed in order to upgrade the tool to the latest version.
+
+"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="TelemetryEnabledByDefault_Message" xml:space="preserve">
+    <value>預設會啟用遙測，但執行 [wingetcreate 設定] 與編輯設定檔案可停用此功能。</value>
+    <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
+  </data>
+  <data name="DownloadFileExceedsMaxSize_Error" xml:space="preserve">
+    <value>URL 指向大於大小上限 {0}MB 的檔案</value>
+    <comment>{0} - represents the maximum size of a downloaded file</comment>
+  </data>
+  <data name="InstallerCountMustMatch_Error" xml:space="preserve">
+    <value>新的安裝程式套件數目必須符合現有的安裝程式套件數目。</value>
+  </data>
+  <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
+    <value>從 URL 偵測到 {0} {1} 安裝程式有多個相符的專案： {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type
+
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="UnmatchedInstaller_Error" xml:space="preserve">
+    <value>從 URL 偵測到 {0} {1} 安裝程式找不到相符的專案： {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type 
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="AdditionalMetadataNeeded_Message" xml:space="preserve">
+    <value>來自 {0} 的安裝程式所需的其他中繼資料</value>
+    <comment>{0} - Installer URL of the installer</comment>
+  </data>
+  <data name="Add_MenuItem" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="AllInstallers_MenuItem" xml:space="preserve">
+    <value>所有安裝程式</value>
+  </data>
+  <data name="Back_MenuItem" xml:space="preserve">
+    <value>上一步</value>
+  </data>
+  <data name="DisplayPreviewOfItems" xml:space="preserve">
+    <value>顯示 [{0}] 的預覽:</value>
+    <comment>{0} - Name of field with list of items</comment>
+  </data>
+  <data name="DisplayPreviewOfSelectedInstaller_Message" xml:space="preserve">
+    <value>顯示所選取安裝程式的預覽:</value>
+  </data>
+  <data name="DisplayPreview_MenuItem" xml:space="preserve">
+    <value>顯示預覽</value>
+  </data>
+  <data name="Done_MenuItem" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="FieldValueIs_Message" xml:space="preserve">
+    <value>[{0}] 值為</value>
+    <comment>{0} - Name of the field</comment>
+  </data>
+  <data name="FilterMenuItems_Message" xml:space="preserve">
+    <value>在下方輸入搜尋查詢以篩選功能表項目。</value>
+  </data>
+  <data name="ModifyOptionalInstallerFields_Message" xml:space="preserve">
+    <value>您要修改選擇性安裝程式欄位嗎?</value>
+  </data>
+  <data name="None_MenuItem" xml:space="preserve">
+    <value>無</value>
+  </data>
+  <data name="RemoveLastEntry_MenuItem" xml:space="preserve">
+    <value>移除最後一個項目</value>
+  </data>
+  <data name="SelectAction_Message" xml:space="preserve">
+    <value>您想要做什麼? </value>
+  </data>
+  <data name="SelectInstallerToEdit_Message" xml:space="preserve">
+    <value>要編輯哪個安裝程式?</value>
+  </data>
+  <data name="SelectPropertyToEdit_Message" xml:space="preserve">
+    <value>您要編輯哪個屬性?</value>
+  </data>
+  <data name="InteractiveUpdate_HelpText" xml:space="preserve">
+    <value>讓更新命令成為互動式的布林值。若為 true，工具會提示使用者輸入。預設值為 false。</value>
+  </data>
+  <data name="InstallerUpdatedSuccessfully_Message" xml:space="preserve">
+    <value>安裝程式已成功更新！</value>
+  </data>
+  <data name="NewInstallerUrl_Message" xml:space="preserve">
+    <value>新的安裝程式 URL 是什麼？</value>
+  </data>
+  <data name="PressKeyToContinue_Message" xml:space="preserve">
+    <value>請按任意鍵繼續...</value>
+  </data>
+  <data name="UpdatingInstallerOutOfTotal_Message" xml:space="preserve">
+    <value>正在更新 {0} / {1} 安裝程式：</value>
+    <comment>{0} - represents the current installer index that is being updated
+{1} - represents the total number of installers to be updated</comment>
+  </data>
+  <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
+    <value>是否要捨棄此更新並重新開始？</value>
   </data>
 </root>
