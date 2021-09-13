@@ -253,9 +253,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
                 }
-                else if (e is IOException)
+                else if (e is IOException iOException)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
+                    if (iOException.HResult == -2147024671)
+                    {
+                        // This HResult indicates the installer was blocked by defender scan due to virus detection.
+                        Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
+                    }
+                    else
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.Error_Prefix), iOException.Message);
+                    }
                 }
                 else if (e is ParsePackageException parsePackageException)
                 {
