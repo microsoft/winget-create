@@ -206,13 +206,9 @@
   <data name="Example_UpdateCommand_SaveAndPublish" xml:space="preserve">
     <value>保存并发布更新的清单</value>
   </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateInstallerURL" xml:space="preserve">
-    <value>搜索现有清单并更新安装程序 URL</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field with the value provided by the user.</comment>
-  </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateVersion" xml:space="preserve">
-    <value>搜索现有清单并更新版本</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the Version field with the value provided by the user.</comment>
+  <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
+    <value>搜索现有清单并更新安装程序 URL 和版本</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>程序包可以支持的文件扩展名列表</value>
@@ -260,16 +256,13 @@
     <value>安装程序类型</value>
   </data>
   <data name="InstallerUrl_HelpText" xml:space="preserve">
-    <value>用于提取相关元数据以生成清单的安装程序 Url</value>
+    <value>安装程序 URL(用于提取用于生成清单的相关元数据)</value>
   </data>
   <data name="InstallLocation_KeywordDescription" xml:space="preserve">
     <value>安装程序位置重定向路径</value>
   </data>
   <data name="Interactive_KeywordDescription" xml:space="preserve">
     <value>交互式安装程序开关</value>
-  </data>
-  <data name="InvalidCachedToken" xml:space="preserve">
-    <value>缓存的令牌无效，正在删除并启动 OAuth 流</value>
   </data>
   <data name="Language_KeywordDescription" xml:space="preserve">
     <value>替代默认语言</value>
@@ -332,7 +325,7 @@
     <value>程序包元数据区域设置</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
-    <value>程序包主页。</value>
+    <value>程序包主页</value>
   </data>
   <data name="Platform_KeywordDescription" xml:space="preserve">
     <value>安装程序平台</value>
@@ -380,9 +373,6 @@
   <data name="Silent_KeywordDescription" xml:space="preserve">
     <value>无提示安装程序开关</value>
   </data>
-  <data name="StoreToken_Message" xml:space="preserve">
-    <value>正在设置缓存的 GitHub 令牌</value>
-  </data>
   <data name="Store_HelpText" xml:space="preserve">
     <value>设置缓存的 GitHub 令牌。可使用 --token 参数指定要缓存的令牌，否则将启动 OAuth 流。</value>
   </data>
@@ -429,7 +419,7 @@
     <value>程序包版本 |例如 1.2.3.4|</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
-    <value>无法将 OAuth 令牌写入缓存： {0}</value>
+    <value>将令牌写入缓存失败: {0}</value>
   </data>
   <data name="ConfirmManifestCreation_Message" xml:space="preserve">
     <value>是否要对此清单进行更改?</value>
@@ -458,9 +448,6 @@
   </data>
   <data name="ResumingCommandExecution_Message" xml:space="preserve">
     <value>正在恢复命令执行...</value>
-  </data>
-  <data name="UsingTokenFromCache_Message" xml:space="preserve">
-    <value>正在使用来自缓存的 GitHub 令牌...</value>
   </data>
   <data name="PackageName_KeywordDescription" xml:space="preserve">
     <value>程序包名 |例如 Visual Studio|</value>
@@ -495,8 +482,8 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>安装程序最低操作系统版本</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>当前不支持使用多个不同的安装程序 url 更新现有清单。</value>
+  <data name="MultipleInstallerUpdateDiscrepancy_Error" xml:space="preserve">
+    <value>更新清单仅支持相同数量的安装程序 URL。</value>
   </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>升级开关</value>
@@ -514,7 +501,7 @@
     <value>外部程序包依赖项列表</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>安装程序 URL | 例如 https://microsoft.com/downloads|</value>
+    <value>安装程序 URL(s) |e.g. https://microsoft.com/foo.exe, https://microsoft.com/bar.msix|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>清单类型</value>
@@ -541,7 +528,7 @@
     <value>可在以下位置找到更多帮助： https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>隐私声明：https://aka.ms/winget-create-privacy</value>
+    <value>隐私声明: https://aka.ms/privacy</value>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>HTTP 响应失败。状态代码: {0}</value>
@@ -551,6 +538,228 @@
     <value>提供的 URL 无效。请检查 URL，然后重试。</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>无法成功分析包并确定安装程序类型。</value>
+    <value>无法从 [{0}] 中分析数据包</value>
+    <comment>{0} - will be replaced with the failed installer url</comment>
+  </data>
+  <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
+    <value>我们检测到此程序包标识符已存在。如果要更新现有包，请使用更新命令。</value>
+  </data>
+  <data name="SettingsCommand_HelpText" xml:space="preserve">
+    <value>打开设置</value>
+  </data>
+  <data name="ErrorParsingSettingsFile_Message" xml:space="preserve">
+    <value>分析文件时出错: {0}。</value>
+    <comment>{0} - will be replaced with the path to the settings file.</comment>
+  </data>
+  <data name="GenerateNewSettingsFile_Message" xml:space="preserve">
+    <value>找不到设置文件，正在从加载的设置生成新的设置文件...</value>
+  </data>
+  <data name="LoadSettingsFromBackup_Message" xml:space="preserve">
+    <value>已从备份文件加载设置。</value>
+  </data>
+  <data name="LoadSettingsFromDefault_Message" xml:space="preserve">
+    <value>已从默认出厂设置加载设置。</value>
+  </data>
+  <data name="TelemetryAnonymous_Message" xml:space="preserve">
+    <value>数据是匿名的，并由 Microsoft 收集。</value>
+  </data>
+  <data name="TelemetryJustification_Message" xml:space="preserve">
+    <value>Windows 程序包管理器清单创建程序将收集使用数据以改善你的体验。</value>
+  </data>
+  <data name="TelemetrySettings_Message" xml:space="preserve">
+    <value>遥测设置</value>
+  </data>
+  <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
+    <value>加载设置时出现意外错误。请运行设置命令来验证你的设置。</value>
+  </data>
+  <data name="CompareUpdatedManifestWithExisting_Message" xml:space="preserve">
+    <value>请确保要提交的更新清单与现有包不同。</value>
+  </data>
+  <data name="InvalidTokenError_Message" xml:space="preserve">
+    <value>提供的令牌无效，请生成新的 GitHub 令牌，然后重试。</value>
+  </data>
+  <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
+    <value>不允许提交不带任何更新更改的清单。 </value>
+  </data>
+  <data name="InstallerMatchFailedError_Message" xml:space="preserve">
+    <value>以下安装程序无法匹配现有安装程序节点：</value>
+  </data>
+  <data name="UnboundArguments_Message" xml:space="preserve">
+    <value>检测到以下未绑定参数()： "{0}"</value>
+    <comment>{0} - The additional unbound arguments present in the command line arguments.</comment>
+  </data>
+  <data name="VerifyCommandUsage_Message" xml:space="preserve">
+    <value>请通过传递 --help 标志来检查和验证此命令的使用情况。</value>
+  </data>
+  <data name="ModifyOptionalDefaultLocaleFields_Message" xml:space="preserve">
+    <value>是否要修改可选的默认区域设置字段？</value>
+  </data>
+  <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
+    <value>每个新的安装程序 URL 必须具有一个基于安装程序类型和体系结构的现有安装程序的匹配项。以下安装程序无法匹配现有安装程序：</value>
+  </data>
+  <data name="DetectedArchMismatch_Message" xml:space="preserve">
+    <value>从二进制文件中检测到的架构可能与下列安装程序的安装程序 URL 中指定的不同:</value>
+  </data>
+  <data name="InstallerBinaryMismatch_Message" xml:space="preserve">
+    <value>使用从 URL ({0}) 检测到的体系结构，替代从二进制({1})检测到的体系结构</value>
+    <comment>{0} - Architecture detected from the installer URL
+{1} - Architecture determined from the installer binary</comment>
+  </data>
+  <data name="RepositoryNotFound_Error" xml:space="preserve">
+    <value>找不到存储库 "{0}/{1}"。请在设置文件中验证Windows 程序包管理器存储库所有者和名称。</value>
+    <comment>{0} - will be replaced with the owner name of the Windows Package Manager repository
+{1} - will be replaced with the name of the Windows Package Manager repository</comment>
+  </data>
+  <data name="CacheCommand_HelpText" xml:space="preserve">
+    <value>管理存储在缓存中的已下载安装程序</value>
+  </data>
+  <data name="Clean_HelpText" xml:space="preserve">
+    <value>删除缓存文件夹中下载的所有安装程序</value>
+  </data>
+  <data name="List_HelpText" xml:space="preserve">
+    <value>列出存储在缓存中的所有已下载安装程序</value>
+  </data>
+  <data name="Open_HelpText" xml:space="preserve">
+    <value>打开缓存文件夹以存储下载的安装程序</value>
+  </data>
+  <data name="InstallersFound_Message" xml:space="preserve">
+    <value>在 {1} 中找到 {0} 安装程序</value>
+    <comment>{0} - Will be replaced with the number of installers found in the cache folder
+{1} - Will be replaced with the path to the downloaded installer cache folder</comment>
+  </data>
+  <data name="DeletingInstaller_Message" xml:space="preserve">
+    <value>正在删除 {0}</value>
+    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+  </data>
+  <data name="InstallerCacheCleaned_Message" xml:space="preserve">
+    <value>安装程序缓存已清理。</value>
+  </data>
+  <data name="DeletingInvalidCachedToken_Message" xml:space="preserve">
+    <value>缓存的令牌无效，正在从缓存中删除令牌...</value>
+  </data>
+  <data name="InvalidGitHubToken_Message" xml:space="preserve">
+    <value>令牌无效。请生成新的 GitHub 令牌，然后重试。</value>
+  </data>
+  <data name="RateLimitExceeded_Message" xml:space="preserve">
+    <value>已超过 GitHub API 速率限制。要提高速率限制，请向 GitHub 令牌提供 “-t” 标记或使用 “token --store” 命令存储一个标记。</value>
+    <comment>'-t' refers to a command line switch argument
+'token --store' refers to a command line argument</comment>
+  </data>
+  <data name="SettingToken_Message" xml:space="preserve">
+    <value>正在设置 GitHub 令牌...</value>
+  </data>
+  <data name="StoringToken_Message" xml:space="preserve">
+    <value>已成功将令牌存储在缓存中。</value>
+  </data>
+  <data name="GetLatestVersion_Message" xml:space="preserve">
+    <value>有关最新版本({0})，请转到{1}</value>
+    <comment>{0} - Will be replaced with the latest release version
+{1} - Will be replaced with the URL to the latest version of the tool.</comment>
+  </data>
+  <data name="OutdatedVersionNotice_Message" xml:space="preserve">
+    <value>这是 Winget-Create 的较旧版本，可能缺少一些关键功能。</value>
+  </data>
+  <data name="UpgradeUsingWinget_Message" xml:space="preserve">
+    <value>如果安装了 winget 客户端，则可以通过运行命令 “winget upgrade Microsoft.WingetCreate” 进行更新</value>
+    <comment>`winget upgrade Microsoft.WingetCreate` refers to a specific command to be executed in order to upgrade the tool to the latest version.
+
+"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="TelemetryEnabledByDefault_Message" xml:space="preserve">
+    <value>默认情况下，遥测处于启用状态，但可以通过运行“wingetcreate settings”并编辑设置文件来禁用遥测。</value>
+    <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
+  </data>
+  <data name="DownloadFileExceedsMaxSize_Error" xml:space="preserve">
+    <value>URL 指向大于最大大小 {0}MB 的文件</value>
+    <comment>{0} - represents the maximum size of a downloaded file</comment>
+  </data>
+  <data name="InstallerCountMustMatch_Error" xml:space="preserve">
+    <value>新的安装程序包数必须与现有安装程序包的数量匹配。</value>
+  </data>
+  <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
+    <value>从 URL 中检测到 {0} {1} 安装程序的多个匹配项： {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type
+
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="UnmatchedInstaller_Error" xml:space="preserve">
+    <value>未从 URL 中找到与 {0} {1} 安装程序匹配： {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type 
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="AdditionalMetadataNeeded_Message" xml:space="preserve">
+    <value>安装程序所需的其他元数据来自 {0}</value>
+    <comment>{0} - Installer URL of the installer</comment>
+  </data>
+  <data name="Add_MenuItem" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="AllInstallers_MenuItem" xml:space="preserve">
+    <value>所有安装程序</value>
+  </data>
+  <data name="Back_MenuItem" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="DisplayPreviewOfItems" xml:space="preserve">
+    <value>显示 [{0}] 的预览:</value>
+    <comment>{0} - Name of field with list of items</comment>
+  </data>
+  <data name="DisplayPreviewOfSelectedInstaller_Message" xml:space="preserve">
+    <value>显示所选安装程序的预览:</value>
+  </data>
+  <data name="DisplayPreview_MenuItem" xml:space="preserve">
+    <value>显示预览</value>
+  </data>
+  <data name="Done_MenuItem" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="FieldValueIs_Message" xml:space="preserve">
+    <value>{0} 值为</value>
+    <comment>{0} - Name of the field</comment>
+  </data>
+  <data name="FilterMenuItems_Message" xml:space="preserve">
+    <value>通过在下面键入搜索查询来筛选菜单项。</value>
+  </data>
+  <data name="ModifyOptionalInstallerFields_Message" xml:space="preserve">
+    <value>是否要修改可选安装程序字段?</value>
+  </data>
+  <data name="None_MenuItem" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="RemoveLastEntry_MenuItem" xml:space="preserve">
+    <value>删除最后一项</value>
+  </data>
+  <data name="SelectAction_Message" xml:space="preserve">
+    <value>你希望做什么呢?</value>
+  </data>
+  <data name="SelectInstallerToEdit_Message" xml:space="preserve">
+    <value>你想要编辑哪个安装程序?</value>
+  </data>
+  <data name="SelectPropertyToEdit_Message" xml:space="preserve">
+    <value>要编辑哪个属性?</value>
+  </data>
+  <data name="InteractiveUpdate_HelpText" xml:space="preserve">
+    <value>用于使更新命令交互的布尔值。如果为 true，则工具将提示用户输入。默认值为 false。</value>
+  </data>
+  <data name="InstallerUpdatedSuccessfully_Message" xml:space="preserve">
+    <value>安装程序已成功更新!</value>
+  </data>
+  <data name="NewInstallerUrl_Message" xml:space="preserve">
+    <value>新的安装程序 URL 是什么?</value>
+  </data>
+  <data name="PressKeyToContinue_Message" xml:space="preserve">
+    <value>按任意键继续...</value>
+  </data>
+  <data name="UpdatingInstallerOutOfTotal_Message" xml:space="preserve">
+    <value>正在更新第 {0} 个安装程序(共 {1} 个):</value>
+    <comment>{0} - represents the current installer index that is being updated
+{1} - represents the total number of installers to be updated</comment>
+  </data>
+  <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
+    <value>是否要放弃此更新并重新开始?</value>
   </data>
 </root>

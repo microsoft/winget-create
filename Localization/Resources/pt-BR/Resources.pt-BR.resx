@@ -206,13 +206,9 @@
   <data name="Example_UpdateCommand_SaveAndPublish" xml:space="preserve">
     <value>Salvar e publicar manifesto atualizado</value>
   </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateInstallerURL" xml:space="preserve">
-    <value>Pesquisar um manifesto existente e atualizar a URL do instalador</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field with the value provided by the user.</comment>
-  </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateVersion" xml:space="preserve">
-    <value>Pesquisar um manifesto existente e atualizar a versão</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the Version field with the value provided by the user.</comment>
+  <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
+    <value>Pesquisar um manifesto existente e atualizar a URL e a versão do instalador</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>Lista de extensões de arquivo às quais o pacote pode dar suporte</value>
@@ -260,16 +256,13 @@
     <value>O tipo de instalador</value>
   </data>
   <data name="InstallerUrl_HelpText" xml:space="preserve">
-    <value>URL do instalador usada para extrair metadados relevantes para a geração de um manifesto</value>
+    <value>Urls do instalador usados ​​para extrair metadados relevantes para gerar um manifesto</value>
   </data>
   <data name="InstallLocation_KeywordDescription" xml:space="preserve">
     <value>Caminho de redirecionamento do local do instalador</value>
   </data>
   <data name="Interactive_KeywordDescription" xml:space="preserve">
     <value>As opções do instalador interativo</value>
-  </data>
-  <data name="InvalidCachedToken" xml:space="preserve">
-    <value>O token armazenado em cache era inválido, excluindo e iniciando o fluxo OAuth</value>
   </data>
   <data name="Language_KeywordDescription" xml:space="preserve">
     <value>Substitui o idioma padrão</value>
@@ -332,7 +325,7 @@
     <value>A localidade de metadados do pacote</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
-    <value>A página inicial do pacote.</value>
+    <value>A página inicial do pacote</value>
   </data>
   <data name="Platform_KeywordDescription" xml:space="preserve">
     <value>A plataforma do instalador</value>
@@ -380,9 +373,6 @@
   <data name="Silent_KeywordDescription" xml:space="preserve">
     <value>As opções do instalador silencioso</value>
   </data>
-  <data name="StoreToken_Message" xml:space="preserve">
-    <value>Configurando o token GitHub armazenado em cache</value>
-  </data>
   <data name="Store_HelpText" xml:space="preserve">
     <value>Defina o token GitHub armazenado em cache. Pode especificar o token para o cache com o parâmetro--token, caso contrário, iniciará o fluxo OAuth.</value>
   </data>
@@ -429,7 +419,7 @@
     <value>A versão do pacote | por exemplo, 1.2.3.4 |</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
-    <value>Falha ao gravar o token OAuth no cache: {0}</value>
+    <value>Falha ao gravar o token no cache: {0}</value>
   </data>
   <data name="ConfirmManifestCreation_Message" xml:space="preserve">
     <value>Deseja fazer alterações neste manifesto?</value>
@@ -458,9 +448,6 @@
   </data>
   <data name="ResumingCommandExecution_Message" xml:space="preserve">
     <value>Continuando a execução do comando...</value>
-  </data>
-  <data name="UsingTokenFromCache_Message" xml:space="preserve">
-    <value>Usando o token GitHub do cache...</value>
   </data>
   <data name="PackageName_KeywordDescription" xml:space="preserve">
     <value>O nome do pacote |ex.: Visual Studio|</value>
@@ -495,8 +482,8 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>A versão mínima do sistema operacional do instalador</value>
   </data>
-  <data name="MultipleInstallerUrlFound_Error" xml:space="preserve">
-    <value>Não há suporte para a atualização de um manifesto existente com várias URLs de instalador diferentes no momento.</value>
+  <data name="MultipleInstallerUpdateDiscrepancy_Error" xml:space="preserve">
+    <value>Só há suporte para a atualização de um manifesto com o mesmo número de URLs do instalador.</value>
   </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>As opções de atualização</value>
@@ -514,7 +501,7 @@
     <value>Lista de dependências de pacotes externos</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>A URL do instalador | ex. https://microsoft.com/downloads|</value>
+    <value>As URLs do instalador | por exemplo,  https://microsoft.com/foo.exe, https://microsoft.com/bar.msix|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>O tipo de manifesto</value>
@@ -541,7 +528,7 @@
     <value>Mais ajuda podem ser encontradas em: https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>Política de privacidade: https://aka.ms/winget-create-privacy</value>
+    <value>Política de privacidade: https://aka.ms/privacy</value>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>A resposta HTTP não teve êxito. Código de status: {0}</value>
@@ -551,6 +538,228 @@
     <value>URL inválida fornecida. Verifique a URL e tente novamente.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>Não é possível analisar o pacote e determinar o tipo do instalador.</value>
+    <value>Falha ao analisar o pacote de [{0}]</value>
+    <comment>{0} - will be replaced with the failed installer url</comment>
+  </data>
+  <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
+    <value>Detectamos que este identificador de pacote já existe. Se você pretende atualizar um pacote existente, use o comando Atualizar.</value>
+  </data>
+  <data name="SettingsCommand_HelpText" xml:space="preserve">
+    <value>Abrir configurações</value>
+  </data>
+  <data name="ErrorParsingSettingsFile_Message" xml:space="preserve">
+    <value>Erro ao analisar o arquivo: {0}.</value>
+    <comment>{0} - will be replaced with the path to the settings file.</comment>
+  </data>
+  <data name="GenerateNewSettingsFile_Message" xml:space="preserve">
+    <value>Nenhum arquivo de configurações encontrado, gerando novo arquivo de configurações a partir de configurações carregadas...</value>
+  </data>
+  <data name="LoadSettingsFromBackup_Message" xml:space="preserve">
+    <value>Configurações carregadas a partir do arquivo de backup.</value>
+  </data>
+  <data name="LoadSettingsFromDefault_Message" xml:space="preserve">
+    <value>Configurações carregadas a partir das configurações padrão de fábrica.</value>
+  </data>
+  <data name="TelemetryAnonymous_Message" xml:space="preserve">
+    <value>Os dados são anônimos e coletados apenas pela Microsoft.</value>
+  </data>
+  <data name="TelemetryJustification_Message" xml:space="preserve">
+    <value>O Criador de Manifestos do Gerenciador de Pacotes do Windows coleta dados de uso com o objetivo de aprimorar sua experiência.</value>
+  </data>
+  <data name="TelemetrySettings_Message" xml:space="preserve">
+    <value>Configurações de Telemetria</value>
+  </data>
+  <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
+    <value>Erro inesperado ao carregar as configurações. Verifique suas configurações executando o comando de configurações.</value>
+  </data>
+  <data name="CompareUpdatedManifestWithExisting_Message" xml:space="preserve">
+    <value>Verifique se o manifesto atualizado que você está enviando é diferente do pacote existente.</value>
+  </data>
+  <data name="InvalidTokenError_Message" xml:space="preserve">
+    <value>Token inválido fornecido. Gere um novo token do GitHub e tente novamente.</value>
+  </data>
+  <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
+    <value>Não é permitido enviar um manifesto sem alterações atualizadas. </value>
+  </data>
+  <data name="InstallerMatchFailedError_Message" xml:space="preserve">
+    <value>Os seguintes instaladores não corresponderam a um nó de instalador existente:</value>
+  </data>
+  <data name="UnboundArguments_Message" xml:space="preserve">
+    <value>O(s) seguinte(s) argumento(s) sem restrições foram detectados: "{0}"</value>
+    <comment>{0} - The additional unbound arguments present in the command line arguments.</comment>
+  </data>
+  <data name="VerifyCommandUsage_Message" xml:space="preserve">
+    <value>Verifique e verifique o uso deste comando passando o sinalizador --help.</value>
+  </data>
+  <data name="ModifyOptionalDefaultLocaleFields_Message" xml:space="preserve">
+    <value>Deseja modificar os campos de localidade padrão opcionais?</value>
+  </data>
+  <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
+    <value>Cada NOVA URL do instalador deve ter uma única correspondência com um instalador existente com base no tipo e na arquitetura do instalador. Os seguintes instaladores não corresponderam a um instalador existente:</value>
+  </data>
+  <data name="DetectedArchMismatch_Message" xml:space="preserve">
+    <value>A arquitetura detectada do binário pode ser diferente da especificada no URL do instalador para o(s) seguinte(s) instalador(es):</value>
+  </data>
+  <data name="InstallerBinaryMismatch_Message" xml:space="preserve">
+    <value>Usando arquitetura detectada da URL ({0}), arquitetura de substituição detectada de binário ({1})</value>
+    <comment>{0} - Architecture detected from the installer URL
+{1} - Architecture determined from the installer binary</comment>
+  </data>
+  <data name="RepositoryNotFound_Error" xml:space="preserve">
+    <value>Repositório "{0}/{1}" não encontrado. Verifique o Gerenciador de Pacotes do Windows e o nome do repositório no arquivo de configurações.</value>
+    <comment>{0} - will be replaced with the owner name of the Windows Package Manager repository
+{1} - will be replaced with the name of the Windows Package Manager repository</comment>
+  </data>
+  <data name="CacheCommand_HelpText" xml:space="preserve">
+    <value>Gerenciar os instaladores baixados armazenados no cache</value>
+  </data>
+  <data name="Clean_HelpText" xml:space="preserve">
+    <value>Exclui todos os instaladores baixados na pasta de cache</value>
+  </data>
+  <data name="List_HelpText" xml:space="preserve">
+    <value>Lista todos os instaladores baixados armazenados no cache</value>
+  </data>
+  <data name="Open_HelpText" xml:space="preserve">
+    <value>Abre a pasta de cache que armazena os instaladores baixados</value>
+  </data>
+  <data name="InstallersFound_Message" xml:space="preserve">
+    <value>{0} instaladores encontrados em {1}</value>
+    <comment>{0} - Will be replaced with the number of installers found in the cache folder
+{1} - Will be replaced with the path to the downloaded installer cache folder</comment>
+  </data>
+  <data name="DeletingInstaller_Message" xml:space="preserve">
+    <value>Excluindo {0}</value>
+    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+  </data>
+  <data name="InstallerCacheCleaned_Message" xml:space="preserve">
+    <value>Cache do instalador limpo.</value>
+  </data>
+  <data name="DeletingInvalidCachedToken_Message" xml:space="preserve">
+    <value>O token armazenado em cache era inválido, excluindo o token do cache...</value>
+  </data>
+  <data name="InvalidGitHubToken_Message" xml:space="preserve">
+    <value>O token era inválido. Gere um novo token do GitHub e tente novamente.</value>
+  </data>
+  <data name="RateLimitExceeded_Message" xml:space="preserve">
+    <value>O limite de taxa da API do GitHub foi excedido. Para estender seu limite de taxa, forneça seu token do GitHub com o sinalizador '-t' ou armazene um usando o comando 'token --store'.</value>
+    <comment>'-t' refers to a command line switch argument
+'token --store' refers to a command line argument</comment>
+  </data>
+  <data name="SettingToken_Message" xml:space="preserve">
+    <value>Definindo token do GitHub...</value>
+  </data>
+  <data name="StoringToken_Message" xml:space="preserve">
+    <value>Token armazenado no cache com êxito.</value>
+  </data>
+  <data name="GetLatestVersion_Message" xml:space="preserve">
+    <value>Para obter a versão mais recente ({0}), acesse {1}</value>
+    <comment>{0} - Will be replaced with the latest release version
+{1} - Will be replaced with the URL to the latest version of the tool.</comment>
+  </data>
+  <data name="OutdatedVersionNotice_Message" xml:space="preserve">
+    <value>Esta é uma versão mais antiga do Winget-Create e pode estar faltando alguns recursos críticos.</value>
+  </data>
+  <data name="UpgradeUsingWinget_Message" xml:space="preserve">
+    <value>Se você tiver o cliente winget instalado, poderá atualizar executando o comando: 'winget upgrade Microsoft.WingetCreate'</value>
+    <comment>`winget upgrade Microsoft.WingetCreate` refers to a specific command to be executed in order to upgrade the tool to the latest version.
+
+"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="TelemetryEnabledByDefault_Message" xml:space="preserve">
+    <value>Por padrão, a telemetria está habilitada, mas pode ser desabilitada ao executar 'configurações wingetcreate' e editar o arquivo de configurações.</value>
+    <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
+  </data>
+  <data name="DownloadFileExceedsMaxSize_Error" xml:space="preserve">
+    <value>A URL aponta para um arquivo maior que o tamanho máximo de {0}MB</value>
+    <comment>{0} - represents the maximum size of a downloaded file</comment>
+  </data>
+  <data name="InstallerCountMustMatch_Error" xml:space="preserve">
+    <value>O número de novos pacotes do instalador deve corresponder ao número de pacotes de instalador existentes.</value>
+  </data>
+  <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
+    <value>Várias correspondências encontradas para {0} {1} instalador detectado na URL: {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type
+
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="UnmatchedInstaller_Error" xml:space="preserve">
+    <value>Nenhuma correspondência encontrada para {0} {1} instalador detectado da URL: {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type 
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="AdditionalMetadataNeeded_Message" xml:space="preserve">
+    <value>São necessários metadados adicionais para o instalador do {0}</value>
+    <comment>{0} - Installer URL of the installer</comment>
+  </data>
+  <data name="Add_MenuItem" xml:space="preserve">
+    <value>ADICIONAR</value>
+  </data>
+  <data name="AllInstallers_MenuItem" xml:space="preserve">
+    <value>TODOS OS INSTALADORES</value>
+  </data>
+  <data name="Back_MenuItem" xml:space="preserve">
+    <value>VOLTAR</value>
+  </data>
+  <data name="DisplayPreviewOfItems" xml:space="preserve">
+    <value>Exibindo a visualização do [{0}]:</value>
+    <comment>{0} - Name of field with list of items</comment>
+  </data>
+  <data name="DisplayPreviewOfSelectedInstaller_Message" xml:space="preserve">
+    <value>Exibição de uma visualização do instalador selecionado:</value>
+  </data>
+  <data name="DisplayPreview_MenuItem" xml:space="preserve">
+    <value>EXIBIR A VISUALIZAÇÃO</value>
+  </data>
+  <data name="Done_MenuItem" xml:space="preserve">
+    <value>CONCLUÍDO</value>
+  </data>
+  <data name="FieldValueIs_Message" xml:space="preserve">
+    <value>O valor [{0}] é</value>
+    <comment>{0} - Name of the field</comment>
+  </data>
+  <data name="FilterMenuItems_Message" xml:space="preserve">
+    <value>Filtre itens de menu digitando uma consulta de pesquisa abaixo.</value>
+  </data>
+  <data name="ModifyOptionalInstallerFields_Message" xml:space="preserve">
+    <value>Deseja modificar os campos opcionais do instalador?</value>
+  </data>
+  <data name="None_MenuItem" xml:space="preserve">
+    <value>NENHUM</value>
+  </data>
+  <data name="RemoveLastEntry_MenuItem" xml:space="preserve">
+    <value>REMOVER A ÚLTIMA INSERÇÃO</value>
+  </data>
+  <data name="SelectAction_Message" xml:space="preserve">
+    <value>O que você gostaria de fazer?</value>
+  </data>
+  <data name="SelectInstallerToEdit_Message" xml:space="preserve">
+    <value>Qual instalador você gostaria de editar?</value>
+  </data>
+  <data name="SelectPropertyToEdit_Message" xml:space="preserve">
+    <value>Qual propriedade você gostaria de editar?</value>
+  </data>
+  <data name="InteractiveUpdate_HelpText" xml:space="preserve">
+    <value>Valor booliano para tornar o comando de atualização interativo. Se true, a ferramenta solicitará a entrada do usuário. O padrão é false.</value>
+  </data>
+  <data name="InstallerUpdatedSuccessfully_Message" xml:space="preserve">
+    <value>Instalador atualizado com êxito!</value>
+  </data>
+  <data name="NewInstallerUrl_Message" xml:space="preserve">
+    <value>Qual é o novo url do instalador?</value>
+  </data>
+  <data name="PressKeyToContinue_Message" xml:space="preserve">
+    <value>Pressionar qualquer tecla para continuar...</value>
+  </data>
+  <data name="UpdatingInstallerOutOfTotal_Message" xml:space="preserve">
+    <value>Atualização {0} de {1} instaladores:</value>
+    <comment>{0} - represents the current installer index that is being updated
+{1} - represents the total number of installers to be updated</comment>
+  </data>
+  <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
+    <value>Deseja descartar esta atualização e recomeçar?</value>
   </data>
 </root>

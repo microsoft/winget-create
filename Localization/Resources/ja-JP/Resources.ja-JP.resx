@@ -206,13 +206,9 @@
   <data name="Example_UpdateCommand_SaveAndPublish" xml:space="preserve">
     <value>更新されたマニフェストを保存して公開する</value>
   </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateInstallerURL" xml:space="preserve">
-    <value>既存のマニフェストを検索し、インストーラー URLを更新します</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field with the value provided by the user.</comment>
-  </data>
-  <data name="Example_UpdateCommand_SearchAndUpdateVersion" xml:space="preserve">
-    <value>既存のマニフェストを検索し、バージョンを更新します</value>
-    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the Version field with the value provided by the user.</comment>
+  <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
+    <value>既存のマニフェストを検索し、インストーラー URL とバージョンを更新します</value>
+    <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>パッケージでサポートされているファイル拡張子の一覧</value>
@@ -267,9 +263,6 @@
   </data>
   <data name="Interactive_KeywordDescription" xml:space="preserve">
     <value>インタラクティブ インストーラー スイッチ</value>
-  </data>
-  <data name="InvalidCachedToken" xml:space="preserve">
-    <value>キャッシュされたトークンが無効です。削除して OAuth フローを起動しています</value>
   </data>
   <data name="Language_KeywordDescription" xml:space="preserve">
     <value>既定の言語をオーバーライドする</value>
@@ -332,7 +325,7 @@
     <value>パッケージのメタデータ ロケール</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
-    <value>パッケージのホーム ページ。</value>
+    <value>パッケージのホーム ページ</value>
   </data>
   <data name="Platform_KeywordDescription" xml:space="preserve">
     <value>インストーラー プラットフォーム</value>
@@ -380,9 +373,6 @@
   <data name="Silent_KeywordDescription" xml:space="preserve">
     <value>サイレント インストーラー スイッチ</value>
   </data>
-  <data name="StoreToken_Message" xml:space="preserve">
-    <value>キャッシュされた GitHub トークンを設定しています</value>
-  </data>
   <data name="Store_HelpText" xml:space="preserve">
     <value>キャッシュされた GitHub トークンを設定します。 -- token パラメーターを使用してキャッシュするトークンを指定できます。指定しない場合、OAuth フローが開始されます。</value>
   </data>
@@ -429,7 +419,7 @@
     <value>パッケージのバージョン | 例: 1.2.3.4 |</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
-    <value>キャッシュする OAuth トークンの書き込みに失敗しました: {0}</value>
+    <value>トークンをキャッシュに書き込めませんでした: {0}</value>
   </data>
   <data name="ConfirmManifestCreation_Message" xml:space="preserve">
     <value>このマニフェストに変更を加えますか?</value>
@@ -458,9 +448,6 @@
   </data>
   <data name="ResumingCommandExecution_Message" xml:space="preserve">
     <value>コマンド実行を再開しています...</value>
-  </data>
-  <data name="UsingTokenFromCache_Message" xml:space="preserve">
-    <value>キャッシュから GitHub トークンを使用しています...</value>
   </data>
   <data name="PackageName_KeywordDescription" xml:space="preserve">
     <value>パッケージ名 | 例: Visual Studio|</value>
@@ -495,6 +482,9 @@
   <data name="MinimumOSVersion_KeywordDescription" xml:space="preserve">
     <value>インストーラー の最小オペレーティング システム バージョン</value>
   </data>
+  <data name="MultipleInstallerUpdateDiscrepancy_Error" xml:space="preserve">
+    <value>マニフェストの更新は、同じ数のインストーラー URL でのみサポートされています。</value>
+  </data>
   <data name="Upgrade_KeywordDescription" xml:space="preserve">
     <value>アップグレード スイッチ</value>
   </data>
@@ -511,7 +501,7 @@
     <value>外部パッケージの依存関係の一覧</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>インストーラーの URL | 例: https://microsoft.com/downloads|</value>
+    <value>インストーラーの URL |例: x  https://microsoft.com/foo.exe, https://microsoft.com/bar.msi|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>マニフェストの種類</value>
@@ -538,7 +528,7 @@
     <value>詳細については、次の場所を参照してください: https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>プライバシーに関する声明: https://aka.ms/winget-create-privacy</value>
+    <value>プライバシーに関する声明: https://aka.ms/privacy</value>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>HTTP 応答が失敗しました。状態コード: {0}</value>
@@ -548,6 +538,228 @@
     <value>無効な URL が指定されました。URL を確認して、もう一度お試しください。</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>パッケージを正しく解析できませんでした。インストーラーの種類を確認できません。</value>
+    <value>[{0}] からパッケージを解析できませんでした</value>
+    <comment>{0} - will be replaced with the failed installer url</comment>
+  </data>
+  <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
+    <value>このパッケージ識別子は既に存在していることが検出されました。既存のパッケージを更新する場合は、[更新] コマンドを使用してください。</value>
+  </data>
+  <data name="SettingsCommand_HelpText" xml:space="preserve">
+    <value>設定を開く</value>
+  </data>
+  <data name="ErrorParsingSettingsFile_Message" xml:space="preserve">
+    <value>ファイルの解析エラー: {0}。</value>
+    <comment>{0} - will be replaced with the path to the settings file.</comment>
+  </data>
+  <data name="GenerateNewSettingsFile_Message" xml:space="preserve">
+    <value>設定ファイルが見つかりません。読み込まれた設定から新しい設定ファイルを生成しています...</value>
+  </data>
+  <data name="LoadSettingsFromBackup_Message" xml:space="preserve">
+    <value>バックアップ ファイルから設定を読み込みました。</value>
+  </data>
+  <data name="LoadSettingsFromDefault_Message" xml:space="preserve">
+    <value>既定の出荷時の設定から設定を読み込みました。</value>
+  </data>
+  <data name="TelemetryAnonymous_Message" xml:space="preserve">
+    <value>データは匿名であり、Microsoft によって収集されます。</value>
+  </data>
+  <data name="TelemetryJustification_Message" xml:space="preserve">
+    <value>Windows パッケージ マネージャーのマニフェスト作成者は、エクスペリエンスを向上させるために使用状況データを収集します。</value>
+  </data>
+  <data name="TelemetrySettings_Message" xml:space="preserve">
+    <value>製品利用統計情報の設定</value>
+  </data>
+  <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
+    <value>設定の読み込み中に予期しないエラーが発生しました。設定コマンドを実行して、設定を確認してください。</value>
+  </data>
+  <data name="CompareUpdatedManifestWithExisting_Message" xml:space="preserve">
+    <value>送信しようとしている更新されたマニフェストが既存のパッケージと異なっていることを確認してください。</value>
+  </data>
+  <data name="InvalidTokenError_Message" xml:space="preserve">
+    <value>無効なトークンが指定されました。新しい GitHub トークンを生成して、もう一度お試しください。</value>
+  </data>
+  <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
+    <value>更新された変更なしでマニフェストを送信することはできません。 </value>
+  </data>
+  <data name="InstallerMatchFailedError_Message" xml:space="preserve">
+    <value>次のインストーラーは、既存のインストーラー ノードと一致できませんでした:</value>
+  </data>
+  <data name="UnboundArguments_Message" xml:space="preserve">
+    <value>次のバインドなしの引数が検出されました: "{0}"</value>
+    <comment>{0} - The additional unbound arguments present in the command line arguments.</comment>
+  </data>
+  <data name="VerifyCommandUsage_Message" xml:space="preserve">
+    <value>--help flag を渡して、このコマンドの使用法を確認してください。</value>
+  </data>
+  <data name="ModifyOptionalDefaultLocaleFields_Message" xml:space="preserve">
+    <value>オプションの既定のロケール フィールドを変更しますか?</value>
+  </data>
+  <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
+    <value>新しいインストーラーの各 URL は、インストーラーの種類とアーキテクチャに基づいて、既存のインストーラーと 1 つ一致する必要があります。次のインストーラーは、既存のインストーラーと一致しませんでした。</value>
+  </data>
+  <data name="DetectedArchMismatch_Message" xml:space="preserve">
+    <value>バイナリから検出されたアーキテクチャは、次のインストーラーのインストーラー URL で指定されたアーキテクチャと異なる場合があります。</value>
+  </data>
+  <data name="InstallerBinaryMismatch_Message" xml:space="preserve">
+    <value>URL ({0}) から検出されたアーキテクチャを使用して、バイナリ ({1}) から検出されたアーキテクチャをオーバーライドする</value>
+    <comment>{0} - Architecture detected from the installer URL
+{1} - Architecture determined from the installer binary</comment>
+  </data>
+  <data name="RepositoryNotFound_Error" xml:space="preserve">
+    <value>リポジトリ "{0}/{1}" が見つかりません。設定ファイルのWindows パッケージ マネージャーリポジトリの所有者と名前を確認してください。</value>
+    <comment>{0} - will be replaced with the owner name of the Windows Package Manager repository
+{1} - will be replaced with the name of the Windows Package Manager repository</comment>
+  </data>
+  <data name="CacheCommand_HelpText" xml:space="preserve">
+    <value>キャッシュに保存されているダウンロード済みインストーラーを管理します</value>
+  </data>
+  <data name="Clean_HelpText" xml:space="preserve">
+    <value>キャッシュ フォルダー内のダウンロード済みインストーラーをすべて削除します</value>
+  </data>
+  <data name="List_HelpText" xml:space="preserve">
+    <value>キャッシュに保存されているダウンロード済みインストーラーをすべて一覧表示します</value>
+  </data>
+  <data name="Open_HelpText" xml:space="preserve">
+    <value>ダウンロードしたインストーラーを保存しているキャッシュ フォルダーを開きます</value>
+  </data>
+  <data name="InstallersFound_Message" xml:space="preserve">
+    <value>{1} で見つかった {0} インストーラー</value>
+    <comment>{0} - Will be replaced with the number of installers found in the cache folder
+{1} - Will be replaced with the path to the downloaded installer cache folder</comment>
+  </data>
+  <data name="DeletingInstaller_Message" xml:space="preserve">
+    <value>{0} を削除します</value>
+    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+  </data>
+  <data name="InstallerCacheCleaned_Message" xml:space="preserve">
+    <value>インストーラーのキャッシュがクリーンアップされました。</value>
+  </data>
+  <data name="DeletingInvalidCachedToken_Message" xml:space="preserve">
+    <value>キャッシュされたトークンが無効です。キャッシュ...からトークンを削除しています...</value>
+  </data>
+  <data name="InvalidGitHubToken_Message" xml:space="preserve">
+    <value>トークンが無効でした。新しい GitHub トークンを生成して、もう一度お試しください。</value>
+  </data>
+  <data name="RateLimitExceeded_Message" xml:space="preserve">
+    <value>GitHub API のレート制限を超えました。レート制限を延長するには、GitHub トークンに "-t" フラグを指定するか、"token --store" コマンドを使用して GitHub トークンを格納します。</value>
+    <comment>'-t' refers to a command line switch argument
+'token --store' refers to a command line argument</comment>
+  </data>
+  <data name="SettingToken_Message" xml:space="preserve">
+    <value>GitHub トークンを設定しています...</value>
+  </data>
+  <data name="StoringToken_Message" xml:space="preserve">
+    <value>トークンがキャッシュに正常に格納されました。</value>
+  </data>
+  <data name="GetLatestVersion_Message" xml:space="preserve">
+    <value>最新バージョン ({0}) については、{1}にアクセスしてください</value>
+    <comment>{0} - Will be replaced with the latest release version
+{1} - Will be replaced with the URL to the latest version of the tool.</comment>
+  </data>
+  <data name="OutdatedVersionNotice_Message" xml:space="preserve">
+    <value>これは古いバージョンのWinget-Createであり、いくつかの重要な機能が不足している可能性があります。</value>
+  </data>
+  <data name="UpgradeUsingWinget_Message" xml:space="preserve">
+    <value>winget クライアントがインストールされている場合は、次のコマンドを実行して更新できます: 'winget upgrade Microsoft.WingetCreate'</value>
+    <comment>`winget upgrade Microsoft.WingetCreate` refers to a specific command to be executed in order to upgrade the tool to the latest version.
+
+"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="TelemetryEnabledByDefault_Message" xml:space="preserve">
+    <value>既定では、テレメトリが有効になっていますが、'wingetcreate settings' を実行し、設定ファイルを編集することで無効にできます。</value>
+    <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
+  </data>
+  <data name="DownloadFileExceedsMaxSize_Error" xml:space="preserve">
+    <value>URL が最大サイズの {0} MB より大きいファイルを指しています</value>
+    <comment>{0} - represents the maximum size of a downloaded file</comment>
+  </data>
+  <data name="InstallerCountMustMatch_Error" xml:space="preserve">
+    <value>新しいインストーラー パッケージの数は、既存のインストーラー パッケージの数と一致する必要があります。</value>
+  </data>
+  <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
+    <value>URL から検出された {0} {1} インストーラーに対して複数の一致が見つかりました: {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type
+
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="UnmatchedInstaller_Error" xml:space="preserve">
+    <value>URL から検出された {0} {1} インストーラーに一致するものが見つかりません: {2}</value>
+    <comment>{0} - will be replaced with installer architecture
+
+{1} - will be replaced with the installer type 
+{2} - will be replaced with the installer</comment>
+  </data>
+  <data name="AdditionalMetadataNeeded_Message" xml:space="preserve">
+    <value>{0} からのインストーラーに必要な追加のメタデータ</value>
+    <comment>{0} - Installer URL of the installer</comment>
+  </data>
+  <data name="Add_MenuItem" xml:space="preserve">
+    <value>追加</value>
+  </data>
+  <data name="AllInstallers_MenuItem" xml:space="preserve">
+    <value>すべてのインストーラー</value>
+  </data>
+  <data name="Back_MenuItem" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="DisplayPreviewOfItems" xml:space="preserve">
+    <value>[{0}] のプレビューを表示しています</value>
+    <comment>{0} - Name of field with list of items</comment>
+  </data>
+  <data name="DisplayPreviewOfSelectedInstaller_Message" xml:space="preserve">
+    <value>選択したインストーラーのプレビューの表示:</value>
+  </data>
+  <data name="DisplayPreview_MenuItem" xml:space="preserve">
+    <value>プレビューの表示</value>
+  </data>
+  <data name="Done_MenuItem" xml:space="preserve">
+    <value>完了</value>
+  </data>
+  <data name="FieldValueIs_Message" xml:space="preserve">
+    <value>[{0}] の値は</value>
+    <comment>{0} - Name of the field</comment>
+  </data>
+  <data name="FilterMenuItems_Message" xml:space="preserve">
+    <value>下に検索クエリを入力して、メニュー項目をフィルター処理します。</value>
+  </data>
+  <data name="ModifyOptionalInstallerFields_Message" xml:space="preserve">
+    <value>オプションのインストーラー フィールドを変更しますか?</value>
+  </data>
+  <data name="None_MenuItem" xml:space="preserve">
+    <value>なし</value>
+  </data>
+  <data name="RemoveLastEntry_MenuItem" xml:space="preserve">
+    <value>最後のエントリの削除</value>
+  </data>
+  <data name="SelectAction_Message" xml:space="preserve">
+    <value>何をしますか?</value>
+  </data>
+  <data name="SelectInstallerToEdit_Message" xml:space="preserve">
+    <value>どのインストーラーを編集しますか?</value>
+  </data>
+  <data name="SelectPropertyToEdit_Message" xml:space="preserve">
+    <value>どのプロパティを編集しますか?</value>
+  </data>
+  <data name="InteractiveUpdate_HelpText" xml:space="preserve">
+    <value>更新コマンドを対話型にするためのブール値です。true の場合、ユーザーに入力を求めるメッセージが表示されます。既定値は false です。</value>
+  </data>
+  <data name="InstallerUpdatedSuccessfully_Message" xml:space="preserve">
+    <value>インストーラーが正常に更新されました。</value>
+  </data>
+  <data name="NewInstallerUrl_Message" xml:space="preserve">
+    <value>新しいインストーラーの URL は何ですか?</value>
+  </data>
+  <data name="PressKeyToContinue_Message" xml:space="preserve">
+    <value>続行するには何かキーを押してください...</value>
+  </data>
+  <data name="UpdatingInstallerOutOfTotal_Message" xml:space="preserve">
+    <value>{0} インストーラーの {1} を更新しています:</value>
+    <comment>{0} - represents the current installer index that is being updated
+{1} - represents the total number of installers to be updated</comment>
+  </data>
+  <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
+    <value>この更新を破棄して最初からやり直しますか?</value>
   </data>
 </root>
