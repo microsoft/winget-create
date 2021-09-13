@@ -252,6 +252,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
                 return null;
             }
+            catch (IOException iOException) when (iOException.HResult == -2147024671)
+            {
+                Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
+                return null;
+            }
             catch (ParsePackageException parsePackageException)
             {
                 parsePackageException.ParseFailedInstallerUrls.ForEach(i => Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), i));
@@ -259,12 +264,9 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
             catch (InstallerMatchException installerMatchException)
             {
-                Console.WriteLine();
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
                 installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
-                Console.WriteLine();
-                Logger.WarnLocalized(nameof(Resources.ResolveMatchingConflicts_Message));
                 return null;
             }
 
@@ -436,6 +438,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 else if (!PackageParser.ParsePackageAndUpdateInstallerNode(installer, packageFile, url))
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), url);
+                    Console.WriteLine();
                 }
                 else
                 {
