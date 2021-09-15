@@ -745,6 +745,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to INSTALLER {0}: {1}.
+        /// </summary>
+        public static string InstallerSelection_MenuItem {
+            get {
+                return ResourceManager.GetString("InstallerSelection_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} installers found in {1}.
         /// </summary>
         public static string InstallersFound_Message {

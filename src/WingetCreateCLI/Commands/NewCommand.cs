@@ -295,7 +295,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static List<string> GenerateInstallerSelectionList(List<Installer> installers, out Dictionary<string, Installer> installerSelectionMap)
         {
             installerSelectionMap = new Dictionary<string, Installer>();
-
+            int index = 1;
             foreach (Installer installer in installers)
             {
                 var installerTuple = string.Join(" | ", new[]
@@ -307,7 +307,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                         installer.InstallerUrl,
                     }.Where(s => !string.IsNullOrEmpty(s)));
 
-                installerSelectionMap.Add(installerTuple, installer);
+                var installerMenuItem = string.Format(Resources.InstallerSelection_MenuItem, index, installerTuple);
+                installerSelectionMap.Add(installerMenuItem, installer);
+                index++;
             }
 
             List<string> selectionList = new List<string>() { Resources.AllInstallers_MenuItem };
