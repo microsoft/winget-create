@@ -259,6 +259,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond..
+        /// </summary>
+        public static string ConnectionAttemptFailed_Error {
+            get {
+                return ResourceManager.GetString("ConnectionAttemptFailed_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package copyright.
         /// </summary>
         public static string Copyright_KeywordDescription {
