@@ -284,7 +284,15 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (e is HttpRequestException httpRequestException)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.HttpResponseUnsuccessful_Error), httpRequestException.StatusCode);
+                    if (httpRequestException.StatusCode != null)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.HttpResponseUnsuccessful_Error), httpRequestException.StatusCode);
+                    }
+                    else
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.Error_Prefix), httpRequestException.Message);
+                    }
+
                     return null;
                 }
 
