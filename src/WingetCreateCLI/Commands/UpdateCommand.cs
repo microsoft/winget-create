@@ -16,7 +16,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
-    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
