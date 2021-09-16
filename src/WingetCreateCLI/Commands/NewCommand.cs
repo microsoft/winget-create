@@ -201,7 +201,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             if (Prompt.Confirm(Resources.ModifyOptionalInstallerFields_Message))
             {
-                DisplayInstallersAsMenuSelection(manifests.InstallerManifest);
+                PromptHelper.DisplayInstallersAsMenuSelection(manifests.InstallerManifest);
             }
 
             Console.WriteLine();
@@ -248,128 +248,6 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));
                     Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Displays all installers from an Installer manifest as a selection menu.
-        /// </summary>
-        public static void DisplayInstallersAsMenuSelection(InstallerManifest installerManifest)
-        {
-            Console.Clear();
-
-            while (true)
-            {
-                List<string> selectionList = GenerateInstallerSelectionList(installerManifest.Installers, out Dictionary<string, Installer> installerSelectionMap);
-                var selectedItem = Prompt.Select(Resources.SelectInstallerToEdit_Message, selectionList);
-
-                if (selectedItem == Resources.None_MenuItem)
-                {
-                    break;
-                }
-                else if (selectedItem == Resources.AllInstallers_MenuItem)
-                {
-                    Installer installerCopy = new Installer();
-                    PromptHelper.PromptPropertiesWithMenu(installerCopy, Resources.None_MenuItem);
-                    ApplyChangesToIndividualInstallers(installerCopy, installerManifest.Installers);
-                }
-                else if (selectedItem == Resources.DisplayPreview_MenuItem)
-                {
-                    Console.Clear();
-                    Console.WriteLine();
-                    Logger.InfoLocalized(nameof(Resources.DisplayPreviewOfSelectedInstaller_Message));
-                    var serializer = Serialization.CreateSerializer();
-                    string installerString = serializer.Serialize(installerManifest);
-                    Console.WriteLine(installerString);
-                    Console.WriteLine();
-                }
-                else
-                {
-                    Installer selectedInstaller = installerSelectionMap[selectedItem];
-                    PromptHelper.PromptPropertiesWithMenu(selectedInstaller, Resources.None_MenuItem);
-                }
-            }
-        }
-
-        private static List<string> GenerateInstallerSelectionList(List<Installer> installers, out Dictionary<string, Installer> installerSelectionMap)
-        {
-            installerSelectionMap = new Dictionary<string, Installer>();
-            int index = 1;
-            foreach (Installer installer in installers)
-            {
-                var installerTuple = string.Join(" | ", new[]
-                    {
-                        installer.Architecture.ToEnumAttributeValue(),
-                        installer.InstallerType.ToEnumAttributeValue(),
-                        installer.Scope?.ToEnumAttributeValue(),
-                        installer.InstallerLocale,
-                        installer.InstallerUrl,
-                    }.Where(s => !string.IsNullOrEmpty(s)));
-
-                var installerMenuItem = string.Format(Resources.InstallerSelection_MenuItem, index, installerTuple);
-                installerSelectionMap.Add(installerMenuItem, installer);
-                index++;
-            }
-
-            List<string> selectionList = new List<string>() { Resources.AllInstallers_MenuItem };
-            selectionList.AddRange(installerSelectionMap.Keys);
-            selectionList.AddRange(new[] { Resources.DisplayPreview_MenuItem, Resources.None_MenuItem });
-            return selectionList;
-        }
-
-        private static void ApplyChangesToIndividualInstallers(Installer installerCopy, List<Installer> installers)
-        {
-            // Skip architecture as the default value when instantiated is x86.
-            var modifiedFields = installerCopy.GetType().GetProperties()
-                .Select(prop => prop)
-                .Where(pi =>
-                    pi.GetValue(installerCopy) != null &&
-                    pi.Name != nameof(Installer.Architecture) &&
-                    pi.Name != nameof(Installer.AdditionalProperties));
-
-            foreach (var field in modifiedFields)
-            {
-                foreach (Installer installer in installers)
-                {
-                    var fieldValue = field.GetValue(installerCopy);
-                    var prop = installer.GetType().GetProperty(field.Name);
-                    if (prop.PropertyType.IsValueType)
-                    {
-                        prop.SetValue(installer, fieldValue);
-                    }
-                    else if (fieldValue is IList list)
-                    {
-                        prop.SetValue(installer, list.DeepClone());
-                    }
-                    else if (fieldValue is Dependencies dependencies)
-                    {
-                        ApplyDependencyChangesToInstaller(dependencies, installer);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Clones any non-null property values of the dependencies object and assigns them to the provided installer object.
-        /// </summary>
-        /// <param name="dependencies">Dependencies object with new values.</param>
-        /// <param name="installer">Installer object to assign new changes to.</param>
-        private static void ApplyDependencyChangesToInstaller(Dependencies dependencies, Installer installer)
-        {
-            var modifiedFields = dependencies.GetType().GetProperties()
-                .Select(prop => prop)
-                .Where(pi => pi.GetValue(dependencies) != null);
-
-            foreach (var field in modifiedFields.Where(f => f.Name != nameof(Installer.AdditionalProperties)))
-            {
-                var fieldValue = field.GetValue(dependencies);
-                installer.Dependencies ??= new Dependencies();
-                var prop = installer.Dependencies.GetType().GetProperty(field.Name);
-
-                if (fieldValue is IList list)
-                {
-                    prop.SetValue(installer.Dependencies, list.DeepClone());
                 }
             }
         }

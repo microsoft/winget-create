@@ -40,6 +40,40 @@ namespace Microsoft.WingetCreateCore.Models
         /// </summary>
         public List<LocaleManifest> LocaleManifests { get; set; } = new List<LocaleManifest>();
 
+        /// <summary>
+        /// Generates the proper file name for the given manifest.
+        /// </summary>
+        /// <typeparam name="T">Manifest type.</typeparam>
+        /// <param name="manifest">Manifest object model.</param>
+        /// <returns>File name string of manifest.</returns>
+        public static string GetFileName<T>(T manifest)
+        {
+            string fileName = null;
+
+            if (manifest is InstallerManifest installerManifest)
+            {
+                fileName = $"{installerManifest.PackageIdentifier}.installer.yaml";
+            }
+            else if (manifest is VersionManifest versionManifest)
+            {
+                fileName = $"{versionManifest.PackageIdentifier}.yaml";
+            }
+            else if (manifest is DefaultLocaleManifest defaultLocaleManifest)
+            {
+                fileName = $"{defaultLocaleManifest.PackageIdentifier}.locale.{defaultLocaleManifest.PackageLocale}.yaml";
+            }
+            else if (manifest is LocaleManifest localeManifest)
+            {
+                fileName = $"{localeManifest.PackageIdentifier}.locale.{localeManifest.PackageLocale}.yaml";
+            }
+            else if (manifest is SingletonManifest singletonManifest)
+            {
+                fileName = $"{singletonManifest.PackageIdentifier}.yaml";
+            }
+
+            return fileName;
+        }
+
         public List<Installer.Installer> CloneInstallers()
         {
             List<Installer.Installer> deepCopy = new List<Installer.Installer>();
@@ -70,6 +104,6 @@ namespace Microsoft.WingetCreateCore.Models
                     }));
 
             return deepCopy;
-        } 
+        }
     }
 }

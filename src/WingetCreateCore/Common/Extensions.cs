@@ -9,10 +9,6 @@ namespace Microsoft.WingetCreateCore.Common
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
-    using Microsoft.WingetCreateCore.Models.DefaultLocale;
-    using Microsoft.WingetCreateCore.Models.Installer;
-    using Microsoft.WingetCreateCore.Models.Locale;
-    using Microsoft.WingetCreateCore.Models.Version;
 
     /// <summary>
     /// Functionality for manipulating data related to the Manifest object model.
@@ -144,30 +140,6 @@ namespace Microsoft.WingetCreateCore.Common
             }
 
             return newList;
-        }
-
-        public static string GetFileName(this object o)
-        {
-            string fileName = null;
-
-            if (o is InstallerManifest installerManifest)
-            {
-                fileName = $"{installerManifest.PackageIdentifier}.installer.yaml";
-            }
-            else if (o is VersionManifest versionManifest)
-            {
-                fileName = $"{versionManifest.PackageIdentifier}.yaml";
-            }
-            else if (o is DefaultLocaleManifest defaultLocaleManifest)
-            {
-                fileName = $"{defaultLocaleManifest.PackageIdentifier}.locale.{defaultLocaleManifest.PackageLocale}.yaml";
-            }
-            else if (o is LocaleManifest localeManifest)
-            {
-                fileName = $"{localeManifest.PackageIdentifier}.locale.{localeManifest.PackageLocale}.yaml";
-            }
-
-            return fileName;
         }
     }
 }

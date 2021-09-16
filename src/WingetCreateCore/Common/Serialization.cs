@@ -138,6 +138,18 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
+        /// Serializes the provided object and returns the serialized string.
+        /// </summary>
+        /// <typeparam name="T">Object type.</typeparam>
+        /// <param name="value">Object to be serialized.</param>
+        /// <returns>Serialized string.</returns>
+        public static string Serialize<T>(T value)
+        {
+            var serializer = CreateSerializer();
+            return serializer.Serialize(value);
+        }
+
+        /// <summary>
         /// Deserializes a list of manifest strings into their appropriate object models.
         /// </summary>
         /// <param name="manifestContents">List of manifest string contents.</param>

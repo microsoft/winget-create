@@ -774,4 +774,13 @@
     <comment>{0} - represents the installer index number
 {1} - represents the associated installer metadata</comment>
   </data>
+  <data name="EditManifests_Message" xml:space="preserve">
+    <value>Would you like to edit your manifests?</value>
+  </data>
+  <data name="SaveAndExit_MenuItem" xml:space="preserve">
+    <value>SAVE AND EXIT</value>
+  </data>
+  <data name="SelectManifestToEdit_Message" xml:space="preserve">
+    <value>Which manifest do you want to edit?</value>
+  </data>
 </root>

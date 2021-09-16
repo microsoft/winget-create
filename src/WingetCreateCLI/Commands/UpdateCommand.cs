@@ -371,6 +371,55 @@ namespace Microsoft.WingetCreateCLI.Commands
             return newHashes.Except(oldHashes).Any();
         }
 
+        private static void DisplayManifestsAsMenuSelection(Manifests manifests)
+        {
+            Console.Clear();
+            string versionFileName = Manifests.GetFileName(manifests.VersionManifest);
+            string installerFileName = Manifests.GetFileName(manifests.InstallerManifest);
+            string versionManifestMenuItem = $"{manifests.VersionManifest.ManifestType.ToUpper()}: " + versionFileName;
+            string installerManifestMenuItem = $"{manifests.InstallerManifest.ManifestType.ToUpper()}: " + installerFileName;
+
+            while (true)
+            {
+                // Need to update locale manifest file name each time as PackageLocale can change
+                string defaultLocaleMenuItem = $"{manifests.DefaultLocaleManifest.ManifestType.ToUpper()}: " + Manifests.GetFileName(manifests.DefaultLocaleManifest);
+                List<string> selectionList = new List<string> { versionManifestMenuItem, installerManifestMenuItem, defaultLocaleMenuItem };
+                Dictionary<string, LocaleManifest> localeManifestMap = new Dictionary<string, LocaleManifest>();
+                foreach (LocaleManifest localeManifest in manifests.LocaleManifests)
+                {
+                    string localeManifestFileName = $"{localeManifest.ManifestType.ToUpper()}: " + Manifests.GetFileName(localeManifest);
+                    localeManifestMap.Add(localeManifestFileName, localeManifest);
+                    selectionList.Add(localeManifestFileName);
+                }
+
+                selectionList.Add(Resources.Done_MenuItem);
+                var selectedItem = Prompt.Select(Resources.SelectManifestToEdit_Message, selectionList);
+
+                if (selectedItem == versionManifestMenuItem)
+                {
+                    PromptHelper.PromptPropertiesWithMenu(manifests.VersionManifest, Resources.SaveAndExit_MenuItem, versionFileName);
+                }
+                else if (selectedItem == installerManifestMenuItem)
+                {
+                    PromptHelper.PromptPropertiesWithMenu(manifests.InstallerManifest, Resources.SaveAndExit_MenuItem, installerFileName);
+                }
+                else if (selectedItem == defaultLocaleMenuItem)
+                {
+                    PromptHelper.PromptPropertiesWithMenu(manifests.DefaultLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(manifests.DefaultLocaleManifest));
+
+                }
+                else if (selectedItem == Resources.Done_MenuItem)
+                {
+                    break;
+                }
+                else
+                {
+                    var selectedLocaleManifest = localeManifestMap[selectedItem];
+                    PromptHelper.PromptPropertiesWithMenu(selectedLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(selectedLocaleManifest));
+                }
+            }
+        }
+
         /// <summary>
         /// Update flow for interactively updating the manifest.
         /// </summary>s
@@ -380,14 +429,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
             Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
-
-            // ask if they would like to make additional edits
-            // show all manifests
-            // show menu for the selected manifest
-            if (Prompt.Confirm("Would you like to make edits to the manifests?"))
-            {
-                DisplayManifestsAsMenuSelection(manifests);
-            }
 
             // Clone the list of installers in order to preserve initial values.
             Manifests originalManifest = new Manifests { InstallerManifest = new InstallerManifest() };
@@ -402,61 +443,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                 ValidateManifestsInTempDir(manifests);
             }
             while (Prompt.Confirm(Resources.DiscardUpdateAndStartOver_Message));
-            Console.Clear();
+
+            if (Prompt.Confirm(Resources.EditManifests_Message))
+            {
+                DisplayManifestsAsMenuSelection(manifests);
+            }
 
             return manifests;
-        }
-
-        private static void DisplayManifestsAsMenuSelection(Manifests manifests)
-        {
-            Console.Clear();
-            string versionFileName = manifests.VersionManifest.GetFileName();
-            string installerFileName = manifests.InstallerManifest.GetFileName();
-            string defaultLocaleFileName = manifests.DefaultLocaleManifest.GetFileName();
-            List<string> selectionList = new List<string> { versionFileName, installerFileName, defaultLocaleFileName };
-
-            Dictionary<string, LocaleManifest> localeManifestMap = new Dictionary<string, LocaleManifest>();
-            foreach (LocaleManifest localeManifest in manifests.LocaleManifests)
-            {
-                string localeManifestFileName = localeManifest.GetFileName();
-                localeManifestMap.Add(localeManifestFileName, localeManifest);
-                selectionList.Add(localeManifestFileName);
-            }
-
-            // Add additional options
-            selectionList.AddRange(new[] { Resources.DisplayPreview_MenuItem, Resources.Done_MenuItem });
-
-            while (true)
-            {
-                // if we allow the user to change the locale, we'll need it to be generated each time
-                var selectedItem = Prompt.Select("Which manifest do you want to edit?", selectionList);
-
-                if (selectedItem == versionFileName)
-                {
-                    PromptHelper.PromptPropertiesWithMenu(manifests.VersionManifest, Resources.None_MenuItem);
-                }
-                else if (selectedItem == installerFileName)
-                {
-                    PromptHelper.PromptPropertiesWithMenu(manifests.InstallerManifest, Resources.None_MenuItem);
-                }
-                else if (selectedItem == defaultLocaleFileName)
-                {
-                    PromptHelper.PromptPropertiesWithMenu(manifests.DefaultLocaleManifest, Resources.None_MenuItem);
-
-                }
-                else if (selectedItem == Resources.DisplayPreview_MenuItem)
-                {
-
-                }
-                else if (selectedItem == Resources.Done_MenuItem)
-                {
-                    break;
-                }
-                else
-                {
-                    PromptHelper.PromptPropertiesWithMenu(localeManifestMap[selectedItem], Resources.None_MenuItem);
-                }
-            }
         }
 
         /// <summary>
@@ -466,14 +459,13 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         private async Task UpdateInstallersInteractively(List<Installer> existingInstallers)
         {
-            var serializer = Serialization.CreateSerializer();
             int numOfExistingInstallers = existingInstallers.Count;
             int index = 1;
 
             foreach (var installer in existingInstallers)
             {
                 Logger.InfoLocalized(nameof(Resources.UpdatingInstallerOutOfTotal_Message), index, numOfExistingInstallers);
-                Console.WriteLine(serializer.Serialize(installer));
+                Console.WriteLine(Serialization.Serialize(installer));
                 await this.UpdateSingleInstallerInteractively(installer);
                 index++;
             }
