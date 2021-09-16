@@ -22,6 +22,14 @@ namespace Microsoft.WingetCreateCLI
     /// </summary>
     public static class PromptHelper
     {
+        private static readonly string[] NonEditableRequiredFields = new[]
+        {
+            nameof(InstallerManifest.PackageIdentifier),
+            nameof(InstallerManifest.PackageVersion),
+            nameof(InstallerManifest.ManifestType),
+            nameof(InstallerManifest.ManifestVersion),
+        };
+
         /// <summary>
         /// List of strings representing the optional fields that should not be editable.
         /// </summary>
@@ -72,8 +80,9 @@ namespace Microsoft.WingetCreateCLI
 
             var fieldList = properties
                 .Select(property => property.Name)
-                .Where(pName => !NonEditableOptionalFields.Any(field => field == pName)).ToList();
+                .Where(pName => !NonEditableOptionalFields.Any(field => field == pName) && !NonEditableRequiredFields.Any(field => field == pName)).ToList();
 
+            // Filter out fields if an installerType is present
             var installerTypeProperty = model.GetType().GetProperty(nameof(InstallerType));
             if (installerTypeProperty != null)
             {
@@ -106,8 +115,16 @@ namespace Microsoft.WingetCreateCLI
                     break;
                 }
 
-                var selectedProperty = properties.First(p => p.Name == selectedField);
-                PromptPropertyAndSetValue(model, selectedField, selectedProperty.GetValue(model));
+                if (selectedField == nameof(InstallerManifest.Installers))
+                {
+                    Commands.NewCommand.DisplayInstallersAsMenuSelection(model as InstallerManifest);
+                }
+                else
+                {
+
+                    var selectedProperty = properties.First(p => p.Name == selectedField);
+                    PromptPropertyAndSetValue(model, selectedField, selectedProperty.GetValue(model));
+                }
             }
         }
 

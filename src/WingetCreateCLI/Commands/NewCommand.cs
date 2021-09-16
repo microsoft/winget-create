@@ -255,7 +255,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Displays all installers from an Installer manifest as a selection menu.
         /// </summary>
-        private static void DisplayInstallersAsMenuSelection(InstallerManifest installerManifest)
+        public static void DisplayInstallersAsMenuSelection(InstallerManifest installerManifest)
         {
             Console.Clear();
 
