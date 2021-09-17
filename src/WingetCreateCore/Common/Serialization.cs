@@ -140,10 +140,9 @@ namespace Microsoft.WingetCreateCore
         /// <summary>
         /// Serializes the provided object and returns the serialized string.
         /// </summary>
-        /// <typeparam name="T">Object type.</typeparam>
         /// <param name="value">Object to be serialized.</param>
         /// <returns>Serialized string.</returns>
-        public static string Serialize<T>(T value)
+        public static string Serialize(object value)
         {
             var serializer = CreateSerializer();
             return serializer.Serialize(value);

@@ -313,6 +313,17 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
+        /// Creates a new Installer object that is a copy of the provided Installer.
+        /// </summary>
+        /// <param name="installer">Installer object to be cloned.</param>
+        /// <returns>A new cloned Installer object.</returns>
+        public static Installer CloneInstaller(Installer installer)
+        {
+            string json = JsonConvert.SerializeObject(installer);
+            return JsonConvert.DeserializeObject<Installer>(json);
+        }
+
+        /// <summary>
         /// Updates the metadata from an existing installer node with the metadata from a new installer node.
         /// </summary>
         /// <param name="existingInstaller">Existing installer node.</param>
@@ -452,7 +463,6 @@ namespace Microsoft.WingetCreateCore
 
             return archMatches.Count == 1 ? archMatches.Single() : null;
         }
-
 
         /// <summary>
         /// Computes the SHA256 hash value for the specified byte array.
@@ -648,12 +658,6 @@ namespace Microsoft.WingetCreateCore
             }
 
             return null;
-        }
-
-        private static Installer CloneInstaller(Installer installer)
-        {
-            string json = JsonConvert.SerializeObject(installer);
-            return JsonConvert.DeserializeObject<Installer>(json);
         }
 
         private static void SetInstallerPropertiesFromAppxMetadata(AppxMetadata appxMetadata, Installer installer, InstallerManifest installerManifest)

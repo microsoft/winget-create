@@ -74,7 +74,7 @@ namespace Microsoft.WingetCreateCLI
         {
             Console.Clear();
             var properties = model.GetType().GetProperties();
-            var fieldList = FilterRestrictedFields(model, properties);
+            var fieldList = FilterPropertiesAndCreateSelectionList(model, properties);
             if (!string.IsNullOrEmpty(modelName))
             {
                 fieldList.Add(Resources.DisplayPreview_MenuItem);
@@ -309,7 +309,15 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
-        private static List<string> FilterRestrictedFields<T>(T model, PropertyInfo[] properties)
+        /// <summary>
+        /// Creates a filtered list of strings representing the fields to be shown in a selection menu. Filters out
+        /// non-editable fields as well as fields that are not relevant based on the installer type if present.
+        /// </summary>
+        /// <typeparam name="T">Object type.</typeparam>
+        /// <param name="model">Object model.</param>
+        /// <param name="properties">Array of model properties.</param>
+        /// <returns>List of strings representing the properties to be shown in the selection menu.</returns>
+        private static List<string> FilterPropertiesAndCreateSelectionList<T>(T model, PropertyInfo[] properties)
         {
             var fieldList = properties
                 .Select(property => property.Name)
@@ -340,6 +348,12 @@ namespace Microsoft.WingetCreateCLI
             return fieldList;
         }
 
+        /// <summary>
+        /// Creates a list of strings representing the installer nodes to be shown in a selection menu.
+        /// </summary>
+        /// <param name="installers">List of installers.</param>
+        /// <param name="installerSelectionMap">Installer dictionary that maps the installer menu item string to the installer object model.</param>
+        /// <returns>List of strings representing the installers to be shown in the selection menu. </returns>
         private static List<string> GenerateInstallerSelectionList(List<Installer> installers, out Dictionary<string, Installer> installerSelectionMap)
         {
             installerSelectionMap = new Dictionary<string, Installer>();
@@ -366,6 +380,11 @@ namespace Microsoft.WingetCreateCLI
             return selectionList;
         }
 
+        /// <summary>
+        /// Applies all installerCopy changes to each installer in the List of installers.
+        /// </summary>
+        /// <param name="installerCopy">Installer object model with new changes.</param>
+        /// <param name="installers">List of installers receiving the new changes.</param>
         private static void ApplyChangesToIndividualInstallers(Installer installerCopy, List<Installer> installers)
         {
             // Skip architecture as the default value when instantiated is x86.

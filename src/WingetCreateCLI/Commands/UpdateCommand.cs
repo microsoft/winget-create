@@ -405,7 +405,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 else if (selectedItem == defaultLocaleMenuItem)
                 {
                     PromptHelper.PromptPropertiesWithMenu(manifests.DefaultLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(manifests.DefaultLocaleManifest));
-
                 }
                 else if (selectedItem == Resources.Done_MenuItem)
                 {

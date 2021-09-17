@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateCore.Models
 {
+    using System;
     using System.Collections.Generic;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -48,61 +49,25 @@ namespace Microsoft.WingetCreateCore.Models
         /// <returns>File name string of manifest.</returns>
         public static string GetFileName<T>(T manifest)
         {
-            string fileName = null;
-
-            if (manifest is InstallerManifest installerManifest)
+            return manifest switch
             {
-                fileName = $"{installerManifest.PackageIdentifier}.installer.yaml";
-            }
-            else if (manifest is VersionManifest versionManifest)
-            {
-                fileName = $"{versionManifest.PackageIdentifier}.yaml";
-            }
-            else if (manifest is DefaultLocaleManifest defaultLocaleManifest)
-            {
-                fileName = $"{defaultLocaleManifest.PackageIdentifier}.locale.{defaultLocaleManifest.PackageLocale}.yaml";
-            }
-            else if (manifest is LocaleManifest localeManifest)
-            {
-                fileName = $"{localeManifest.PackageIdentifier}.locale.{localeManifest.PackageLocale}.yaml";
-            }
-            else if (manifest is SingletonManifest singletonManifest)
-            {
-                fileName = $"{singletonManifest.PackageIdentifier}.yaml";
-            }
-
-            return fileName;
+                InstallerManifest installerManifest => $"{installerManifest.PackageIdentifier}.installer.yaml",
+                VersionManifest versionManifest => $"{versionManifest.PackageIdentifier}.yaml",
+                DefaultLocaleManifest defaultLocaleManifest => $"{defaultLocaleManifest.PackageIdentifier}.locale.{defaultLocaleManifest.PackageLocale}.yaml",
+                LocaleManifest localeManifest => $"{localeManifest.PackageIdentifier}.locale.{localeManifest.PackageLocale}.yaml",
+                SingletonManifest singletonManifest => $"{singletonManifest.PackageIdentifier}.yaml",
+                _ => throw new ArgumentException(nameof(manifest)),
+            };
         }
 
+        /// <summary>
+        /// Creates a new cloned list of Installers that is a copy of the current list of installers.
+        /// </summary>
+        /// <returns>A new cloned list of Installers.</returns>
         public List<Installer.Installer> CloneInstallers()
         {
             List<Installer.Installer> deepCopy = new List<Installer.Installer>();
-
-            this.InstallerManifest.Installers.ForEach(
-                i => deepCopy.Add(
-                    new Installer.Installer {
-                        InstallerLocale = i.InstallerLocale,
-                        Platform = i.Platform,
-                        MinimumOSVersion = i.MinimumOSVersion,
-                        Architecture = i.Architecture,
-                        InstallerType = i.InstallerType,
-                        Scope = i.Scope,
-                        InstallerUrl = i.InstallerUrl,
-                        InstallerSha256 = i.InstallerSha256,
-                        SignatureSha256 = i.SignatureSha256,
-                        InstallModes = i.InstallModes,
-                        InstallerSwitches = i.InstallerSwitches,
-                        InstallerSuccessCodes = i.InstallerSuccessCodes,
-                        UpgradeBehavior = i.UpgradeBehavior,
-                        Commands = i.Commands,
-                        Protocols = i.Protocols,
-                        FileExtensions = i.FileExtensions,
-                        PackageFamilyName = i.PackageFamilyName,
-                        ProductCode = i.ProductCode,
-                        Capabilities = i.Capabilities,
-                        RestrictedCapabilities = i.RestrictedCapabilities,
-                    }));
-
+            this.InstallerManifest.Installers.ForEach(i => deepCopy.Add(PackageParser.CloneInstaller(i)));
             return deepCopy;
         }
     }
