@@ -148,7 +148,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
             List<LocaleManifest> localeManifests = manifests.LocaleManifests;
 
-            string defaultPackageLocale = defaultLocaleManifest.PackageLocale;
             string version = versionManifest.PackageVersion;
             string packageId = versionManifest.PackageIdentifier;
             string manifestDir = Utils.GetAppManifestDirPath(packageId, version);
@@ -167,9 +166,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                 fullDirPath = Path.Combine(outputDir, manifestDir);
             }
 
-            string versionManifestFileName = $"{packageId}.yaml";
-            string installerManifestFileName = $"{packageId}.installer.yaml";
-            string defaultLocaleManifestFileName = $"{packageId}.locale.{defaultPackageLocale}.yaml";
+            string versionManifestFileName = Manifests.GetFileName(manifests.VersionManifest);
+            string installerManifestFileName = Manifests.GetFileName(manifests.InstallerManifest);
+            string defaultLocaleManifestFileName = Manifests.GetFileName(manifests.DefaultLocaleManifest);
 
             File.WriteAllText(Path.Combine(fullDirPath, versionManifestFileName), versionManifest.ToYaml());
             File.WriteAllText(Path.Combine(fullDirPath, installerManifestFileName), installerManifest.ToYaml());
@@ -177,7 +176,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (LocaleManifest localeManifest in localeManifests)
             {
-                string localeManifestFileName = $"{packageId}.locale.{localeManifest.PackageLocale}.yaml";
+                string localeManifestFileName = Manifests.GetFileName(localeManifest);
                 File.WriteAllText(Path.Combine(fullDirPath, localeManifestFileName), localeManifest.ToYaml());
             }
 
@@ -195,11 +194,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>A boolean value indicating whether validation of the manifests was successful.</returns>
         protected static bool ValidateManifestsInTempDir(Manifests manifests)
         {
-            string packageId = manifests.VersionManifest.PackageIdentifier;
-            string defaultPackageLocale = manifests.DefaultLocaleManifest.PackageLocale;
-            string versionManifestFileName = $"{packageId}.yaml";
-            string installerManifestFileName = $"{packageId}.installer.yaml";
-            string defaultLocaleManifestFileName = $"{packageId}.locale.{defaultPackageLocale}.yaml";
+            string versionManifestFileName = Manifests.GetFileName(manifests.VersionManifest);
+            string installerManifestFileName = Manifests.GetFileName(manifests.InstallerManifest);
+            string defaultLocaleManifestFileName = Manifests.GetFileName(manifests.DefaultLocaleManifest);
 
             string randomDirPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(randomDirPath);

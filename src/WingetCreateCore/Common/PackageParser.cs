@@ -313,7 +313,7 @@ namespace Microsoft.WingetCreateCore
             }
             else
             {
-                // For a single installer, detect the architecture. If no architecture is found, default to architecture from existing manifest.
+                // For a single installer, detect the architecture. If no architecture is detected, default to architecture from existing manifest.
                 newInstaller.Architecture = GetArchFromUrl(url) ?? GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? installer.Architecture;
             }
 

@@ -69,7 +69,7 @@ namespace Microsoft.WingetCreateCLI
         /// <typeparam name="T">Model type.</typeparam>
         /// <param name="model">Instance of object model.</param>
         /// <param name="exitMenuWord">Exit keyword to be shown to the user to exit the navigational menu.</param>
-        /// <param name="modelName">If a non-null string is provided, a menu item to display a preview of the model will be added to the selection list</param>
+        /// <param name="modelName">If a non-null string is provided, a menu item to display a preview of the model will be added to the selection list.</param>
         public static void PromptPropertiesWithMenu<T>(T model, string exitMenuWord, string modelName = null)
         {
             Console.Clear();
