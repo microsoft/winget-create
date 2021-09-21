@@ -305,9 +305,20 @@ namespace Microsoft.WingetCreateCore
             }
 
             Installer newInstaller = newInstallers.First();
+
+            if (newInstallers.Count > 1)
+            {
+                // For multiple installers in an AppxBundle, use the existing architecture to avoid matching conflicts.
+                newInstaller.Architecture = installer.Architecture;
+            }
+            else
+            {
+                // For a single installer, detect the architecture. If no architecture is found, default to architecture from existing manifest.
+                newInstaller.Architecture = GetArchFromUrl(url) ?? GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? installer.Architecture;
+            }
+
             newInstaller.InstallerUrl = url;
             newInstaller.InstallerSha256 = GetFileHash(path);
-
             UpdateInstallerMetadata(installer, newInstallers.First());
             return true;
         }
@@ -330,6 +341,7 @@ namespace Microsoft.WingetCreateCore
         /// <param name="newInstaller">New installer node.</param>
         private static void UpdateInstallerMetadata(Installer existingInstaller, Installer newInstaller)
         {
+            existingInstaller.Architecture = newInstaller.Architecture;
             existingInstaller.InstallerUrl = newInstaller.InstallerUrl;
             existingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
             existingInstaller.SignatureSha256 = newInstaller.SignatureSha256;
