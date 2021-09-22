@@ -370,6 +370,54 @@ namespace Microsoft.WingetCreateCLI.Commands
             return newHashes.Except(oldHashes).Any();
         }
 
+        private static void DisplayManifestsAsMenuSelection(Manifests manifests)
+        {
+            Console.Clear();
+            string versionFileName = Manifests.GetFileName(manifests.VersionManifest);
+            string installerFileName = Manifests.GetFileName(manifests.InstallerManifest);
+            string versionManifestMenuItem = $"{manifests.VersionManifest.ManifestType.ToUpper()}: " + versionFileName;
+            string installerManifestMenuItem = $"{manifests.InstallerManifest.ManifestType.ToUpper()}: " + installerFileName;
+
+            while (true)
+            {
+                // Need to update locale manifest file name each time as PackageLocale can change
+                string defaultLocaleMenuItem = $"{manifests.DefaultLocaleManifest.ManifestType.ToUpper()}: " + Manifests.GetFileName(manifests.DefaultLocaleManifest);
+                List<string> selectionList = new List<string> { versionManifestMenuItem, installerManifestMenuItem, defaultLocaleMenuItem };
+                Dictionary<string, LocaleManifest> localeManifestMap = new Dictionary<string, LocaleManifest>();
+                foreach (LocaleManifest localeManifest in manifests.LocaleManifests)
+                {
+                    string localeManifestFileName = $"{localeManifest.ManifestType.ToUpper()}: " + Manifests.GetFileName(localeManifest);
+                    localeManifestMap.Add(localeManifestFileName, localeManifest);
+                    selectionList.Add(localeManifestFileName);
+                }
+
+                selectionList.Add(Resources.Done_MenuItem);
+                var selectedItem = Prompt.Select(Resources.SelectManifestToEdit_Message, selectionList);
+
+                if (selectedItem == versionManifestMenuItem)
+                {
+                    PromptHelper.PromptPropertiesWithMenu(manifests.VersionManifest, Resources.SaveAndExit_MenuItem, versionFileName);
+                }
+                else if (selectedItem == installerManifestMenuItem)
+                {
+                    PromptHelper.PromptPropertiesWithMenu(manifests.InstallerManifest, Resources.SaveAndExit_MenuItem, installerFileName);
+                }
+                else if (selectedItem == defaultLocaleMenuItem)
+                {
+                    PromptHelper.PromptPropertiesWithMenu(manifests.DefaultLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(manifests.DefaultLocaleManifest));
+                }
+                else if (selectedItem == Resources.Done_MenuItem)
+                {
+                    break;
+                }
+                else
+                {
+                    var selectedLocaleManifest = localeManifestMap[selectedItem];
+                    PromptHelper.PromptPropertiesWithMenu(selectedLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(selectedLocaleManifest));
+                }
+            }
+        }
+
         /// <summary>
         /// Update flow for interactively updating the manifest.
         /// </summary>s
@@ -393,7 +441,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 ValidateManifestsInTempDir(manifests);
             }
             while (Prompt.Confirm(Resources.DiscardUpdateAndStartOver_Message));
-            Console.Clear();
+
+            if (Prompt.Confirm(Resources.EditManifests_Message))
+            {
+                DisplayManifestsAsMenuSelection(manifests);
+            }
+
             return manifests;
         }
 
@@ -404,14 +457,13 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         private async Task UpdateInstallersInteractively(List<Installer> existingInstallers)
         {
-            var serializer = Serialization.CreateSerializer();
             int numOfExistingInstallers = existingInstallers.Count;
             int index = 1;
 
             foreach (var installer in existingInstallers)
             {
                 Logger.InfoLocalized(nameof(Resources.UpdatingInstallerOutOfTotal_Message), index, numOfExistingInstallers);
-                Console.WriteLine(serializer.Serialize(installer));
+                Console.WriteLine(Serialization.Serialize(installer));
                 await this.UpdateSingleInstallerInteractively(installer);
                 index++;
             }

@@ -439,6 +439,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to edit your manifests?.
+        /// </summary>
+        public static string EditManifests_Message {
+            get {
+                return ResourceManager.GetString("EditManifests_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter values for the following fields:.
         /// </summary>
         public static string EnterFollowingFields_Message {
@@ -1492,6 +1501,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SAVE AND EXIT.
+        /// </summary>
+        public static string SaveAndExit_MenuItem {
+            get {
+                return ResourceManager.GetString("SaveAndExit_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is an enumeration of install scope (“User”, “System”).
         /// </summary>
         public static string Scope_KeywordDescription {
@@ -1515,6 +1533,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SelectInstallerToEdit_Message {
             get {
                 return ResourceManager.GetString("SelectInstallerToEdit_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Which manifest do you want to edit?.
+        /// </summary>
+        public static string SelectManifestToEdit_Message {
+            get {
+                return ResourceManager.GetString("SelectManifestToEdit_Message", resourceCulture);
             }
         }
         
