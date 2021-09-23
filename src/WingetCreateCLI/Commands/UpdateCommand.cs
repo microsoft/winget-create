@@ -392,8 +392,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 selectionList.Add(Resources.Done_MenuItem);
+                ValidateManifestsInTempDir(manifests);
                 var selectedItem = Prompt.Select(Resources.SelectManifestToEdit_Message, selectionList);
-
                 if (selectedItem == versionManifestMenuItem)
                 {
                     PromptHelper.PromptPropertiesWithMenu(manifests.VersionManifest, Resources.SaveAndExit_MenuItem, versionFileName);
