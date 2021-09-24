@@ -231,7 +231,7 @@
     <value>GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.</value>
   </data>
   <data name="Heading" xml:space="preserve">
-    <value>Windows Manifest Creator v{0}</value>
+    <value>Windows Package Manager Manifest Creator v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
   </data>
   <data name="Homepage_KeywordDescription" xml:space="preserve">

@@ -646,7 +646,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Windows Manifest Creator v{0}.
+        ///   Looks up a localized string similar to Windows Package Manager Manifest Creator v{0}.
         /// </summary>
         public static string Heading {
             get {
