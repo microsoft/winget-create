@@ -104,6 +104,15 @@ jobs:
           nugetConfigPath: "nuget.config"
           projects: $(workingDirectory)/**/*.csproj
 
+      - task: CopyFiles@2
+        displayName: 'Copy Binaries from Visual Studio Package'
+        inputs:
+          Contents: |
+            C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_14.0.30035.0_x64__8wekyb3d8bbwe\MSVCP140.dll
+            C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_14.0.30035.0_x64__8wekyb3d8bbwe\VCRUNTIME140.dll
+            C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_14.0.30035.0_x64__8wekyb3d8bbwe\VCRUNTIME140_1.dll
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'          
+
       - task: DotNetCoreCLI@2
         displayName: Build standalone, framework-dependent exe
         inputs:
