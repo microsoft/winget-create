@@ -56,18 +56,17 @@ jobs:
       - checkout: self
         lfs: "true"     
 
-      - script: dir
-        workingDirectory: 'C:\Program Files\WindowsApps\'
-        displayName: List contents of a folder
+      - powershell: |
+        iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
+        Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
 
-      # - task: CopyFiles@2
-      #   displayName: 'Copy Binaries from Visual Studio Package 2'
-      #   inputs:
-      #     Contents: |
-      #       '%ProgramFiles%\WindowsApps\Microsoft.VCLibs*\MSVCP140.dll'
-      #       'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140.dll'
-      #       'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140_1.dll'
-      #     TargetFolder: '$(Build.ArtifactStagingDirectory)'    
+
+      - task: CopyFiles@2
+        displayName: 'Copy Binaries from Visual Studio Package 2'
+        inputs:
+          Contents: |
+            'C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_14.0.29231.0_x64__8wekyb3d8bbwe'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'    
 
   #     - powershell: |
   #         echo $(version)
