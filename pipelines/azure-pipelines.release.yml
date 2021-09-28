@@ -54,17 +54,7 @@ jobs:
 
     steps:
       - checkout: self
-        lfs: "true"
-
-      - task: CopyFiles@2
-        displayName: 'Copy Binaries from Visual Studio Package'
-        inputs:
-          SourceFolder: 'C:\Program Files\'
-          Contents: |
-            'WindowsApps\**\MSVCP140.dll'
-            'WindowsApps\**\VCRUNTIME140.dll'
-            'WindowsApps\**\VCRUNTIME140_1.dll'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)'           
+        lfs: "true"          
 
       - task: CopyFiles@2
         displayName: 'Copy Binaries from Visual Studio Package 2'
@@ -73,7 +63,8 @@ jobs:
             'C:\Program Files\WindowsApps\Microsoft.VCLibs*\MSVCP140.dll'
             'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140.dll'
             'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140_1.dll'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)'       
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'    
+
   #     - powershell: |
   #         echo $(version)
   #         echo $(appxBundlePath)
