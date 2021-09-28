@@ -56,201 +56,210 @@ jobs:
       - checkout: self
         lfs: "true"
 
-      - powershell: |
-          echo $(version)
-          echo $(appxBundlePath)
-          echo $(appxBundleFile)
-          echo $(exePathSelfContained)
-          echo $(exePathFrameworkDependent)
-          echo "##vso[task.setvariable variable=manifestVersion;isOutput=true]$(version)"
-          echo "##vso[task.setvariable variable=appxBundleFile;isOutput=true]$(appxBundleFile)"
-        name: OutputVersionStep
-        displayName: Set output variables for UpdateManifest job
-
-      - powershell: |
-          [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
-          $manifest.Package.Identity.Version = "$(version)"
-          $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
-
-          [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
-          @($project.Project.PropertyGroup)[0].Version = "$(version)"
-          $project.save("$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj")
-        displayName: "Update cli and package manifest version"
-
-      - task: DeleteFiles@1
-        displayName: "Delete existing stubbed TelemetryEventSources.cs. Not necessary, but will cause build to fail if fetch fails."
-        inputs:
-          Contents: '$(workingDirectory)\WingetCreateCLI\Telemetry\TelemetryEventSource.cs'
-
-      - task: PkgESGitFetch@10
-        displayName: "Fetch TelemetryEventSource.cs from OS repo and overwrite stubbed version"
-        inputs:
-          repository: "https://microsoft.visualstudio.com/os/_git/os.2020"
-          branch: official/main
-          source: 'minkernel\published\internal\telemetry\TelemetryEventSource.cs'
-          destination: '$(workingDirectory)\WingetCreateCLI\Telemetry\'
-
-      # NuGetCommand task, but since there are two duplicate tasks by this name in the org, must refer to it by GUID
-      - task: 333b11bd-d341-40d9-afcf-b32d5ce6f23b@2
-        displayName: Restore Packages
-        inputs:
-          restoreSolution: "$(solution)"
-
-      - task: DotNetCoreCLI@2
-        displayName: Restore
-        inputs:
-          command: restore
-          feedsToUse: config
-          nugetConfigPath: "nuget.config"
-          projects: $(workingDirectory)/**/*.csproj
-
       - task: CopyFiles@2
         displayName: 'Copy Binaries from Visual Studio Package'
         inputs:
+          SourceFolder: 'C:\Program Files\'
           Contents: |
-            C:\Program Files\WindowsApps\**\MSVCP140.dll
-            C:\Program Files\WindowsApps\**\VCRUNTIME140.dll
-            C:\Program Files\WindowsApps\**\VCRUNTIME140_1.dll
-          TargetFolder: '$(Build.ArtifactStagingDirectory)'          
-
-      - task: DotNetCoreCLI@2
-        displayName: Build standalone, framework-dependent exe
-        inputs:
-          command: publish
-          publishWebProjects: false
-          zipAfterPublish: false
-          projects: $(workingDirectory)/**/WingetCreateCLI.csproj
-          arguments: "--configuration Release --runtime=win-x64 --output $(exeDirFrameworkDependent) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
-
-      - task: DotNetCoreCLI@2
-        displayName: Build standalone, self-contained exe
-        inputs:
-          command: publish
-          publishWebProjects: false
-          zipAfterPublish: false
-          projects: $(workingDirectory)/**/WingetCreateCLI.csproj
-          arguments: "--configuration Release --runtime=win-x64 --output $(exeDirSelfContained) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=true"
-
-      - task: MSBuild@1
-        displayName: Build Solution
-        inputs:
-          platform: "$(buildPlatform)"
-          solution: "$(solution)"
-          configuration: "$(buildConfiguration)"
-          msbuildArguments: '/p:AppxBundleOutput="$(appxBundlePath)"
-            /p:AppxBundle=Always
-            /p:UapAppxPackageBuildMode=SideloadOnly
-            /p:AppxPackageSigningEnabled=false'
-
-      - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-        displayName: "ESRP CodeSigning"
-        inputs:
-          ConnectedServiceName: "PeetPackageEs2"
-          FolderPath: $(appxPackageDir)
-          Pattern: |
-            $(appxBundleFile)
-            **/WingetCreateCLI.exe
-          UseMinimatch: true
-          signConfigType: inlineSignParams
-          inlineOperation: |
-            [
-              {
-                  "KeyCode" : "CP-230012",
-                  "OperationCode" : "SigntoolSign",
-                  "Parameters" : {
-                      "OpusName" : "Microsoft",
-                      "OpusInfo" : "http://www.microsoft.com",
-                      "FileDigest" : "/fd \"SHA256\"",
-                      "PageHash" : "/NPH",
-                      "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
-                  },
-                  "ToolName" : "sign",
-                  "ToolVersion" : "1.0"
-              },
-              {
-                  "KeyCode" : "CP-230012",
-                  "OperationCode" : "SigntoolVerify",
-                  "Parameters" : {},
-                  "ToolName" : "sign",
-                  "ToolVersion" : "1.0"
-              }
-            ]
-
-      - powershell: |
-          ren "$(exeDirFrameworkDependent)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
-          ren "$(exeDirSelfContained)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate-self-contained.exe
-          (Get-FileHash -Algorithm SHA256 -Path $(exePathFrameworkDependent)).Hash > "$(exePathFrameworkDependent).txt"
-          (Get-FileHash -Algorithm SHA256 -Path $(exePathSelfContained)).Hash > "$(exePathSelfContained).txt"
-          (Get-FileHash -Algorithm SHA256 -Path $(appxBundlePath)).Hash > "$(appxBundlePath).txt"
-        displayName: "Create hash files"
+            'WindowsApps\**\MSVCP140.dll'
+            'WindowsApps\**\VCRUNTIME140.dll'
+            'WindowsApps\**\VCRUNTIME140_1.dll'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'           
 
       - task: CopyFiles@2
-        displayName: Copy files to be published to staging directory
+        displayName: 'Copy Binaries from Visual Studio Package 2'
         inputs:
-          targetFolder: $(Build.ArtifactStagingDirectory)
-          flattenFolders: true
-          contents: |
-            $(exePathFrameworkDependent)
-            $(exePathSelfContained)
-            $(exePathFrameworkDependent).txt
-            $(exePathSelfContained).txt
-            $(appxBundlePath)
-            $(appxBundlePath).txt
+          Contents: |
+            'C:\Program Files\WindowsApps\Microsoft.VCLibs*\MSVCP140.dll'
+            'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140.dll'
+            'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140_1.dll'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'       
+  #     - powershell: |
+  #         echo $(version)
+  #         echo $(appxBundlePath)
+  #         echo $(appxBundleFile)
+  #         echo $(exePathSelfContained)
+  #         echo $(exePathFrameworkDependent)
+  #         echo "##vso[task.setvariable variable=manifestVersion;isOutput=true]$(version)"
+  #         echo "##vso[task.setvariable variable=appxBundleFile;isOutput=true]$(appxBundleFile)"
+  #       name: OutputVersionStep
+  #       displayName: Set output variables for UpdateManifest job
 
-      - publish: $(Build.ArtifactStagingDirectory)
-        artifact: wingetcreate
-        displayName: Publish appx, exe, and hash files
+  #     - powershell: |
+  #         [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
+  #         $manifest.Package.Identity.Version = "$(version)"
+  #         $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
 
-      - task: GitHubRelease@1
-        displayName: Create GitHub release
-        inputs:
-          gitHubConnection: github
-          repositoryName: $(Build.Repository.Name)
-          tagSource: userSpecifiedTag
-          tag: v$(version)-preview
-          isPreRelease: true
-          isDraft: true # After running this step, visit the new draft release, edit, and publish.
-          assets: $(Build.ArtifactStagingDirectory)/*
+  #         [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
+  #         @($project.Project.PropertyGroup)[0].Version = "$(version)"
+  #         $project.save("$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj")
+  #       displayName: "Update cli and package manifest version"
 
-  - job: Wait
-    displayName: Wait for vanity URL to be manually updated
-    dependsOn: Build
-    pool: server
-    timeoutInMinutes: 1440 # job times out in 1 day
-    steps:
-      - task: ManualValidation@0
-        timeoutInMinutes: 1440 # task times out in 1 day
-        inputs:
-          instructions: "Please update aka.ms vanity URLs for latest release"
+  #     - task: DeleteFiles@1
+  #       displayName: "Delete existing stubbed TelemetryEventSources.cs. Not necessary, but will cause build to fail if fetch fails."
+  #       inputs:
+  #         Contents: '$(workingDirectory)\WingetCreateCLI\Telemetry\TelemetryEventSource.cs'
 
-  - job: UpdateManifest
-    dependsOn:
-      - Build
-      - Wait
-    pool:
-      vmImage: $(vmImageName)
-    variables:
-      runCodesignValidationInjection: ${{ false }}
-      skipComponentGovernanceDetection: ${{ true }}
-      manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
-      appxBundleFile: $[dependencies.Build.outputs['OutputVersionStep.appxBundleFile']]
-      packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)-preview/$(appxBundleFile)"
-    steps:
-      - checkout: none
+  #     - task: PkgESGitFetch@10
+  #       displayName: "Fetch TelemetryEventSource.cs from OS repo and overwrite stubbed version"
+  #       inputs:
+  #         repository: "https://microsoft.visualstudio.com/os/_git/os.2020"
+  #         branch: official/main
+  #         source: 'minkernel\published\internal\telemetry\TelemetryEventSource.cs'
+  #         destination: '$(workingDirectory)\WingetCreateCLI\Telemetry\'
 
-      - powershell: |
-          # These are the steps you'd run in your CI/CD pipeline to update your OWC manifest using wingetcreate.
-          # The update command only supports a single installer URL, if you have multiple URLs you'll have to manually modify
-          # your manifests as described here https://github.com/microsoft/winget-create#using-windows-package-manager-manifest-creator-in-a-cicd-pipeline
+  #     # NuGetCommand task, but since there are two duplicate tasks by this name in the org, must refer to it by GUID
+  #     - task: 333b11bd-d341-40d9-afcf-b32d5ce6f23b@2
+  #       displayName: Restore Packages
+  #       inputs:
+  #         restoreSolution: "$(solution)"
 
-          # https://aka.ms/wingetcreate/latest points to latest version of wingetcreate.exe
-          # https://aka.ms/wingetcreate/preview points to latest preview version of wingetcreate.exe
-          # requires .NET to be installed on the build machine to operate correctly, but is a smaller download
+  #     - task: DotNetCoreCLI@2
+  #       displayName: Restore
+  #       inputs:
+  #         command: restore
+  #         feedsToUse: config
+  #         nugetConfigPath: "nuget.config"
+  #         projects: $(workingDirectory)/**/*.csproj      
 
-          # https://aka.ms/wingetcreate/latest/self-contained points to latest self-contained version of wingetcreate.exe
-          # https://aka.ms/wingetcreate/preview/self-contained points to latest self-contained preview version of wingetcreate.exe
-          # does not require .NET to be installed on the build machine to operate correctly, but is a larger download
+  #     - task: DotNetCoreCLI@2
+  #       displayName: Build standalone, framework-dependent exe
+  #       inputs:
+  #         command: publish
+  #         publishWebProjects: false
+  #         zipAfterPublish: false
+  #         projects: $(workingDirectory)/**/WingetCreateCLI.csproj
+  #         arguments: "--configuration Release --runtime=win-x64 --output $(exeDirFrameworkDependent) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
 
-          iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
-          .\wingetcreate.exe update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit
-        displayName: Update package manifest in the OWC
+  #     - task: DotNetCoreCLI@2
+  #       displayName: Build standalone, self-contained exe
+  #       inputs:
+  #         command: publish
+  #         publishWebProjects: false
+  #         zipAfterPublish: false
+  #         projects: $(workingDirectory)/**/WingetCreateCLI.csproj
+  #         arguments: "--configuration Release --runtime=win-x64 --output $(exeDirSelfContained) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=true"
+
+  #     - task: MSBuild@1
+  #       displayName: Build Solution
+  #       inputs:
+  #         platform: "$(buildPlatform)"
+  #         solution: "$(solution)"
+  #         configuration: "$(buildConfiguration)"
+  #         msbuildArguments: '/p:AppxBundleOutput="$(appxBundlePath)"
+  #           /p:AppxBundle=Always
+  #           /p:UapAppxPackageBuildMode=SideloadOnly
+  #           /p:AppxPackageSigningEnabled=false'
+
+  #     - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
+  #       displayName: "ESRP CodeSigning"
+  #       inputs:
+  #         ConnectedServiceName: "PeetPackageEs2"
+  #         FolderPath: $(appxPackageDir)
+  #         Pattern: |
+  #           $(appxBundleFile)
+  #           **/WingetCreateCLI.exe
+  #         UseMinimatch: true
+  #         signConfigType: inlineSignParams
+  #         inlineOperation: |
+  #           [
+  #             {
+  #                 "KeyCode" : "CP-230012",
+  #                 "OperationCode" : "SigntoolSign",
+  #                 "Parameters" : {
+  #                     "OpusName" : "Microsoft",
+  #                     "OpusInfo" : "http://www.microsoft.com",
+  #                     "FileDigest" : "/fd \"SHA256\"",
+  #                     "PageHash" : "/NPH",
+  #                     "TimeStamp" : "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+  #                 },
+  #                 "ToolName" : "sign",
+  #                 "ToolVersion" : "1.0"
+  #             },
+  #             {
+  #                 "KeyCode" : "CP-230012",
+  #                 "OperationCode" : "SigntoolVerify",
+  #                 "Parameters" : {},
+  #                 "ToolName" : "sign",
+  #                 "ToolVersion" : "1.0"
+  #             }
+  #           ]
+
+  #     - powershell: |
+  #         ren "$(exeDirFrameworkDependent)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
+  #         ren "$(exeDirSelfContained)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate-self-contained.exe
+  #         (Get-FileHash -Algorithm SHA256 -Path $(exePathFrameworkDependent)).Hash > "$(exePathFrameworkDependent).txt"
+  #         (Get-FileHash -Algorithm SHA256 -Path $(exePathSelfContained)).Hash > "$(exePathSelfContained).txt"
+  #         (Get-FileHash -Algorithm SHA256 -Path $(appxBundlePath)).Hash > "$(appxBundlePath).txt"
+  #       displayName: "Create hash files"
+
+  #     - task: CopyFiles@2
+  #       displayName: Copy files to be published to staging directory
+  #       inputs:
+  #         targetFolder: $(Build.ArtifactStagingDirectory)
+  #         flattenFolders: true
+  #         contents: |
+  #           $(exePathFrameworkDependent)
+  #           $(exePathSelfContained)
+  #           $(exePathFrameworkDependent).txt
+  #           $(exePathSelfContained).txt
+  #           $(appxBundlePath)
+  #           $(appxBundlePath).txt
+
+  #     - publish: $(Build.ArtifactStagingDirectory)
+  #       artifact: wingetcreate
+  #       displayName: Publish appx, exe, and hash files
+
+  #     - task: GitHubRelease@1
+  #       displayName: Create GitHub release
+  #       inputs:
+  #         gitHubConnection: github
+  #         repositoryName: $(Build.Repository.Name)
+  #         tagSource: userSpecifiedTag
+  #         tag: v$(version)-preview
+  #         isPreRelease: true
+  #         isDraft: true # After running this step, visit the new draft release, edit, and publish.
+  #         assets: $(Build.ArtifactStagingDirectory)/*
+
+  # - job: Wait
+  #   displayName: Wait for vanity URL to be manually updated
+  #   dependsOn: Build
+  #   pool: server
+  #   timeoutInMinutes: 1440 # job times out in 1 day
+  #   steps:
+  #     - task: ManualValidation@0
+  #       timeoutInMinutes: 1440 # task times out in 1 day
+  #       inputs:
+  #         instructions: "Please update aka.ms vanity URLs for latest release"
+
+  # - job: UpdateManifest
+  #   dependsOn:
+  #     - Build
+  #     - Wait
+  #   pool:
+  #     vmImage: $(vmImageName)
+  #   variables:
+  #     runCodesignValidationInjection: ${{ false }}
+  #     skipComponentGovernanceDetection: ${{ true }}
+  #     manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
+  #     appxBundleFile: $[dependencies.Build.outputs['OutputVersionStep.appxBundleFile']]
+  #     packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)-preview/$(appxBundleFile)"
+  #   steps:
+  #     - checkout: none
+
+  #     - powershell: |
+  #         # These are the steps you'd run in your CI/CD pipeline to update your OWC manifest using wingetcreate.
+  #         # The update command only supports a single installer URL, if you have multiple URLs you'll have to manually modify
+  #         # your manifests as described here https://github.com/microsoft/winget-create#using-windows-package-manager-manifest-creator-in-a-cicd-pipeline
+
+  #         # https://aka.ms/wingetcreate/latest points to latest version of wingetcreate.exe
+  #         # https://aka.ms/wingetcreate/preview points to latest preview version of wingetcreate.exe
+  #         # requires .NET to be installed on the build machine to operate correctly, but is a smaller download
+
+  #         # https://aka.ms/wingetcreate/latest/self-contained points to latest self-contained version of wingetcreate.exe
+  #         # https://aka.ms/wingetcreate/preview/self-contained points to latest self-contained preview version of wingetcreate.exe
+  #         # does not require .NET to be installed on the build machine to operate correctly, but is a larger download
+
+  #         iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+  #         .\wingetcreate.exe update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit
+  #       displayName: Update package manifest in the OWC
