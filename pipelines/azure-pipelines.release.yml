@@ -69,14 +69,21 @@ jobs:
         inputs:
           targetType: 'inline'
           script: | 
-            Get-ChildItem -Path C:\Program Files\* -Recurse -Force
+            Get-ChildItem -Path "C:\Program Files\*" -Recurse -Force
 
       - task: CopyFiles@2
         displayName: 'Copy Binaries from Visual Studio Package 2'
         inputs:
           Contents: |
-            'C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_*\'
+            "C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_14.0.29231.0_x64__8wekyb3d8bbwe\MSVCP140.dll*\"
           TargetFolder: '$(Build.ArtifactStagingDirectory)'    
+
+      - task: CopyFiles@2
+        displayName: 'Copy Binaries from Visual Studio Package 3'
+        inputs:
+          Contents: |
+            "C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_14.0.30035.0_x64__8wekyb3d8bbwe\MSVCP140.dll"
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'   
 
   #     - powershell: |
   #         echo $(version)
