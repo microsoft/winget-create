@@ -56,13 +56,6 @@ jobs:
       - checkout: self
         lfs: "true"     
 
-      - task: PowerShell@2
-        displayName: Install Tests Dependencies
-        inputs:
-          targetType: 'inline'
-          script: |
-            Add-AppxPackage %ProgramFiles(x86)%\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.VCLibs.Desktop\14.0\Appx\Retail\x64\Microsoft.VCLibs.x64.14.00.Desktop.appx
-
       - script: dir
         workingDirectory: 'C:\Program Files\WindowsApps\'
         displayName: List contents of a folder
