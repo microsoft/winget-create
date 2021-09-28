@@ -65,6 +65,7 @@ jobs:
           echo "##vso[task.setvariable variable=appxBundleFile;isOutput=true]$(appxBundleFile)"
         name: OutputVersionStep
         displayName: Set output variables for UpdateManifest job
+
       - powershell: |
           [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
           $manifest.Package.Identity.Version = "$(version)"
@@ -73,6 +74,7 @@ jobs:
           @($project.Project.PropertyGroup)[0].Version = "$(version)"
           $project.save("$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj")
         displayName: "Update cli and package manifest version"
+
       - task: DeleteFiles@1
         displayName: "Delete existing stubbed TelemetryEventSources.cs. Not necessary, but will cause build to fail if fetch fails."
         inputs:
@@ -98,7 +100,7 @@ jobs:
       - task: CopyFiles@2
         displayName: 'Copy Binary Dependencies from VCLibs to Project folder'
         inputs:
-          SourceFolder: "C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_14.0.29231.0_x64__8wekyb3d8bbwe"
+          SourceFolder: "C:/Program Files/WindowsApps/Microsoft.VCLibs.140.00.UWPDesktop_14.0.29231.0_x64__8wekyb3d8bbwe"
           Contents: |
             "msvcp140.dll"
             "vcruntime140.dll"
