@@ -54,16 +54,27 @@ jobs:
 
     steps:
       - checkout: self
-        lfs: "true"          
+        lfs: "true"     
 
-      - task: CopyFiles@2
-        displayName: 'Copy Binaries from Visual Studio Package 2'
+      - task: PowerShell@2
+        displayName: Install Tests Dependencies
         inputs:
-          Contents: |
-            'C:\Program Files\WindowsApps\Microsoft.VCLibs*\MSVCP140.dll'
-            'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140.dll'
-            'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140_1.dll'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)'    
+          targetType: 'inline'
+          script: |
+            Add-AppxPackage %ProgramFiles(x86)%\Microsoft SDKs\Windows Kits\10\ExtensionSDKs\Microsoft.VCLibs.Desktop\14.0\Appx\Retail\x64\Microsoft.VCLibs.x64.14.00.Desktop.appx
+
+      - script: dir
+        workingDirectory: 'C:\Program Files\WindowsApps\'
+        displayName: List contents of a folder
+
+      # - task: CopyFiles@2
+      #   displayName: 'Copy Binaries from Visual Studio Package 2'
+      #   inputs:
+      #     Contents: |
+      #       '%ProgramFiles%\WindowsApps\Microsoft.VCLibs*\MSVCP140.dll'
+      #       'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140.dll'
+      #       'C:\Program Files\WindowsApps\Microsoft.VCLibs*\VCRUNTIME140_1.dll'
+      #     TargetFolder: '$(Build.ArtifactStagingDirectory)'    
 
   #     - powershell: |
   #         echo $(version)
