@@ -64,11 +64,18 @@ jobs:
             iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
             Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
 
+      - task: PowerShell@2
+        displayName: Show Directory
+        inputs:
+          targetType: 'inline'
+          script: | 
+            Get-ChildItem -Path C:\Program Files\* -Recurse -Force
+
       - task: CopyFiles@2
         displayName: 'Copy Binaries from Visual Studio Package 2'
         inputs:
           Contents: |
-            'C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_14.0.29231.0_x64__8wekyb3d8bbwe\MSVCP140.dll'
+            'C:\Program Files\WindowsApps\Microsoft.VCLibs.140.00.UWPDesktop_*\'
           TargetFolder: '$(Build.ArtifactStagingDirectory)'    
 
   #     - powershell: |
