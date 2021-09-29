@@ -101,7 +101,7 @@ jobs:
         displayName: Extract files from VCLibs appx
         inputs:
           archiveFilePatterns: 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
-          destinationFolder: '$(workingDirectory)\WingetCreateCLI\bin\$(buildPlatform)\$(buildConfiguration)\net5.0-windows10.0.17763.0'
+          destinationFolder: '$(workingDirectory)\WingetCreateCLI'
           cleanDestinationFolder: false
           overwriteExistingFiles: false        
 
