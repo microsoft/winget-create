@@ -448,6 +448,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                 DisplayManifestsAsMenuSelection(manifests);
             }
 
+            if (!this.SubmitToGitHub)
+            {
+                this.SubmitToGitHub = Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message);
+            }
+
             return manifests;
         }
 
