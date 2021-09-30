@@ -34,6 +34,7 @@ jobs:
           echo "##vso[task.setvariable variable=majorMinorBuildVersion;isOutput=true]$version"
         name: GetVersionStep
         displayName: Get version from CLI project
+
   - job: Build
     displayName: Build
     dependsOn: GetVersion
@@ -70,6 +71,7 @@ jobs:
           [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
           $manifest.Package.Identity.Version = "$(version)"
           $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
+
           [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
           @($project.Project.PropertyGroup)[0].Version = "$(version)"
           $project.save("$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj")
@@ -90,12 +92,11 @@ jobs:
 
       # Copies binary dependencies from VCLibs package to be included in standalone exe     
       - task: PowerShell@2
-        displayName: Download and install VCLibs package
+        displayName: Download VCLibs package
         inputs:
           targetType: 'inline'
           script: | 
             iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
-            Add-AppxPackage Microsoft.VCLibs.x64.14.00.Desktop.appx
 
       - task: ExtractFiles@1
         displayName: Extract files from VCLibs appx
@@ -103,7 +104,7 @@ jobs:
           archiveFilePatterns: 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
           destinationFolder: '$(workingDirectory)\WingetCreateCLI'
           cleanDestinationFolder: false
-          overwriteExistingFiles: false        
+          overwriteExistingFiles: false                 
 
       # NuGetCommand task, but since there are two duplicate tasks by this name in the org, must refer to it by GUID
       - task: 333b11bd-d341-40d9-afcf-b32d5ce6f23b@2
@@ -181,6 +182,7 @@ jobs:
                   "ToolVersion" : "1.0"
               }
             ]
+
       - powershell: |
           ren "$(exeDirFrameworkDependent)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
           ren "$(exeDirSelfContained)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate-self-contained.exe
@@ -188,6 +190,7 @@ jobs:
           (Get-FileHash -Algorithm SHA256 -Path $(exePathSelfContained)).Hash > "$(exePathSelfContained).txt"
           (Get-FileHash -Algorithm SHA256 -Path $(appxBundlePath)).Hash > "$(appxBundlePath).txt"
         displayName: "Create hash files"
+
       - task: CopyFiles@2
         displayName: Copy files to be published to staging directory
         inputs:
@@ -200,6 +203,7 @@ jobs:
             $(exePathSelfContained).txt
             $(appxBundlePath)
             $(appxBundlePath).txt
+
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: wingetcreate
         displayName: Publish appx, exe, and hash files
@@ -245,12 +249,15 @@ jobs:
           # These are the steps you'd run in your CI/CD pipeline to update your OWC manifest using wingetcreate.
           # The update command only supports a single installer URL, if you have multiple URLs you'll have to manually modify
           # your manifests as described here https://github.com/microsoft/winget-create#using-windows-package-manager-manifest-creator-in-a-cicd-pipeline
+
           # https://aka.ms/wingetcreate/latest points to latest version of wingetcreate.exe
           # https://aka.ms/wingetcreate/preview points to latest preview version of wingetcreate.exe
           # requires .NET to be installed on the build machine to operate correctly, but is a smaller download
+
           # https://aka.ms/wingetcreate/latest/self-contained points to latest self-contained version of wingetcreate.exe
           # https://aka.ms/wingetcreate/preview/self-contained points to latest self-contained preview version of wingetcreate.exe
           # does not require .NET to be installed on the build machine to operate correctly, but is a larger download
+
           iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
           .\wingetcreate.exe update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit
         displayName: Update package manifest in the OWC
