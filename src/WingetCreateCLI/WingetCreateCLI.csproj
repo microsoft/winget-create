@@ -77,6 +77,19 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
+    
+  <!--Include VCLib binary dependencies-->  
+  <ItemGroup Condition="'$(SelfContained)' == true">
+    <None Update="msvcp140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="vcruntime140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="vcruntime140_1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>   
+  </ItemGroup>    
 
   <ItemGroup>
       <SettingSchema Include="$(ProjectDir)\Schemas\settings.schema.0.1.json" ModelName="Settings" />
@@ -100,5 +113,4 @@
       <SdkToolsPathMaybeWithx64Architecture>$(TargetFrameworkSDKToolsDirectory)$(PlatformTarget)\</SdkToolsPathMaybeWithx64Architecture>
     </PropertyGroup>
   </Target>
-
 </Project>
