@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.CorrelationVector" Version="1.0.42" />
     <PackageReference Include="Microsoft.Msix.Utils" Version="2.1.0" />
     <!--https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#generatepathproperty-->
-    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" Version="0.2.8" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" Version="0.3.4" GeneratePathProperty="true" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.14" />
     <PackageReference Include="NLog" Version="4.7.9" />
     <PackageReference Include="NSwag.MSBuild" Version="13.11.1">

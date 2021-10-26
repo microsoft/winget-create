@@ -31,7 +31,7 @@ namespace Microsoft.WingetCreateCore.Models.Version
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(20)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*$")]
-        public string DefaultLocale { get; set; }
+        public string DefaultLocale { get; set; } = "en-US";
     
         /// <summary>The manifest type</summary>
         [Newtonsoft.Json.JsonProperty("ManifestType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
