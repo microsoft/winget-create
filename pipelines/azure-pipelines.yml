@@ -22,7 +22,7 @@ variables:
   appxPackageDir: '$(Build.ArtifactStagingDirectory)\AppxPackages'
 
   # Agent VM image name
-  vmImageName: "windows-latest"
+  vmImageName: "ubuntu-latest"
 
   # Working Directory
   workingDirectory: "src"
