@@ -783,4 +783,7 @@
   <data name="SelectManifestToEdit_Message" xml:space="preserve">
     <value>Which manifest do you want to edit?</value>
   </data>
+  <data name="DownloadConnectionTimeout_Error" xml:space="preserve">
+    <value>Unable to complete the download request as the connection has timed out. Please verify your installer URL and try again.</value>
+  </data>
 </root>

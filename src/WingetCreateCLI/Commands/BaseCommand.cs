@@ -305,6 +305,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return null;
                 }
 
+                if (e is TaskCanceledException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadConnectionTimeout_Error));
+                    return null;
+                }
+
                 throw;
             }
         }
