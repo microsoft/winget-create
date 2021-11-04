@@ -463,12 +463,12 @@ namespace Microsoft.WingetCreateCore
                 archMatches.Add(InstallerArchitecture.Arm);
             }
 
-            if (Regex.Match(url, "x64|win64|_64", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, "x64|win64|_64|64-bit", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(InstallerArchitecture.X64);
             }
 
-            if (Regex.Match(url, "x86|win32|ia32|_86", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, "x86|win32|ia32|_86|32-bit", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(InstallerArchitecture.X86);
             }
