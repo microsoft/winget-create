@@ -292,20 +292,25 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     return null;
                 }
-
-                if (e is DownloadSizeExceededException downloadSizeExceededException)
+                else if (e is DownloadSizeExceededException downloadSizeExceededException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.DownloadFileExceedsMaxSize_Error), $"{downloadSizeExceededException.MaxDownloadSizeInBytes / 1024 / 1024}");
                     return null;
                 }
-
-                if (e is InvalidOperationException)
+                else if (e is InvalidOperationException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.InvalidUrl_Error));
                     return null;
                 }
-
-                throw;
+                else if (e is TaskCanceledException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadConnectionTimeout_Error));
+                    return null;
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 

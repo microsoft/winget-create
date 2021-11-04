@@ -412,6 +412,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to complete the download request as the connection has timed out. Please verify your installer URL and try again..
+        /// </summary>
+        public static string DownloadConnectionTimeout_Error {
+            get {
+                return ResourceManager.GetString("DownloadConnectionTimeout_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to download installer..
         /// </summary>
         public static string DownloadFile_Error {
