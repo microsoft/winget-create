@@ -786,4 +786,14 @@
   <data name="DownloadConnectionTimeout_Error" xml:space="preserve">
     <value>Unable to complete the download request as the connection has timed out. Please verify your installer URL and try again.</value>
   </data>
+  <data name="ArchitectureOverride_Warning" xml:space="preserve">
+    <value>Overriding the architecture of an installer can cause failures when trying to match new installers with existing ones. If you are resolving an issue relating to an installer with an inaccurate architecture, make sure that the existing manifest has only one installer that matches the architecture and installerType of the overridden installer you are updating with. To modify an existing manifest, use the '--interactive' flag with the update command and submit the new changes. Once the changes are published, please try again.</value>
+  </data>
+  <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
+    <value>Multiple architectures detected. Only one architecture can be specified for an override.</value>
+  </data>
+  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
+    <value>Unable to parse the specified override architecture {0}.</value>
+    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  </data>
 </root>

@@ -218,11 +218,11 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verifies that the architecture obtained from updating an msix does not come from the string.
+        /// Verifies that the architecture obtained from updating an msix does not come from the url string.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task UpdateMsixWithNoArchitectureOverride()
+        public async Task UpdateMsixIgnoresArchitectureFromUrl()
         {
             TestUtils.InitializeMockDownloads("arm64/" + TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MsixArchitectureMatch", null, this.tempPath, null);
@@ -252,6 +252,17 @@ namespace Microsoft.WingetCreateUnitTests
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.NoChangeDetectedInUpdatedManifest_Message), "Failed to block manifests without updates from submitting.");
         }
+
+        /*
+         * 
+- Test a single installer that is detected to be different, but override should make it correct (verify field)
+- Test if a single installer is different, but the override should fail, but detection of the binary/url should be able to match it (verify field)
+- Test if failing to match either one shows error message. (Verify error message)
+         * 
+         */
+
+        [Test]
+        public async Task 
 
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls)
         {

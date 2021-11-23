@@ -37,7 +37,7 @@ namespace Microsoft.WingetCreateCore
         /// <summary>
         /// Representation of an installer's architectures detected from the url and binary.
         /// </summary>
-        public record DetectedArch(string Url, InstallerArchitecture? UrlArch, InstallerArchitecture BinaryArch);
+        public record DetectedArch(string Url, InstallerArchitecture? UrlArch, InstallerArchitecture BinaryArch, InstallerArchitecture? OverrideArch);
 
         /// <summary>
         /// The default path where downloaded installers are stored.
@@ -183,12 +183,14 @@ namespace Microsoft.WingetCreateCore
         /// <param name="paths">Paths to packages to extract metadata from.</param>
         /// <param name="detectedArchOfInstallers">List of DetectedArch objects that represent each installers detected architectures.</param>
         /// <param name="newInstallers">List of newly parsed installer nodes.</param>
+        /// <param name="installerArchOverrideMap">Dictionary that maps the installer URL with the override architecture.</param>
         public static void UpdateInstallerNodesAsync(
             InstallerManifest installerManifest,
             IEnumerable<string> installerUrls,
             IEnumerable<string> paths,
             out List<DetectedArch> detectedArchOfInstallers,
-            out List<Installer> newInstallers)
+            out List<Installer> newInstallers,
+            Dictionary<string, InstallerArchitecture> installerArchOverrideMap)
         {
             var newPackages = paths.Zip(installerUrls, (path, url) => (path, url)).ToList();
             newInstallers = new List<Installer>();
@@ -200,7 +202,8 @@ namespace Microsoft.WingetCreateCore
 
             foreach (var (path, url) in newPackages)
             {
-                if (!ParsePackageAndGenerateInstallerNodes(path, url, newInstallers, null, ref detectedArchOfInstallers))
+                // pass in overridden architecture map
+                if (!ParsePackageAndGenerateInstallerNodes(path, url, newInstallers, null, ref detectedArchOfInstallers, installerArchOverrideMap))
                 {
                     parseFailedInstallerUrls.Add(url);
                 }
@@ -222,59 +225,29 @@ namespace Microsoft.WingetCreateCore
             // Update previous installers with parsed data from downloaded packages
             foreach (var newInstaller in newInstallers)
             {
-                DetectedArch detectedArch = detectedArchOfInstallers.Find(
-                    i => i.Url == newInstaller.InstallerUrl &&
-                    (i.UrlArch == newInstaller.Architecture || i.BinaryArch == newInstaller.Architecture));
+                Installer existingInstallerMatch = FindInstallerMatch(
+                    newInstaller,
+                    existingInstallers,
+                    installerManifest,
+                    detectedArchOfInstallers,
+                    ref unmatchedInstallers,
+                    ref multipleMatchedInstallers);
 
-                var urlMatch = existingInstallers.Where(
-                    i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
-                    i.Architecture == detectedArch.UrlArch);
-
-                var archAndTypeMatch = existingInstallers.Where(
-                    i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
-                    i.Architecture == detectedArch.BinaryArch);
-
-                int numOfUrlMatches = urlMatch.Count();
-                int numOfArchAndTypeMatches = archAndTypeMatch.Count();
-
-                // Count > 1 indicates multiple matches were found. Count == 0 indicates no matches were found.
-                // Since string matching isn't always reliable, failing to find a match is okay.
-                // We only want to show an error if a string match finds multiple matches.
-                // If string matching fails to find a match, show all errors that may occur from ArchAndTypeMatches.
-                if (numOfUrlMatches > 1)
+                // If a match is found, add match to dictionary and remove for list of existingInstallers
+                if (existingInstallerMatch != null)
                 {
-                    multipleMatchedInstallers.Add(newInstaller);
-                    continue;
-                }
-                else if (numOfUrlMatches == 0)
-                {
-                    if (numOfArchAndTypeMatches == 0)
-                    {
-                        unmatchedInstallers.Add(newInstaller);
-                    }
-                    else if (numOfArchAndTypeMatches > 1)
-                    {
-                        multipleMatchedInstallers.Add(newInstaller);
-                    }
-                }
-
-                var matchingExistingInstaller = numOfUrlMatches == 1 ? urlMatch.Single() : numOfArchAndTypeMatches == 1 ? archAndTypeMatch.Single() : null;
-
-                // If we can't find a match in the remaining existing packages, there must be a mismatch between the old manifest and the URLs provided
-                if (matchingExistingInstaller == null)
-                {
-                    continue;
+                    installerMatchDict.Add(existingInstallerMatch, newInstaller);
+                    existingInstallers.Remove(existingInstallerMatch);
                 }
                 else
                 {
-                    installerMatchDict.Add(matchingExistingInstaller, newInstaller); // add the match to the map.
-                    existingInstallers.Remove(matchingExistingInstaller);
+                    continue;
                 }
             }
 
             if (unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
             {
-                throw new InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers);
+                throw new InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers, installerArchOverrideMap.Keys.Any());
             }
             else
             {
@@ -335,6 +308,76 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
+        /// Finds an existing installer that matches the new installer by checking the installerType and the following:
+        /// 1. Matching based on architecture specified as an override.
+        /// 2. Matching based on architecture detected from URL string or binary.
+        /// </summary>
+        /// <param name="newInstaller">New installer to be matched.</param>
+        /// <param name="existingInstallers">List of existing installers to be matched.</param>
+        /// <param name="installerManifest">Installer manifest.</param>
+        /// <param name="detectedArchOfInstallers">List of detected architectures for each new installer.</param>
+        /// <param name="unmatchedInstallers">List of unmatched installers.</param>
+        /// <param name="multipleMatchedInstallers">List of installers with multiple matches..</param>
+        /// <returns>The installer match from the list of existing installers.</returns>
+        private static Installer FindInstallerMatch(
+            Installer newInstaller,
+            List<Installer> existingInstallers,
+            InstallerManifest installerManifest,
+            List<DetectedArch> detectedArchOfInstallers,
+            ref List<Installer> unmatchedInstallers,
+            ref List<Installer> multipleMatchedInstallers)
+        {
+            DetectedArch detectedArch = detectedArchOfInstallers.Find(
+                i => i.Url == newInstaller.InstallerUrl &&
+                (i.UrlArch == newInstaller.Architecture || i.BinaryArch == newInstaller.Architecture || i.OverrideArch == newInstaller.Architecture));
+
+            // If we can find an exact match by comparing the installerType and the override architecture, then return match.
+            // Otherwise, continue and try matching based on arch detected from url and binary detection, as the user could be trying overwrite with a new architecture.
+            var overrideArchMatches = existingInstallers.Where(
+                    i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
+                    i.Architecture == detectedArch.OverrideArch);
+
+            if (overrideArchMatches.Count() == 1)
+            {
+                return overrideArchMatches.Single();
+            }
+
+            var urlArchMatches = existingInstallers.Where(
+                                        i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
+                                        i.Architecture == detectedArch.UrlArch);
+
+            var binaryArchMatches = existingInstallers.Where(
+                i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
+                i.Architecture == detectedArch.BinaryArch);
+
+            int numOfUrlArchMatches = urlArchMatches.Count();
+            int numOfBinaryArchMatches = binaryArchMatches.Count();
+
+            // Count > 1 indicates multiple matches were found. Count == 0 indicates no matches were found.
+            // Since url string matching isn't always reliable, failing to find a match is okay.
+            // We only want to show an error if a string match finds multiple matches.
+            // If url string matching fails to find a match, show all errors that may occur from ArchAndTypeMatches.
+            if (numOfUrlArchMatches > 1)
+            {
+                multipleMatchedInstallers.Add(newInstaller);
+            }
+            else if (numOfUrlArchMatches == 0)
+            {
+                if (numOfBinaryArchMatches == 0)
+                {
+                    unmatchedInstallers.Add(newInstaller);
+                }
+                else if (numOfBinaryArchMatches > 1)
+                {
+                    multipleMatchedInstallers.Add(newInstaller);
+                }
+            }
+
+            var matchingExistingInstaller = numOfUrlArchMatches == 1 ? urlArchMatches.Single() : numOfBinaryArchMatches == 1 ? binaryArchMatches.Single() : null;
+            return matchingExistingInstaller;
+        }
+
+        /// <summary>
         /// Updates the metadata from an existing installer node with the metadata from a new installer node.
         /// </summary>
         /// <param name="existingInstaller">Existing installer node.</param>
@@ -377,7 +420,7 @@ namespace Microsoft.WingetCreateCore
             defaultLocaleManifest.ShortDescription ??= versionInfo.FileDescription?.Trim();
             defaultLocaleManifest.License ??= versionInfo.LegalCopyright?.Trim();
 
-            if (ParsePackageAndGenerateInstallerNodes(path, url, installerManifest.Installers, manifests, ref detectedArchOfInstallers))
+            if (ParsePackageAndGenerateInstallerNodes(path, url, installerManifest.Installers, manifests, ref detectedArchOfInstallers, null))
             {
                 if (!string.IsNullOrEmpty(defaultLocaleManifest.PackageVersion))
                 {
@@ -404,18 +447,26 @@ namespace Microsoft.WingetCreateCore
         /// <param name="newInstallers">List of new installers.</param>
         /// <param name="manifests">Manifests object model.</param>
         /// <param name="detectedArchOfInstallers">List of DetectedArch objects representing detected architecture of each installer.</param>
+        /// <param name="installerArchOverrideMap">Dictionary that maps the installer URL with the override architecture.</param>
         /// <returns>Boolean value indicating whether the function was successful or not.</returns>
         private static bool ParsePackageAndGenerateInstallerNodes(
             string path,
             string url,
             List<Installer> newInstallers,
             Manifests manifests,
-            ref List<DetectedArch> detectedArchOfInstallers)
+            ref List<DetectedArch> detectedArchOfInstallers,
+            Dictionary<string, InstallerArchitecture> installerArchOverrideMap)
         {
             var installer = new Installer();
             installer.InstallerUrl = url;
             installer.InstallerSha256 = GetFileHash(path);
             installer.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+
+            InstallerArchitecture? overrideArch = null;
+            if (installerArchOverrideMap != null)
+            {
+                overrideArch = installerArchOverrideMap.ContainsKey(url) ? installerArchOverrideMap[url] : null;
+            }
 
             bool parseMsixResult = false;
 
@@ -425,17 +476,21 @@ namespace Microsoft.WingetCreateCore
 
             if (parseMsixResult)
             {
-                // Skip architecture override for msix installers as there can be more than one installer in a bundle
+                // Skip architecture override for msix installers as there can be multiple installer architectures in a bundle
                 detectedArchOfInstallers.AddRange(newInstallers
                     .Where(i => i.InstallerUrl == url)
-                    .Select(i => new DetectedArch(i.InstallerUrl, i.Architecture, i.Architecture)));
+                    .Select(i => new DetectedArch(i.InstallerUrl, i.Architecture, i.Architecture, overrideArch)));
             }
             else
             {
                 var archGuess = GetArchFromUrl(installer.InstallerUrl);
-                detectedArchOfInstallers.Add(new DetectedArch(installer.InstallerUrl, archGuess, installer.Architecture));
+                detectedArchOfInstallers.Add(new DetectedArch(installer.InstallerUrl, archGuess, installer.Architecture, overrideArch));
 
-                if (archGuess.HasValue)
+                if (overrideArch.HasValue)
+                {
+                    installer.Architecture = overrideArch.Value;
+                }
+                else if (archGuess.HasValue)
                 {
                     installer.Architecture = archGuess.Value;
                 }

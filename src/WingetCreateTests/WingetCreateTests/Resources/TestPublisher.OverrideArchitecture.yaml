@@ -1,0 +1,19 @@
+﻿PackageIdentifier: TestPublisher.OverrideArchitecture
+PackageVersion: 0.1.2
+PackageName: Override architecture test
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used to test the update command when overriding the architectures of provided installers.
+InstallerLocale: en-US
+Installers:
+  - Architecture: arm
+    InstallerUrl: https://fakedomain.com/WingetCreateTestMsiInstaller.msi
+    InstallerType: msi
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  - Architecture: arm
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerType: exe
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.0.0

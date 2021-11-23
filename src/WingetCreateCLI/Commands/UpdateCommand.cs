@@ -16,6 +16,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
@@ -220,6 +221,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().ToArray();
             }
 
+            // Parse out architecture overrides from installer URLs and reassign.
+            this.InstallerUrls = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.ToList(), out Dictionary<string, InstallerArchitecture> installerArchOverrideMap);
+
+            foreach (var key in installerArchOverrideMap.Keys)
+            {
+                Logger.Warn($"Overriding {key} with architecture {installerArchOverrideMap[key]}");
+            }
+
             // We only support updates with same number of installer URLs
             if (this.InstallerUrls.Distinct().Count() != installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().Count())
             {
@@ -243,7 +252,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                     this.InstallerUrls,
                     packageFiles,
                     out detectedArchOfInstallers,
-                    out newInstallers);
+                    out newInstallers,
+                    installerArchOverrideMap);
 
                 DisplayMismatchedArchitectures(detectedArchOfInstallers);
             }
@@ -267,6 +277,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
                 installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+
+                if (installerMatchException.IsArchitectureOverride)
+                {
+                    Logger.WarnLocalized(nameof(Resources.ArchitectureOverride_Warning));
+                }
+
                 return null;
             }
 
@@ -417,6 +433,50 @@ namespace Microsoft.WingetCreateCLI.Commands
                     PromptHelper.PromptPropertiesWithMenu(selectedLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(selectedLocaleManifest));
                 }
             }
+        }
+
+        /// <summary>
+        /// Parse out architecture overrides included in the installer URLs and returns the parsed list of installer URLs.
+        /// </summary>
+        /// <param name="installerUrlsToBeParsed">List of installer URLs to be parsed for architecture overrides.</param>
+        /// <param name="installerArchOverrideMap">Dictionary that maps the overridden architecture to the installer URL.</param>
+        /// <returns>List of parsed installer URLs without appended architecture overrides.</returns>
+        private List<string> ParseInstallerUrlsForArchOverride(
+            List<string> installerUrlsToBeParsed,
+            out Dictionary<string, InstallerArchitecture> installerArchOverrideMap)
+        {
+            installerArchOverrideMap = new Dictionary<string, InstallerArchitecture>();
+            List<string> parsedInstallerUrls = new List<string>();
+            foreach (string installerUrl in installerUrlsToBeParsed)
+            {
+                if (installerUrl.Contains('|'))
+                {
+                    // '|' character indicates that an architecture override can be parsed from the installer.
+                    string[] installerUrlOverride = installerUrl.Split('|');
+
+                    if (installerUrlOverride.Length > 2)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.MultipleArchitectureOverride_Error));
+                    }
+
+                    InstallerArchitecture? overrideArch = installerUrlOverride[1].ToEnumOrDefault<InstallerArchitecture>();
+                    if (overrideArch.HasValue)
+                    {
+                        parsedInstallerUrls.Add(installerUrlOverride[0]);
+                        installerArchOverrideMap.Add(installerUrlOverride[0], overrideArch.Value);
+                    }
+                    else
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.UnableToParseArchOverride_Error), installerUrlOverride[1]);
+                    }
+                }
+                else
+                {
+                    parsedInstallerUrls.Add(installerUrl);
+                }
+            }
+
+            return parsedInstallerUrls;
         }
 
         /// <summary>

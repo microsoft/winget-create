@@ -17,10 +17,12 @@ namespace Microsoft.WingetCreateCore.Common.Exceptions
         /// </summary>
         /// <param name="multipleMatchedInstaller">List of installers with multiple matches.</param>
         /// <param name="unmatchedInstallers">List of installers with no matches.</param>
-        public InstallerMatchException(List<Installer> multipleMatchedInstaller, List<Installer> unmatchedInstallers)
+        /// <param name="isArchitectureOverride">Architecture of an installer was overridden by the user.</param>
+        public InstallerMatchException(List<Installer> multipleMatchedInstaller, List<Installer> unmatchedInstallers, bool isArchitectureOverride)
         {
             this.MultipleMatchedInstallers = multipleMatchedInstaller;
             this.UnmatchedInstallers = unmatchedInstallers;
+            this.IsArchitectureOverride = isArchitectureOverride;
         }
 
         /// <summary>
@@ -32,5 +34,10 @@ namespace Microsoft.WingetCreateCore.Common.Exceptions
         /// Gets the list of installers with no matches.
         /// </summary>
         public List<Installer> UnmatchedInstallers { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the user overrode the architecture of installer to be updated.
+        /// </summary>
+        public bool IsArchitectureOverride { get; private set; }
     }
 }
