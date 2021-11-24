@@ -797,4 +797,7 @@
     <value>Unable to parse the specified override architecture {0}.</value>
     <comment>{0} - represents the override architecture that failed to parse.</comment>
   </data>
+  <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
+    <value>Override the architecture of an installer</value>
+  </data>
 </root>

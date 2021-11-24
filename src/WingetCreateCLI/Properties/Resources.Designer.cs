@@ -538,6 +538,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Override the architecture of an installer.
+        /// </summary>
+        public static string Example_UpdateCommand_OverrideArchitecture {
+            get {
+                return ResourceManager.GetString("Example_UpdateCommand_OverrideArchitecture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save and publish updated manifest.
         /// </summary>
         public static string Example_UpdateCommand_SaveAndPublish {

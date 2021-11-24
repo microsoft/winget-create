@@ -41,6 +41,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>" }, Version = "<Version>" });
                 yield return new Example(Resources.Example_UpdateCommand_SaveAndPublish, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>", OutputDir = "<OutputDirectory>", GitHubToken = "<GitHubPersonalAccessToken>" });
+                yield return new Example(Resources.Example_UpdateCommand_OverrideArchitecture, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>|<InstallerArchitecture>" }, Version = "<Version>" });
             }
         }
 
