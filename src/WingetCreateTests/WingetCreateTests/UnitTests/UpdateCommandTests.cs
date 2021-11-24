@@ -254,6 +254,39 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verfies that an error message is shown if the overriding architecture is invalid.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateWithArchitectureOverrideFailsParsing()
+        {
+            string invalidArch = "fakeArch";
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            (UpdateCommand badCommand, var manifests) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|{invalidArch}" });
+            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
+            Assert.IsNull(failedUpdateManifests, "Command should have failed due to invalid architecture specified for override.");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(string.Format(Resources.UnableToParseArchOverride_Error, invalidArch)), "Failed to show architecture override parsing error.");
+        }
+
+        /// <summary>
+        /// Verfies that an error message is shown if multiple architectures are specified for an override.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFailsOverrideWithMultipleArchitectures()
+        {
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            (UpdateCommand badCommand, var manifests) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|x86|ARM" });
+            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
+            Assert.IsNull(failedUpdateManifests, "Command should have failed due to multiple architecture overrides specified for a single installer.");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.MultipleArchitectureOverride_Error), "Failed to show multiple architecture overrides error.");
+        }
+
+        /// <summary>
         /// Verifies that the overriding architecture can be matched to the architecture specified in the existing manifest and the update succeeds.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
