@@ -133,7 +133,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Overriding the architecture of an installer can cause failures when trying to match new installers with existing ones. If you are resolving an issue relating to an installer with an inaccurate architecture, make sure that the existing manifest has only one installer that matches the architecture and installerType of the overridden installer you are updating with. To modify an existing manifest, use the &apos;--interactive&apos; flag with the update command and submit the new changes. Once the changes are published, p [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to If the installer you provided fails to match an existing installer even when overriding the architecture, you may need to edit the existing manifest manually. Make sure that the existing manifest has a single installer that matches the overriding architecture and installer type of the new installer. To modify an existing manifest, use the &apos;--interactive&apos; flag with the update command and submit the new changes. Once the changes are published, please try again..
         /// </summary>
         public static string ArchitectureOverride_Warning {
             get {

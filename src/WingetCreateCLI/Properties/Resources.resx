@@ -787,7 +787,8 @@
     <value>Unable to complete the download request as the connection has timed out. Please verify your installer URL and try again.</value>
   </data>
   <data name="ArchitectureOverride_Warning" xml:space="preserve">
-    <value>Overriding the architecture of an installer can cause failures when trying to match new installers with existing ones. If you are resolving an issue relating to an installer with an inaccurate architecture, make sure that the existing manifest has only one installer that matches the architecture and installerType of the overridden installer you are updating with. To modify an existing manifest, use the '--interactive' flag with the update command and submit the new changes. Once the changes are published, please try again.</value>
+    <value>If the installer you provided fails to match an existing installer even when overriding the architecture, you may need to edit the existing manifest manually. Make sure that the existing manifest has a single installer that matches the overriding architecture and installer type of the new installer. To modify an existing manifest, use the '--interactive' flag with the update command and submit the new changes. Once the changes are published, please try again.</value>
+    <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
   </data>
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Multiple architectures detected. Only one architecture can be specified for an override.</value>

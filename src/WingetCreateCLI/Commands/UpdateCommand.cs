@@ -224,6 +224,12 @@ namespace Microsoft.WingetCreateCLI.Commands
             // Parse out architecture overrides from installer URLs and reassign.
             this.InstallerUrls = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.ToList(), out Dictionary<string, InstallerArchitecture> installerArchOverrideMap);
 
+            // If InstallerUrls is null, there was an issue when parsing for architecture override.
+            if (this.InstallerUrls == null)
+            {
+                return null;
+            }
+
             foreach (var key in installerArchOverrideMap.Keys)
             {
                 Logger.Warn($"Overriding {key} with architecture {installerArchOverrideMap[key]}");
@@ -447,32 +453,36 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             installerArchOverrideMap = new Dictionary<string, InstallerArchitecture>();
             List<string> parsedInstallerUrls = new List<string>();
-            foreach (string installerUrl in installerUrlsToBeParsed)
+            foreach (string item in installerUrlsToBeParsed)
             {
-                if (installerUrl.Contains('|'))
+                if (item.Contains('|'))
                 {
                     // '|' character indicates that an architecture override can be parsed from the installer.
-                    string[] installerUrlOverride = installerUrl.Split('|');
+                    string[] installerUrlOverride = item.Split('|');
 
                     if (installerUrlOverride.Length > 2)
                     {
                         Logger.ErrorLocalized(nameof(Resources.MultipleArchitectureOverride_Error));
+                        return null;
                     }
 
-                    InstallerArchitecture? overrideArch = installerUrlOverride[1].ToEnumOrDefault<InstallerArchitecture>();
+                    string installerUrl = installerUrlOverride[0];
+                    string overrideArchString = installerUrlOverride[1];
+                    InstallerArchitecture? overrideArch = overrideArchString.ToEnumOrDefault<InstallerArchitecture>();
                     if (overrideArch.HasValue)
                     {
-                        parsedInstallerUrls.Add(installerUrlOverride[0]);
-                        installerArchOverrideMap.Add(installerUrlOverride[0], overrideArch.Value);
+                        parsedInstallerUrls.Add(installerUrl);
+                        installerArchOverrideMap.Add(installerUrl, overrideArch.Value);
                     }
                     else
                     {
-                        Logger.ErrorLocalized(nameof(Resources.UnableToParseArchOverride_Error), installerUrlOverride[1]);
+                        Logger.ErrorLocalized(nameof(Resources.UnableToParseArchOverride_Error), overrideArchString);
+                        return null;
                     }
                 }
                 else
                 {
-                    parsedInstallerUrls.Add(installerUrl);
+                    parsedInstallerUrls.Add(item);
                 }
             }
 
