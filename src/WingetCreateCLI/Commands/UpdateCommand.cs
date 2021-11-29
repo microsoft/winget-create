@@ -249,20 +249,21 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            List<PackageParser.DetectedArch> detectedArchOfInstallers;
-            List<Installer> newInstallers = new List<Installer>();
+            InstallerUpdateHelper installerUpdateHelper =
+                new InstallerUpdateHelper
+                {
+                    PackageFiles = packageFiles,
+                    InstallerUrls = this.InstallerUrls,
+                    NewInstallers = new List<Installer>(),
+                    DetectedArchitectures = new List<PackageParser.DetectedArch>(),
+                    ArchitectureOverrideMap = installerArchOverrideMap,
+                };
 
             try
             {
-                PackageParser.UpdateInstallerNodesAsync(
-                    installerManifest,
-                    this.InstallerUrls,
-                    packageFiles,
-                    out detectedArchOfInstallers,
-                    out newInstallers,
-                    installerArchOverrideMap);
-
-                DisplayMismatchedArchitectures(detectedArchOfInstallers);
+                // List of detected architectures should get populated by update.
+                PackageParser.UpdateInstallerNodesAsync(installerManifest, installerUpdateHelper);
+                DisplayMismatchedArchitectures(installerUpdateHelper.DetectedArchitectures);
             }
             catch (InvalidOperationException)
             {

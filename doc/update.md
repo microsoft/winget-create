@@ -26,7 +26,11 @@ Search for an existing manifest and update the installer url:
 
 Save and publish updated manifest:
 
-  `wingetcreate.exe update --out <OutputDirectory> --token <GitHubPersonalAccessToken> --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update --out <OutputDirectory> --token <GitHubPersonalAccessToken> --version <Version> <PackageIdentifier>`
+
+Override the architecture of an installer:
+
+`wingetcreate.exe update --urls <InstallerUrl1>|<InstallerArchitecture> --version <Version> <PackageIdentifier>`
 
 ## Arguments
 
