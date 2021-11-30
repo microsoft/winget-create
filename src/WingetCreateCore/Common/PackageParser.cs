@@ -316,18 +316,15 @@ namespace Microsoft.WingetCreateCore
                 return overrideArchMatches.Single();
             }
 
+            var binaryArchitecture = installerUpdateHelper.BinaryArchitecture ?? newInstaller.Architecture;
+
             // Msixbundle installers can have multiple installers with different architectures
-            // For those installers, the binaryArchitecture will be detected as null, therefore we simply use architecture specified in the newInstaller object.
-            if (installerUpdateHelper.BinaryArchitecture == null)
-            {
-                installerUpdateHelper.BinaryArchitecture = newInstaller.Architecture;
-            }
-
+            // For those installers, the binaryArchitecture will be detected as null, therefore we default to the architecture specified in the newInstaller object.
+            var binaryArchMatches = archMatches.Where(i => i.Architecture == binaryArchitecture);
             var urlArchMatches = archMatches.Where(i => i.Architecture == installerUpdateHelper.UrlArchitecture);
-            var binaryArchMatches = archMatches.Where(i => i.Architecture == installerUpdateHelper.BinaryArchitecture);
 
-            int numOfUrlArchMatches = urlArchMatches.Count();
             int numOfBinaryArchMatches = binaryArchMatches.Count();
+            int numOfUrlArchMatches = urlArchMatches.Count();
 
             // Count > 1 indicates multiple matches were found. Count == 0 indicates no matches were found.
             // Since url string matching isn't always reliable, failing to find a match is okay.

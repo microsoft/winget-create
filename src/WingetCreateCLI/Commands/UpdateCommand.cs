@@ -225,8 +225,8 @@ namespace Microsoft.WingetCreateCLI.Commands
             // Generate list of InstallerUpdate objects and parse out any specified architecture overrides.
             List<InstallerUpdateHelper> installerUpdateHelpers = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.ToList());
 
-            // If the installer update list is empty, there was an issue when parsing for architecture override.
-            if (!installerUpdateHelpers.Any())
+            // If the installer update list is null there was an issue when parsing for architecture override.
+            if (installerUpdateHelpers == null)
             {
                 return null;
             }
