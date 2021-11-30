@@ -7,33 +7,38 @@ namespace Microsoft.WingetCreateCore.Models
     using Microsoft.WingetCreateCore.Models.Installer;
 
     /// <summary>
-    /// Helper class for storing information about new installers used during the update flow.
+    /// Helper class for storing information relating to updating an installer.
     /// </summary>
     public class InstallerUpdateHelper
     {
         /// <summary>
-        /// Gets or sets a list of new installer urls for updating the manifest.
+        /// Gets or sets the installer url.
         /// </summary>
-        public IEnumerable<string> InstallerUrls { get; set; }
+        public string InstallerUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of paths to packages to extract metadata from.
+        /// Gets or sets the path to the package to extract metadata from.
         /// </summary>
-        public IList<string> PackageFiles { get; set; }
+        public string PackageFile { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of DetectedArch object models that represent each installers detected architectures.
+        /// Gets or sets the new installers for updating the manifest.
         /// </summary>
-        public List<PackageParser.DetectedArch> DetectedArchitectures { get; set; }
+        public List<Installer.Installer> NewInstallers { get; set; } = new List<Installer.Installer>();
 
         /// <summary>
-        /// Gets or sets a list of new installers for updating the manifest.
+        /// Gets or sets the architecture detected from the URL string.
         /// </summary>
-        public List<Installer.Installer> NewInstallers { get; set; }
+        public InstallerArchitecture? UrlArchitecture { get; set; }
 
         /// <summary>
-        /// Gets or sets a dictionary that maps the installer URL with the override architecture.
+        /// Gets or sets the architecture detected from the binary.
         /// </summary>
-        public Dictionary<string, InstallerArchitecture> ArchitectureOverrideMap { get; set; }
+        public InstallerArchitecture? BinaryArchitecture { get; set; }
+
+        /// <summary>
+        /// Gets or sets the architecture specified as an override.
+        /// </summary>
+        public InstallerArchitecture? OverrideArchitecture { get; set; }
     }
 }

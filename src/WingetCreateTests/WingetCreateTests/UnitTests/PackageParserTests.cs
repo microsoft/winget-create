@@ -49,7 +49,12 @@ namespace Microsoft.WingetCreateUnitTests
             var testExeInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestExeInstaller);
             Assert.That(testExeInstallerPath, Is.Not.Null.And.Not.Empty);
             Manifests manifests = new Manifests();
-            Assert.DoesNotThrow(() => PackageParser.ParsePackages(new[] { testExeInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests, out _));
+            var installerUpdateHelpers = new List<InstallerUpdateHelper>
+            {
+                new InstallerUpdateHelper { InstallerUrl = TestConstants.TestExeInstaller, PackageFile = testExeInstallerPath },
+            };
+
+            Assert.DoesNotThrow(() => PackageParser.ParsePackages(installerUpdateHelpers, manifests));
             Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
@@ -66,7 +71,12 @@ namespace Microsoft.WingetCreateUnitTests
             var testMsiInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsiInstaller);
             Assert.That(testMsiInstallerPath, Is.Not.Null.And.Not.Empty);
             Manifests manifests = new Manifests();
-            Assert.DoesNotThrow(() => PackageParser.ParsePackages(new[] { testMsiInstallerPath }, new[] { TestConstants.TestExeInstaller }, manifests, out _));
+            var installerUpdateHelpers = new List<InstallerUpdateHelper>
+            {
+                new InstallerUpdateHelper { InstallerUrl = TestConstants.TestExeInstaller, PackageFile = testMsiInstallerPath },
+            };
+
+            Assert.DoesNotThrow(() => PackageParser.ParsePackages(installerUpdateHelpers, manifests));
             Assert.AreEqual("WingetCreateTestMsiInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestMsiInstaller", manifests.VersionManifest.PackageIdentifier);
@@ -83,7 +93,12 @@ namespace Microsoft.WingetCreateUnitTests
             var testMsixInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsixInstaller);
             Assert.That(testMsixInstallerPath, Is.Not.Null.And.Not.Empty);
             Manifests manifests = new Manifests();
-            Assert.DoesNotThrow(() => PackageParser.ParsePackages(new[] { testMsixInstallerPath }, new[] { TestConstants.TestMsixInstaller }, manifests, out _));
+            var installerUpdateHelpers = new List<InstallerUpdateHelper>
+            {
+                new InstallerUpdateHelper { InstallerUrl = TestConstants.TestMsixInstaller, PackageFile = testMsixInstallerPath },
+            };
+
+            Assert.DoesNotThrow(() => PackageParser.ParsePackages(installerUpdateHelpers, manifests));
             Assert.AreEqual("WingetCreateTestMsixInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("1.0.1.0", manifests.VersionManifest.PackageVersion);
@@ -105,11 +120,15 @@ namespace Microsoft.WingetCreateUnitTests
             var testMsixInstallerPath = TestUtils.MockDownloadFile(TestConstants.TestMsixInstaller);
             Assert.That(testMsixInstallerPath, Is.Not.Null.And.Not.Empty);
             Manifests manifests = new Manifests();
-            Assert.DoesNotThrow(() => PackageParser.ParsePackages(
-                new[] { testExeInstallerPath, testMsiInstallerPath, testMsixInstallerPath },
-                new[] { TestConstants.TestExeInstaller, TestConstants.TestMsiInstaller, TestConstants.TestMsixInstaller },
-                manifests,
-                out List<PackageParser.DetectedArch> detectedArchs));
+
+            var installerUpdateHelpers = new List<InstallerUpdateHelper>
+            {
+                new InstallerUpdateHelper { InstallerUrl = TestConstants.TestExeInstaller, PackageFile = testExeInstallerPath },
+                new InstallerUpdateHelper { InstallerUrl = TestConstants.TestMsiInstaller, PackageFile = testMsiInstallerPath },
+                new InstallerUpdateHelper { InstallerUrl = TestConstants.TestMsixInstaller, PackageFile = testMsixInstallerPath },
+            };
+
+            Assert.DoesNotThrow(() => PackageParser.ParsePackages(installerUpdateHelpers, manifests));
 
             // Shared properties will be parsed from all installers, with priority given to the first-parsed value.
             Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);

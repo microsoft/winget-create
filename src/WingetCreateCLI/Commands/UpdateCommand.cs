@@ -222,18 +222,24 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().ToArray();
             }
 
-            // Parse out architecture overrides from installer URLs and reassign.
-            this.InstallerUrls = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.ToList(), out Dictionary<string, InstallerArchitecture> installerArchOverrideMap);
+            // Generate list of InstallerUpdate objects and parse out any specified architecture overrides.
+            List<InstallerUpdateHelper> installerUpdateHelpers = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.ToList());
 
-            // If InstallerUrls is null, there was an issue when parsing for architecture override.
-            if (this.InstallerUrls == null)
+            // If the installer update list is empty, there was an issue when parsing for architecture override.
+            if (!installerUpdateHelpers.Any())
             {
                 return null;
             }
 
-            foreach (var key in installerArchOverrideMap.Keys)
+            // Reassign list with parsed installer urls.
+            this.InstallerUrls = installerUpdateHelpers.Select(x => x.InstallerUrl);
+
+            foreach (var installerUpdate in installerUpdateHelpers)
             {
-                Logger.Warn($"Overriding {key} with architecture {installerArchOverrideMap[key]}");
+                if (installerUpdate.OverrideArchitecture.HasValue)
+                {
+                    Logger.WarnLocalized(nameof(Resources.OverridingArchitecture_Warning), installerUpdate.InstallerUrl, installerUpdate.OverrideArchitecture);
+                }
             }
 
             // We only support updates with same number of installer URLs
@@ -243,27 +249,21 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            var packageFiles = await DownloadInstallers(this.InstallerUrls);
-            if (packageFiles == null)
+            foreach (var installerUpdate in installerUpdateHelpers)
             {
-                return null;
-            }
-
-            InstallerUpdateHelper installerUpdateHelper =
-                new InstallerUpdateHelper
+                string packageFile = await DownloadPackageFile(installerUpdate.InstallerUrl);
+                if (string.IsNullOrEmpty(packageFile))
                 {
-                    PackageFiles = packageFiles,
-                    InstallerUrls = this.InstallerUrls,
-                    NewInstallers = new List<Installer>(),
-                    DetectedArchitectures = new List<PackageParser.DetectedArch>(),
-                    ArchitectureOverrideMap = installerArchOverrideMap,
-                };
+                    return null;
+                }
+
+                installerUpdate.PackageFile = packageFile;
+            }
 
             try
             {
-                // List of detected architectures should get populated by update.
-                PackageParser.UpdateInstallerNodesAsync(installerManifest, installerUpdateHelper);
-                DisplayMismatchedArchitectures(installerUpdateHelper.DetectedArchitectures);
+                PackageParser.UpdateInstallerNodesAsync(installerUpdateHelpers, installerManifest);
+                DisplayMismatchedArchitectures(installerUpdateHelpers);
             }
             catch (InvalidOperationException)
             {
@@ -447,16 +447,14 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Parse out architecture overrides included in the installer URLs and returns the parsed list of installer URLs.
         /// </summary>
         /// <param name="installerUrlsToBeParsed">List of installer URLs to be parsed for architecture overrides.</param>
-        /// <param name="installerArchOverrideMap">Dictionary that maps the overridden architecture to the installer URL.</param>
-        /// <returns>List of parsed installer URLs without appended architecture overrides.</returns>
-        private List<string> ParseInstallerUrlsForArchOverride(
-            List<string> installerUrlsToBeParsed,
-            out Dictionary<string, InstallerArchitecture> installerArchOverrideMap)
+        /// <returns>List of <see cref="InstallerUpdateHelper"/> helper objects used for updating the installers.</returns>
+        private List<InstallerUpdateHelper> ParseInstallerUrlsForArchOverride(List<string> installerUrlsToBeParsed)
         {
-            installerArchOverrideMap = new Dictionary<string, InstallerArchitecture>();
-            List<string> parsedInstallerUrls = new List<string>();
+            List<InstallerUpdateHelper> installerUpdateList = new List<InstallerUpdateHelper>();
             foreach (string item in installerUrlsToBeParsed)
             {
+                InstallerUpdateHelper installerUpdate = new InstallerUpdateHelper();
+
                 if (item.Contains('|'))
                 {
                     // '|' character indicates that an architecture override can be parsed from the installer.
@@ -473,8 +471,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     InstallerArchitecture? overrideArch = overrideArchString.ToEnumOrDefault<InstallerArchitecture>();
                     if (overrideArch.HasValue)
                     {
-                        parsedInstallerUrls.Add(installerUrl);
-                        installerArchOverrideMap.Add(installerUrl, overrideArch.Value);
+                        installerUpdate.InstallerUrl = installerUrl;
+                        installerUpdate.OverrideArchitecture = overrideArch.Value;
+                        installerUpdateList.Add(installerUpdate);
                     }
                     else
                     {
@@ -484,11 +483,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 else
                 {
-                    parsedInstallerUrls.Add(item);
+                    installerUpdate.InstallerUrl = item;
+                    installerUpdateList.Add(installerUpdate);
                 }
             }
 
-            return parsedInstallerUrls;
+            return installerUpdateList;
         }
 
         /// <summary>

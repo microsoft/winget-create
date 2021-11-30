@@ -800,4 +800,9 @@
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Override the architecture of an installer</value>
   </data>
+  <data name="OverridingArchitecture_Warning" xml:space="preserve">
+    <value>Overriding {0} with architecture {1}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding architecture</comment>
+  </data>
 </root>

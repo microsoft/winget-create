@@ -1267,6 +1267,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Overriding {0} with architecture {1}.
+        /// </summary>
+        public static string OverridingArchitecture_Warning {
+            get {
+                return ResourceManager.GetString("OverridingArchitecture_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of package dependencies from current source.
         /// </summary>
         public static string PackageDependencies_KeywordDescription {
