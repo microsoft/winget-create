@@ -223,18 +223,18 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             // Generate list of InstallerUpdate objects and parse out any specified architecture overrides.
-            List<InstallerUpdateHelper> installerUpdateHelpers = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.ToList());
+            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.ToList());
 
             // If the installer update list is null there was an issue when parsing for architecture override.
-            if (installerUpdateHelpers == null)
+            if (installerMetadataList == null)
             {
                 return null;
             }
 
-            // Reassign list with parsed installer urls.
-            this.InstallerUrls = installerUpdateHelpers.Select(x => x.InstallerUrl);
+            // Reassign list with parsed installer URLs without architecture overrides.
+            this.InstallerUrls = installerMetadataList.Select(x => x.InstallerUrl).ToList();
 
-            foreach (var installerUpdate in installerUpdateHelpers)
+            foreach (var installerUpdate in installerMetadataList)
             {
                 if (installerUpdate.OverrideArchitecture.HasValue)
                 {
@@ -249,7 +249,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            foreach (var installerUpdate in installerUpdateHelpers)
+            foreach (var installerUpdate in installerMetadataList)
             {
                 string packageFile = await DownloadPackageFile(installerUpdate.InstallerUrl);
                 if (string.IsNullOrEmpty(packageFile))
@@ -262,8 +262,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                PackageParser.UpdateInstallerNodesAsync(installerUpdateHelpers, installerManifest);
-                DisplayMismatchedArchitectures(installerUpdateHelpers);
+                PackageParser.UpdateInstallerNodesAsync(installerMetadataList, installerManifest);
+                DisplayMismatchedArchitectures(installerMetadataList);
             }
             catch (InvalidOperationException)
             {
@@ -447,13 +447,13 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Parse out architecture overrides included in the installer URLs and returns the parsed list of installer URLs.
         /// </summary>
         /// <param name="installerUrlsToBeParsed">List of installer URLs to be parsed for architecture overrides.</param>
-        /// <returns>List of <see cref="InstallerUpdateHelper"/> helper objects used for updating the installers.</returns>
-        private List<InstallerUpdateHelper> ParseInstallerUrlsForArchOverride(List<string> installerUrlsToBeParsed)
+        /// <returns>List of <see cref="InstallerMetadata"/> helper objects used for updating the installers.</returns>
+        private List<InstallerMetadata> ParseInstallerUrlsForArchOverride(List<string> installerUrlsToBeParsed)
         {
-            List<InstallerUpdateHelper> installerUpdateList = new List<InstallerUpdateHelper>();
+            List<InstallerMetadata> installerUpdateList = new List<InstallerMetadata>();
             foreach (string item in installerUrlsToBeParsed)
             {
-                InstallerUpdateHelper installerUpdate = new InstallerUpdateHelper();
+                InstallerMetadata installerUpdate = new InstallerMetadata();
 
                 if (item.Contains('|'))
                 {
@@ -473,13 +473,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                     {
                         installerUpdate.InstallerUrl = installerUrl;
                         installerUpdate.OverrideArchitecture = overrideArch.Value;
-                        installerUpdateList.Add(installerUpdate);
                     }
                     else
                     {
                         Logger.ErrorLocalized(nameof(Resources.UnableToParseArchOverride_Error), overrideArchString);
                         return null;
                     }
+
+                    installerUpdateList.Add(installerUpdate);
                 }
                 else
                 {

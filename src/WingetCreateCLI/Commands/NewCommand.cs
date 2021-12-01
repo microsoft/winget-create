@@ -106,7 +106,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Console.Clear();
                 }
 
-                List<InstallerUpdateHelper> installerUpdateList = new List<InstallerUpdateHelper>();
+                List<InstallerMetadata> installerUpdateList = new List<InstallerMetadata>();
 
                 foreach (var installerUrl in this.InstallerUrls)
                 {
@@ -116,7 +116,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return false;
                     }
 
-                    installerUpdateList.Add(new InstallerUpdateHelper { InstallerUrl = installerUrl, PackageFile = packageFile });
+                    installerUpdateList.Add(new InstallerMetadata { InstallerUrl = installerUrl, PackageFile = packageFile });
                 }
 
                 try

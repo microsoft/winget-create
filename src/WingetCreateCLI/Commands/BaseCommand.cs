@@ -213,10 +213,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Displays the appropriate warning messages for installers with detected architecture mismatches.
         /// </summary>
-        /// <param name="installerUpdateHelpers">List of <see cref="InstallerUpdateHelper"/>.</param>
-        protected static void DisplayMismatchedArchitectures(List<InstallerUpdateHelper> installerUpdateHelpers)
+        /// <param name="installerMetadataList">List of <see cref="InstallerMetadata"/>.</param>
+        protected static void DisplayMismatchedArchitectures(List<InstallerMetadata> installerMetadataList)
         {
-            var mismatchedArchInstallers = installerUpdateHelpers.Where(
+            var mismatchedArchInstallers = installerMetadataList.Where(
                 i => i.UrlArchitecture.HasValue &&
                 i.BinaryArchitecture.HasValue &&
                 i.UrlArchitecture != i.BinaryArchitecture);

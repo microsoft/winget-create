@@ -7,9 +7,9 @@ namespace Microsoft.WingetCreateCore.Models
     using Microsoft.WingetCreateCore.Models.Installer;
 
     /// <summary>
-    /// Helper class for storing information relating to updating an installer.
+    /// Helper class for storing an installer's metadata information.
     /// </summary>
-    public class InstallerUpdateHelper
+    public class InstallerMetadata
     {
         /// <summary>
         /// Gets or sets the installer url.
