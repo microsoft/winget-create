@@ -450,10 +450,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>List of <see cref="InstallerMetadata"/> helper objects used for updating the installers.</returns>
         private List<InstallerMetadata> ParseInstallerUrlsForArchOverride(List<string> installerUrlsToBeParsed)
         {
-            List<InstallerMetadata> installerUpdateList = new List<InstallerMetadata>();
+            List<InstallerMetadata> installerMetadataList = new List<InstallerMetadata>();
             foreach (string item in installerUrlsToBeParsed)
             {
-                InstallerMetadata installerUpdate = new InstallerMetadata();
+                InstallerMetadata installerMetadata = new InstallerMetadata();
 
                 if (item.Contains('|'))
                 {
@@ -471,25 +471,24 @@ namespace Microsoft.WingetCreateCLI.Commands
                     InstallerArchitecture? overrideArch = overrideArchString.ToEnumOrDefault<InstallerArchitecture>();
                     if (overrideArch.HasValue)
                     {
-                        installerUpdate.InstallerUrl = installerUrl;
-                        installerUpdate.OverrideArchitecture = overrideArch.Value;
+                        installerMetadata.InstallerUrl = installerUrl;
+                        installerMetadata.OverrideArchitecture = overrideArch.Value;
                     }
                     else
                     {
                         Logger.ErrorLocalized(nameof(Resources.UnableToParseArchOverride_Error), overrideArchString);
                         return null;
                     }
-
-                    installerUpdateList.Add(installerUpdate);
                 }
                 else
                 {
-                    installerUpdate.InstallerUrl = item;
-                    installerUpdateList.Add(installerUpdate);
+                    installerMetadata.InstallerUrl = item;
                 }
+
+                installerMetadataList.Add(installerMetadata);
             }
 
-            return installerUpdateList;
+            return installerMetadataList;
         }
 
         /// <summary>
