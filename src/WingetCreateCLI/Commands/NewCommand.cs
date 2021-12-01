@@ -106,16 +106,23 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Console.Clear();
                 }
 
-                var packageFiles = await DownloadInstallers(this.InstallerUrls);
-                if (packageFiles == null)
+                List<InstallerMetadata> installerUpdateList = new List<InstallerMetadata>();
+
+                foreach (var installerUrl in this.InstallerUrls)
                 {
-                    return false;
+                    string packageFile = await DownloadPackageFile(installerUrl);
+                    if (string.IsNullOrEmpty(packageFile))
+                    {
+                        return false;
+                    }
+
+                    installerUpdateList.Add(new InstallerMetadata { InstallerUrl = installerUrl, PackageFile = packageFile });
                 }
 
                 try
                 {
-                    PackageParser.ParsePackages(packageFiles, this.InstallerUrls, manifests, out List<PackageParser.DetectedArch> detectedArchs);
-                    DisplayMismatchedArchitectures(detectedArchs);
+                    PackageParser.ParsePackages(installerUpdateList, manifests);
+                    DisplayMismatchedArchitectures(installerUpdateList);
                 }
                 catch (IOException iOException) when (iOException.HResult == -2147024671)
                 {

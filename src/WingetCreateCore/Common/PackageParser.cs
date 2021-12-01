@@ -35,11 +35,6 @@ namespace Microsoft.WingetCreateCore
     public static class PackageParser
     {
         /// <summary>
-        /// Representation of an installer's architectures detected from the url and binary.
-        /// </summary>
-        public record DetectedArch(string Url, InstallerArchitecture? UrlArch, InstallerArchitecture BinaryArch);
-
-        /// <summary>
         /// The default path where downloaded installers are stored.
         /// </summary>
         public static readonly string DefaultInstallerDownloadPath = Path.Combine(Path.GetTempPath(), Constants.ProgramName);
@@ -78,31 +73,20 @@ namespace Microsoft.WingetCreateCore
         /// <summary>
         /// Parses packages for available metadata including Version, Publisher, Name, Descripion, License, etc.
         /// </summary>
-        /// <param name="paths">Path(s) to package files. </param>
-        /// <param name="urls">Installer urls. </param>
+        /// <param name="installerMetadataList">List of <see cref="InstallerMetadata"/>.</param>
         /// <param name="manifests">Wrapper object for manifest object models.</param>
-        /// <param name="detectedArchOfInstallers">List of DetectedArch objects that represent each installers detected architectures.</param>
-        public static void ParsePackages(
-            IEnumerable<string> paths,
-            IEnumerable<string> urls,
-            Manifests manifests,
-            out List<DetectedArch> detectedArchOfInstallers)
+        public static void ParsePackages(List<InstallerMetadata> installerMetadataList, Manifests manifests)
         {
-            detectedArchOfInstallers = new List<DetectedArch>();
-            VersionManifest versionManifest = manifests.VersionManifest = new VersionManifest();
-
-            // TODO: Remove once default is set in schema
-            versionManifest.DefaultLocale = "en-US";
-
-            InstallerManifest installerManifest = manifests.InstallerManifest = new InstallerManifest();
-            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest = new DefaultLocaleManifest();
+            manifests.VersionManifest = new VersionManifest();
+            manifests.InstallerManifest = new InstallerManifest();
+            manifests.DefaultLocaleManifest = new DefaultLocaleManifest();
             List<string> parseFailedInstallerUrls = new List<string>();
 
-            foreach (var package in paths.Zip(urls, (path, url) => (path, url)))
+            foreach (var installerMetadata in installerMetadataList)
             {
-                if (!ParsePackage(package.path, package.url, manifests, ref detectedArchOfInstallers))
+                if (!ParsePackage(installerMetadata, manifests))
                 {
-                    parseFailedInstallerUrls.Add(package.url);
+                    parseFailedInstallerUrls.Add(installerMetadata.InstallerUrl);
                 }
             }
 
@@ -176,38 +160,29 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
-        /// Update InstallerManifest's Installer nodes based on specified package file paths.
+        /// Update InstallerManifest's Installer nodes using the provided list of InstallerMetadata objects.
         /// </summary>
+        /// <param name="installerMetadataList">List of <see cref="InstallerMetadata"/>.</param>
         /// <param name="installerManifest"><see cref="InstallerManifest"/> to update.</param>
-        /// <param name="installerUrls">InstallerUrls where installers can be downloaded.</param>
-        /// <param name="paths">Paths to packages to extract metadata from.</param>
-        /// <param name="detectedArchOfInstallers">List of DetectedArch objects that represent each installers detected architectures.</param>
-        /// <param name="newInstallers">List of newly parsed installer nodes.</param>
-        public static void UpdateInstallerNodesAsync(
-            InstallerManifest installerManifest,
-            IEnumerable<string> installerUrls,
-            IEnumerable<string> paths,
-            out List<DetectedArch> detectedArchOfInstallers,
-            out List<Installer> newInstallers)
+        public static void UpdateInstallerNodesAsync(List<InstallerMetadata> installerMetadataList, InstallerManifest installerManifest)
         {
-            var newPackages = paths.Zip(installerUrls, (path, url) => (path, url)).ToList();
-            newInstallers = new List<Installer>();
-            detectedArchOfInstallers = new List<DetectedArch>();
             var existingInstallers = new List<Installer>(installerManifest.Installers);
             List<Installer> unmatchedInstallers = new List<Installer>();
             List<Installer> multipleMatchedInstallers = new List<Installer>();
             List<string> parseFailedInstallerUrls = new List<string>();
 
-            foreach (var (path, url) in newPackages)
+            foreach (var installerMetadata in installerMetadataList)
             {
-                if (!ParsePackageAndGenerateInstallerNodes(path, url, newInstallers, null, ref detectedArchOfInstallers))
+                if (!ParsePackageAndGenerateInstallerNodes(installerMetadata, null))
                 {
-                    parseFailedInstallerUrls.Add(url);
+                    parseFailedInstallerUrls.Add(installerMetadata.InstallerUrl);
                 }
             }
 
+            int numOfNewInstallers = installerMetadataList.Sum(x => x.NewInstallers.Count);
+
             // We only allow updating manifests with the same package count
-            if (newInstallers.Count != existingInstallers.Count)
+            if (numOfNewInstallers != existingInstallers.Count)
             {
                 throw new InvalidOperationException();
             }
@@ -220,61 +195,36 @@ namespace Microsoft.WingetCreateCore
             Dictionary<Installer, Installer> installerMatchDict = new Dictionary<Installer, Installer>();
 
             // Update previous installers with parsed data from downloaded packages
-            foreach (var newInstaller in newInstallers)
+            foreach (var installerUpdate in installerMetadataList)
             {
-                DetectedArch detectedArch = detectedArchOfInstallers.Find(
-                    i => i.Url == newInstaller.InstallerUrl &&
-                    (i.UrlArch == newInstaller.Architecture || i.BinaryArch == newInstaller.Architecture));
-
-                var urlMatch = existingInstallers.Where(
-                    i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
-                    i.Architecture == detectedArch.UrlArch);
-
-                var archAndTypeMatch = existingInstallers.Where(
-                    i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType &&
-                    i.Architecture == detectedArch.BinaryArch);
-
-                int numOfUrlMatches = urlMatch.Count();
-                int numOfArchAndTypeMatches = archAndTypeMatch.Count();
-
-                // Count > 1 indicates multiple matches were found. Count == 0 indicates no matches were found.
-                // Since string matching isn't always reliable, failing to find a match is okay.
-                // We only want to show an error if a string match finds multiple matches.
-                // If string matching fails to find a match, show all errors that may occur from ArchAndTypeMatches.
-                if (numOfUrlMatches > 1)
+                foreach (var newInstaller in installerUpdate.NewInstallers)
                 {
-                    multipleMatchedInstallers.Add(newInstaller);
-                    continue;
-                }
-                else if (numOfUrlMatches == 0)
-                {
-                    if (numOfArchAndTypeMatches == 0)
+                    // if the installerUpdate does not have a binary or url architecture specified, then just use what is specified in the installer.
+                    Installer existingInstallerMatch = FindInstallerMatch(
+                        newInstaller,
+                        existingInstallers,
+                        installerManifest,
+                        installerUpdate,
+                        ref unmatchedInstallers,
+                        ref multipleMatchedInstallers);
+
+                    // If a match is found, add match to dictionary and remove for list of existingInstallers
+                    if (existingInstallerMatch != null)
                     {
-                        unmatchedInstallers.Add(newInstaller);
+                        installerMatchDict.Add(existingInstallerMatch, newInstaller);
+                        existingInstallers.Remove(existingInstallerMatch);
                     }
-                    else if (numOfArchAndTypeMatches > 1)
+                    else
                     {
-                        multipleMatchedInstallers.Add(newInstaller);
+                        continue;
                     }
-                }
-
-                var matchingExistingInstaller = numOfUrlMatches == 1 ? urlMatch.Single() : numOfArchAndTypeMatches == 1 ? archAndTypeMatch.Single() : null;
-
-                // If we can't find a match in the remaining existing packages, there must be a mismatch between the old manifest and the URLs provided
-                if (matchingExistingInstaller == null)
-                {
-                    continue;
-                }
-                else
-                {
-                    installerMatchDict.Add(matchingExistingInstaller, newInstaller); // add the match to the map.
-                    existingInstallers.Remove(matchingExistingInstaller);
                 }
             }
 
             if (unmatchedInstallers.Any() || multipleMatchedInstallers.Any())
             {
-                throw new InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers);
+                bool isArchitectureOverride = installerMetadataList.Any(x => x.OverrideArchitecture.HasValue);
+                throw new InstallerMatchException(multipleMatchedInstallers, unmatchedInstallers, isArchitectureOverride);
             }
             else
             {
@@ -335,6 +285,71 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
+        /// Finds an existing installer that matches the new installer by checking the installerType and the following:
+        /// 1. Matching based on architecture specified as an override.
+        /// 2. Matching based on architecture detected from URL string or binary.
+        /// </summary>
+        /// <param name="newInstaller">New installer to be matched.</param>
+        /// <param name="existingInstallers">List of existing installers to be matched.</param>
+        /// <param name="installerManifest">Installer manifest.</param>
+        /// <param name="installerMetadata">Helper class for storing an installer's metadata information.</param>
+        /// <param name="unmatchedInstallers">List of unmatched installers.</param>
+        /// <param name="multipleMatchedInstallers">List of installers with multiple matches..</param>
+        /// <returns>The installer match from the list of existing installers.</returns>
+        private static Installer FindInstallerMatch(
+            Installer newInstaller,
+            List<Installer> existingInstallers,
+            InstallerManifest installerManifest,
+            InstallerMetadata installerMetadata,
+            ref List<Installer> unmatchedInstallers,
+            ref List<Installer> multipleMatchedInstallers)
+        {
+            // If we can find an exact match by comparing the installerType and the override architecture, then return match.
+            // Otherwise, continue and try matching based on arch detected from url and binary detection, as the user could be trying overwrite with a new architecture.
+            var archMatches = existingInstallers.Where(
+                i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType);
+
+            var overrideArchMatches = archMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
+            if (overrideArchMatches.Count() == 1)
+            {
+                return overrideArchMatches.Single();
+            }
+
+            var binaryArchitecture = installerMetadata.BinaryArchitecture ?? newInstaller.Architecture;
+
+            // Msixbundle installers can have multiple installers with different architectures
+            // For those installers, the binaryArchitecture will be detected as null, therefore we default to the architecture specified in the newInstaller object.
+            var binaryArchMatches = archMatches.Where(i => i.Architecture == binaryArchitecture);
+            var urlArchMatches = archMatches.Where(i => i.Architecture == installerMetadata.UrlArchitecture);
+
+            int numOfBinaryArchMatches = binaryArchMatches.Count();
+            int numOfUrlArchMatches = urlArchMatches.Count();
+
+            // Count > 1 indicates multiple matches were found. Count == 0 indicates no matches were found.
+            // Since url string matching isn't always reliable, failing to find a match is okay.
+            // We only want to show an error if a string match finds multiple matches.
+            // If url string matching fails to find a match, show all errors that may occur from ArchAndTypeMatches.
+            if (numOfUrlArchMatches > 1)
+            {
+                multipleMatchedInstallers.Add(newInstaller);
+            }
+            else if (numOfUrlArchMatches == 0)
+            {
+                if (numOfBinaryArchMatches == 0)
+                {
+                    unmatchedInstallers.Add(newInstaller);
+                }
+                else if (numOfBinaryArchMatches > 1)
+                {
+                    multipleMatchedInstallers.Add(newInstaller);
+                }
+            }
+
+            var matchingExistingInstaller = numOfUrlArchMatches == 1 ? urlArchMatches.Single() : numOfBinaryArchMatches == 1 ? binaryArchMatches.Single() : null;
+            return matchingExistingInstaller;
+        }
+
+        /// <summary>
         /// Updates the metadata from an existing installer node with the metadata from a new installer node.
         /// </summary>
         /// <param name="existingInstaller">Existing installer node.</param>
@@ -354,22 +369,16 @@ namespace Microsoft.WingetCreateCore
         /// <summary>
         /// Parses a package for available metadata including Version, Publisher, Name, Descripion, License, etc.
         /// </summary>
-        /// <param name="path">Path to package file. </param>
-        /// <param name="url">Installer url. </param>
+        /// <param name="installerMetadata">Helper class for storing an installer's metadata information.</param>
         /// <param name="manifests">Wrapper object for manifest object models.</param>
-        /// <param name="detectedArchOfInstallers">List of DetectedArch objects that represent each installers detected architectures.</param>
         /// <returns>True if package was successfully parsed and metadata extracted, false otherwise.</returns>
-        private static bool ParsePackage(
-            string path,
-            string url,
-            Manifests manifests,
-            ref List<DetectedArch> detectedArchOfInstallers)
+        private static bool ParsePackage(InstallerMetadata installerMetadata, Manifests manifests)
         {
             VersionManifest versionManifest = manifests.VersionManifest;
             InstallerManifest installerManifest = manifests.InstallerManifest;
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
 
-            var versionInfo = FileVersionInfo.GetVersionInfo(path);
+            var versionInfo = FileVersionInfo.GetVersionInfo(installerMetadata.PackageFile);
 
             defaultLocaleManifest.PackageVersion ??= versionInfo.FileVersion?.Trim() ?? versionInfo.ProductVersion?.Trim();
             defaultLocaleManifest.Publisher ??= versionInfo.CompanyName?.Trim();
@@ -377,8 +386,11 @@ namespace Microsoft.WingetCreateCore
             defaultLocaleManifest.ShortDescription ??= versionInfo.FileDescription?.Trim();
             defaultLocaleManifest.License ??= versionInfo.LegalCopyright?.Trim();
 
-            if (ParsePackageAndGenerateInstallerNodes(path, url, installerManifest.Installers, manifests, ref detectedArchOfInstallers))
+            if (ParsePackageAndGenerateInstallerNodes(installerMetadata, manifests))
             {
+                // Add range of new installers generates from parsing the package.
+                manifests.InstallerManifest.Installers.AddRange(installerMetadata.NewInstallers);
+
                 if (!string.IsNullOrEmpty(defaultLocaleManifest.PackageVersion))
                 {
                     versionManifest.PackageVersion = installerManifest.PackageVersion = RemoveInvalidCharsFromString(defaultLocaleManifest.PackageVersion);
@@ -399,45 +411,41 @@ namespace Microsoft.WingetCreateCore
         /// <summary>
         /// Parses a package for relevant metadata and generates a new installer node for each installer file (MSIX can have multiple installers).
         /// </summary>
-        /// <param name="path">Path to package file.</param>
-        /// <param name="url">Installer url.</param>
-        /// <param name="newInstallers">List of new installers.</param>
+        /// <param name="installerMetadata">Helper class for storing an installer's metadata information.</param>
         /// <param name="manifests">Manifests object model.</param>
-        /// <param name="detectedArchOfInstallers">List of DetectedArch objects representing detected architecture of each installer.</param>
         /// <returns>Boolean value indicating whether the function was successful or not.</returns>
-        private static bool ParsePackageAndGenerateInstallerNodes(
-            string path,
-            string url,
-            List<Installer> newInstallers,
-            Manifests manifests,
-            ref List<DetectedArch> detectedArchOfInstallers)
+        private static bool ParsePackageAndGenerateInstallerNodes(InstallerMetadata installerMetadata, Manifests manifests)
         {
-            var installer = new Installer();
-            installer.InstallerUrl = url;
-            installer.InstallerSha256 = GetFileHash(path);
-            installer.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+            var url = installerMetadata.InstallerUrl;
+            var path = installerMetadata.PackageFile;
+            var newInstallers = installerMetadata.NewInstallers;
+            var baseInstaller = new Installer();
+            baseInstaller.InstallerUrl = url;
+            baseInstaller.InstallerSha256 = GetFileHash(path);
+            baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
 
             bool parseMsixResult = false;
 
-            bool parseResult = ParseExeInstallerType(path, installer, newInstallers) ||
-                (parseMsixResult = ParseMsix(path, installer, manifests, newInstallers)) ||
-                ParseMsi(path, installer, manifests, newInstallers);
+            bool parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
+                (parseMsixResult = ParseMsix(path, baseInstaller, manifests, newInstallers)) ||
+                ParseMsi(path, baseInstaller, manifests, newInstallers);
 
-            if (parseMsixResult)
+            if (!parseMsixResult)
             {
-                // Skip architecture override for msix installers as there can be more than one installer in a bundle
-                detectedArchOfInstallers.AddRange(newInstallers
-                    .Where(i => i.InstallerUrl == url)
-                    .Select(i => new DetectedArch(i.InstallerUrl, i.Architecture, i.Architecture)));
-            }
-            else
-            {
-                var archGuess = GetArchFromUrl(installer.InstallerUrl);
-                detectedArchOfInstallers.Add(new DetectedArch(installer.InstallerUrl, archGuess, installer.Architecture));
+                // Only capture architecture if installer is non-msix as the architecture for msix installers is deterministic
+                var urlArchitecture = installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
+                installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
+                installerMetadata.BinaryArchitecture = baseInstaller.Architecture;
 
-                if (archGuess.HasValue)
+                var overrideArch = installerMetadata.OverrideArchitecture;
+
+                if (overrideArch.HasValue)
                 {
-                    installer.Architecture = archGuess.Value;
+                    baseInstaller.Architecture = overrideArch.Value;
+                }
+                else if (urlArchitecture.HasValue)
+                {
+                    baseInstaller.Architecture = urlArchitecture.Value;
                 }
             }
 

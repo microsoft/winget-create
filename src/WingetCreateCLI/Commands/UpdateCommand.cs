@@ -16,6 +16,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
@@ -40,6 +41,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>" }, Version = "<Version>" });
                 yield return new Example(Resources.Example_UpdateCommand_SaveAndPublish, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>", OutputDir = "<OutputDirectory>", GitHubToken = "<GitHubPersonalAccessToken>" });
+                yield return new Example(Resources.Example_UpdateCommand_OverrideArchitecture, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>|<InstallerArchitecture>" }, Version = "<Version>" });
             }
         }
 
@@ -220,6 +222,26 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().ToArray();
             }
 
+            // Generate list of InstallerUpdate objects and parse out any specified architecture overrides.
+            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.ToList());
+
+            // If the installer update list is null there was an issue when parsing for architecture override.
+            if (installerMetadataList == null)
+            {
+                return null;
+            }
+
+            // Reassign list with parsed installer URLs without architecture overrides.
+            this.InstallerUrls = installerMetadataList.Select(x => x.InstallerUrl).ToList();
+
+            foreach (var installerUpdate in installerMetadataList)
+            {
+                if (installerUpdate.OverrideArchitecture.HasValue)
+                {
+                    Logger.WarnLocalized(nameof(Resources.OverridingArchitecture_Warning), installerUpdate.InstallerUrl, installerUpdate.OverrideArchitecture);
+                }
+            }
+
             // We only support updates with same number of installer URLs
             if (this.InstallerUrls.Distinct().Count() != installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().Count())
             {
@@ -227,25 +249,21 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return null;
             }
 
-            var packageFiles = await DownloadInstallers(this.InstallerUrls);
-            if (packageFiles == null)
+            foreach (var installerUpdate in installerMetadataList)
             {
-                return null;
-            }
+                string packageFile = await DownloadPackageFile(installerUpdate.InstallerUrl);
+                if (string.IsNullOrEmpty(packageFile))
+                {
+                    return null;
+                }
 
-            List<PackageParser.DetectedArch> detectedArchOfInstallers;
-            List<Installer> newInstallers = new List<Installer>();
+                installerUpdate.PackageFile = packageFile;
+            }
 
             try
             {
-                PackageParser.UpdateInstallerNodesAsync(
-                    installerManifest,
-                    this.InstallerUrls,
-                    packageFiles,
-                    out detectedArchOfInstallers,
-                    out newInstallers);
-
-                DisplayMismatchedArchitectures(detectedArchOfInstallers);
+                PackageParser.UpdateInstallerNodesAsync(installerMetadataList, installerManifest);
+                DisplayMismatchedArchitectures(installerMetadataList);
             }
             catch (InvalidOperationException)
             {
@@ -267,6 +285,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
                 installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+
+                if (installerMatchException.IsArchitectureOverride)
+                {
+                    Logger.WarnLocalized(nameof(Resources.ArchitectureOverride_Warning));
+                }
+
                 return null;
             }
 
@@ -417,6 +441,54 @@ namespace Microsoft.WingetCreateCLI.Commands
                     PromptHelper.PromptPropertiesWithMenu(selectedLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(selectedLocaleManifest));
                 }
             }
+        }
+
+        /// <summary>
+        /// Parse out architecture overrides included in the installer URLs and returns the parsed list of installer URLs.
+        /// </summary>
+        /// <param name="installerUrlsToBeParsed">List of installer URLs to be parsed for architecture overrides.</param>
+        /// <returns>List of <see cref="InstallerMetadata"/> helper objects used for updating the installers.</returns>
+        private List<InstallerMetadata> ParseInstallerUrlsForArchOverride(List<string> installerUrlsToBeParsed)
+        {
+            List<InstallerMetadata> installerMetadataList = new List<InstallerMetadata>();
+            foreach (string item in installerUrlsToBeParsed)
+            {
+                InstallerMetadata installerMetadata = new InstallerMetadata();
+
+                if (item.Contains('|'))
+                {
+                    // '|' character indicates that an architecture override can be parsed from the installer.
+                    string[] installerUrlOverride = item.Split('|');
+
+                    if (installerUrlOverride.Length > 2)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.MultipleArchitectureOverride_Error));
+                        return null;
+                    }
+
+                    string installerUrl = installerUrlOverride[0];
+                    string overrideArchString = installerUrlOverride[1];
+                    InstallerArchitecture? overrideArch = overrideArchString.ToEnumOrDefault<InstallerArchitecture>();
+                    if (overrideArch.HasValue)
+                    {
+                        installerMetadata.InstallerUrl = installerUrl;
+                        installerMetadata.OverrideArchitecture = overrideArch.Value;
+                    }
+                    else
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.UnableToParseArchOverride_Error), overrideArchString);
+                        return null;
+                    }
+                }
+                else
+                {
+                    installerMetadata.InstallerUrl = item;
+                }
+
+                installerMetadataList.Add(installerMetadata);
+            }
+
+            return installerMetadataList;
         }
 
         /// <summary>

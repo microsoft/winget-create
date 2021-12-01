@@ -33,6 +33,12 @@
     <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.locale.en-US.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\TestPublisher.MultipleArchitectureOverride.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TestPublisher.ArchitectureOverride.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\TestPublisher.MsixArchitectureMatch.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

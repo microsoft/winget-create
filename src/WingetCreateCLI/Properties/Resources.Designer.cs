@@ -133,6 +133,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to If the installer you provided fails to match an existing installer even when overriding the architecture, you may need to edit the existing manifest manually. Make sure that the existing manifest has a single installer that matches the overriding architecture and installer type of the new installer. To modify an existing manifest, use the &apos;--interactive&apos; flag with the update command and submit the new changes. Once the changes are published, please try again..
+        /// </summary>
+        public static string ArchitectureOverride_Warning {
+            get {
+                return ResourceManager.GetString("ArchitectureOverride_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package author.
         /// </summary>
         public static string Author_KeywordDescription {
@@ -525,6 +534,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Example_SubmitCommand_SubmitLocalManifest {
             get {
                 return ResourceManager.GetString("Example_SubmitCommand_SubmitLocalManifest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Override the architecture of an installer.
+        /// </summary>
+        public static string Example_UpdateCommand_OverrideArchitecture {
+            get {
+                return ResourceManager.GetString("Example_UpdateCommand_OverrideArchitecture", resourceCulture);
             }
         }
         
@@ -1096,6 +1114,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multiple architectures detected. Only one architecture can be specified for an override..
+        /// </summary>
+        public static string MultipleArchitectureOverride_Error {
+            get {
+                return ResourceManager.GetString("MultipleArchitectureOverride_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Updating a manifest is only supported with the same number of installer URLs..
         /// </summary>
         public static string MultipleInstallerUpdateDiscrepancy_Error {
@@ -1236,6 +1263,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string OutputDirectory_HelpText {
             get {
                 return ResourceManager.GetString("OutputDirectory_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overriding {0} with architecture {1}.
+        /// </summary>
+        public static string OverridingArchitecture_Warning {
+            get {
+                return ResourceManager.GetString("OverridingArchitecture_Warning", resourceCulture);
             }
         }
         
@@ -1749,6 +1785,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string TokenExpired_Message {
             get {
                 return ResourceManager.GetString("TokenExpired_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to parse the specified override architecture {0}..
+        /// </summary>
+        public static string UnableToParseArchOverride_Error {
+            get {
+                return ResourceManager.GetString("UnableToParseArchOverride_Error", resourceCulture);
             }
         }
         

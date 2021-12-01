@@ -213,19 +213,22 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Displays the appropriate warning messages for installers with detected architecture mismatches.
         /// </summary>
-        /// <param name="detectedArchs">List of DetectedArch objects that represent each installers detected architectures.</param>
-        protected static void DisplayMismatchedArchitectures(List<PackageParser.DetectedArch> detectedArchs)
+        /// <param name="installerMetadataList">List of <see cref="InstallerMetadata"/>.</param>
+        protected static void DisplayMismatchedArchitectures(List<InstallerMetadata> installerMetadataList)
         {
-            var mismatchedArchInstallers = detectedArchs.Where(i => i.UrlArch.HasValue && i.UrlArch != i.BinaryArch);
+            var mismatchedArchInstallers = installerMetadataList.Where(
+                i => i.UrlArchitecture.HasValue &&
+                i.BinaryArchitecture.HasValue &&
+                i.UrlArchitecture != i.BinaryArchitecture);
 
             if (mismatchedArchInstallers.Any())
             {
                 Logger.WarnLocalized(nameof(Resources.DetectedArchMismatch_Message));
                 Console.WriteLine();
-                foreach (var installer in mismatchedArchInstallers)
+                foreach (var mismatch in mismatchedArchInstallers)
                 {
-                    Logger.WarnLocalized(nameof(Resources.InstallerBinaryMismatch_Message), installer.UrlArch, installer.BinaryArch);
-                    Logger.Warn($"{installer.Url}");
+                    Logger.WarnLocalized(nameof(Resources.InstallerBinaryMismatch_Message), mismatch.UrlArchitecture, mismatch.BinaryArchitecture);
+                    Logger.Warn($"{mismatch.InstallerUrl}");
                     Console.WriteLine();
                 }
             }
@@ -312,29 +315,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                     throw;
                 }
             }
-        }
-
-        /// <summary>
-        /// Download all packages specified by urls, and return list of downloaded file paths.
-        /// </summary>
-        /// <param name="urls">Urls for packages to download.</param>
-        /// <returns>List of file paths downloaded.</returns>
-        protected static async Task<IList<string>> DownloadInstallers(IEnumerable<string> urls)
-        {
-            var packageFiles = new List<string>();
-
-            foreach (var url in urls)
-            {
-                string packageFile = await DownloadPackageFile(url);
-                if (string.IsNullOrEmpty(packageFile))
-                {
-                    return null;
-                }
-
-                packageFiles.Add(packageFile);
-            }
-
-            return packageFiles;
         }
 
         /// <summary>

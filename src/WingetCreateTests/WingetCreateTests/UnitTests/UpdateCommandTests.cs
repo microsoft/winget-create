@@ -218,11 +218,11 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verifies that the architecture obtained from updating an msix does not come from the string.
+        /// Verifies that the architecture obtained from updating an msix does not come from the url string.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task UpdateMsixWithNoArchitectureOverride()
+        public async Task UpdateMsixIgnoresArchitectureFromUrl()
         {
             TestUtils.InitializeMockDownloads("arm64/" + TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MsixArchitectureMatch", null, this.tempPath, null);
@@ -251,6 +251,119 @@ namespace Microsoft.WingetCreateUnitTests
             await command.ExecuteManifestUpdate(manifests, this.testCommandEvent);
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.NoChangeDetectedInUpdatedManifest_Message), "Failed to block manifests without updates from submitting.");
+        }
+
+        /// <summary>
+        /// Verfies that an error message is shown if the overriding architecture is invalid.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateWithArchitectureOverrideFailsParsing()
+        {
+            string invalidArch = "fakeArch";
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            (UpdateCommand badCommand, var manifests) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|{invalidArch}" });
+            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
+            Assert.IsNull(failedUpdateManifests, "Command should have failed due to invalid architecture specified for override.");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(string.Format(Resources.UnableToParseArchOverride_Error, invalidArch)), "Failed to show architecture override parsing error.");
+        }
+
+        /// <summary>
+        /// Verfies that an error message is shown if multiple architectures are specified for an override.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFailsOverrideWithMultipleArchitectures()
+        {
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            (UpdateCommand badCommand, var manifests) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|x86|ARM" });
+            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
+            Assert.IsNull(failedUpdateManifests, "Command should have failed due to multiple architecture overrides specified for a single installer.");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.MultipleArchitectureOverride_Error), "Failed to show multiple architecture overrides error.");
+        }
+
+        /// <summary>
+        /// Verifies that the overriding architecture can be matched to the architecture specified in the existing manifest and the update succeeds.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateWithArchitectureOverrides()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            InstallerArchitecture expectedArch = InstallerArchitecture.Arm;
+
+            // Test without architecture override should fail.
+            (UpdateCommand badCommand, var manifests) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { testInstallerUrl });
+            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
+            Assert.IsNull(failedUpdateManifests, "Command should have failed without architecture override as the installer is x64");
+
+            // Test with architecture override should pass.
+            (UpdateCommand goodCommand, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { $"{testInstallerUrl}|{expectedArch}" });
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+            var updatedManifests = await RunUpdateCommand(goodCommand, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded as installer should be overrided with ARM architecture.");
+
+            var updatedInstaller = updatedManifests.InstallerManifest.Installers.Single();
+            Assert.AreEqual(expectedArch, updatedInstaller.Architecture, $"Architecture should be {expectedArch} from override.");
+            Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
+        /// <summary>
+        /// Verifies that if a matching failure occurs when trying to perform an architecture override, a warning message is displayed.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateWithArchitectureOverrideFailsWithErrorMessage()
+        {
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|x64" });
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNull(updatedManifests, "Command should have failed");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.ArchitectureOverride_Warning), "Failed to show warning for architecture override.");
+        }
+
+        /// <summary>
+        /// Test the architecture override with multiple installers. Verifies that if the override architecture does not match any installer,
+        /// the architecture detected from the url or the binary will be used instead to perform the matching.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateWithMultipleArchitectureOverrides()
+        {
+            var expectedArchs = new[]
+            {
+                InstallerArchitecture.Arm,
+                InstallerArchitecture.X64,
+            };
+
+            string x64ExeInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            string x86ExeInstallerUrl = $"https://fakedomain.com/win32/{TestConstants.TestExeInstaller}";
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller, $"win32/{TestConstants.TestExeInstaller}");
+            (UpdateCommand command, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.MultipleArchitectureOverride", "1.2.3.4", this.tempPath, new[] { $"{x64ExeInstallerUrl}|arm", $"{x86ExeInstallerUrl}|x64" });
+
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            foreach (var item in expectedArchs.Zip(updatedManifests.InstallerManifest.Installers, (expectedArch, installer) => (expectedArch, installer)))
+            {
+                Assert.AreEqual(item.expectedArch, item.installer.Architecture, "Architecture override failed.");
+                Assert.AreNotEqual(initialInstaller.InstallerSha256, item.installer.InstallerSha256, "InstallerSha256 should be updated");
+            }
         }
 
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls)
