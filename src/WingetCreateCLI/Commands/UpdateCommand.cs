@@ -175,6 +175,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return false;
             }
 
+            RemoveEmptyStringFieldsInManifests(updatedManifests);
             DisplayManifestPreview(updatedManifests);
 
             if (string.IsNullOrEmpty(this.OutputDir))

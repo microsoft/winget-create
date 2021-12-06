@@ -161,6 +161,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
 
                     PromptPropertiesAndDisplayManifests(manifests);
+                    RemoveEmptyStringFieldsInManifests(manifests);
                     isManifestValid = ValidateManifestsInTempDir(manifests);
                 }
                 while (Prompt.Confirm(Resources.ConfirmManifestCreation_Message));
