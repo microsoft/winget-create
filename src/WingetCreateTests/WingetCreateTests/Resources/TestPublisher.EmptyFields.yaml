@@ -1,0 +1,19 @@
+﻿PackageIdentifier: TestPublisher.EmptyFields
+PackageVersion: 0.1.2
+PackageName: Empty fields test
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used to test if empty fields are removed from the manifest.
+InstallerLocale: en-US
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerType: exe
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+    ProductCode: ''
+    PackageFamilyName: ''
+PrivacyUrl: ''
+Author: ''
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.0.0

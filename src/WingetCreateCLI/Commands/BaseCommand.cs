@@ -357,6 +357,26 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
+        /// Removes fields with empty string values from all manifests.
+        /// </summary>
+        /// <param name="manifests">Wrapper object containing the manifest object models.</param>
+        protected static void RemoveEmptyStringFieldsInManifests(Manifests manifests)
+        {
+            RemoveEmptyStringFields(manifests.InstallerManifest);
+            RemoveEmptyStringFields(manifests.DefaultLocaleManifest);
+
+            foreach (var localeManifest in manifests.LocaleManifests)
+            {
+                RemoveEmptyStringFields(localeManifest);
+            }
+
+            foreach (var installer in manifests.InstallerManifest.Installers)
+            {
+                RemoveEmptyStringFields(installer);
+            }
+        }
+
+        /// <summary>
         /// Launches the GitHub OAuth flow and obtains a GitHub token.
         /// </summary>
         /// <returns>A boolean value indicating whether the OAuth login flow was successful.</returns>
@@ -493,6 +513,24 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Removes fields with empty string values from a given object.
+        /// </summary>
+        /// <param name="obj">Object to remove empty string fields from.</param>
+        private static void RemoveEmptyStringFields(object obj)
+        {
+            var stringProperties = obj.GetType().GetProperties()
+                .Where(p => p.PropertyType == typeof(string));
+
+            foreach (var prop in stringProperties)
+            {
+                if ((string)prop.GetValue(obj) == string.Empty)
+                {
+                    prop.SetValue(obj, null);
+                }
+            }
         }
     }
 }

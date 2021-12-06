@@ -140,6 +140,32 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies that any fields with empty string values are replaced with null so that they do not appear in the manifest output.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateRemovesEmptyFields()
+        {
+            string packageId = "TestPublisher.EmptyFields";
+            string version = "1.2.3.4";
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(packageId, version, this.tempPath, null);
+            bool updateExecuted = await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent);
+            Assert.IsTrue(updateExecuted, "Command should have succeeded");
+            string manifestDir = Utils.GetAppManifestDirPath(packageId, version);
+            var updatedManifestContents = Directory.GetFiles(Path.Combine(this.tempPath, manifestDir)).Select(f => File.ReadAllText(f));
+            Assert.IsTrue(updatedManifestContents.Any(), "Updated manifests were not created successfully");
+
+            Manifests updatedManifests = Serialization.DeserializeManifestContents(updatedManifestContents);
+            Assert.IsNull(updatedManifests.DefaultLocaleManifest.PrivacyUrl, "PrivacyUrl should be null.");
+            Assert.IsNull(updatedManifests.DefaultLocaleManifest.Author, "Author should be null.");
+
+            var firstInstaller = updatedManifests.InstallerManifest.Installers.First();
+            Assert.IsNull(firstInstaller.ProductCode, "ProductCode should be null.");
+            Assert.IsNull(firstInstaller.PackageFamilyName, "ProductCode should be null.");
+        }
+
+        /// <summary>
         /// Verify that update command fails if there is a discrepency in the URL count.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
