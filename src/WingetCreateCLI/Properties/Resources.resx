@@ -805,4 +805,49 @@
     <comment>{0} - represents the InstallerUrl 
 {1} - represents the overriding architecture</comment>
   </data>
+  <data name="AgreementLabel_KeywordDescription" xml:space="preserve">
+    <value>The label of the Agreement. i.e. EULA, AgeRating, etc. This field should be localized. Either Agreement or AgreementUrl is required. When we show the agreements, we would Bold the AgreementLabel</value>
+  </data>
+  <data name="AgreementUrl_KeywordDescription" xml:space="preserve">
+    <value>The agreement URL</value>
+  </data>
+  <data name="Agreement_KeywordDescription" xml:space="preserve">
+    <value>The agreement text content</value>
+  </data>
+  <data name="AllowedMarkets_KeywordDescription" xml:space="preserve">
+    <value>The included installer target markets</value>
+  </data>
+  <data name="AppsAndFeaturesEntry_KeywordDescription" xml:space="preserve">
+    <value>Various key values under installer's ARP entry</value>
+  </data>
+  <data name="DisplayName_KeywordDescription" xml:space="preserve">
+    <value>The DisplayName registry value</value>
+  </data>
+  <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
+    <value>The installer's elevation requirement</value>
+  </data>
+  <data name="ExcludedMarkets_KeywordDescription" xml:space="preserve">
+    <value>The excluded installer target markets</value>
+  </data>
+  <data name="InstallerAbortsTerminal_KeywordDescription" xml:space="preserve">
+    <value>Indicates whether the installer will abort terminal. Default is false</value>
+  </data>
+  <data name="InstallLocationRequired_KeywordDescription" xml:space="preserve">
+    <value>Indicates whether the installer requires an install location provided</value>
+  </data>
+  <data name="Markets_KeywordDescription" xml:space="preserve">
+    <value>The installer markets</value>
+  </data>
+  <data name="ReleaseDate_KeywordDescription" xml:space="preserve">
+    <value>The installer release date</value>
+  </data>
+  <data name="ReleaseNotesUrl_KeywordDescription" xml:space="preserve">
+    <value>The package release notes url</value>
+  </data>
+  <data name="ReleaseNotes_KeywordDescription" xml:space="preserve">
+    <value>The package release notes</value>
+  </data>
+  <data name="RequireExplicitUpgrade_KeywordDescription" xml:space="preserve">
+    <value>Indicates whether the installer should be pinned by default from upgrade</value>
+  </data>
 </root>

@@ -218,6 +218,10 @@ namespace Microsoft.WingetCreateCLI
                 {
                     PromptEnum(model, property, elementType, false, message: message);
                 }
+                else if (elementType == typeof(bool))
+                {
+                    PromptBool(model, property, message);
+                }
             }
             else if (property.PropertyType.IsClass)
             {
@@ -439,6 +443,13 @@ namespace Microsoft.WingetCreateCLI
                     prop.SetValue(installer.Dependencies, list.DeepClone());
                 }
             }
+        }
+
+        private static void PromptBool(object model, PropertyInfo property, string message)
+        {
+            bool[] boolList = new[] { true, false };
+            var selectedValue = Prompt.Select(message, boolList);
+            property.SetValue(model, selectedValue);
         }
 
         private static void PromptEnum(object model, PropertyInfo property, Type enumType, bool required, string message, string defaultValue = null)
