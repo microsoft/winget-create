@@ -13,6 +13,7 @@ namespace Microsoft.WingetCreateCLI
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
+    using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Newtonsoft.Json;
     using Sharprompt;
@@ -22,6 +23,15 @@ namespace Microsoft.WingetCreateCLI
     /// </summary>
     public static class PromptHelper
     {
+        /// <summary>
+        /// Dictionary for storing the alternative names of fields. (Workaround for Agreement naming conflict).
+        /// </summary>
+        private static readonly Dictionary<string, string> FieldRenameDict = new Dictionary<string, string>
+        {
+            { nameof(Agreement.Agreement1), nameof(Agreement) },
+            { nameof(Agreement), nameof(Agreement.Agreement1) },
+        };
+
         private static readonly string[] NonEditableRequiredFields = new[]
         {
             nameof(InstallerManifest.PackageIdentifier),
@@ -106,7 +116,8 @@ namespace Microsoft.WingetCreateCLI
                 }
                 else
                 {
-                    var selectedProperty = properties.First(p => p.Name == selectedField);
+                    // Since some fields have conflicting naming (i.e. Agreement, Agreement1), we need to also check the JsonProperty.PropertyName value.
+                    var selectedProperty = properties.First(p => p.Name == selectedField || p.Name == p.GetCustomAttribute<JsonPropertyAttribute>().PropertyName);
                     PromptPropertyAndSetValue(model, selectedField, selectedProperty.GetValue(model));
                 }
             }
@@ -166,6 +177,12 @@ namespace Microsoft.WingetCreateCLI
             Type instanceType = typeof(T);
             string message = string.Format(Resources.FieldValueIs_Message, memberName);
             Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
+
+            // check if memberName goes by a different value:
+            if (FieldRenameDict.ContainsKey(memberName))
+            {
+                memberName = FieldRenameDict[memberName];
+            }
 
             if (instanceType == typeof(object))
             {
@@ -328,6 +345,16 @@ namespace Microsoft.WingetCreateCLI
                 .Where(pName =>
                     !NonEditableOptionalFields.Any(field => field == pName) &&
                     !NonEditableRequiredFields.Any(field => field == pName)).ToList();
+
+            // Replace any field names that need to be renamed
+            for (int i = 0; i < fieldList.Count; i++)
+            {
+                string item = fieldList[i];
+                if (FieldRenameDict.ContainsKey(item))
+                {
+                    fieldList[i] = FieldRenameDict[item];
+                }
+            }
 
             // Filter out fields if an installerType is present
             var installerTypeProperty = model.GetType().GetProperty(nameof(InstallerType));
