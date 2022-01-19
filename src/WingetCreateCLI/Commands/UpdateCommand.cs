@@ -224,7 +224,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             // Generate list of InstallerUpdate objects and parse out any specified architecture overrides.
-            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.ToList());
+            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.Select(i => i.Trim()).ToList());
 
             // If the installer update list is null there was an issue when parsing for architecture override.
             if (installerMetadataList == null)
