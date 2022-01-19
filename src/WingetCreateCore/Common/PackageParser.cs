@@ -47,6 +47,12 @@ namespace Microsoft.WingetCreateCore
             "nullsoft",
         };
 
+        private static readonly string[] AppxFileExtensions = new[]
+        {
+            ".appx",
+            ".appxbundle",
+        };
+
         private static HttpClient httpClient = new HttpClient();
 
         private enum MachineType
@@ -738,7 +744,7 @@ namespace Microsoft.WingetCreateCore
                 }
 
                 baseInstaller.SignatureSha256 = signatureSha256;
-                baseInstaller.InstallerType = InstallerType.Msix;
+                baseInstaller.InstallerType = AppxFileExtensions.Contains(Path.GetExtension(path)) ? InstallerType.Appx : InstallerType.Msix;
 
                 // Add installer nodes for MSIX installers
                 foreach (var appxMetadata in appxMetadatas)
