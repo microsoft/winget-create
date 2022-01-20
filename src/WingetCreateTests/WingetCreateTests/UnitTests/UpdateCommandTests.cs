@@ -392,6 +392,41 @@ namespace Microsoft.WingetCreateUnitTests
             }
         }
 
+        /// <summary>
+        /// Tests that the provided installer url with leading and trailing spaces is trimmed prior to being updated.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateWithUntrimmedInstallerUrl()
+        {
+            string untrimmedInstallerUrl = $"  https://fakedomain.com/{TestConstants.TestExeInstaller}   ";
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.SingleExe", "1.2.3.4", this.tempPath, new[] { untrimmedInstallerUrl });
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            Assert.AreNotEqual(untrimmedInstallerUrl, updatedManifests.InstallerManifest.Installers.First().InstallerUrl, "InstallerUrl was not trimmed prior to update.");
+        }
+
+        /// <summary>
+        /// Tests if a new installer has null values, the update does not overwrite existing values for ProductCode, PackageFamilyName, and Platform from the existing manifest.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdatePreservesExistingValues()
+        {
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.SingleExe", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}" });
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
+            Assert.AreEqual("FakeProductCode", updatedInstaller.ProductCode, "Existing value for ProductCode was overwritten.");
+            Assert.AreEqual("FakePackageFamilyName", updatedInstaller.PackageFamilyName, "Existing value for PackageFamilyName was overwritten.");
+            Assert.IsNotNull(updatedInstaller.Platform, "Existing value for Platform was overwritten.;");
+        }
+
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls)
         {
             var updateCommand = new UpdateCommand
