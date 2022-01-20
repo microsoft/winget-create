@@ -392,6 +392,25 @@ namespace Microsoft.WingetCreateUnitTests
             }
         }
 
+        /// <summary>
+        /// Tests when an update is unable to find an installerType match.
+        /// The matching logic must resort to using an alternative installerType to determine a match (i.e. appx -> msix).
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateWithAlternativeInstallerType()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithAlternativeInstallerType", null, this.tempPath, null);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            foreach (var updatedInstaller in updatedManifests.InstallerManifest.Installers)
+            {
+                Assert.AreEqual(InstallerType.Appx, updatedInstaller.InstallerType, "Msix installerType should be matched with Appx");
+            }
+        }
+
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls)
         {
             var updateCommand = new UpdateCommand

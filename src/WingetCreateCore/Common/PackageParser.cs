@@ -47,10 +47,10 @@ namespace Microsoft.WingetCreateCore
             "nullsoft",
         };
 
-        private static readonly string[] AppxFileExtensions = new[]
+        private static readonly Dictionary<InstallerType, InstallerType> AlternativeInstallerTypeDict = new Dictionary<InstallerType, InstallerType>
         {
-            ".appx",
-            ".appxbundle",
+            { InstallerType.Appx, InstallerType.Msix },
+            { InstallerType.Msix, InstallerType.Appx },
         };
 
         private static HttpClient httpClient = new HttpClient();
@@ -312,10 +312,18 @@ namespace Microsoft.WingetCreateCore
         {
             // If we can find an exact match by comparing the installerType and the override architecture, then return match.
             // Otherwise, continue and try matching based on arch detected from url and binary detection, as the user could be trying overwrite with a new architecture.
-            var archMatches = existingInstallers.Where(
+            var installerTypeMatches = existingInstallers.Where(
                 i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType);
 
-            var overrideArchMatches = archMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
+            // If there are no installerType matches, check if there is an alternative installerType (i.e. appx -> msix).
+            if (!installerTypeMatches.Any() && AlternativeInstallerTypeDict.ContainsKey(newInstaller.InstallerType.Value))
+            {
+                InstallerType alternativeInstallerType = AlternativeInstallerTypeDict[newInstaller.InstallerType.Value];
+                installerTypeMatches = existingInstallers.Where(
+                i => (i.InstallerType ?? installerManifest.InstallerType) == alternativeInstallerType);
+            }
+
+            var overrideArchMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
             if (overrideArchMatches.Count() == 1)
             {
                 return overrideArchMatches.Single();
@@ -325,8 +333,8 @@ namespace Microsoft.WingetCreateCore
 
             // Msixbundle installers can have multiple installers with different architectures
             // For those installers, the binaryArchitecture will be detected as null, therefore we default to the architecture specified in the newInstaller object.
-            var binaryArchMatches = archMatches.Where(i => i.Architecture == binaryArchitecture);
-            var urlArchMatches = archMatches.Where(i => i.Architecture == installerMetadata.UrlArchitecture);
+            var binaryArchMatches = installerTypeMatches.Where(i => i.Architecture == binaryArchitecture);
+            var urlArchMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.UrlArchitecture);
 
             int numOfBinaryArchMatches = binaryArchMatches.Count();
             int numOfUrlArchMatches = urlArchMatches.Count();
@@ -744,7 +752,7 @@ namespace Microsoft.WingetCreateCore
                 }
 
                 baseInstaller.SignatureSha256 = signatureSha256;
-                baseInstaller.InstallerType = AppxFileExtensions.Contains(Path.GetExtension(path)) ? InstallerType.Appx : InstallerType.Msix;
+                baseInstaller.InstallerType = InstallerType.Msix;
 
                 // Add installer nodes for MSIX installers
                 foreach (var appxMetadata in appxMetadatas)
