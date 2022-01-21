@@ -47,18 +47,20 @@ namespace Microsoft.WingetCreateCore
             "nullsoft",
         };
 
-        private static readonly Dictionary<InstallerType, InstallerType> AlternativeInstallerTypeDict = new Dictionary<InstallerType, InstallerType>
-        {
-            { InstallerType.Appx, InstallerType.Msix },
-            { InstallerType.Msix, InstallerType.Appx },
-        };
-
         private static HttpClient httpClient = new HttpClient();
 
         private enum MachineType
         {
             X86 = 0x014c,
             X64 = 0x8664,
+        }
+
+        private enum CompatibilitySet
+        {
+            None,
+            Exe,
+            Msi,
+            Msix,
         }
 
         /// <summary>
@@ -315,12 +317,11 @@ namespace Microsoft.WingetCreateCore
             var installerTypeMatches = existingInstallers.Where(
                 i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType);
 
-            // If there are no installerType matches, check if there is an alternative installerType (i.e. appx -> msix).
-            if (!installerTypeMatches.Any() && AlternativeInstallerTypeDict.ContainsKey(newInstaller.InstallerType.Value))
+            // If there are no exact installerType matches, check if there is a compatible installerType that can be matched.
+            if (!installerTypeMatches.Any())
             {
-                InstallerType alternativeInstallerType = AlternativeInstallerTypeDict[newInstaller.InstallerType.Value];
                 installerTypeMatches = existingInstallers.Where(
-                i => (i.InstallerType ?? installerManifest.InstallerType) == alternativeInstallerType);
+                i => IsCompatibleInstallerType(i.InstallerType ?? installerManifest.InstallerType, newInstaller.InstallerType));
             }
 
             var overrideArchMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
@@ -546,6 +547,58 @@ namespace Microsoft.WingetCreateCore
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Checks if the provided installerTypes are compatible.
+        /// </summary>
+        /// <param name="type1">First InstallerType.</param>
+        /// <param name="type2">Second InstallerType.</param>
+        /// <returns>A boolean value indicating whether the installerTypes are compatible.</returns>
+        private static bool IsCompatibleInstallerType(InstallerType? type1, InstallerType? type2)
+        {
+            if (!type1.HasValue || !type2.HasValue)
+            {
+                return false;
+            }
+
+            InstallerType installerType1 = type1.Value;
+            InstallerType installerType2 = type2.Value;
+
+            if (installerType1 == installerType2)
+            {
+                return true;
+            }
+
+            CompatibilitySet set1 = GetCompatibilitySet(installerType1);
+            CompatibilitySet set2 = GetCompatibilitySet(installerType2);
+
+            if (set1 == CompatibilitySet.None || set2 == CompatibilitySet.None)
+            {
+                return false;
+            }
+
+            return set1 == set2;
+        }
+
+        private static CompatibilitySet GetCompatibilitySet(InstallerType type)
+        {
+            switch (type)
+            {
+                case InstallerType.Inno:
+                case InstallerType.Nullsoft:
+                case InstallerType.Exe:
+                case InstallerType.Burn:
+                    return CompatibilitySet.Exe;
+                case InstallerType.Wix:
+                case InstallerType.Msi:
+                    return CompatibilitySet.Msi;
+                case InstallerType.Msix:
+                case InstallerType.Appx:
+                    return CompatibilitySet.Msix;
+                default:
+                    return CompatibilitySet.None;
+            }
         }
 
         private static bool ParseExeInstallerType(string path, Installer baseInstaller, List<Installer> newInstallers)

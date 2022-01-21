@@ -394,14 +394,14 @@ namespace Microsoft.WingetCreateUnitTests
 
         /// <summary>
         /// Tests when an update is unable to find an installerType match.
-        /// The matching logic must resort to using an alternative installerType to determine a match (i.e. appx -> msix).
+        /// The matching logic must resort to using a compatible installerType to determine a match (i.e. appx -> msix).
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task UpdateWithAlternativeInstallerType()
+        public async Task UpdateWithCompatibleInstallerType()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithAlternativeInstallerType", null, this.tempPath, null);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithCompatibleInstallerType", null, this.tempPath, null);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
