@@ -375,10 +375,12 @@ namespace Microsoft.WingetCreateCore
             existingInstaller.InstallerUrl = newInstaller.InstallerUrl;
             existingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
             existingInstaller.SignatureSha256 = newInstaller.SignatureSha256;
-            existingInstaller.ProductCode = newInstaller.ProductCode;
-            existingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion;
-            existingInstaller.PackageFamilyName = newInstaller.PackageFamilyName;
-            existingInstaller.Platform = newInstaller.Platform;
+
+            // If the newInstaller field value is null, we default to using the existingInstaller field value.
+            existingInstaller.ProductCode = newInstaller.ProductCode ?? existingInstaller.ProductCode;
+            existingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion ?? existingInstaller.MinimumOSVersion;
+            existingInstaller.PackageFamilyName = newInstaller.PackageFamilyName ?? existingInstaller.PackageFamilyName;
+            existingInstaller.Platform = newInstaller.Platform ?? existingInstaller.Platform;
         }
 
         /// <summary>
