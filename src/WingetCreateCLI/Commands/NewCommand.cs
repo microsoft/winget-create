@@ -268,7 +268,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var property in optionalProperties)
             {
-                if (property.Name == nameof(DefaultLocaleManifest.Agreements))
+                if (property.Name == nameof(DefaultLocaleManifest.Agreements) && !Prompt.Confirm("Would you like to edit the agreements field?"))
                 {
                     continue;
                 }
@@ -276,20 +276,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));
                 Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
             }
-
-            // Prompt for agreements separately after all other optional fields have been prompted for.
-            // way to add and remove items.
-
-
-            List<Agreement> agreements = new List<Agreement>();
-            while (Prompt.Confirm("Would you like to add an agreement?"))
-            {
-                Agreement agreement = new Agreement();
-                PromptHelper.PromptPropertiesWithMenu(agreement, Resources.SaveAndExit_MenuItem);
-            }
-
-            var agreementsProp = manifest.GetType().GetProperty(nameof(DefaultLocaleManifest.Agreements));
-
         }
 
         private static void PromptInstallerProperties<T>(T manifest, PropertyInfo property)

@@ -23,15 +23,6 @@ namespace Microsoft.WingetCreateCLI
     /// </summary>
     public static class PromptHelper
     {
-        /// <summary>
-        /// Dictionary for storing the alternative names of fields. (Workaround for Agreement naming conflict).
-        /// </summary>
-        private static readonly Dictionary<string, string> FieldRenameDict = new Dictionary<string, string>
-        {
-            { nameof(Agreement.Agreement1), nameof(Agreement) },
-            { nameof(Agreement), nameof(Agreement.Agreement1) },
-        };
-
         private static readonly string[] NonEditableRequiredFields = new[]
         {
             nameof(InstallerManifest.PackageIdentifier),
@@ -56,6 +47,8 @@ namespace Microsoft.WingetCreateCLI
             nameof(Installer.AdditionalProperties),
             nameof(Installer.Capabilities),
             nameof(Installer.RestrictedCapabilities),
+            nameof(Installer.ReleaseDate),  // Ignore due to bad model conversion from schema (ReleaseDate should be string type).
+            nameof(Agreement.Agreement1),   // Ignore due to bad model conversion from schema (Agreement1 property name should be Agreement).
         };
 
         private static readonly string[] MsixExclusionList = new[]
@@ -85,6 +78,8 @@ namespace Microsoft.WingetCreateCLI
             Console.Clear();
             var properties = model.GetType().GetProperties();
             var fieldList = FilterPropertiesAndCreateSelectionList(model, properties);
+
+
             if (!string.IsNullOrEmpty(modelName))
             {
                 fieldList.Add(Resources.DisplayPreview_MenuItem);
@@ -116,10 +111,84 @@ namespace Microsoft.WingetCreateCLI
                 }
                 else
                 {
-                    // Since some fields have conflicting naming (i.e. Agreement, Agreement1), we need to also check the JsonProperty.PropertyName value.
-                    var selectedProperty = properties.First(p => p.Name == selectedField || p.Name == p.GetCustomAttribute<JsonPropertyAttribute>().PropertyName);
+                    var selectedProperty = properties.First(p => p.Name == selectedField);
                     PromptPropertyAndSetValue(model, selectedField, selectedProperty.GetValue(model));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Displays a prompt selection menu for adding and editing items to a list of objects.
+        /// </summary>
+        /// <typeparam name="T">Model type.</typeparam>
+        /// <param name="model">Instance of object model.</param>
+        /// <param name="memberName">Name of the selected property field.</param>
+        public static void PromptListOfClassType<T>(object model, string memberName)
+            where T : new()
+        {
+            var property = model.GetType().GetProperty(memberName);
+            List<T> objectList = (List<T>)property.GetValue(model);
+            if (objectList == null)
+            {
+                objectList = new List<T>();
+            }
+
+            string name = objectList.GetType().GetGenericArguments().Single().Name;
+
+            while (true)
+            {
+                Console.Clear();
+                int count = 1;
+                Dictionary<string, T> selectionMap = new Dictionary<string, T>();
+                List<string> selectionList = new List<string>();
+                objectList.ForEach(item =>
+                    {
+                        string entryName = $"{name}{count}";
+                        selectionMap.Add(entryName, item);
+                        selectionList.Add(entryName);
+                        count++;
+                    });
+
+                if (objectList.Any())
+                {
+                    selectionList.AddRange(new[] { Resources.AddNewItem_MenuItem, Resources.RemoveLastItem_MenuItem, Resources.SaveAndExit_MenuItem });
+                }
+                else
+                {
+                    selectionList.AddRange(new[] { Resources.AddNewItem_MenuItem, Resources.SaveAndExit_MenuItem });
+                }
+
+                Console.WriteLine($"[{memberName}]: " + Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
+                var selectedItem = Prompt.Select(Resources.SelectItemToEdit_Message, selectionList);
+
+                if (selectedItem == Resources.SaveAndExit_MenuItem)
+                {
+                    break;
+                }
+                else if (selectedItem == Resources.AddNewItem_MenuItem)
+                {
+                    var item = new T();
+                    PromptPropertiesWithMenu(item, Resources.SaveAndExit_MenuItem);
+                    objectList.Add(item);
+                }
+                else if (selectedItem == Resources.RemoveLastItem_MenuItem)
+                {
+                    objectList.RemoveAt(objectList.Count - 1);
+                }
+                else
+                {
+                    var item = selectionMap[selectedItem];
+                    PromptPropertiesWithMenu(item, Resources.SaveAndExit_MenuItem);
+                }
+            }
+
+            if (!objectList.Any())
+            {
+                property.SetValue(model, null);
+            }
+            else
+            {
+                property.SetValue(model, objectList);
             }
         }
 
@@ -178,12 +247,6 @@ namespace Microsoft.WingetCreateCLI
             string message = string.Format(Resources.FieldValueIs_Message, memberName);
             Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
 
-            // check if memberName goes by a different value:
-            if (FieldRenameDict.ContainsKey(memberName))
-            {
-                memberName = FieldRenameDict[memberName];
-            }
-
             if (instanceType == typeof(object))
             {
                 // if the instance type is an object, obtain the type from the property.
@@ -194,12 +257,27 @@ namespace Microsoft.WingetCreateCLI
             {
                 // elementType is needed so that Prompt.List prompts for type T and not type List<T>
                 Type elementType = instanceType.GetGenericArguments().SingleOrDefault();
-                var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptList));
-                var generic = mi.MakeGenericMethod(elementType);
-                generic.Invoke(instance, new[] { message, model, memberName, instance, minimum, validationModel, validationName });
+                if (elementType.IsClass && elementType != typeof(string))
+                {
+                    var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptListOfClassType));
+                    var generic = mi.MakeGenericMethod(elementType);
+                    generic.Invoke(instance, new[] { model, memberName, model.GetType().GetProperty(memberName).GetValue(model) });
+                }
+                else
+                {
+                    var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptList));
+                    var generic = mi.MakeGenericMethod(elementType);
+                    generic.Invoke(instance, new[] { message, model, memberName, instance, minimum, validationModel, validationName });
+                }
             }
             else
             {
+                if (instanceType.IsEnum)
+                {
+                    // Default enum values need to be converted from long/int to Enum type to ensure type consistency for the generic method call.
+                    instance = (T)Enum.ToObject(instanceType, instance);
+                }
+
                 var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptValue));
                 var generic = mi.MakeGenericMethod(instanceType);
                 generic.Invoke(instance, new[] { message, model, memberName, instance });
@@ -220,7 +298,7 @@ namespace Microsoft.WingetCreateCLI
             Type instanceType = typeof(T);
             Type elementType;
 
-            if (instanceType == typeof(string))
+            if (instanceType == typeof(string) || instanceType == typeof(long))
             {
                 var result = Prompt.Input<T>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
                 property.SetValue(model, result);
@@ -345,16 +423,6 @@ namespace Microsoft.WingetCreateCLI
                 .Where(pName =>
                     !NonEditableOptionalFields.Any(field => field == pName) &&
                     !NonEditableRequiredFields.Any(field => field == pName)).ToList();
-
-            // Replace any field names that need to be renamed
-            for (int i = 0; i < fieldList.Count; i++)
-            {
-                string item = fieldList[i];
-                if (FieldRenameDict.ContainsKey(item))
-                {
-                    fieldList[i] = FieldRenameDict[item];
-                }
-            }
 
             // Filter out fields if an installerType is present
             var installerTypeProperty = model.GetType().GetProperty(nameof(InstallerType));

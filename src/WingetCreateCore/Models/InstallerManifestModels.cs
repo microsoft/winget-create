@@ -334,7 +334,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("ReleaseDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset? ReleaseDate { get; set; }
-    
+
         [Newtonsoft.Json.JsonProperty("InstallLocationRequired", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? InstallLocationRequired { get; set; }
     

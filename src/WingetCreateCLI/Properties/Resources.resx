@@ -817,7 +817,7 @@
   <data name="AllowedMarkets_KeywordDescription" xml:space="preserve">
     <value>The included installer target markets</value>
   </data>
-  <data name="AppsAndFeaturesEntry_KeywordDescription" xml:space="preserve">
+  <data name="AppsAndFeaturesEntries_KeywordDescription" xml:space="preserve">
     <value>Various key values under installer's ARP entry</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
@@ -849,5 +849,14 @@
   </data>
   <data name="RequireExplicitUpgrade_KeywordDescription" xml:space="preserve">
     <value>Indicates whether the installer should be pinned by default from upgrade</value>
+  </data>
+  <data name="AddNewItem_MenuItem" xml:space="preserve">
+    <value>ADD NEW ITEM</value>
+  </data>
+  <data name="RemoveLastItem_MenuItem" xml:space="preserve">
+    <value>REMOVE LAST ITEM</value>
+  </data>
+  <data name="SelectItemToEdit_Message" xml:space="preserve">
+    <value>Select an item to edit or add a new one</value>
   </data>
 </root>

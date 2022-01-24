@@ -88,6 +88,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ADD NEW ITEM.
+        /// </summary>
+        public static string AddNewItem_MenuItem {
+            get {
+                return ResourceManager.GetString("AddNewItem_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The agreement text content.
         /// </summary>
         public static string Agreement_KeywordDescription {
@@ -153,9 +162,9 @@ namespace Microsoft.WingetCreateCLI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Various key values under installer&apos;s ARP entry.
         /// </summary>
-        public static string AppsAndFeaturesEntry_KeywordDescription {
+        public static string AppsAndFeaturesEntries_KeywordDescription {
             get {
-                return ResourceManager.GetString("AppsAndFeaturesEntry_KeywordDescription", resourceCulture);
+                return ResourceManager.GetString("AppsAndFeaturesEntries_KeywordDescription", resourceCulture);
             }
         }
         
@@ -1627,6 +1636,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to REMOVE LAST ITEM.
+        /// </summary>
+        public static string RemoveLastItem_MenuItem {
+            get {
+                return ResourceManager.GetString("RemoveLastItem_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repository &quot;{0}/{1}&quot; not found. Please verify the Windows Package Manager repository owner and name in your settings file..
         /// </summary>
         public static string RepositoryNotFound_Error {
@@ -1713,6 +1731,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SelectInstallerToEdit_Message {
             get {
                 return ResourceManager.GetString("SelectInstallerToEdit_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select an item to edit or add a new one.
+        /// </summary>
+        public static string SelectItemToEdit_Message {
+            get {
+                return ResourceManager.GetString("SelectItemToEdit_Message", resourceCulture);
             }
         }
         

@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
-namespace Microsoft.WingetCreateCore.Models
+
+namespace Microsoft.WingetCreateCore.Models.Singleton
 {
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
 
     /// <summary>
     /// This partial class is a workaround to a known issue.
@@ -24,22 +24,5 @@ namespace Microsoft.WingetCreateCore.Models
         /// </summary>
         [System.ComponentModel.DataAnnotations.MaxLength(256)]
         public List<string> ExcludedMarkets { get; set; }
-    }
-
-    // Move this to its own custom validation folder/class
-    public class ValidateMarkets : ValidationAttribute
-    {
-        // Checks if the allowedmarket does not have any string values that overlap with the excludedmarkets and vice versa.
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            var model = (Markets2)validationContext.ObjectInstance;
-            return base.IsValid(value, validationContext);
-        }
-    }
-
-    public class ValidateDateTimeOffset : ValidationAttribute
-    {
-        // Checks if the datetime string entered can successfully be parsed, if not return the error to the user
-
     }
 }

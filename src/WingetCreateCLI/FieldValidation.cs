@@ -60,6 +60,10 @@ namespace Microsoft.WingetCreateCLI
                     // If the original type of the field is not a string, validate as a List<string>
                     property = items;
                 }
+                else if (type == typeof(long))
+                {
+                    property = long.Parse((string)property);
+                }
 
                 if (Validator.TryValidateProperty(property, validationContext, validationResults))
                 {
