@@ -115,6 +115,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The agreements for the package.
+        /// </summary>
+        public static string Agreements_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Agreements_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The agreement URL.
         /// </summary>
         public static string AgreementUrl_KeywordDescription {
@@ -516,6 +525,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string DownloadInstaller_Message {
             get {
                 return ResourceManager.GetString("DownloadInstaller_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to edit the Agreements field?.
+        /// </summary>
+        public static string EditAgreements_Message {
+            get {
+                return ResourceManager.GetString("EditAgreements_Message", resourceCulture);
             }
         }
         

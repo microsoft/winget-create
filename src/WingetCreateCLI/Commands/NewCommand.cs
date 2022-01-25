@@ -268,7 +268,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var property in optionalProperties)
             {
-                if (property.Name == nameof(DefaultLocaleManifest.Agreements) && !Prompt.Confirm("Would you like to edit the agreements field?"))
+                if (property.Name == nameof(DefaultLocaleManifest.Agreements) &&
+                    !Prompt.Confirm(Resources.EditAgreements_Message))
                 {
                     continue;
                 }

@@ -23,6 +23,10 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         }
     }
 
+    /// <summary>
+    /// Partial Installer class for defining a string type ReleaseDateTime field.
+    /// Workaround for issue with model generating ReleaseDate with DateTimeOffset type.
+    /// </summary>
     public partial class Installer
     {
         /// <summary>

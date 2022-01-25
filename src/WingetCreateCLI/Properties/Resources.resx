@@ -853,6 +853,13 @@
   <data name="AddNewItem_MenuItem" xml:space="preserve">
     <value>ADD NEW ITEM</value>
   </data>
+  <data name="Agreements_KeywordDescription" xml:space="preserve">
+    <value>The agreements for the package</value>
+  </data>
+  <data name="EditAgreements_Message" xml:space="preserve">
+    <value>Would you like to edit the Agreements field?</value>
+    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  </data>
   <data name="RemoveLastItem_MenuItem" xml:space="preserve">
     <value>REMOVE LAST ITEM</value>
   </data>

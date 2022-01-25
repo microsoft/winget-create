@@ -79,7 +79,6 @@ namespace Microsoft.WingetCreateCLI
             var properties = model.GetType().GetProperties();
             var fieldList = FilterPropertiesAndCreateSelectionList(model, properties);
 
-
             if (!string.IsNullOrEmpty(modelName))
             {
                 fieldList.Add(Resources.DisplayPreview_MenuItem);
@@ -261,7 +260,7 @@ namespace Microsoft.WingetCreateCLI
                 {
                     var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptListOfClassType));
                     var generic = mi.MakeGenericMethod(elementType);
-                    generic.Invoke(instance, new[] { model, memberName, model.GetType().GetProperty(memberName).GetValue(model) });
+                    generic.Invoke(instance, new[] { model, memberName });
                 }
                 else
                 {

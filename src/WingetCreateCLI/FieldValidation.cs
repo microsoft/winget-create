@@ -62,6 +62,7 @@ namespace Microsoft.WingetCreateCLI
                 }
                 else if (type == typeof(long))
                 {
+                    // Handles case if the property type is long.
                     property = long.Parse((string)property);
                 }
 
