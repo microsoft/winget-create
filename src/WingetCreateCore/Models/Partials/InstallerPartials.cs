@@ -33,8 +33,6 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         /// Gets or sets the Release Date time.
         /// </summary>
         [YamlMember(Alias = "ReleaseDate")]
-        [Newtonsoft.Json.JsonProperty("ReleaseDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         [RegularExpression(@"^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$")]
         public string ReleaseDateTime { get; set; }
     }
