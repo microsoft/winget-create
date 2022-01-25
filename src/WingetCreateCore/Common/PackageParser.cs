@@ -55,6 +55,14 @@ namespace Microsoft.WingetCreateCore
             X64 = 0x8664,
         }
 
+        private enum CompatibilitySet
+        {
+            None,
+            Exe,
+            Msi,
+            Msix,
+        }
+
         /// <summary>
         /// Gets or sets the path in the %TEMP% directory where installers are downloaded to.
         /// </summary>
@@ -306,10 +314,17 @@ namespace Microsoft.WingetCreateCore
         {
             // If we can find an exact match by comparing the installerType and the override architecture, then return match.
             // Otherwise, continue and try matching based on arch detected from url and binary detection, as the user could be trying overwrite with a new architecture.
-            var archMatches = existingInstallers.Where(
+            var installerTypeMatches = existingInstallers.Where(
                 i => (i.InstallerType ?? installerManifest.InstallerType) == newInstaller.InstallerType);
 
-            var overrideArchMatches = archMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
+            // If there are no exact installerType matches, check if there is a compatible installerType that can be matched.
+            if (!installerTypeMatches.Any())
+            {
+                installerTypeMatches = existingInstallers.Where(
+                i => IsCompatibleInstallerType(i.InstallerType ?? installerManifest.InstallerType, newInstaller.InstallerType));
+            }
+
+            var overrideArchMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
             if (overrideArchMatches.Count() == 1)
             {
                 return overrideArchMatches.Single();
@@ -319,8 +334,8 @@ namespace Microsoft.WingetCreateCore
 
             // Msixbundle installers can have multiple installers with different architectures
             // For those installers, the binaryArchitecture will be detected as null, therefore we default to the architecture specified in the newInstaller object.
-            var binaryArchMatches = archMatches.Where(i => i.Architecture == binaryArchitecture);
-            var urlArchMatches = archMatches.Where(i => i.Architecture == installerMetadata.UrlArchitecture);
+            var binaryArchMatches = installerTypeMatches.Where(i => i.Architecture == binaryArchitecture);
+            var urlArchMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.UrlArchitecture);
 
             int numOfBinaryArchMatches = binaryArchMatches.Count();
             int numOfUrlArchMatches = urlArchMatches.Count();
@@ -360,10 +375,12 @@ namespace Microsoft.WingetCreateCore
             existingInstaller.InstallerUrl = newInstaller.InstallerUrl;
             existingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
             existingInstaller.SignatureSha256 = newInstaller.SignatureSha256;
-            existingInstaller.ProductCode = newInstaller.ProductCode;
-            existingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion;
-            existingInstaller.PackageFamilyName = newInstaller.PackageFamilyName;
-            existingInstaller.Platform = newInstaller.Platform;
+
+            // If the newInstaller field value is null, we default to using the existingInstaller field value.
+            existingInstaller.ProductCode = newInstaller.ProductCode ?? existingInstaller.ProductCode;
+            existingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion ?? existingInstaller.MinimumOSVersion;
+            existingInstaller.PackageFamilyName = newInstaller.PackageFamilyName ?? existingInstaller.PackageFamilyName;
+            existingInstaller.Platform = newInstaller.Platform ?? existingInstaller.Platform;
         }
 
         /// <summary>
@@ -532,6 +549,58 @@ namespace Microsoft.WingetCreateCore
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Checks if the provided installerTypes are compatible.
+        /// </summary>
+        /// <param name="type1">First InstallerType.</param>
+        /// <param name="type2">Second InstallerType.</param>
+        /// <returns>A boolean value indicating whether the installerTypes are compatible.</returns>
+        private static bool IsCompatibleInstallerType(InstallerType? type1, InstallerType? type2)
+        {
+            if (!type1.HasValue || !type2.HasValue)
+            {
+                return false;
+            }
+
+            InstallerType installerType1 = type1.Value;
+            InstallerType installerType2 = type2.Value;
+
+            if (installerType1 == installerType2)
+            {
+                return true;
+            }
+
+            CompatibilitySet set1 = GetCompatibilitySet(installerType1);
+            CompatibilitySet set2 = GetCompatibilitySet(installerType2);
+
+            if (set1 == CompatibilitySet.None || set2 == CompatibilitySet.None)
+            {
+                return false;
+            }
+
+            return set1 == set2;
+        }
+
+        private static CompatibilitySet GetCompatibilitySet(InstallerType type)
+        {
+            switch (type)
+            {
+                case InstallerType.Inno:
+                case InstallerType.Nullsoft:
+                case InstallerType.Exe:
+                case InstallerType.Burn:
+                    return CompatibilitySet.Exe;
+                case InstallerType.Wix:
+                case InstallerType.Msi:
+                    return CompatibilitySet.Msi;
+                case InstallerType.Msix:
+                case InstallerType.Appx:
+                    return CompatibilitySet.Msix;
+                default:
+                    return CompatibilitySet.None;
+            }
         }
 
         private static bool ParseExeInstallerType(string path, Installer baseInstaller, List<Installer> newInstallers)
