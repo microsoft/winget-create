@@ -853,17 +853,41 @@
   <data name="AddNewItem_MenuItem" xml:space="preserve">
     <value>ADD NEW ITEM</value>
   </data>
+  <data name="AgreementContent_KeywordDescription" xml:space="preserve">
+    <value>The agreement text content</value>
+  </data>
   <data name="Agreements_KeywordDescription" xml:space="preserve">
     <value>The agreements for the package</value>
+  </data>
+  <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
+    <value>The DisplayVersion registry value</value>
   </data>
   <data name="EditAgreements_Message" xml:space="preserve">
     <value>Would you like to edit the Agreements field?</value>
     <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
   </data>
+  <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
+    <value>Installer exit codes for common errors</value>
+  </data>
+  <data name="InstallerReturnCode_KeywordDescription" xml:space="preserve">
+    <value>An exit code that can be returned by the installer after execution</value>
+  </data>
+  <data name="ReleaseDateTime_KeywordDescription" xml:space="preserve">
+    <value>The installer release date</value>
+  </data>
   <data name="RemoveLastItem_MenuItem" xml:space="preserve">
     <value>REMOVE LAST ITEM</value>
   </data>
+  <data name="ReturnResponse_KeywordDescription" xml:space="preserve">
+    <value>List of return responses for common errors</value>
+  </data>
   <data name="SelectItemToEdit_Message" xml:space="preserve">
     <value>Select an item to edit or add a new one</value>
+  </data>
+  <data name="UnsupportedOSArchitectures_KeywordDescription" xml:space="preserve">
+    <value>List of OS architectures the installer does not support</value>
+  </data>
+  <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
+    <value>UpgradeCode used for correlation of packages across sources</value>
   </data>
 </root>

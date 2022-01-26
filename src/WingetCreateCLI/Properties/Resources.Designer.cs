@@ -106,6 +106,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The agreement text content.
+        /// </summary>
+        public static string AgreementContent_KeywordDescription {
+            get {
+                return ResourceManager.GetString("AgreementContent_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The label of the Agreement. i.e. EULA, AgeRating, etc. This field should be localized. Either Agreement or AgreementUrl is required. When we show the agreements, we would Bold the AgreementLabel.
         /// </summary>
         public static string AgreementLabel_KeywordDescription {
@@ -475,6 +484,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The DisplayVersion registry value.
+        /// </summary>
+        public static string DisplayVersion_KeywordDescription {
+            get {
+                return ResourceManager.GetString("DisplayVersion_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DONE.
         /// </summary>
         public static string Done_MenuItem {
@@ -669,6 +687,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ExecutionPaused_Message {
             get {
                 return ResourceManager.GetString("ExecutionPaused_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installer exit codes for common errors.
+        /// </summary>
+        public static string ExpectedReturnCodes_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ExpectedReturnCodes_KeywordDescription", resourceCulture);
             }
         }
         
@@ -876,6 +903,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InstallerMatchFailedError_Message {
             get {
                 return ResourceManager.GetString("InstallerMatchFailedError_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exit code that can be returned by the installer after execution.
+        /// </summary>
+        public static string InstallerReturnCode_KeywordDescription {
+            get {
+                return ResourceManager.GetString("InstallerReturnCode_KeywordDescription", resourceCulture);
             }
         }
         
@@ -1627,6 +1663,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The installer release date.
+        /// </summary>
+        public static string ReleaseDateTime_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ReleaseDateTime_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package release notes.
         /// </summary>
         public static string ReleaseNotes_KeywordDescription {
@@ -1713,6 +1758,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string RetrievingManifest_Message {
             get {
                 return ResourceManager.GetString("RetrievingManifest_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List of return responses for common errors.
+        /// </summary>
+        public static string ReturnResponse_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ReturnResponse_KeywordDescription", resourceCulture);
             }
         }
         
@@ -2005,6 +2059,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List of OS architectures the installer does not support.
+        /// </summary>
+        public static string UnsupportedOSArchitectures_KeywordDescription {
+            get {
+                return ResourceManager.GetString("UnsupportedOSArchitectures_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The upgrade switches.
         /// </summary>
         public static string Update_KeywordDescription {
@@ -2055,6 +2118,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UpgradeBehavior_KeywordDescription {
             get {
                 return ResourceManager.GetString("UpgradeBehavior_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UpgradeCode used for correlation of packages across sources.
+        /// </summary>
+        public static string UpgradeCode_KeywordDescription {
+            get {
+                return ResourceManager.GetString("UpgradeCode_KeywordDescription", resourceCulture);
             }
         }
         
