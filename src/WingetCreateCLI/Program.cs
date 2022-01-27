@@ -20,6 +20,8 @@ namespace Microsoft.WingetCreateCLI
     /// </summary>
     internal class Program
     {
+        // Comment
+
         private static async Task<int> Main(string[] args)
         {
             Logger.Initialize();
