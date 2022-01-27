@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 
 namespace Microsoft.WingetCreateCore
@@ -650,26 +650,9 @@ namespace Microsoft.WingetCreateCore
         /// <returns>A boolean.</returns>
         private static bool IsWix(QDatabase installer)
         {
-            // Do any of the WiX properties exist?
-            foreach (var property in installer.Properties)
-            {
-                if (property.Property.ToLower().Contains("wix"))
-                {
-                    return true;
-                }
-            }
-
-            // Do any of the WiX tables exist?
-            foreach (var table in installer.Tables)
-            {
-                if (table.Name.ToLower().Contains("wix"))
-                {
-                    return true;
-                }
-            }
-
-            // Does the CreatingApp mention WiX?
             return
+                Array.Exists(installer.Tables.ToArray(), table => table.Name.ToLower().Contains("wix")) ||
+                Array.Exists(installer.Properties.ToArray(), property => property.Property.ToLower().Contains("wix") || property.Value.ToLower().Contains("wix")) ||
                 installer.SummaryInfo.CreatingApp.ToLower().Contains("wix") ||
                 installer.SummaryInfo.CreatingApp.ToLower().Contains("windows installer xml");
         }
