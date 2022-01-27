@@ -651,7 +651,9 @@ namespace Microsoft.WingetCreateCore
             {
                 using (var database = new QDatabase(path, Deployment.WindowsInstaller.DatabaseOpenMode.ReadOnly))
                 {
-                    baseInstaller.InstallerType = InstallerType.Msi;
+                    baseInstaller.InstallerType = database.SummaryInfo.CreatingApp.Contains("Windows Installer XML")
+                        ? InstallerType.Wix
+                        : InstallerType.Msi;
 
                     var properties = database.Properties.ToList();
 
