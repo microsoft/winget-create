@@ -651,8 +651,8 @@ namespace Microsoft.WingetCreateCore
         private static bool IsWix(QDatabase installer)
         {
             return
-                Array.Exists(installer.Tables.ToArray(), table => table.Name.ToLower().Contains("wix")) ||
-                Array.Exists(installer.Properties.ToArray(), property => property.Property.ToLower().Contains("wix") || property.Value.ToLower().Contains("wix")) ||
+                installer.Tables.AsEnumerable().Any(table => table.Name.ToLower().Contains("wix")) ||
+                installer.Properties.AsEnumerable().Any(property => property.Property.ToLower().Contains("wix") || property.Value.ToLower().Contains("wix")) ||
                 installer.SummaryInfo.CreatingApp.ToLower().Contains("wix") ||
                 installer.SummaryInfo.CreatingApp.ToLower().Contains("windows installer xml");
         }
