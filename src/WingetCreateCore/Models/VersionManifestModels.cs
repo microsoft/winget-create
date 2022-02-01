@@ -30,7 +30,7 @@ namespace Microsoft.WingetCreateCore.Models.Version
         [Newtonsoft.Json.JsonProperty("DefaultLocale", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(20)]
-        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*$")]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([a-zA-Z]{2,3}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*$")]
         public string DefaultLocale { get; set; } = "en-US";
     
         /// <summary>The manifest type</summary>

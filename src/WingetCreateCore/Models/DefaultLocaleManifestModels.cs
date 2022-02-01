@@ -35,8 +35,6 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
     }
     
     /// <summary>A representation of a multiple-file manifest representing a default app metadata in the OWC. v1.1.0</summary>
@@ -61,7 +59,7 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
         [Newtonsoft.Json.JsonProperty("PackageLocale", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(20)]
-        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*$")]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([a-zA-Z]{2,3}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*$")]
         public string PackageLocale { get; set; } = "en-US";
     
         /// <summary>The publisher name</summary>
@@ -183,7 +181,5 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
     }
 }

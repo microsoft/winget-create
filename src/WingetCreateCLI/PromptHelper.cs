@@ -256,7 +256,7 @@ namespace Microsoft.WingetCreateCLI
             {
                 // elementType is needed so that Prompt.List prompts for type T and not type List<T>
                 Type elementType = instanceType.GetGenericArguments().SingleOrDefault();
-                if (elementType.IsClass && elementType != typeof(string))
+                if (elementType.IsNonStringClassType())
                 {
                     var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptListOfClassType));
                     var generic = mi.MakeGenericMethod(elementType);

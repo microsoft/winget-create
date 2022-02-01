@@ -18,6 +18,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
@@ -268,10 +269,14 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var property in optionalProperties)
             {
-                if (property.Name == nameof(DefaultLocaleManifest.Agreements) &&
-                    !Prompt.Confirm(Resources.EditAgreements_Message))
+                Type type = property.PropertyType;
+                if (type.IsEnumerable())
                 {
-                    continue;
+                    Type elementType = type.GetGenericArguments().SingleOrDefault();
+                    if (elementType.IsNonStringClassType() && !Prompt.Confirm(Resources.EditAgreements_Message))
+                    {
+                        continue;
+                    }
                 }
 
                 PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));

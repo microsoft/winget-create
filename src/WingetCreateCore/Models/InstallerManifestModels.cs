@@ -231,7 +231,8 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     public partial class Installer 
     {
         [Newtonsoft.Json.JsonProperty("InstallerLocale", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(20, MinimumLength = 1)]
+        [System.ComponentModel.DataAnnotations.StringLength(20)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([a-zA-Z]{2,3}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*$")]
         public string InstallerLocale { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Platform", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
@@ -334,7 +335,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("ReleaseDate", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
         public System.DateTimeOffset? ReleaseDate { get; set; }
-
+    
         [Newtonsoft.Json.JsonProperty("InstallLocationRequired", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? InstallLocationRequired { get; set; }
     
@@ -385,7 +386,8 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         public string Channel { get; set; }
     
         [Newtonsoft.Json.JsonProperty("InstallerLocale", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(20, MinimumLength = 1)]
+        [System.ComponentModel.DataAnnotations.StringLength(20)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([a-zA-Z]{2,3}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*$")]
         public string InstallerLocale { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Platform", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]

@@ -5,7 +5,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
+    using Microsoft.WingetCreateCore.Models.CustomValidation;
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -33,7 +33,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         /// Gets or sets the Release Date time.
         /// </summary>
         [YamlMember(Alias = "ReleaseDate")]
-        [RegularExpression(@"^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$")]
+        [DateTimeValidation]
         public string ReleaseDateTime { get; set; }
     }
 
