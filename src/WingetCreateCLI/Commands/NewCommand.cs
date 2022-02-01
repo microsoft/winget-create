@@ -269,6 +269,16 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var property in optionalProperties)
             {
+                Type type = property.PropertyType;
+                if (type.IsEnumerable())
+                {
+                    Type elementType = type.GetGenericArguments().SingleOrDefault();
+                    if (elementType.IsNonStringClassType() && !Prompt.Confirm(Resources.EditAgreements_Message))
+                    {
+                        continue;
+                    }
+                }
+
                 PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));
                 Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
             }

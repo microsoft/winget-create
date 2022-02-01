@@ -5,6 +5,7 @@ namespace Microsoft.WingetCreateUnitTests
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
@@ -21,6 +22,15 @@ namespace Microsoft.WingetCreateUnitTests
     /// </summary>
     public class LocalizationTests
     {
+        /// <summary>
+        /// List of property names that are not used and therefore do not require a localized string.
+        /// </summary>
+        private readonly List<string> ignoreLocalizedProperties = new List<string>()
+        {
+            nameof(WingetCreateCore.Models.DefaultLocale.Agreement.Agreement1),
+            nameof(WingetCreateCore.Models.Installer.Installer.ReleaseDate),
+        };
+
         /// <summary>
         /// Verifies that all localized strings exist for every property that exists
         /// in the Manifest object model.
@@ -109,6 +119,11 @@ namespace Microsoft.WingetCreateUnitTests
         {
             foreach (PropertyInfo property in type.GetProperties())
             {
+                if (this.ignoreLocalizedProperties.Contains(property.Name))
+                {
+                    continue;
+                }
+
                 if (property.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
                 {
                     // Checks properties for objects inside a collection

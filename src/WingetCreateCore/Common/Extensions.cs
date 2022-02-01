@@ -106,6 +106,37 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
+        /// Determine if a type is scalar.
+        /// </summary>
+        /// <param name="t">Type to be evaluated.</param>
+        /// <returns>Boolean value indicating whether the object type is scalar.</returns>
+        public static bool IsScalarType(this Type t)
+        {
+            switch (Type.GetTypeCode(t))
+            {
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Determine if a type is a non-string class type.
+        /// </summary>
+        /// <param name="t">Type to be evaluated.</param>
+        /// <returns>Boolean value indicating whether the type is a non-string class type.</returns>
+        public static bool IsNonStringClassType(this Type t)
+        {
+            return t.IsClass && t != typeof(string);
+        }
+
+        /// <summary>
         /// Creates a new List object that is a deep clone copy of the current list object instance.
         /// </summary>
         /// <param name="list">List object to be cloned.</param>
