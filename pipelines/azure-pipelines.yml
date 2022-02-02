@@ -113,28 +113,6 @@ jobs:
           verbosity: "Verbose"
           alertWarningLevel: "High"
 
-      - task: notice@0
-        displayName: "NOTICE File Generator"
-        inputs:
-          outputfile: "$(System.DefaultWorkingDirectory)/temp/NOTICE.txt"
-          outputformat: "text"
-
-      - bash: |
-          echo "Diffing existing NOTICE.txt with generated version"
-          diff -w NOTICE.txt temp/NOTICE.txt
-          if [[ $? -ne 0 ]];
-          then
-            echo "Notice file modified"
-            echo "*******************************************************************************************************"
-            echo "Download the updated NOTICE.txt from the build artifacts and update the file in your PR, then re-submit"
-            echo "*******************************************************************************************************"
-            exit 1
-          else
-            echo "Notice file not modified."
-          fi
-        displayName: "Trigger build warning if NOTICE.txt file needs to be modified."
-        continueOnError: "true"
-
       - task: VSTest@2
         displayName: Run Tests
         inputs:
