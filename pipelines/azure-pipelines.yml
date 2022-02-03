@@ -135,6 +135,7 @@ jobs:
           fi
         displayName: "Trigger build warning if NOTICE.txt file needs to be modified."
         condition: not(eq(variables['Build.Reason'], 'PullRequest'))
+        continueOnError: "true"
 
       - task: VSTest@2
         displayName: Run Tests
