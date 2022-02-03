@@ -557,14 +557,15 @@ SOFTWARE.
 
 ---------------------------------------------------------
 
-Microsoft.WindowsPackageManager.Utils 0.2.8 - MIT
+Microsoft.WindowsPackageManager.Utils 1.1.6 - MIT
 
 
 (c) 2008 VeriSign, Inc.
 (c) Microsoft Corporation.
 CopyrightUrl ShortDescription
 Copyright (c) Microsoft Corporation
-CopyrightUrl ShortDescription WindowsFeatures
+CopyrightUrl ShortDescription Agreements
+CopyrightUrl Copyright Agreements ShortDescription
 CopyrightInfo AbstractInfo FormattingImplementationInfo
 
 MIT License
