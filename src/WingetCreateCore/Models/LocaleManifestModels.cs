@@ -8,7 +8,38 @@ namespace Microsoft.WingetCreateCore.Models.Locale
 {
     #pragma warning disable // Disable all warnings
 
-    /// <summary>A representation of a multiple-file manifest representing app metadata in other locale in the OWC. v1.0.0</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class Agreement 
+    {
+        /// <summary>The label of the Agreement. i.e. EULA, AgeRating, etc. This field should be localized. Either Agreement or AgreementUrl is required. When we show the agreements, we would Bold the AgreementLabel</summary>
+        [Newtonsoft.Json.JsonProperty("AgreementLabel", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(100, MinimumLength = 1)]
+        public string AgreementLabel { get; set; }
+    
+        /// <summary>The agreement text content.</summary>
+        [Newtonsoft.Json.JsonProperty("Agreement", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(10000, MinimumLength = 1)]
+        public string Agreement1 { get; set; }
+    
+        /// <summary>The agreement URL.</summary>
+        [Newtonsoft.Json.JsonProperty("AgreementUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(2048)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
+        public string AgreementUrl { get; set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
+    
+    
+    }
+    
+    /// <summary>A representation of a multiple-file manifest representing app metadata in other locale in the OWC. v1.1.0</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class LocaleManifest 
     {
@@ -30,7 +61,7 @@ namespace Microsoft.WingetCreateCore.Models.Locale
         [Newtonsoft.Json.JsonProperty("PackageLocale", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(20)]
-        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([a-zA-Z]{2}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*$")]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([a-zA-Z]{2,3}|[iI]-[a-zA-Z]+|[xX]-[a-zA-Z]{1,8})(-[a-zA-Z]{1,8})*$")]
         public string PackageLocale { get; set; }
     
         /// <summary>The publisher name</summary>
@@ -104,15 +135,25 @@ namespace Microsoft.WingetCreateCore.Models.Locale
         [System.ComponentModel.DataAnnotations.StringLength(10000, MinimumLength = 3)]
         public string Description { get; set; }
     
-        /// <summary>The most common package term</summary>
-        [Newtonsoft.Json.JsonProperty("Moniker", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(40, MinimumLength = 1)]
-        public string Moniker { get; set; }
-    
         /// <summary>List of additional package search terms</summary>
         [Newtonsoft.Json.JsonProperty("Tags", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(16)]
         public System.Collections.Generic.List<string> Tags { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Agreements", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.MaxLength(128)]
+        public System.Collections.Generic.List<Agreement> Agreements { get; set; }
+    
+        /// <summary>The package release notes</summary>
+        [Newtonsoft.Json.JsonProperty("ReleaseNotes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(10000, MinimumLength = 1)]
+        public string ReleaseNotes { get; set; }
+    
+        /// <summary>The package release notes url</summary>
+        [Newtonsoft.Json.JsonProperty("ReleaseNotesUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(2048)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
+        public string ReleaseNotesUrl { get; set; }
     
         /// <summary>The manifest type</summary>
         [Newtonsoft.Json.JsonProperty("ManifestType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -123,7 +164,7 @@ namespace Microsoft.WingetCreateCore.Models.Locale
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.0.0";
+        public string ManifestVersion { get; set; } = "1.1.0";
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     

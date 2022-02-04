@@ -115,6 +115,7 @@ jobs:
 
       - task: notice@0
         displayName: "NOTICE File Generator"
+        condition: not(eq(variables['Build.Reason'], 'PullRequest'))
         inputs:
           outputfile: "$(System.DefaultWorkingDirectory)/temp/NOTICE.txt"
           outputformat: "text"
@@ -133,6 +134,7 @@ jobs:
             echo "Notice file not modified."
           fi
         displayName: "Trigger build warning if NOTICE.txt file needs to be modified."
+        condition: not(eq(variables['Build.Reason'], 'PullRequest'))
         continueOnError: "true"
 
       - task: VSTest@2

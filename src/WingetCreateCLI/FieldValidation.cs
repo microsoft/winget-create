@@ -7,6 +7,7 @@ namespace Microsoft.WingetCreateCLI
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using Microsoft.WingetCreateCore.Common;
 
     /// <summary>
     /// Provides functionality for validating properties of the manifest object model.
@@ -35,6 +36,7 @@ namespace Microsoft.WingetCreateCLI
                 Type type = instance.GetType().GetProperty(memberName).PropertyType;
                 List<ValidationResult> validationResults = new List<ValidationResult>();
 
+                // Handles case for string and list<string> types.
                 if (typeof(IEnumerable<string>).IsAssignableFrom(type) || (defaultValue != null && typeof(IEnumerable<string>).IsAssignableFrom(defaultValue.GetType())))
                 {
                     // If the user didn't provide a value, check if null is allowed for field
@@ -59,6 +61,13 @@ namespace Microsoft.WingetCreateCLI
 
                     // If the original type of the field is not a string, validate as a List<string>
                     property = items;
+                }
+                else if (type.IsScalarType())
+                {
+                    if (type == typeof(long))
+                    {
+                        property = long.Parse((string)property);
+                    }
                 }
 
                 if (Validator.TryValidateProperty(property, validationContext, validationResults))

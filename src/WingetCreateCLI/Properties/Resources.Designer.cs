@@ -88,11 +88,74 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ADD NEW ITEM.
+        /// </summary>
+        public static string AddNewItem_MenuItem {
+            get {
+                return ResourceManager.GetString("AddNewItem_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The agreement text content.
+        /// </summary>
+        public static string Agreement_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Agreement_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The agreement text content.
+        /// </summary>
+        public static string AgreementContent_KeywordDescription {
+            get {
+                return ResourceManager.GetString("AgreementContent_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The label of the Agreement. i.e. EULA, AgeRating, etc. This field should be localized. Either Agreement or AgreementUrl is required. When we show the agreements, we would Bold the AgreementLabel.
+        /// </summary>
+        public static string AgreementLabel_KeywordDescription {
+            get {
+                return ResourceManager.GetString("AgreementLabel_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The agreements for the package.
+        /// </summary>
+        public static string Agreements_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Agreements_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The agreement URL.
+        /// </summary>
+        public static string AgreementUrl_KeywordDescription {
+            get {
+                return ResourceManager.GetString("AgreementUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ALL INSTALLERS.
         /// </summary>
         public static string AllInstallers_MenuItem {
             get {
                 return ResourceManager.GetString("AllInstallers_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The included installer target markets.
+        /// </summary>
+        public static string AllowedMarkets_KeywordDescription {
+            get {
+                return ResourceManager.GetString("AllowedMarkets_KeywordDescription", resourceCulture);
             }
         }
         
@@ -111,6 +174,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string AppMoniker_KeywordDescription {
             get {
                 return ResourceManager.GetString("AppMoniker_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Various key values under installer&apos;s ARP entry.
+        /// </summary>
+        public static string AppsAndFeaturesEntries_KeywordDescription {
+            get {
+                return ResourceManager.GetString("AppsAndFeaturesEntries_KeywordDescription", resourceCulture);
             }
         }
         
@@ -376,6 +448,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The DisplayName registry value.
+        /// </summary>
+        public static string DisplayName_KeywordDescription {
+            get {
+                return ResourceManager.GetString("DisplayName_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DISPLAY PREVIEW.
         /// </summary>
         public static string DisplayPreview_MenuItem {
@@ -399,6 +480,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string DisplayPreviewOfSelectedInstaller_Message {
             get {
                 return ResourceManager.GetString("DisplayPreviewOfSelectedInstaller_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The DisplayVersion registry value.
+        /// </summary>
+        public static string DisplayVersion_KeywordDescription {
+            get {
+                return ResourceManager.GetString("DisplayVersion_KeywordDescription", resourceCulture);
             }
         }
         
@@ -457,11 +547,29 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to edit the Agreements field?.
+        /// </summary>
+        public static string EditAgreements_Message {
+            get {
+                return ResourceManager.GetString("EditAgreements_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Would you like to edit your manifests?.
         /// </summary>
         public static string EditManifests_Message {
             get {
                 return ResourceManager.GetString("EditManifests_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The installer&apos;s elevation requirement.
+        /// </summary>
+        public static string ElevationRequirement_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ElevationRequirement_KeywordDescription", resourceCulture);
             }
         }
         
@@ -565,11 +673,29 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The excluded installer target markets.
+        /// </summary>
+        public static string ExcludedMarkets_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ExcludedMarkets_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Execution of the command is paused until the GitHub login has been completed. .
         /// </summary>
         public static string ExecutionPaused_Message {
             get {
                 return ResourceManager.GetString("ExecutionPaused_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installer exit codes for common errors.
+        /// </summary>
+        public static string ExpectedReturnCodes_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ExpectedReturnCodes_KeywordDescription", resourceCulture);
             }
         }
         
@@ -709,6 +835,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Indicates whether the installer will abort terminal. Default is false.
+        /// </summary>
+        public static string InstallerAbortsTerminal_KeywordDescription {
+            get {
+                return ResourceManager.GetString("InstallerAbortsTerminal_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installer target architecture.
         /// </summary>
         public static string InstallerArchitecture_KeywordDescription {
@@ -768,6 +903,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InstallerMatchFailedError_Message {
             get {
                 return ResourceManager.GetString("InstallerMatchFailedError_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exit code that can be returned by the installer after execution.
+        /// </summary>
+        public static string InstallerReturnCode_KeywordDescription {
+            get {
+                return ResourceManager.GetString("InstallerReturnCode_KeywordDescription", resourceCulture);
             }
         }
         
@@ -867,6 +1011,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InstallLocation_KeywordDescription {
             get {
                 return ResourceManager.GetString("InstallLocation_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates whether the installer requires an install location provided.
+        /// </summary>
+        public static string InstallLocationRequired_KeywordDescription {
+            get {
+                return ResourceManager.GetString("InstallLocationRequired_KeywordDescription", resourceCulture);
             }
         }
         
@@ -1047,6 +1200,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ManifestVersion_KeywordDescription {
             get {
                 return ResourceManager.GetString("ManifestVersion_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The installer markets.
+        /// </summary>
+        public static string Markets_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Markets_KeywordDescription", resourceCulture);
             }
         }
         
@@ -1492,6 +1654,42 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The installer release date.
+        /// </summary>
+        public static string ReleaseDate_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ReleaseDate_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The installer release date.
+        /// </summary>
+        public static string ReleaseDateTime_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ReleaseDateTime_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The package release notes.
+        /// </summary>
+        public static string ReleaseNotes_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ReleaseNotes_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The package release notes url.
+        /// </summary>
+        public static string ReleaseNotesUrl_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ReleaseNotesUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to REMOVE LAST ENTRY.
         /// </summary>
         public static string RemoveLastEntry_MenuItem {
@@ -1501,11 +1699,29 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to REMOVE LAST ITEM.
+        /// </summary>
+        public static string RemoveLastItem_MenuItem {
+            get {
+                return ResourceManager.GetString("RemoveLastItem_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repository &quot;{0}/{1}&quot; not found. Please verify the Windows Package Manager repository owner and name in your settings file..
         /// </summary>
         public static string RepositoryNotFound_Error {
             get {
                 return ResourceManager.GetString("RepositoryNotFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates whether the installer should be pinned by default from upgrade.
+        /// </summary>
+        public static string RequireExplicitUpgrade_KeywordDescription {
+            get {
+                return ResourceManager.GetString("RequireExplicitUpgrade_KeywordDescription", resourceCulture);
             }
         }
         
@@ -1546,6 +1762,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List of return responses for common errors.
+        /// </summary>
+        public static string ReturnResponse_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ReturnResponse_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SAVE AND EXIT.
         /// </summary>
         public static string SaveAndExit_MenuItem {
@@ -1578,6 +1803,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SelectInstallerToEdit_Message {
             get {
                 return ResourceManager.GetString("SelectInstallerToEdit_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select an item to edit or add a new one.
+        /// </summary>
+        public static string SelectItemToEdit_Message {
+            get {
+                return ResourceManager.GetString("SelectItemToEdit_Message", resourceCulture);
             }
         }
         
@@ -1825,6 +2059,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List of OS architectures the installer does not support.
+        /// </summary>
+        public static string UnsupportedOSArchitectures_KeywordDescription {
+            get {
+                return ResourceManager.GetString("UnsupportedOSArchitectures_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The upgrade switches.
         /// </summary>
         public static string Update_KeywordDescription {
@@ -1875,6 +2118,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UpgradeBehavior_KeywordDescription {
             get {
                 return ResourceManager.GetString("UpgradeBehavior_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UpgradeCode used for correlation of packages across sources.
+        /// </summary>
+        public static string UpgradeCode_KeywordDescription {
+            get {
+                return ResourceManager.GetString("UpgradeCode_KeywordDescription", resourceCulture);
             }
         }
         

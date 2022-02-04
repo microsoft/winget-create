@@ -13,6 +13,7 @@ namespace Microsoft.WingetCreateCLI
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
+    using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Newtonsoft.Json;
     using Sharprompt;
@@ -46,6 +47,8 @@ namespace Microsoft.WingetCreateCLI
             nameof(Installer.AdditionalProperties),
             nameof(Installer.Capabilities),
             nameof(Installer.RestrictedCapabilities),
+            nameof(Installer.ReleaseDate),  // Ignore due to bad model conversion from schema (ReleaseDate should be string type).
+            nameof(Agreement.Agreement1),   // Ignore due to bad model conversion from schema (Agreement1 property name should be Agreement).
         };
 
         private static readonly string[] MsixExclusionList = new[]
@@ -75,6 +78,7 @@ namespace Microsoft.WingetCreateCLI
             Console.Clear();
             var properties = model.GetType().GetProperties();
             var fieldList = FilterPropertiesAndCreateSelectionList(model, properties);
+
             if (!string.IsNullOrEmpty(modelName))
             {
                 fieldList.Add(Resources.DisplayPreview_MenuItem);
@@ -109,6 +113,81 @@ namespace Microsoft.WingetCreateCLI
                     var selectedProperty = properties.First(p => p.Name == selectedField);
                     PromptPropertyAndSetValue(model, selectedField, selectedProperty.GetValue(model));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Displays a prompt selection menu for adding and editing items to a list of objects.
+        /// </summary>
+        /// <typeparam name="T">Model type.</typeparam>
+        /// <param name="model">Instance of object model.</param>
+        /// <param name="memberName">Name of the selected property field.</param>
+        public static void PromptListOfClassType<T>(object model, string memberName)
+            where T : new()
+        {
+            var property = model.GetType().GetProperty(memberName);
+            List<T> objectList = (List<T>)property.GetValue(model);
+            if (objectList == null)
+            {
+                objectList = new List<T>();
+            }
+
+            string name = objectList.GetType().GetGenericArguments().Single().Name;
+
+            while (true)
+            {
+                Console.Clear();
+                int count = 1;
+                Dictionary<string, T> selectionMap = new Dictionary<string, T>();
+                List<string> selectionList = new List<string>();
+                objectList.ForEach(item =>
+                    {
+                        string entryName = $"{name}{count}";
+                        selectionMap.Add(entryName, item);
+                        selectionList.Add(entryName);
+                        count++;
+                    });
+
+                if (objectList.Any())
+                {
+                    selectionList.AddRange(new[] { Resources.AddNewItem_MenuItem, Resources.RemoveLastItem_MenuItem, Resources.SaveAndExit_MenuItem });
+                }
+                else
+                {
+                    selectionList.AddRange(new[] { Resources.AddNewItem_MenuItem, Resources.SaveAndExit_MenuItem });
+                }
+
+                Console.WriteLine($"[{memberName}]: " + Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
+                var selectedItem = Prompt.Select(Resources.SelectItemToEdit_Message, selectionList);
+
+                if (selectedItem == Resources.SaveAndExit_MenuItem)
+                {
+                    break;
+                }
+                else if (selectedItem == Resources.AddNewItem_MenuItem)
+                {
+                    var item = new T();
+                    PromptPropertiesWithMenu(item, Resources.SaveAndExit_MenuItem);
+                    objectList.Add(item);
+                }
+                else if (selectedItem == Resources.RemoveLastItem_MenuItem)
+                {
+                    objectList.RemoveAt(objectList.Count - 1);
+                }
+                else
+                {
+                    var item = selectionMap[selectedItem];
+                    PromptPropertiesWithMenu(item, Resources.SaveAndExit_MenuItem);
+                }
+            }
+
+            if (!objectList.Any())
+            {
+                property.SetValue(model, null);
+            }
+            else
+            {
+                property.SetValue(model, objectList);
             }
         }
 
@@ -177,12 +256,27 @@ namespace Microsoft.WingetCreateCLI
             {
                 // elementType is needed so that Prompt.List prompts for type T and not type List<T>
                 Type elementType = instanceType.GetGenericArguments().SingleOrDefault();
-                var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptList));
-                var generic = mi.MakeGenericMethod(elementType);
-                generic.Invoke(instance, new[] { message, model, memberName, instance, minimum, validationModel, validationName });
+                if (elementType.IsNonStringClassType())
+                {
+                    var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptListOfClassType));
+                    var generic = mi.MakeGenericMethod(elementType);
+                    generic.Invoke(instance, new[] { model, memberName });
+                }
+                else
+                {
+                    var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptList));
+                    var generic = mi.MakeGenericMethod(elementType);
+                    generic.Invoke(instance, new[] { message, model, memberName, instance, minimum, validationModel, validationName });
+                }
             }
             else
             {
+                if (instanceType.IsEnum)
+                {
+                    // Default enum values need to be converted from long/int to Enum type to ensure type consistency for the generic method call.
+                    instance = (T)Enum.ToObject(instanceType, instance);
+                }
+
                 var mi = typeof(PromptHelper).GetMethod(nameof(PromptHelper.PromptValue));
                 var generic = mi.MakeGenericMethod(instanceType);
                 generic.Invoke(instance, new[] { message, model, memberName, instance });
@@ -203,7 +297,7 @@ namespace Microsoft.WingetCreateCLI
             Type instanceType = typeof(T);
             Type elementType;
 
-            if (instanceType == typeof(string))
+            if (instanceType == typeof(string) || instanceType == typeof(long))
             {
                 var result = Prompt.Input<T>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
                 property.SetValue(model, result);
@@ -217,6 +311,10 @@ namespace Microsoft.WingetCreateCLI
                 if (elementType.IsEnum)
                 {
                     PromptEnum(model, property, elementType, false, message: message);
+                }
+                else if (elementType == typeof(bool))
+                {
+                    PromptBool(model, property, message);
                 }
             }
             else if (property.PropertyType.IsClass)
@@ -439,6 +537,13 @@ namespace Microsoft.WingetCreateCLI
                     prop.SetValue(installer.Dependencies, list.DeepClone());
                 }
             }
+        }
+
+        private static void PromptBool(object model, PropertyInfo property, string message)
+        {
+            bool[] boolList = new[] { true, false };
+            var selectedValue = Prompt.Select(message, boolList);
+            property.SetValue(model, selectedValue);
         }
 
         private static void PromptEnum(object model, PropertyInfo property, Type enumType, bool required, string message, string defaultValue = null)
