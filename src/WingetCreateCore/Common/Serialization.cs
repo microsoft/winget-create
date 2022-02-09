@@ -5,11 +5,9 @@ namespace Microsoft.WingetCreateCore
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Reflection.Metadata;
     using System.Runtime.Serialization;
     using System.Text;
     using Microsoft.WingetCreateCore.Models;
@@ -58,9 +56,8 @@ namespace Microsoft.WingetCreateCore
             var deserializer = new DeserializerBuilder()
                 .WithNamingConvention(PascalCaseNamingConvention.Instance)
                 .WithTypeConverter(new YamlStringEnumConverter())
-                .IgnoreUnmatchedProperties()
-                .WithTypeInspector(inspector => new AliasTypeInspector(inspector));
-                //.WithAttributeOverride<InstallerManifest>(c => c.ReleaseDate, new YamlIgnoreAttribute());
+                .WithTypeInspector(inspector => new AliasTypeInspector(inspector))
+                .IgnoreUnmatchedProperties();
             return deserializer.Build();
         }
 

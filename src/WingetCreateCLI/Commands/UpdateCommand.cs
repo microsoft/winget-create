@@ -24,7 +24,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Locale;
     using Microsoft.WingetCreateCore.Models.Version;
     using Sharprompt;
-    using Windows.Media.SpeechRecognition;
 
     /// <summary>
     /// Command for updating the elements of an existing or local manifest.
