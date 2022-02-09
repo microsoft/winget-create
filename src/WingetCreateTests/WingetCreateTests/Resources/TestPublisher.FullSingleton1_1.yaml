@@ -1,0 +1,80 @@
+﻿PackageIdentifier: TestPublisher.FullSingleton1_1
+PackageVersion: 0.1.2.3
+PackageLocale: en-US
+DefaultLocale: en-US
+Publisher: TestPublisher
+PublisherUrl: https://fakeTestUrl.com
+PublisherSupportUrl: https://fakeTestUrl.com
+PrivacyUrl: https://fakeTestUrl.com
+Author: fakeAuthor
+PackageName: Full Singleton 1.1 Test
+PackageUrl: https://fakeTestUrl.com
+License: MIT
+LicenseUrl: https://fakeTestUrl.com
+Copyright: fakeCopyright
+CopyrightUrl: https://fakeTestUrl.com
+ShortDescription: A manifest used to verify that all fields from a full 1.1 singleton manifest can be deserialized and updated.
+Description: A manifest used to verify that all fields from a full 1.1 singleton manifest can be deseri
+Moniker: testMoniker
+Tags:
+- testSingleton
+Agreements:
+- AgreementLabel: fakeAgreementLabel
+  AgreementUrl: https://fakeTestUrl.com
+  Agreement: fakeAgreementContent
+ReleaseNotes: fakeReleaseNotes
+ReleaseNotesUrl: https://fakeTestUrl.com
+Installers:
+- MinimumOSVersion: 10.0.0.0
+  Architecture: x64
+  InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+  InstallerType: exe
+  InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  ProductCode: FakeProductCode
+  PackageFamilyName: FakePackageFamilyName
+  InstallModes:
+  - silent
+  InstallerSwitches:
+    Silent: /s
+    Upgrade: /u
+  InstallerSuccessCodes:
+  - 1
+  ExpectedReturnCodes:
+  - InstallerReturnCode: 123
+    ReturnResponse: alreadyInstalled
+  UpgradeBehavior: install
+  Commands:
+  - fakeCommand
+  Protocols:
+  - fakeProtocol
+  FileExtensions:
+  - .exe
+  Dependencies:
+    WindowsFeatures:
+    - fakeValue
+    WindowsLibraries:
+    - fakeValue
+    PackageDependencies:
+    - MinimumVersion: 10.0.0.0
+    ExternalDependencies:
+    - fakeValue
+  Markets:
+    AllowedMarkets:
+    - fakeAllowedMarket
+    ExcludedMarkets:
+    - fakeExcludedMarket
+  InstallerAbortsTerminal: true
+  InstallLocationRequired: true
+  RequireExplicitUpgrade: true
+  UnsupportedOSArchitectures:
+  - arm64
+  AppsAndFeaturesEntries:
+  - DisplayName: testName
+    Publisher: testPublisher
+    DisplayVersion: testVersion
+    UpgradeCode: fakeProductCode
+  ElevationRequirement: elevationRequired
+  ReleaseDate: 1-1-2022
+ManifestType: singleton
+ManifestVersion: 1.1.0
+

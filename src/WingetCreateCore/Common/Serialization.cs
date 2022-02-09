@@ -204,6 +204,9 @@ namespace Microsoft.WingetCreateCore
             return value.StartsWith(bomMarkUtf8, StringComparison.OrdinalIgnoreCase) ? value.Remove(0, bomMarkUtf8.Length) : value;
         }
 
+        /// <summary>
+        /// Custom TypeInspector to priorize properties that have a defined YamlMemberAttribute for custom override.
+        /// </summary>
         private class AliasTypeInspector : TypeInspectorSkeleton
         {
             private readonly ITypeInspector innerTypeDescriptor;
@@ -213,16 +216,29 @@ namespace Microsoft.WingetCreateCore
                 this.innerTypeDescriptor = innerTypeDescriptor;
             }
 
+            /// <summary>
+            /// Because certain properties were generated incorrectly, we needed to create custom fields for those properties.
+            /// Therefore to resolve naming conflicts during deserialization, we prioritize fields that have the YamlMemberAttribute defined
+            /// as that attribute indicates an override.
+            /// </summary>
             public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
             {
                 var propertyDescriptors = this.innerTypeDescriptor.GetProperties(type, container);
                 var aliasDefinedProps = type.GetProperties().ToList().Where(p => p.GetCustomAttribute<YamlMemberAttribute>() != null).ToList();
                 if (aliasDefinedProps.Any())
                 {
-                    var overridedFields = propertyDescriptors
-                        .Where(p => aliasDefinedProps.Any(x => p.Name == x.GetCustomAttribute<YamlMemberAttribute>().Alias && p.Type != x.PropertyType)).ToList();
-                    var result = propertyDescriptors.Where(p => !overridedFields.Any(x => x.Name == p.Name && x.Type == p.Type)).ToList();
-                    return result;
+                    var overriddenProps = propertyDescriptors
+                        .Where(prop => aliasDefinedProps.Any(aliasProp =>
+                            prop.Name == aliasProp.GetCustomAttribute<YamlMemberAttribute>().Alias && // Use Alias name (ex. ReleaseDate) instead of property name (ex. ReleaseDateString).
+                            prop.Type != aliasProp.PropertyType))
+                        .ToList();
+
+                    // Remove overridden properties from the returned list of deserializable properties.
+                    return propertyDescriptors
+                        .Where(prop => !overriddenProps.Any(overridenProp =>
+                            prop.Name == overridenProp.Name &&
+                            prop.Type == overridenProp.Type))
+                        .ToList();
                 }
                 else
                 {

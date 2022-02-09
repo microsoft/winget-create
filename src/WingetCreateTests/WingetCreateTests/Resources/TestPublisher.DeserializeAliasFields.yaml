@@ -1,0 +1,21 @@
+﻿PackageIdentifier: TestPublisher.DeserializeAliasFields
+PackageVersion: 0.1.2
+PackageName: Deserialize Alias Fields Test
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used to test the the deserialization of custom fields that have a YamlMember alias attribute.
+InstallerLocale: en-US
+ReleaseDate: 1-1-2022
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerType: exe
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+    ReleaseDate: 1-1-2022
+Agreements: 
+  - Agreement: Agreement text
+    AgreementLabel: Agreement label
+    AgreementUrl: https://fakeagreementurl.com
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.1.0
