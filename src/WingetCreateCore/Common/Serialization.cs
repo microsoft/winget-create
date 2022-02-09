@@ -5,9 +5,11 @@ namespace Microsoft.WingetCreateCore
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Reflection.Metadata;
     using System.Runtime.Serialization;
     using System.Text;
     using Microsoft.WingetCreateCore.Models;
@@ -21,6 +23,7 @@ namespace Microsoft.WingetCreateCore
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;
     using YamlDotNet.Serialization.NamingConventions;
+    using YamlDotNet.Serialization.TypeInspectors;
 
     /// <summary>
     /// Provides functionality for the serialization of JSON objects to yaml.
@@ -55,7 +58,9 @@ namespace Microsoft.WingetCreateCore
             var deserializer = new DeserializerBuilder()
                 .WithNamingConvention(PascalCaseNamingConvention.Instance)
                 .WithTypeConverter(new YamlStringEnumConverter())
-                .IgnoreUnmatchedProperties();
+                .IgnoreUnmatchedProperties()
+                .WithTypeInspector(inspector => new AliasTypeInspector(inspector));
+                //.WithAttributeOverride<InstallerManifest>(c => c.ReleaseDate, new YamlIgnoreAttribute());
             return deserializer.Build();
         }
 
@@ -197,6 +202,33 @@ namespace Microsoft.WingetCreateCore
         {
             string bomMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
             return value.StartsWith(bomMarkUtf8, StringComparison.OrdinalIgnoreCase) ? value.Remove(0, bomMarkUtf8.Length) : value;
+        }
+
+        private class AliasTypeInspector : TypeInspectorSkeleton
+        {
+            private readonly ITypeInspector innerTypeDescriptor;
+
+            public AliasTypeInspector(ITypeInspector innerTypeDescriptor)
+            {
+                this.innerTypeDescriptor = innerTypeDescriptor;
+            }
+
+            public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
+            {
+                var propertyDescriptors = this.innerTypeDescriptor.GetProperties(type, container);
+                var aliasDefinedProps = type.GetProperties().ToList().Where(p => p.GetCustomAttribute<YamlMemberAttribute>() != null).ToList();
+                if (aliasDefinedProps.Any())
+                {
+                    var overridedFields = propertyDescriptors
+                        .Where(p => aliasDefinedProps.Any(x => p.Name == x.GetCustomAttribute<YamlMemberAttribute>().Alias && p.Type != x.PropertyType)).ToList();
+                    var result = propertyDescriptors.Where(p => !overridedFields.Any(x => x.Name == p.Name && x.Type == p.Type)).ToList();
+                    return result;
+                }
+                else
+                {
+                    return propertyDescriptors;
+                }
+            }
         }
 
         private class YamlStringEnumConverter : IYamlTypeConverter

@@ -24,6 +24,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Locale;
     using Microsoft.WingetCreateCore.Models.Version;
     using Sharprompt;
+    using Windows.Media.SpeechRecognition;
 
     /// <summary>
     /// Command for updating the elements of an existing or local manifest.
@@ -313,6 +314,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
             }
 
+            UpdateManifestVersionToLatest(manifests);
+
             VersionManifest versionManifest = manifests.VersionManifest;
             InstallerManifest installerManifest = manifests.InstallerManifest;
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
@@ -348,9 +351,12 @@ namespace Microsoft.WingetCreateCLI.Commands
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AllowNullCollections = true;
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, VersionManifest>().ForMember(dest => dest.DefaultLocale, opt => { opt.MapFrom(src => src.PackageLocale); });
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, DefaultLocaleManifest>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, InstallerManifest>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, VersionManifest>()
+                    .ForMember(dest => dest.DefaultLocale, opt => opt.MapFrom(src => src.PackageLocale))
+                    .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, DefaultLocaleManifest>().ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, InstallerManifest>()
+                    .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
@@ -377,6 +383,18 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 manifest.GetType().GetProperty(propertyName).SetValue(manifest, value);
             }
+        }
+
+        /// <summary>
+        /// Ensures that the manifestVersion is updated to the latest schema version.
+        /// </summary>
+        /// <param name="manifests">Manifests object model.</param>
+        private static void UpdateManifestVersionToLatest(Manifests manifests)
+        {
+            string latestManifestVersion = new VersionManifest().ManifestVersion;
+            manifests.VersionManifest.ManifestVersion = latestManifestVersion;
+            manifests.DefaultLocaleManifest.ManifestVersion = latestManifestVersion;
+            manifests.InstallerManifest.ManifestVersion = latestManifestVersion;
         }
 
         /// <summary>
