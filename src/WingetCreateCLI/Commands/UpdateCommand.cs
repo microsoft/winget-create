@@ -391,7 +391,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Ensures that the manifestVersion is updated to the latest schema version.
+        /// Ensures that the manifestVersion is consistent across all manifest object models.
         /// </summary>
         /// <param name="manifests">Manifests object model.</param>
         private static void EnsureManifestVersionConsistency(Manifests manifests)
