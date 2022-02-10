@@ -221,7 +221,14 @@ namespace Microsoft.WingetCreateCore
             public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
             {
                 var propertyDescriptors = this.innerTypeDescriptor.GetProperties(type, container);
-                var aliasDefinedProps = type.GetProperties().ToList().Where(p => p.GetCustomAttribute<YamlMemberAttribute>() != null).ToList();
+                var aliasDefinedProps = type.GetProperties().ToList()
+                    .Where(p =>
+                    {
+                        var yamlMemberAttribute = p.GetCustomAttribute<YamlMemberAttribute>();
+                        return yamlMemberAttribute != null && !string.IsNullOrEmpty(yamlMemberAttribute.Alias);
+                    })
+                    .ToList();
+
                 if (aliasDefinedProps.Any())
                 {
                     var overriddenProps = propertyDescriptors

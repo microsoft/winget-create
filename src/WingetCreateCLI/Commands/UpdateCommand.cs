@@ -313,7 +313,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
             }
 
-            UpdateManifestVersionToLatest(manifests);
+            EnsureManifestVersionConsistency(manifests);
 
             VersionManifest versionManifest = manifests.VersionManifest;
             InstallerManifest installerManifest = manifests.InstallerManifest;
@@ -394,7 +394,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Ensures that the manifestVersion is updated to the latest schema version.
         /// </summary>
         /// <param name="manifests">Manifests object model.</param>
-        private static void UpdateManifestVersionToLatest(Manifests manifests)
+        private static void EnsureManifestVersionConsistency(Manifests manifests)
         {
             string latestManifestVersion = new VersionManifest().ManifestVersion;
             manifests.VersionManifest.ManifestVersion = latestManifestVersion;
