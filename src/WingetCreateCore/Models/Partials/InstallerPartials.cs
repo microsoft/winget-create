@@ -5,7 +5,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
 {
     using System;
     using System.Collections.Generic;
+    using System.Text.Json.Serialization;
     using Microsoft.WingetCreateCore.Models.CustomValidation;
+    using Newtonsoft.Json;
     using YamlDotNet.Serialization;
 
     /// <summary>
@@ -21,6 +23,20 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         {
             return new PackageDependencies { MinimumVersion = this.MinimumVersion, PackageIdentifier = this.PackageIdentifier };
         }
+    }
+
+    /// <summary>
+    /// Partial InstallerManifest class for defining a string type ReleaseDateTimeField.
+    /// Workaround for issue with model generating ReleaseDate with DateTimeOffset type.
+    /// </summary>
+    public partial class InstallerManifest
+    {
+        /// <summary>
+        /// Gets or sets the Release Date time.
+        /// </summary>
+        [YamlMember(Alias = "ReleaseDate")]
+        [DateTimeValidation]
+        public string ReleaseDateTime { get; set; }
     }
 
     /// <summary>

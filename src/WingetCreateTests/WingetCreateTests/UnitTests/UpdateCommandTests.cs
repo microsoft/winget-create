@@ -446,6 +446,64 @@ namespace Microsoft.WingetCreateUnitTests
             }
         }
 
+        /// <summary>
+        /// Tests that the manifest version gets updated to the latest manifest schema version.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdatesToLatestManifestVersion()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.SingleExe", null, this.tempPath, null);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            string initialManifestVersion = initialManifests.SingletonManifest.ManifestVersion;
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            Assert.AreNotEqual(initialManifestVersion, updatedManifests.InstallerManifest.ManifestVersion, "ManifestVersion should be updated to latest.");
+            Assert.AreNotEqual(initialManifestVersion, updatedManifests.VersionManifest.ManifestVersion, "ManifestVersion should be updated to latest.");
+            Assert.AreNotEqual(initialManifestVersion, updatedManifests.DefaultLocaleManifest.ManifestVersion, "ManifestVersion should be updated to latest.");
+        }
+
+        /// <summary>
+        /// Verifies that deserialization prioritizes alias-defined fields and can correctly assign and update those fields.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateDeserializesAliasDefinedFields()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.DeserializeAliasFields", null, this.tempPath, null);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialSingleton = initialManifests.SingletonManifest;
+
+            // Verify that fields with an alias-defined counterpart are not deserialized.
+            Assert.IsNull(initialSingleton.ReleaseDate, "ReleaseDate should not be defined as it is a DateTimeOffset type.");
+            Assert.IsNull(initialSingleton.Installers.First().ReleaseDate, "The installer ReleaseDate should not be defined as it is a DateTimeOffset type.");
+            Assert.IsNull(initialSingleton.Agreements.First().Agreement1, "Agreement1 should not be defined since the property name is generated incorrectly.");
+
+            // Verify that the alias-defined fields are correctly updated.
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            var updatedInstallerManifest = updatedManifests.InstallerManifest;
+            var updatedDefaultLocaleManifest = updatedManifests.DefaultLocaleManifest;
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            Assert.AreEqual(initialSingleton.ReleaseDateTime, updatedInstallerManifest.ReleaseDateTime, "The value for ReleaseDate should be the same.");
+            Assert.AreEqual(initialSingleton.Installers.First().ReleaseDateTime, updatedInstallerManifest.Installers.First().ReleaseDateTime, "The value for ReleaseDateTime should be the same.");
+            Assert.AreEqual(initialSingleton.Agreements.First().AgreementContent, updatedDefaultLocaleManifest.Agreements.First().AgreementContent, "The value for ReleaseDateTime should be the same.");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the Singleton v1.1. manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullSingletonVersion1_1()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullSingleton1_1", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls)
         {
             var updateCommand = new UpdateCommand

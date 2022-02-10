@@ -20,6 +20,20 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     }
 
     /// <summary>
+    /// Partial SingletonManifest class for defining a string type ReleaseDateTime field.
+    /// Workaround for issue with model generating ReleaseDate with DateTimeOffset type.
+    /// </summary>
+    public partial class SingletonManifest
+    {
+        /// <summary>
+        /// Gets or sets the Release Date time.
+        /// </summary>
+        [YamlMember(Alias = "ReleaseDate")]
+        [DateTimeValidation]
+        public string ReleaseDateTime { get; set; }
+    }
+
+    /// <summary>
     /// Partial Installer class for defining a string type ReleaseDateTime field.
     /// Workaround for issue with model generating ReleaseDate with DateTimeOffset type.
     /// </summary>

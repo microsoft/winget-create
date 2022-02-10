@@ -313,6 +313,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 manifests = ConvertSingletonToMultifileManifest(manifests.SingletonManifest);
             }
 
+            EnsureManifestVersionConsistency(manifests);
+
             VersionManifest versionManifest = manifests.VersionManifest;
             InstallerManifest installerManifest = manifests.InstallerManifest;
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
@@ -348,12 +350,21 @@ namespace Microsoft.WingetCreateCLI.Commands
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AllowNullCollections = true;
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, VersionManifest>().ForMember(dest => dest.DefaultLocale, opt => { opt.MapFrom(src => src.PackageLocale); });
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, DefaultLocaleManifest>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, InstallerManifest>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, VersionManifest>()
+                    .ForMember(dest => dest.DefaultLocale, opt => opt.MapFrom(src => src.PackageLocale))
+                    .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, DefaultLocaleManifest>().ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, InstallerManifest>()
+                    .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.AppsAndFeaturesEntry, WingetCreateCore.Models.Installer.AppsAndFeaturesEntry>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.ExpectedReturnCode, WingetCreateCore.Models.Installer.ExpectedReturnCode>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.PackageDependencies, WingetCreateCore.Models.Installer.PackageDependencies>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets, WingetCreateCore.Models.Installer.Markets>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets2, WingetCreateCore.Models.Installer.Markets2>(); // Markets2 is not used, but is required to satisfy mapping configuration.
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Agreement, WingetCreateCore.Models.DefaultLocale.Agreement>();
             });
             var mapper = config.CreateMapper();
 
@@ -377,6 +388,18 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 manifest.GetType().GetProperty(propertyName).SetValue(manifest, value);
             }
+        }
+
+        /// <summary>
+        /// Ensures that the manifestVersion is consistent across all manifest object models.
+        /// </summary>
+        /// <param name="manifests">Manifests object model.</param>
+        private static void EnsureManifestVersionConsistency(Manifests manifests)
+        {
+            string latestManifestVersion = new VersionManifest().ManifestVersion;
+            manifests.VersionManifest.ManifestVersion = latestManifestVersion;
+            manifests.DefaultLocaleManifest.ManifestVersion = latestManifestVersion;
+            manifests.InstallerManifest.ManifestVersion = latestManifestVersion;
         }
 
         /// <summary>
