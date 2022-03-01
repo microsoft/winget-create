@@ -6,7 +6,7 @@
 
 namespace Microsoft.WingetCreateCore.Models.Installer
 {
-#pragma warning disable // Disable all warnings
+    #pragma warning disable // Disable all warnings
 
     /// <summary>Enumeration of supported installer types. InstallerType is required in either root level or individual Installer level</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
