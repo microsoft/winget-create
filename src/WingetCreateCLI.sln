@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30621.155
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WingetCreateCLI", "WingetCreateCLI\WingetCreateCLI.csproj", "{C36B8829-36E2-44BB-942C-00F29FCAE973}"
 EndProject
@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "WingetCreateTestWixInstaller", "WingetCreateTests\WingetCreateTestWixInstaller\WingetCreateTestWixInstaller.wixproj", "{32837E42-CC7B-45A4-A28A-26FA562061F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +88,14 @@ Global
 		{AC37DFD2-1332-4282-B373-8DCF8BB4E3BA}.Release|x86.ActiveCfg = Release|x86
 		{AC37DFD2-1332-4282-B373-8DCF8BB4E3BA}.Release|x86.Build.0 = Release|x86
 		{AC37DFD2-1332-4282-B373-8DCF8BB4E3BA}.Release|x86.Deploy.0 = Release|x86
+		{32837E42-CC7B-45A4-A28A-26FA562061F9}.Debug|x64.ActiveCfg = Debug|x86
+		{32837E42-CC7B-45A4-A28A-26FA562061F9}.Debug|x64.Build.0 = Debug|x86
+		{32837E42-CC7B-45A4-A28A-26FA562061F9}.Debug|x86.ActiveCfg = Debug|x86
+		{32837E42-CC7B-45A4-A28A-26FA562061F9}.Debug|x86.Build.0 = Debug|x86
+		{32837E42-CC7B-45A4-A28A-26FA562061F9}.Release|x64.ActiveCfg = Release|x86
+		{32837E42-CC7B-45A4-A28A-26FA562061F9}.Release|x64.Build.0 = Release|x86
+		{32837E42-CC7B-45A4-A28A-26FA562061F9}.Release|x86.ActiveCfg = Release|x86
+		{32837E42-CC7B-45A4-A28A-26FA562061F9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +104,7 @@ Global
 		{D61EDBD2-637B-4B5A-848E-2B1A505BE883} = {AA9952DB-2343-4C89-8273-FD34F1DC6D87}
 		{90EB2100-7BDB-4FFC-B657-3A63EEED93F9} = {AA9952DB-2343-4C89-8273-FD34F1DC6D87}
 		{154EB646-D902-41B5-9CE1-E78ACC63AA0A} = {AA9952DB-2343-4C89-8273-FD34F1DC6D87}
+		{32837E42-CC7B-45A4-A28A-26FA562061F9} = {AA9952DB-2343-4C89-8273-FD34F1DC6D87}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9697B8CE-91B1-4C5A-AB0E-94B684541F4D}

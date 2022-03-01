@@ -1,0 +1,19 @@
+﻿PackageIdentifier: TestPublisher.UpdateMsiWithWix
+PackageVersion: 0.1.2
+PackageName: Update Msi with Wix
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used to verify that the update command updates the installer with the more precise installerType (msi -> wix).
+InstallerLocale: en-US
+Installers:
+  - Architecture: x86
+    InstallerUrl: https://fakedomain.com/WingetCreateTestWixInstaller.msi
+    InstallerType: msi
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+    ProductCode: FakeProductCode
+    PackageFamilyName: FakePackageFamilyName
+    Platform:
+    - Windows.Desktop
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.0.0

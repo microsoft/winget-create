@@ -34,6 +34,11 @@ namespace Microsoft.WingetCreateTests
         public const string TestMsiInstaller = "WingetCreateTestMsiInstaller.msi";
 
         /// <summary>
+        /// File name of the test WIX installer.
+        /// </summary>
+        public const string TestWixInstaller = "WingetCreateTestWixInstaller.msi";
+
+        /// <summary>
         /// File name of the test MSIX installer.
         /// </summary>
         public const string TestMsixInstaller = "WingetCreateTestMsixInstaller.msixbundle";

@@ -371,6 +371,11 @@ namespace Microsoft.WingetCreateCore
         /// <param name="newInstaller">New installer node.</param>
         private static void UpdateInstallerMetadata(Installer existingInstaller, Installer newInstaller)
         {
+            if (IsPreciseInstallerType(newInstaller.InstallerType.Value))
+            {
+                existingInstaller.InstallerType = newInstaller.InstallerType;
+            }
+
             existingInstaller.Architecture = newInstaller.Architecture;
             existingInstaller.InstallerUrl = newInstaller.InstallerUrl;
             existingInstaller.InstallerSha256 = newInstaller.InstallerSha256;
@@ -549,6 +554,25 @@ namespace Microsoft.WingetCreateCore
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Checks if the provided installerType is more precise and should replace its more generic counterpart.
+        /// </summary>
+        /// <param name="installerType">InstallerType.</param>
+        /// <returns>Boolean value indicating whether the provided InstallerType is more precise.</returns>
+        private static bool IsPreciseInstallerType(InstallerType installerType)
+        {
+            switch (installerType)
+            {
+                case InstallerType.Burn:
+                case InstallerType.Inno:
+                case InstallerType.Nullsoft:
+                case InstallerType.Wix:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         /// <summary>

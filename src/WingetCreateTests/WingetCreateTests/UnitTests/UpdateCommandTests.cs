@@ -437,7 +437,6 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithCompatibleInstallerType", null, this.tempPath, null);
-            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
             foreach (var updatedInstaller in updatedManifests.InstallerManifest.Installers)
@@ -502,6 +501,21 @@ namespace Microsoft.WingetCreateUnitTests
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullSingleton1_1", null, this.tempPath, null);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Verifies that an installerType is updated to the more precise compatible installerType (i.e. msi -> wix).
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateReplacesWithMorePreciseInstallerType()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestWixInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.UpdateMsiWithWix", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
+            Assert.AreEqual(InstallerType.Wix, updatedInstaller.InstallerType, "Msi installerType should be updated to Wix.");
         }
 
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls)
