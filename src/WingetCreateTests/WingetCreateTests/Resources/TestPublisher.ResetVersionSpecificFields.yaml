@@ -1,0 +1,21 @@
+﻿PackageIdentifier: TestPublisher.ResetVersionSpecificFields
+PackageVersion: 0.1.2
+PackageName: Reset Version Specific Fields
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used to verify that version specific fields are reset after each update.
+InstallerLocale: en-US
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerType: exe
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+    ReleaseDate: 1-1-2022
+    Platform:
+    - Windows.Desktop
+PackageLocale: en-US
+ReleaseDate: 1-1-2022
+ReleaseNotes: Fake release notes.
+ReleaseNotesUrl: https://fakeReleaseNotes.com
+ManifestType: singleton
+ManifestVersion: 1.0.0
