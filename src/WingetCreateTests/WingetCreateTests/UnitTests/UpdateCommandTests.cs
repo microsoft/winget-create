@@ -466,30 +466,29 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verifies that deserialization prioritizes alias-defined fields and can correctly assign and update those fields.
+        /// Verifies that deserialization prioritizes alias-defined fields and can correctly assign those field values.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task UpdateDeserializesAliasDefinedFields()
+        public void UpdateDeserializesAliasDefinedFields()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.DeserializeAliasFields", null, this.tempPath, null);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
-            var initialSingleton = initialManifests.SingletonManifest;
+            var singletonManifest = initialManifests.SingletonManifest;
+            var installer = singletonManifest.Installers.First();
+            var agreement = singletonManifest.Agreements.First();
 
             // Verify that fields with an alias-defined counterpart are not deserialized.
-            Assert.IsNull(initialSingleton.ReleaseDate, "ReleaseDate should not be defined as it is a DateTimeOffset type.");
-            Assert.IsNull(initialSingleton.Installers.First().ReleaseDate, "The installer ReleaseDate should not be defined as it is a DateTimeOffset type.");
-            Assert.IsNull(initialSingleton.Agreements.First().Agreement1, "Agreement1 should not be defined since the property name is generated incorrectly.");
+            Assert.IsNull(singletonManifest.ReleaseDate, "ReleaseDate should not be defined as it is a DateTimeOffset type.");
+            Assert.IsNull(installer.ReleaseDate, "The installer ReleaseDate should not be defined as it is a DateTimeOffset type.");
+            Assert.IsNull(singletonManifest.Agreements.First().Agreement1, "Agreement1 should not be defined since the property name is generated incorrectly.");
 
-            // Verify that the alias-defined fields are correctly updated.
-            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
-            var updatedInstallerManifest = updatedManifests.InstallerManifest;
-            var updatedDefaultLocaleManifest = updatedManifests.DefaultLocaleManifest;
-            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
-            Assert.AreEqual(initialSingleton.ReleaseDateTime, updatedInstallerManifest.ReleaseDateTime, "The value for ReleaseDate should be the same.");
-            Assert.AreEqual(initialSingleton.Installers.First().ReleaseDateTime, updatedInstallerManifest.Installers.First().ReleaseDateTime, "The value for ReleaseDateTime should be the same.");
-            Assert.AreEqual(initialSingleton.Agreements.First().AgreementContent, updatedDefaultLocaleManifest.Agreements.First().AgreementContent, "The value for ReleaseDateTime should be the same.");
+            // Verify that the alias-defined fields are correctly deserialized.
+            Assert.AreEqual("1-1-2022", singletonManifest.ReleaseDateTime, "The value for releaseDate should be 1-1-2022");
+            Assert.AreEqual("1-1-2022", installer.ReleaseDateTime, "The value for releaseDate should be 1-1-2022");
+            Assert.AreEqual("Agreement text", agreement.AgreementContent, "The value for AgreementContent should be 'Agreement text'.");
+            Assert.AreEqual("Agreement label", agreement.AgreementLabel, "The value for AgreementLabel should be 'Agreement label'.");
+            Assert.AreEqual("https://fakeagreementurl.com", agreement.AgreementUrl, "The value for AgreementUrl should be 'https://fakeagreementurl.com'.");
         }
 
         /// <summary>
