@@ -668,7 +668,7 @@ namespace Microsoft.WingetCreateCore
                     baseInstaller.InstallerType = IsWix(database)
                         ? InstallerType.Wix
                         : InstallerType.Msi;
-                        
+
                     var properties = database.Properties.ToList();
 
                     if (defaultLocaleManifest != null)
