@@ -291,6 +291,8 @@ namespace Microsoft.WingetCreateCore.Common
                     repo = await this.github.Repository.Forks.Create(this.wingetRepoOwner, this.wingetRepo, new NewRepositoryFork());
                     createdRepo = true;
                 }
+
+                await this.UpdateForkedRepoWithUpstreamCommits(repo);
             }
             else
             {
@@ -306,6 +308,7 @@ namespace Microsoft.WingetCreateCore.Common
             var upstreamMasterSha = upstreamMaster.Object.Sha;
 
             Reference newBranch = null;
+
             try
             {
                 var retryPolicy = Policy.Handle<ApiException>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
@@ -363,6 +366,24 @@ namespace Microsoft.WingetCreateCore.Common
                 }
 
                 throw;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the provided forked repository is behind on upstream commits and updates the default branch with the fetched commits. Update can only be a fast-forward update.
+        /// </summary>
+        /// <param name="forkedRepo"><see cref="Repository"/>Forked repository to be updated.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        private async Task UpdateForkedRepoWithUpstreamCommits(Repository forkedRepo)
+        {
+            var upstream = forkedRepo.Parent;
+            var compareResult = await this.github.Repository.Commit.Compare(upstream.Id, upstream.DefaultBranch, $"{forkedRepo.Owner.Login}:{forkedRepo.DefaultBranch}");
+
+            // Check to ensure that the update is only a fast-forward update.
+            if (compareResult.BehindBy > 0 && compareResult.AheadBy == 0)
+            {
+                var upstreamBranchReference = await this.github.Git.Reference.Get(upstream.Id, $"heads/{upstream.DefaultBranch}");
+                await this.github.Git.Reference.Update(forkedRepo.Id, $"heads/{forkedRepo.DefaultBranch}", new ReferenceUpdate(upstreamBranchReference.Object.Sha));
             }
         }
 
