@@ -709,6 +709,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to update the fork&apos;s default branch because the branch is ahead by {0} commit(s). Manually update the fork&apos;s default branch before resubmitting..
+        /// </summary>
+        public static string FastForwardUpdateFailed_Message {
+            get {
+                return ResourceManager.GetString("FastForwardUpdateFailed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [{0}] value is.
         /// </summary>
         public static string FieldValueIs_Message {

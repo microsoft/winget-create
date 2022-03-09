@@ -505,6 +505,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                         Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
                         return true;
                     }
+                    else if (e is NonFastForwardException nonFastForwardException)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.FastForwardUpdateFailed_Message), nonFastForwardException.CommitsAheadBy);
+                        return true;
+                    }
                     else
                     {
                         return false;

@@ -10,6 +10,7 @@ namespace Microsoft.WingetCreateCore.Common
     using System.Security.Cryptography;
     using System.Threading.Tasks;
     using Jose;
+    using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Octokit;
     using Polly;
@@ -380,8 +381,14 @@ namespace Microsoft.WingetCreateCore.Common
             var compareResult = await this.github.Repository.Commit.Compare(upstream.Id, upstream.DefaultBranch, $"{forkedRepo.Owner.Login}:{forkedRepo.DefaultBranch}");
 
             // Check to ensure that the update is only a fast-forward update.
-            if (compareResult.BehindBy > 0 && compareResult.AheadBy == 0)
+            if (compareResult.BehindBy > 0)
             {
+                int commitsAheadBy = compareResult.AheadBy;
+                if (commitsAheadBy > 0)
+                {
+                    throw new NonFastForwardException(commitsAheadBy);
+                }
+
                 var upstreamBranchReference = await this.github.Git.Reference.Get(upstream.Id, $"heads/{upstream.DefaultBranch}");
                 await this.github.Git.Reference.Update(forkedRepo.Id, $"heads/{forkedRepo.DefaultBranch}", new ReferenceUpdate(upstreamBranchReference.Object.Sha));
             }
