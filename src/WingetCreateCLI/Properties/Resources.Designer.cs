@@ -19,7 +19,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -709,7 +709,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to update the fork&apos;s default branch because the branch is ahead by {0} commit(s). Manually update the fork&apos;s default branch before resubmitting..
+        ///   Looks up a localized string similar to Failed to update fork because the default branch is ahead by {0} commit(s). .
         /// </summary>
         public static string FastForwardUpdateFailed_Message {
             get {

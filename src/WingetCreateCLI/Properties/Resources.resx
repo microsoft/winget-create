@@ -890,4 +890,8 @@
   <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
     <value>UpgradeCode used for correlation of packages across sources</value>
   </data>
+  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
+    <value>Failed to update fork because the default branch is ahead by {0} commit(s). </value>
+    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
+  </data>
 </root>

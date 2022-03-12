@@ -278,8 +278,8 @@ namespace Microsoft.WingetCreateCore.Common
         private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork)
         {
             bool createdRepo = false;
-
             Repository repo;
+
             if (submitToFork)
             {
                 try
@@ -292,8 +292,6 @@ namespace Microsoft.WingetCreateCore.Common
                     repo = await this.github.Repository.Forks.Create(this.wingetRepoOwner, this.wingetRepo, new NewRepositoryFork());
                     createdRepo = true;
                 }
-
-                await this.UpdateForkedRepoWithUpstreamCommits(repo);
             }
             else
             {
@@ -315,7 +313,17 @@ namespace Microsoft.WingetCreateCore.Common
                 var retryPolicy = Policy.Handle<ApiException>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
                 await retryPolicy.ExecuteAsync(async () =>
                 {
-                    await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
+                    try
+                    {
+                        Reference reference = await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
+
+                    }
+                    catch (Octokit.NotFoundException)
+                    {
+                        // Creating a reference can sometimes fail with a NotFoundException if the fork is not up to date with the upstream repository.
+                        await this.UpdateForkedRepoWithUpstreamCommits(repo);
+                        throw;
+                    }
                 });
 
                 // Update from upstream branch master
