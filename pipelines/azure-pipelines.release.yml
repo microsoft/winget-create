@@ -206,7 +206,7 @@ jobs:
           gitHubConnection: github
           repositoryName: $(Build.Repository.Name)
           tagSource: userSpecifiedTag
-          tag: v$(version)-preview
+          tag: v$(version)
           isPreRelease: true
           isDraft: true # After running this step, visit the new draft release, edit, and publish.
           assets: $(Build.ArtifactStagingDirectory)/*
