@@ -40,9 +40,7 @@ jobs:
     dependsOn: GetVersion
     variables:
       majorMinorBuildVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorBuildVersion']]
-      revision: $[counter(format('{0}.{1}', '3', variables['majorMinorBuildVersion']), 1)]
-
-      version: "$(majorMinorBuildVersion).$(revision)"
+      version: "$(majorMinorBuildVersion)"
       appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle"
       appxBundlePath: '$(appxPackageDir)\$(appxBundleFile)'
       exeDirSelfContained: '$(appxPackageDir)\selfcontained'
