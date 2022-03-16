@@ -315,8 +315,7 @@ namespace Microsoft.WingetCreateCore.Common
                 {
                     try
                     {
-                        Reference reference = await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
-
+                        await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
                     }
                     catch (Octokit.NotFoundException)
                     {
