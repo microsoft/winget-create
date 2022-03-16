@@ -265,6 +265,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 PackageParser.UpdateInstallerNodesAsync(installerMetadataList, installerManifest);
                 DisplayMismatchedArchitectures(installerMetadataList);
+                ResetVersionSpecificFields(manifests);
             }
             catch (InvalidOperationException)
             {
@@ -400,6 +401,32 @@ namespace Microsoft.WingetCreateCLI.Commands
             manifests.VersionManifest.ManifestVersion = latestManifestVersion;
             manifests.DefaultLocaleManifest.ManifestVersion = latestManifestVersion;
             manifests.InstallerManifest.ManifestVersion = latestManifestVersion;
+        }
+
+        /// <summary>
+        /// Resets the value of version specific fields to null.
+        /// </summary>
+        /// <param name="manifests">Manifests object model.</param>
+        private static void ResetVersionSpecificFields(Manifests manifests)
+        {
+            DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
+            InstallerManifest installerManifest = manifests.InstallerManifest;
+            List<LocaleManifest> localeManifests = manifests.LocaleManifests;
+
+            defaultLocaleManifest.ReleaseNotes = null;
+            defaultLocaleManifest.ReleaseNotesUrl = null;
+
+            installerManifest.ReleaseDateTime = null;
+            foreach (var installer in installerManifest.Installers)
+            {
+                installer.ReleaseDateTime = null;
+            }
+
+            foreach (LocaleManifest localeManifest in localeManifests)
+            {
+                localeManifest.ReleaseNotes = null;
+                localeManifest.ReleaseNotesUrl = null;
+            }
         }
 
         /// <summary>
