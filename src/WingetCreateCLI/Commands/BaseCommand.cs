@@ -488,28 +488,30 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.InfoLocalized(nameof(Resources.PullRequestURI_Message), pullRequest.HtmlUrl);
                 Console.WriteLine();
             }
-            catch (AggregateException ae)
+            catch (Exception e)
             {
-                ae.Handle((e) =>
+                TelemetryManager.Log.WriteEvent(new PullRequestEvent
                 {
-                    TelemetryManager.Log.WriteEvent(new PullRequestEvent
-                    {
-                        IsSuccessful = false,
-                        ErrorMessage = e.Message,
-                        ExceptionType = e.GetType().ToString(),
-                        StackTrace = e.StackTrace,
-                    });
-
-                    if (e is Octokit.ForbiddenException)
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    IsSuccessful = false,
+                    ErrorMessage = e.Message,
+                    ExceptionType = e.GetType().ToString(),
+                    StackTrace = e.StackTrace,
                 });
+
+                if (e is Octokit.ForbiddenException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
+                    return true;
+                }
+                else if (e is NonFastForwardException nonFastForwardException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.FastForwardUpdateFailed_Message), nonFastForwardException.CommitsAheadBy);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             return true;

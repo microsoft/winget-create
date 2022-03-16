@@ -10,6 +10,7 @@ namespace Microsoft.WingetCreateCore.Common
     using System.Security.Cryptography;
     using System.Threading.Tasks;
     using Jose;
+    using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
     using Octokit;
     using Polly;
@@ -277,8 +278,8 @@ namespace Microsoft.WingetCreateCore.Common
         private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork)
         {
             bool createdRepo = false;
-
             Repository repo;
+
             if (submitToFork)
             {
                 try
@@ -306,12 +307,22 @@ namespace Microsoft.WingetCreateCore.Common
             var upstreamMasterSha = upstreamMaster.Object.Sha;
 
             Reference newBranch = null;
+
             try
             {
                 var retryPolicy = Policy.Handle<ApiException>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
                 await retryPolicy.ExecuteAsync(async () =>
                 {
-                    await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
+                    try
+                    {
+                        await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
+                    }
+                    catch (Octokit.NotFoundException)
+                    {
+                        // Creating a reference can sometimes fail with a NotFoundException if the fork is not up to date with the upstream repository.
+                        await this.UpdateForkedRepoWithUpstreamCommits(repo);
+                        throw;
+                    }
                 });
 
                 // Update from upstream branch master
@@ -363,6 +374,30 @@ namespace Microsoft.WingetCreateCore.Common
                 }
 
                 throw;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the provided forked repository is behind on upstream commits and updates the default branch with the fetched commits. Update can only be a fast-forward update.
+        /// </summary>
+        /// <param name="forkedRepo"><see cref="Repository"/>Forked repository to be updated.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        private async Task UpdateForkedRepoWithUpstreamCommits(Repository forkedRepo)
+        {
+            var upstream = forkedRepo.Parent;
+            var compareResult = await this.github.Repository.Commit.Compare(upstream.Id, upstream.DefaultBranch, $"{forkedRepo.Owner.Login}:{forkedRepo.DefaultBranch}");
+
+            // Check to ensure that the update is only a fast-forward update.
+            if (compareResult.BehindBy > 0)
+            {
+                int commitsAheadBy = compareResult.AheadBy;
+                if (commitsAheadBy > 0)
+                {
+                    throw new NonFastForwardException(commitsAheadBy);
+                }
+
+                var upstreamBranchReference = await this.github.Git.Reference.Get(upstream.Id, $"heads/{upstream.DefaultBranch}");
+                await this.github.Git.Reference.Update(forkedRepo.Id, $"heads/{forkedRepo.DefaultBranch}", new ReferenceUpdate(upstreamBranchReference.Object.Sha));
             }
         }
 
