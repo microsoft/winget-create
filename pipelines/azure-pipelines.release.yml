@@ -31,7 +31,7 @@ jobs:
       - powershell: |
           [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
           $version = @($project.Project.PropertyGroup)[0].Version
-          echo "##vso[task.setvariable variable=majorMinorBuildVersion;isOutput=true]$version"
+          echo "##vso[task.setvariable variable=majorMinorVersion;isOutput=true]$version"
         name: GetVersionStep
         displayName: Get version from CLI project
 
@@ -39,10 +39,10 @@ jobs:
     displayName: Build
     dependsOn: GetVersion
     variables:
-      majorMinorBuildVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorBuildVersion']]
-      revision: $[counter(format('{0}.{1}', '3', variables['majorMinorBuildVersion']), 1)]
-      version: "$(majorMinorBuildVersion).$(revision)"
-      appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle"
+      majorMinorVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorVersion']]
+      buildVersion: $[counter(-1, 1)]
+      version: "$(majorMinorVersion).$(buildVersion).0"
+      appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe.msixbundle"
       appxBundlePath: '$(appxPackageDir)\$(appxBundleFile)'
       exeDirSelfContained: '$(appxPackageDir)\selfcontained'
       exeDirFrameworkDependent: '$(appxPackageDir)\dependent'
