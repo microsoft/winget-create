@@ -42,7 +42,7 @@ jobs:
       majorMinorVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorVersion']]
       buildVersion: $[counter(variables['majorMinorVersion'], 1)]
       version: "$(majorMinorVersion).$(buildVersion).0"
-      appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe.msixbundle"
+      appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle"
       appxBundlePath: '$(appxPackageDir)\$(appxBundleFile)'
       exeDirSelfContained: '$(appxPackageDir)\selfcontained'
       exeDirFrameworkDependent: '$(appxPackageDir)\dependent'

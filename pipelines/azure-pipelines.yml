@@ -58,7 +58,7 @@ jobs:
         buildVersion: $[counter(variables['majorMinorVersion'], 1)]
 
       version: "$(majorMinorVersion).$(buildVersion).0"
-      appxBundlePath: '$(appxPackageDir)\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe.msixbundle'
+      appxBundlePath: '$(appxPackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle'
     pool:
       vmImage: $(vmImageName)
 
