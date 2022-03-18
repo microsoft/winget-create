@@ -56,7 +56,7 @@ jobs:
         buildVersion: 0
       ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         buildVersion: $[counter(variables['majorMinorVersion'], 1)]
-        
+
       version: "$(majorMinorVersion).$(buildVersion).0"
       appxBundlePath: '$(appxPackageDir)\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe.msixbundle'
     pool:
@@ -135,6 +135,6 @@ jobs:
         displayName: Run Tests
         inputs:
           testSelector: "testAssemblies"
-          testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\net5.0-windows10.0.17763.0\WingetCreateTests.dll'
+          testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\net5.0-windows10.0.22000.0\WingetCreateTests.dll'
           runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
           overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'
