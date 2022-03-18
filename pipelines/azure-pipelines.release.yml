@@ -31,7 +31,7 @@ jobs:
       - powershell: |
           [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
           $version = @($project.Project.PropertyGroup)[0].Version
-          echo "##vso[task.setvariable variable=majorMinorBuildVersion;isOutput=true]$version"
+          echo "##vso[task.setvariable variable=majorMinorVersion;isOutput=true]$version"
         name: GetVersionStep
         displayName: Get version from CLI project
 
@@ -39,8 +39,9 @@ jobs:
     displayName: Build
     dependsOn: GetVersion
     variables:
-      majorMinorBuildVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorBuildVersion']]
-      version: "$(majorMinorBuildVersion)"
+      majorMinorVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorVersion']]
+      buildVersion: $[counter(variables['majorMinorVersion'], 1)]
+      version: "$(majorMinorVersion).$(buildVersion).0"
       appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle"
       appxBundlePath: '$(appxPackageDir)\$(appxBundleFile)'
       exeDirSelfContained: '$(appxPackageDir)\selfcontained'
@@ -233,7 +234,7 @@ jobs:
       skipComponentGovernanceDetection: ${{ true }}
       manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
       appxBundleFile: $[dependencies.Build.outputs['OutputVersionStep.appxBundleFile']]
-      packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)-preview/$(appxBundleFile)"
+      packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)/$(appxBundleFile)"
     steps:
       - checkout: none
 
