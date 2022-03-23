@@ -623,7 +623,7 @@
     <value>Öffnet den Cacheordner, in dem die heruntergeladenen Installationsprogramme gespeichert sind.</value>
   </data>
   <data name="InstallersFound_Message" xml:space="preserve">
-    <value>{0}Installationsprogramme gefunden in {1}</value>
+    <value>{0} Installationsprogramme gefunden in {1}</value>
     <comment>{0} - Will be replaced with the number of installers found in the cache folder
 {1} - Will be replaced with the path to the downloaded installer cache folder</comment>
   </data>
