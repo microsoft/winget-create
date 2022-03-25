@@ -1,7 +1,7 @@
 
 # Winget-Create CLI Settings
 
-You can configure Winget-Create by editing the `settings.json` file. Running `wingetcreate settings` will open the file in the default json editor; if no editor is configured, Windows will prompt for you to select an editor, and Notepad is sensible option if you have no other preference.
+You can configure Winget-Create by editing the `settings.json` file. Running `wingetcreate.exe settings` will open the file in the default json editor; if no editor is configured, Windows will prompt for you to select an editor, and Notepad is sensible option if you have no other preference.
 
 ## Telemetry
 
