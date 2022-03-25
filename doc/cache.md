@@ -4,7 +4,7 @@ The **cache** command of the [Winget-Create](../README.md) tool is designed to h
 
 ## Usage
 
-`WingetCreateCLI.exe cache [\<options>]`
+`wingetcreate.exe cache [\<options>]`
 
 ## Arguments
 

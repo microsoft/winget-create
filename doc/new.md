@@ -4,7 +4,7 @@ The **new** command of the [Winget-Create](../README.md) tool begins the process
 
 ## Usage
 
-`WingetCreateCLI.exe new [<urls>] [\<options>]`
+`wingetcreate new [<urls>] [\<options>]`
 
 The **new** command can be called with the optional URL(s). **Winget-Create** will download each provided installer as it begins.  If the URL is not included, the user will need to add it when prompted. 
 

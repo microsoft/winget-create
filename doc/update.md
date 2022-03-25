@@ -5,7 +5,7 @@ The **update** command of the [Winget-Create](../README.md) tool is designed to 
 
 ## Usage
 
-`WingetCreateCLI.exe update <id> [-u <urls>] [-v <version>] [-s] [-t <token>] [-o <output directory>]`
+`wingetcreate update <id> [-u <urls>] [-v <version>] [-s] [-t <token>] [-o <output directory>]`
 
 The **update** command can be called with the installer URL(s) that you wish to update the manifest with. **Please make sure that the number of installer URL(s) included matches the number of existing installer nodes in the manifest you are updating. Otherwise, the command will fail.** This is to ensure that we can deterministically update each installer node with the correct matching installer url provided. 
 

@@ -5,7 +5,7 @@ To use the **submit** command, you simply need to provide your [GitHub token](ht
 
 ## Usage
 
-`WingetCreateCLI.exe submit [\<options>] <PathToManifest>`
+`wingetcreate submit [\<options>] <PathToManifest>`
 
 ## Arguments
 
