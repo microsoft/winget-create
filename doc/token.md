@@ -5,7 +5,7 @@ To use the **token** command, you can specify whether you want to store a new [G
 
 ## Usage
 
-`WingetCreateCLI.exe token [\<options>]`
+`wingetcreate.exe token [\<options>]`
 
 ## Arguments
 
