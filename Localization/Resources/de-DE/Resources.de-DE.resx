@@ -156,10 +156,10 @@
     <value>Die Copyright-Seite des Pakets</value>
   </data>
   <data name="Copyright_KeywordDescription" xml:space="preserve">
-    <value>Das Paket Copyright</value>
+    <value>Das Paket-Copyright</value>
   </data>
   <data name="Custom_KeywordDescription" xml:space="preserve">
-    <value>Die benutzerdefinierte Installer-Schalter</value>
+    <value>Die benutzerdefinierten Installer-Schalter</value>
   </data>
   <data name="DefaultLocale_KeywordDescription" xml:space="preserve">
     <value>Das Standardgebietsschema der Paket-Metadaten |z. B. en-US|</value>
@@ -241,7 +241,7 @@
     <value>Paket-Identifikator, der zum Nachschlagen des vorhandenen Manifests im Windows-Paket-Manager-Repository verwendet wird. Bei der ID wird zwischen Groß- und Kleinschreibung unterschieden.</value>
   </data>
   <data name="PackageIdentifier_KeywordDescription" xml:space="preserve">
-    <value>Die eindeutige Paket Kennung | z. b. Microsoft.....</value>
+    <value>Die eindeutige Paket-Kennung | z. b. Microsoft.....</value>
   </data>
   <data name="InstallerArchitecture_KeywordDescription" xml:space="preserve">
     <value>Die Zielarchitektur des Installationsprogramms</value>
@@ -268,7 +268,7 @@
     <value>Überschreibt die Standardsprache</value>
   </data>
   <data name="LaunchBrowser_Message" xml:space="preserve">
-    <value>Webbrowser wird gestartet... Wenn der Standard Webbrowser nicht gestartet wird, wechseln Sie zu: {0}</value>
+    <value>Webbrowser wird gestartet... Wenn der Standard-Webbrowser nicht gestartet wird, wechseln Sie zu: {0}</value>
     <comment>{0} - will be replaced by the verification URI opened by the browser</comment>
   </data>
   <data name="LicenseUrl_KeywordDescription" xml:space="preserve">
@@ -313,7 +313,7 @@
     <value>Startet eine Reihe von Fragen, die bei der Erstellung eines neuen Manifests helfen</value>
   </data>
   <data name="OctokitNotFound_Error" xml:space="preserve">
-    <value>Bitte überprüfen Sie die Schreibweise und das Gehäuse der Paketkennung</value>
+    <value>Bitte überprüfen Sie die Schreibweise und Groß-/Kleinschreibung der Paketkennung</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
     <value>Ausgabeverzeichnis, in dem die neu erstellten Manifeste lokal gespeichert werden</value>
@@ -356,7 +356,7 @@
     <value>Abrufen des letzten Manifests für {0}</value>
   </data>
   <data name="Scope_KeywordDescription" xml:space="preserve">
-    <value>Dies ist eine Aufzählung des Installations Bereichs ("Benutzer", "System").</value>
+    <value>Dies ist eine Aufzählung des Installationsbereichs ("Benutzer", "System").</value>
   </data>
   <data name="Sha256_KeywordDescription" xml:space="preserve">
     <value>Der SHA256-Hash des Installationsprogramms</value>
@@ -365,16 +365,16 @@
     <value>Die kurze Paketbeschreibung</value>
   </data>
   <data name="SignatureSha256_KeywordDescription" xml:space="preserve">
-    <value>Der MSIX SHA256-Signatur-Hash</value>
+    <value>Der MSIX-SHA256-Signatur-Hash</value>
   </data>
   <data name="SilentWithProgress_KeywordDescription" xml:space="preserve">
-    <value>Die stille mit Fortschritt Installer Schalter</value>
+    <value>Die Silent-mit-Fortschritt-Installer-Schalter</value>
   </data>
   <data name="Silent_KeywordDescription" xml:space="preserve">
-    <value>Die stille Installer-Schalter</value>
+    <value>Die Silent-Installer-Schalter</value>
   </data>
   <data name="Store_HelpText" xml:space="preserve">
-    <value>Legt das zwischengespeicherte GitHub-Token fest. Sie können das zu speichernde Token mit dem Parameter --token angeben, andernfalls wird der OAuth-Fluss initiiert.</value>
+    <value>Legt das zwischengespeicherte GitHub-Token fest. Sie können das zu speichernde Token mit dem Parameter --token angeben, andernfalls wird der OAuth-Protokollfluss initiiert.</value>
   </data>
   <data name="SkippingPullRequest_Message" xml:space="preserve">
     <value>Überspringen der Pull-Request-Einreichung...</value>
@@ -416,7 +416,7 @@
     <value>Version, die beim Aktualisieren des Feldes für die Paketversion verwendet werden soll.</value>
   </data>
   <data name="PackageVersion_KeywordDescription" xml:space="preserve">
-    <value>Die Paket Version | z. b. 1.2.3.4 |</value>
+    <value>Die Paketversion |z. B. 1.2.3.4|</value>
   </data>
   <data name="WritingCacheTokenFailed_Message" xml:space="preserve">
     <value>Das Schreiben des Tokens in den Cache ist fehlgeschlagen: {0}</value>
@@ -444,7 +444,7 @@
     <value>Kein Token bereitgestellt, Übermittlung an GitHub übersprungen.</value>
   </data>
   <data name="NoTokenResponse_Message" xml:space="preserve">
-    <value>Keine Token-Antwort vom GitHub OAuth-Fluss, beendet die Befehlsausführung.</value>
+    <value>Keine Token-Antwort vom GitHub OAuth-Protokollfluss, beendet die Befehlsausführung.</value>
   </data>
   <data name="ResumingCommandExecution_Message" xml:space="preserve">
     <value>Wiederaufnahme der Befehlsausführung...</value>
@@ -462,7 +462,7 @@
     <value>Vorschau des Versionsmanifests:</value>
   </data>
   <data name="RegexFieldValidation_Error" xml:space="preserve">
-    <value>Die Eingabe entspricht nicht dem gültigen Format Muster für dieses Feld.</value>
+    <value>Die Eingabe entspricht nicht dem gültigen Formatmuster für dieses Feld.</value>
   </data>
   <data name="AdditionalProperties_KeywordDescription" xml:space="preserve">
     <value>Die zusätzlichen Eigenschaften für die zukünftige Nebenversionskompatibilität</value>
@@ -501,7 +501,7 @@
     <value>Liste der Abhängigkeiten von externen Paketen</value>
   </data>
   <data name="InstallerUrl_KeywordDescription" xml:space="preserve">
-    <value>Die Installer-URL(s) |e.g. https://microsoft.com/foo.exe, https://microsoft.com/bar.msix|</value>
+    <value>Die Installer-URL(s) |z. B. https://microsoft.com/foo.exe, https://microsoft.com/bar.msix|</value>
   </data>
   <data name="ManifestType_KeywordDescription" xml:space="preserve">
     <value>Der Manifesttyp</value>
@@ -535,7 +535,7 @@
     <comment>{0} - will be replaced with the HTTP response status code</comment>
   </data>
   <data name="InvalidUrl_Error" xml:space="preserve">
-    <value>Ungültige URL angegeben. Über prüfen Sie die URL, und versuchen Sie es erneut.</value>
+    <value>Ungültige URL angegeben. Überprüfen Sie die URL und versuchen Sie es erneut.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
     <value>Fehler beim Analysieren des Pakets aus [{0}].</value>
@@ -579,10 +579,10 @@
     <value>Ungültiges Token angegeben. Generieren Sie bitte ein neues GitHub-Token und versuchen Sie es erneut.</value>
   </data>
   <data name="NoChangeDetectedInUpdatedManifest_Message" xml:space="preserve">
-    <value>Das Übermitteln eines Manifests ohne aktualisierte Änderungen ist nicht zulässig. </value>
+    <value>Das Übermitteln eines Manifests ohne aktualisierte Änderungen ist nicht zulässig.</value>
   </data>
   <data name="InstallerMatchFailedError_Message" xml:space="preserve">
-    <value>Für die folgenden Installers wurde keine Übereinstimmung mit einem bestehenden Installationsknoten gefunden:</value>
+    <value>Für die folgenden Installer wurde keine Übereinstimmung mit einem bestehenden Installationsknoten gefunden:</value>
   </data>
   <data name="UnboundArguments_Message" xml:space="preserve">
     <value>Das/die folgende(n) ungebundene(n) Argument(e) wurde(n) erkannt: "{0}"</value>
@@ -641,7 +641,7 @@
     <value>Das Token war ungültig. Generieren Sie bitte ein neues GitHub-Token und versuchen Sie es erneut.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
-    <value>Das Limit für die GitHub-API-Rate wurde überschritten. Um Ihr Ratenlimit zu erweitern, geben Sie Ihr GitHub-Token mit dem Kennzeichen „-t“ an, oder speichern Sie eins mithilfe des Befehls „token --store“.</value>
+    <value>Das Limit für die GitHub-API-Rate wurde überschritten. Um Ihr Ratenlimit zu erweitern, geben Sie Ihr GitHub-Token mit dem Kennzeichen „-t“ an, oder speichern Sie eines mithilfe des Befehls „token --store“.</value>
     <comment>'-t' refers to a command line switch argument
 'token --store' refers to a command line argument</comment>
   </data>
@@ -670,7 +670,7 @@
     <comment>`wingetcreate settings` refers to a specific command to be executed if the user wants to modify their settings.</comment>
   </data>
   <data name="DownloadFileExceedsMaxSize_Error" xml:space="preserve">
-    <value>Die URL verweist auf eine Datei, die größer als die maximale Größe von {0}MB ist.</value>
+    <value>Die URL verweist auf eine Datei, die größer als die maximale Größe von {0} MB ist.</value>
     <comment>{0} - represents the maximum size of a downloaded file</comment>
   </data>
   <data name="InstallerCountMustMatch_Error" xml:space="preserve">
