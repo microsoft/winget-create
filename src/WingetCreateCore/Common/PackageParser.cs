@@ -50,7 +50,7 @@ namespace Microsoft.WingetCreateCore
         private static HttpClient httpClient = new HttpClient();
 
         private enum MachineType
-        {   
+        {
             X86 = 0x014c,
             X64 = 0x8664,
         }
@@ -149,23 +149,8 @@ namespace Microsoft.WingetCreateCore
                 string fileName = Path.GetFileNameWithoutExtension(targetFile);
                 string fileExt = Path.GetExtension(targetFile);
                 DirectoryInfo dir = new DirectoryInfo(InstallerDownloadPath);
-                var existingFiles = dir.GetFiles(Path.ChangeExtension(fileName + " *", fileExt));
-                var numberStrings = from file in existingFiles //get the number strings from the existing files
-                                    select Path.GetFileNameWithoutExtension(file.Name)
-                                        .Remove(0, fileName.Length)
-                                        .Trim(' ', '(', ')');
-                int highestNumber = 0;
-
-                foreach (var numberString in numberStrings)
-                {
-                    int tempNum = 1;
-                    if (int.TryParse(numberString, out tempNum) && tempNum > highestNumber)
-                    {
-                        highestNumber = tempNum;
-                    }
-                }
-
-                targetFile = Path.Combine(InstallerDownloadPath, fileName + " (" + (highestNumber + 1).ToString() + ")" + fileExt);
+                FileInfo[] existingFiles = dir.GetFiles(Path.ChangeExtension(fileName + " *", fileExt));
+                targetFile = Path.Combine(InstallerDownloadPath, fileName + " (" + (existingFiles.Length + 1).ToString() + ")" + fileExt);
             }
 
             using var targetFileStream = File.OpenWrite(targetFile);
