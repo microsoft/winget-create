@@ -401,7 +401,7 @@ namespace Microsoft.WingetCreateCore
             defaultLocaleManifest.Publisher ??= versionInfo.CompanyName?.Trim();
             defaultLocaleManifest.PackageName ??= versionInfo.ProductName?.Trim();
             defaultLocaleManifest.ShortDescription ??= versionInfo.FileDescription?.Trim();
-            defaultLocaleManifest.License ??= versionInfo.LegalCopyright?.Trim();
+            defaultLocaleManifest.Copyright ??= versionInfo.LegalCopyright?.Trim();
 
             if (ParsePackageAndGenerateInstallerNodes(installerMetadata, manifests))
             {
