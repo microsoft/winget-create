@@ -501,16 +501,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (e is Octokit.ForbiddenException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
-                    return true;
+                    return false;
                 }
                 else if (e is NonFastForwardException nonFastForwardException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.FastForwardUpdateFailed_Message), nonFastForwardException.CommitsAheadBy);
-                    return true;
+                    return false;
                 }
                 else
                 {
-                    return false;
+                    throw;
                 }
             }
 
