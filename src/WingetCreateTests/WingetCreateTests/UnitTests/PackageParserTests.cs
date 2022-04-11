@@ -58,7 +58,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
             Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
             Assert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
-            Assert.AreEqual("Microsoft Copyright", manifests.DefaultLocaleManifest.License);
+            Assert.AreEqual("Microsoft Copyright", manifests.DefaultLocaleManifest.Copyright);
             Assert.AreEqual(InstallerType.Exe, manifests.InstallerManifest.Installers.First().InstallerType);
         }
 
