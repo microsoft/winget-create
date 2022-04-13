@@ -128,6 +128,13 @@ namespace Microsoft.WingetCreateCore
                 throw new HttpRequestException(message, null, response.StatusCode);
             }
 
+            long? downloadSize = response.Content.Headers.ContentLength;
+
+            if (downloadSize > maxDownloadSize)
+            {
+                throw new DownloadSizeExceededException(maxDownloadSize.Value);
+            }
+
             string urlFile = Path.GetFileName(url.Split('?').Last());
             string contentDispositionFile = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
 
@@ -136,28 +143,29 @@ namespace Microsoft.WingetCreateCore
                 Directory.CreateDirectory(InstallerDownloadPath);
             }
 
-            string targetFile = Path.Combine(InstallerDownloadPath, contentDispositionFile ?? urlFile);
-            long? downloadSize = response.Content.Headers.ContentLength;
-
-            if (downloadSize > maxDownloadSize)
-            {
-                throw new DownloadSizeExceededException(maxDownloadSize.Value);
-            }
-
-            if (File.Exists(targetFile))
-            {
-                string fileName = Path.GetFileNameWithoutExtension(targetFile);
-                string fileExt = Path.GetExtension(targetFile);
-                DirectoryInfo dir = new DirectoryInfo(InstallerDownloadPath);
-                FileInfo[] existingFiles = dir.GetFiles(Path.ChangeExtension(fileName + " *", fileExt));
-                targetFile = Path.Combine(InstallerDownloadPath, fileName + " (" + (existingFiles.Length + 1).ToString() + ")" + fileExt);
-            }
+            string targetFile = GetNumericFilename(Path.Combine(InstallerDownloadPath, contentDispositionFile ?? urlFile));
 
             using var targetFileStream = File.OpenWrite(targetFile);
             var contentStream = await response.Content.ReadAsStreamAsync();
             await contentStream.CopyToAsync(targetFileStream);
 
             return targetFile;
+        }
+
+        /// <summary>
+        /// When creating a file, inserts a number into the desired filename when other files
+        /// with the same name exist in the target directory.
+        /// </summary>
+        /// <param name="desiredPath">The path where the new file would be created.</param>
+        /// <returns>The path where the new file should be created.</returns>
+        public static string GetNumericFilename(string desiredPath)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(desiredPath);
+            string fileExt = Path.GetExtension(desiredPath);
+            string fileDir = Path.GetDirectoryName(desiredPath);
+            DirectoryInfo dir = new DirectoryInfo(fileDir);
+            FileInfo[] existingFiles = dir.GetFiles(Path.ChangeExtension(fileName + " *", fileExt));
+            return Path.Combine(fileDir, fileName + " (" + (existingFiles.Length + 1).ToString() + ")" + fileExt);
         }
 
         /// <summary>
