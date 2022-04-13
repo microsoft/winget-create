@@ -147,6 +147,19 @@ namespace Microsoft.WingetCreateCore
 
             using var targetFileStream = File.OpenWrite(targetFile);
             var contentStream = await response.Content.ReadAsStreamAsync();
+
+            /*
+             * There seems to be a difference between the test environments and a users environment
+             * On the users environment, the stream cannot seek and will always have position 0 when
+             * the response content is read into it. In the unit test environment, the stream can
+             * seek and will not reset the position when the response content is read in. This logic
+             * should always ensure that the position is reset to 0 regardless of the environment.
+            */
+            if (contentStream.CanSeek)
+            {
+                contentStream.Position = 0;
+            }
+
             await contentStream.CopyToAsync(targetFileStream);
 
             return targetFile;
