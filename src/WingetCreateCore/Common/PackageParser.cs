@@ -144,6 +144,7 @@ namespace Microsoft.WingetCreateCore
                 throw new DownloadSizeExceededException(maxDownloadSize.Value);
             }
 
+            // Test
             if (!File.Exists(targetFile) || new FileInfo(targetFile).Length != downloadSize)
             {
                 File.Delete(targetFile);
