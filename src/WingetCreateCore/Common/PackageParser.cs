@@ -128,6 +128,13 @@ namespace Microsoft.WingetCreateCore
                 throw new HttpRequestException(message, null, response.StatusCode);
             }
 
+            long? downloadSize = response.Content.Headers.ContentLength;
+
+            if (downloadSize > maxDownloadSize)
+            {
+                throw new DownloadSizeExceededException(maxDownloadSize.Value);
+            }
+
             string urlFile = Path.GetFileName(url.Split('?').Last());
             string contentDispositionFile = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
 
@@ -136,23 +143,42 @@ namespace Microsoft.WingetCreateCore
                 Directory.CreateDirectory(InstallerDownloadPath);
             }
 
-            string targetFile = Path.Combine(InstallerDownloadPath, contentDispositionFile ?? urlFile);
-            long? downloadSize = response.Content.Headers.ContentLength;
+            string targetFile = GetNumericFilename(Path.Combine(InstallerDownloadPath, contentDispositionFile ?? urlFile));
 
-            if (downloadSize > maxDownloadSize)
+            using var targetFileStream = File.OpenWrite(targetFile);
+            var contentStream = await response.Content.ReadAsStreamAsync();
+
+            /*
+             * There seems to be a difference between the test environments and a users environment
+             * On the users environment, the stream cannot seek and will always have position 0 when
+             * the response content is read into it. In the unit test environment, the stream can
+             * seek and will not reset the position when the response content is read in. This logic
+             * should always ensure that the position is reset to 0 regardless of the environment.
+            */
+            if (contentStream.CanSeek)
             {
-                throw new DownloadSizeExceededException(maxDownloadSize.Value);
+                contentStream.Position = 0;
             }
 
-            if (!File.Exists(targetFile) || new FileInfo(targetFile).Length != downloadSize)
-            {
-                File.Delete(targetFile);
-                using var targetFileStream = File.OpenWrite(targetFile);
-                var contentStream = await response.Content.ReadAsStreamAsync();
-                await contentStream.CopyToAsync(targetFileStream);
-            }
+            await contentStream.CopyToAsync(targetFileStream);
 
             return targetFile;
+        }
+
+        /// <summary>
+        /// When creating a file, inserts a number into the desired filename when other files
+        /// with the same name exist in the target directory.
+        /// </summary>
+        /// <param name="desiredPath">The path where the new file would be created.</param>
+        /// <returns>The path where the new file should be created.</returns>
+        public static string GetNumericFilename(string desiredPath)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(desiredPath);
+            string fileExt = Path.GetExtension(desiredPath);
+            string fileDir = Path.GetDirectoryName(desiredPath);
+            DirectoryInfo dir = new DirectoryInfo(fileDir);
+            FileInfo[] existingFiles = dir.GetFiles(Path.ChangeExtension(fileName + "*", fileExt));
+            return existingFiles.Length == 0 ? Path.Combine(fileDir, fileName + fileExt) : Path.Combine(fileDir, fileName + " (" + existingFiles.Length.ToString() + ")" + fileExt);
         }
 
         /// <summary>
