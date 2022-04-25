@@ -40,7 +40,7 @@ Click on the individual commands to learn more.
 You can use WingetCreate to update your existing app manifest as part of your CI/CD pipeline. For reference, see the final task in this repo's [release Azure pipeline](https://github.com/microsoft/winget-create/blob/main/pipelines/azure-pipelines.release.yml).
 
 ### Using the standalone exe:
-The latest version of the standalone exe can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview, both of these require .NET to be installed on the build machine.
+The latest version of the standalone exe can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview, both of these require [.NET 5.0](https://dotnet.microsoft.com/en-us/download/dotnet/5.0) to be installed on the build machine.
 
 > Make sure your build machine has the [Microsoft Visual C++ Redistributable for Visual Studio](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) already installed. Without this, the standalone WingetCreate exe will fail to execute and likely show a "DllNotFoundException" error.
 
