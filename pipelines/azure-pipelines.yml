@@ -131,6 +131,16 @@ jobs:
         condition: not(eq(variables['Build.Reason'], 'PullRequest'))
         continueOnError: "true"
 
+      - powershell: |
+          # These are the steps you'd run in your CI/CD pipeline to update your OWC manifest using wingetcreate.
+          # Add WingetCreate AppxPackage and run the alias 'wingetcreate'
+          # The update command only supports a single installer URL, if you have multiple URLs you'll have to manually modify
+          # your manifests as described here https://github.com/microsoft/winget-create#using-windows-package-manager-manifest-creator-in-a-cicd-pipeline
+          iwr https://aka.ms/wingetcreate/latest/msixbundle -OutFile wingetcreate.msixbundle
+          Add-AppxPackage wingetcreate.msixbundle
+          wingetcreate update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion)
+        displayName: Update package manifest in the OWC   
+
       # - task: VSTest@2
       #   displayName: Run Tests
       #   inputs:
@@ -138,28 +148,3 @@ jobs:
       #     testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\net5.0-windows10.0.22000.0\WingetCreateTests.dll'
       #     runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
       #     overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'
-
-  - job: UpdateManifest
-    dependsOn:
-      - Build
-      - Wait
-    pool:
-      vmImage: $(vmImageName)
-    variables:
-      runCodesignValidationInjection: ${{ false }}
-      skipComponentGovernanceDetection: ${{ true }}
-      manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
-      appxBundleFile: $[dependencies.Build.outputs['OutputVersionStep.appxBundleFile']]
-      packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)/$(appxBundleFile)"
-    steps:
-      - checkout: none
-
-      - powershell: |
-          # These are the steps you'd run in your CI/CD pipeline to update your OWC manifest using wingetcreate.
-          # Add WingetCreate AppxPackage and run the alias 'wingetcreate'
-          # The update command only supports a single installer URL, if you have multiple URLs you'll have to manually modify
-          # your manifests as described here https://github.com/microsoft/winget-create#using-windows-package-manager-manifest-creator-in-a-cicd-pipeline
-          iwr https://aka.ms/wingetcreate/latest/msixbundle -OutFile $(appxBundleFile)
-          Add-AppxPackage $(appxBundleFile)
-          wingetcreate update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion)
-        displayName: Update package manifest in the OWC 
