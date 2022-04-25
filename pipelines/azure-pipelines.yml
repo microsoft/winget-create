@@ -139,20 +139,20 @@ jobs:
       #     runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
       #     overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'
 
-    - job: UpdateManifest
-      dependsOn:
-        - Build
-        - Wait
-      pool:
-        vmImage: $(vmImageName)
-      variables:
-        runCodesignValidationInjection: ${{ false }}
-        skipComponentGovernanceDetection: ${{ true }}
-        manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
-        appxBundleFile: $[dependencies.Build.outputs['OutputVersionStep.appxBundleFile']]
-        packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)/$(appxBundleFile)"
-      steps:
-        - checkout: none
+  - job: UpdateManifest
+    dependsOn:
+      - Build
+      - Wait
+    pool:
+      vmImage: $(vmImageName)
+    variables:
+      runCodesignValidationInjection: ${{ false }}
+      skipComponentGovernanceDetection: ${{ true }}
+      manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
+      appxBundleFile: $[dependencies.Build.outputs['OutputVersionStep.appxBundleFile']]
+      packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)/$(appxBundleFile)"
+    steps:
+      - checkout: none
 
       - powershell: |
           # These are the steps you'd run in your CI/CD pipeline to update your OWC manifest using wingetcreate.
