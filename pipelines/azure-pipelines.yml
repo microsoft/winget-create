@@ -143,7 +143,7 @@ jobs:
 
           iwr https://aka.ms/wingetcreate/latest/msixbundle -OutFile wingetcreate.msixbundle
           Add-AppxPackage wingetcreate.msixbundle
-          wingetcreate update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion)
+          wingetcreate update Microsoft.WingetCreate -u 'https://github.com/microsoft/winget-create/releases/download/v1.0.3.0/Microsoft.WindowsPackageManagerManifestCreator_1.0.3.0_8wekyb3d8bbwe.msixbundle' -v 1.0.6.0
         displayName: Update package manifest in the OWC   
 
       # - task: VSTest@2
