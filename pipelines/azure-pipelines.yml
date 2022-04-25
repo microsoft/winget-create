@@ -100,42 +100,47 @@ jobs:
         artifact: msixbundle
         displayName: Publish msix bundle
 
-      - task: ComponentGovernanceComponentDetection@0
-        displayName: Component Governance
-        inputs:
-          scanType: "Register"
-          verbosity: "Verbose"
-          alertWarningLevel: "High"
+      # - task: ComponentGovernanceComponentDetection@0
+      #   displayName: Component Governance
+      #   inputs:
+      #     scanType: "Register"
+      #     verbosity: "Verbose"
+      #     alertWarningLevel: "High"
 
-      - task: notice@0
-        displayName: "NOTICE File Generator"
-        condition: not(eq(variables['Build.Reason'], 'PullRequest'))
-        inputs:
-          outputfile: "$(System.DefaultWorkingDirectory)/temp/NOTICE.txt"
-          outputformat: "text"
+      # - task: notice@0
+      #   displayName: "NOTICE File Generator"
+      #   condition: not(eq(variables['Build.Reason'], 'PullRequest'))
+      #   inputs:
+      #     outputfile: "$(System.DefaultWorkingDirectory)/temp/NOTICE.txt"
+      #     outputformat: "text"
 
-      - bash: |
-          echo "Diffing existing NOTICE.txt with generated version"
-          diff -w NOTICE.txt temp/NOTICE.txt
-          if [[ $? -ne 0 ]];
-          then
-            echo "Notice file modified"
-            echo "*******************************************************************************************************"
-            echo "Download the updated NOTICE.txt from the build artifacts and update the file in your PR, then re-submit"
-            echo "*******************************************************************************************************"
-            exit 1
-          else
-            echo "Notice file not modified."
-          fi
-        displayName: "Trigger build warning if NOTICE.txt file needs to be modified."
-        condition: not(eq(variables['Build.Reason'], 'PullRequest'))
-        continueOnError: "true"
+      # - bash: |
+      #     echo "Diffing existing NOTICE.txt with generated version"
+      #     diff -w NOTICE.txt temp/NOTICE.txt
+      #     if [[ $? -ne 0 ]];
+      #     then
+      #       echo "Notice file modified"
+      #       echo "*******************************************************************************************************"
+      #       echo "Download the updated NOTICE.txt from the build artifacts and update the file in your PR, then re-submit"
+      #       echo "*******************************************************************************************************"
+      #       exit 1
+      #     else
+      #       echo "Notice file not modified."
+      #     fi
+      #   displayName: "Trigger build warning if NOTICE.txt file needs to be modified."
+      #   condition: not(eq(variables['Build.Reason'], 'PullRequest'))
+      #   continueOnError: "true"
 
       - powershell: |
           # These are the steps you'd run in your CI/CD pipeline to update your OWC manifest using wingetcreate.
           # Add WingetCreate AppxPackage and run the alias 'wingetcreate'
           # The update command only supports a single installer URL, if you have multiple URLs you'll have to manually modify
           # your manifests as described here https://github.com/microsoft/winget-create#using-windows-package-manager-manifest-creator-in-a-cicd-pipeline
+
+          # Winget-Create depends on the C++ Runtime framework, so download and install the framework
+          iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile vclibs.appx
+          Add-AppxPackage vclibs.appx
+
           iwr https://aka.ms/wingetcreate/latest/msixbundle -OutFile wingetcreate.msixbundle
           Add-AppxPackage wingetcreate.msixbundle
           wingetcreate update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion)
