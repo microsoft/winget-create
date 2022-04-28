@@ -231,7 +231,7 @@
     <value>Token di accesso personale GitHub usato per l'invio diretto a Windows Gestione pacchetti reamo. Se non viene specificato alcun token, lo strumento richiederà le credenziali di accesso GitHub.</value>
   </data>
   <data name="Heading" xml:space="preserve">
-    <value>Windows Manifest Creator v. {0}</value>
+    <value>Autore del manifesto di Gestione pacchetti Windows v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
   </data>
   <data name="Homepage_KeywordDescription" xml:space="preserve">
@@ -761,5 +761,137 @@
   </data>
   <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
     <value>Rimuovere questo aggiornamento e ricominciare?</value>
+  </data>
+  <data name="ResolveMatchingConflicts_Message" xml:space="preserve">
+    <value>Per risolvere manualmente i conflitti corrispondenti, usare il flag --interactive.</value>
+    <comment>`--interactive` - refers to a flag that can be included with the command</comment>
+  </data>
+  <data name="DefenderVirus_ErrorMessage" xml:space="preserve">
+    <value>Questa operazione non è stata completata correttamente perché il file scaricato contiene un virus o software potenzialmente indesiderato. Per ulteriori informazioni sul software potenzialmente indesiderato e sulle opzioni disponibili, vedi https://aka.ms/winget-create-security</value>
+  </data>
+  <data name="InstallerSelection_MenuItem" xml:space="preserve">
+    <value>INSTALLER {0}: {1}</value>
+    <comment>{0} - represents the installer index number
+{1} - represents the associated installer metadata</comment>
+  </data>
+  <data name="EditManifests_Message" xml:space="preserve">
+    <value>Modificare i manifesti?</value>
+  </data>
+  <data name="SaveAndExit_MenuItem" xml:space="preserve">
+    <value>SALVA ED ESCI</value>
+  </data>
+  <data name="SelectManifestToEdit_Message" xml:space="preserve">
+    <value>Quale manifesto vuoi modificare?</value>
+  </data>
+  <data name="DownloadConnectionTimeout_Error" xml:space="preserve">
+    <value>Non è possibile completare la richiesta di download perché si è verificato il timeout della connessione. Verificare l'URL del programma di installazione e riprovare.</value>
+  </data>
+  <data name="ArchitectureOverride_Warning" xml:space="preserve">
+    <value>Se il programma di installazione specificato non corrisponde a un programma di installazione esistente anche quando si esegue l'override dell'architettura, potrebbe essere necessario modificare manualmente il manifesto esistente. Assicurarsi che il manifesto esistente disponga di un singolo programma di installazione che corrisponda all'architettura di override e al tipo di programma di installazione del nuovo programma di installazione. Per modificare un manifesto esistente, usare il flag '--interactive' con il comando update e inviare le nuove modifiche. Dopo la pubblicazione delle modifiche, riprova.</value>
+    <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
+  </data>
+  <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
+    <value>Sono state rilevate più architetture. È possibile specificare una sola architettura per un override.</value>
+  </data>
+  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
+    <value>Non è possibile analizzare l'architettura di override specificata {0}.</value>
+    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
+    <value>Sostituire l'architettura di un programma di installazione</value>
+  </data>
+  <data name="OverridingArchitecture_Warning" xml:space="preserve">
+    <value>Sostituzione di {0} con architettura {1}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding architecture</comment>
+  </data>
+  <data name="AgreementLabel_KeywordDescription" xml:space="preserve">
+    <value>Etichetta del Contratto. ad esempio EULA, AgeRating e così via. Questo campo deve essere localizzato. Agreement o AgreementUrl è obbligatorio. Quando vengono visualizzati i contratti, l'etichetta AgreementLabel viene evidenziata in grassetto</value>
+  </data>
+  <data name="AgreementUrl_KeywordDescription" xml:space="preserve">
+    <value>URL del contratto</value>
+  </data>
+  <data name="Agreement_KeywordDescription" xml:space="preserve">
+    <value>Contenuto di testo del contratto</value>
+  </data>
+  <data name="AllowedMarkets_KeywordDescription" xml:space="preserve">
+    <value>Mercati di destinazione del programma di installazione incluso</value>
+  </data>
+  <data name="AppsAndFeaturesEntries_KeywordDescription" xml:space="preserve">
+    <value>Vari valori chiave nella voce ARP del programma di installazione</value>
+  </data>
+  <data name="DisplayName_KeywordDescription" xml:space="preserve">
+    <value>Valore del registro di sistema DisplayName</value>
+  </data>
+  <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
+    <value>Requisito di elevazione del programma di installazione</value>
+  </data>
+  <data name="ExcludedMarkets_KeywordDescription" xml:space="preserve">
+    <value>Mercati di destinazione del programma di installazione esclusi</value>
+  </data>
+  <data name="InstallerAbortsTerminal_KeywordDescription" xml:space="preserve">
+    <value>Indica se il programma di installazione interromperà il terminale. Il valore predefinito è false</value>
+  </data>
+  <data name="InstallLocationRequired_KeywordDescription" xml:space="preserve">
+    <value>Indica se per il programma di installazione è necessario specificare un percorso di installazione</value>
+  </data>
+  <data name="Markets_KeywordDescription" xml:space="preserve">
+    <value>Mercati del programma di installazione</value>
+  </data>
+  <data name="ReleaseDate_KeywordDescription" xml:space="preserve">
+    <value>Data di rilascio del programma di installazione</value>
+  </data>
+  <data name="ReleaseNotesUrl_KeywordDescription" xml:space="preserve">
+    <value>URL delle note sulla versione del pacchetto</value>
+  </data>
+  <data name="ReleaseNotes_KeywordDescription" xml:space="preserve">
+    <value>Note sulla versione del pacchetto</value>
+  </data>
+  <data name="RequireExplicitUpgrade_KeywordDescription" xml:space="preserve">
+    <value>Indica se il programma di installazione deve essere aggiunto per impostazione predefinita dall'aggiornamento</value>
+  </data>
+  <data name="AddNewItem_MenuItem" xml:space="preserve">
+    <value>AGGIUNGI NUOVO ELEMENTO</value>
+  </data>
+  <data name="AgreementContent_KeywordDescription" xml:space="preserve">
+    <value>Contenuto di testo del contratto</value>
+  </data>
+  <data name="Agreements_KeywordDescription" xml:space="preserve">
+    <value>Contratti per il pacchetto</value>
+  </data>
+  <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
+    <value>Valore del Registro di sistema DisplayVersion</value>
+  </data>
+  <data name="EditAgreements_Message" xml:space="preserve">
+    <value>Modificare il campo Contratti?</value>
+    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  </data>
+  <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
+    <value>Codici di uscita del programma di installazione per errori comuni</value>
+  </data>
+  <data name="InstallerReturnCode_KeywordDescription" xml:space="preserve">
+    <value>Codice di uscita che può essere restituito dal programma di installazione dopo l'esecuzione</value>
+  </data>
+  <data name="ReleaseDateTime_KeywordDescription" xml:space="preserve">
+    <value>Data di rilascio del programma di installazione</value>
+  </data>
+  <data name="RemoveLastItem_MenuItem" xml:space="preserve">
+    <value>RIMUOVI ULTIMO ELEMENTO</value>
+  </data>
+  <data name="ReturnResponse_KeywordDescription" xml:space="preserve">
+    <value>Elenco delle risposte inviate per gli errori più comuni</value>
+  </data>
+  <data name="SelectItemToEdit_Message" xml:space="preserve">
+    <value>Selezionare un elemento da modificare o aggiungerne uno nuovo</value>
+  </data>
+  <data name="UnsupportedOSArchitectures_KeywordDescription" xml:space="preserve">
+    <value>Elenco di architetture del sistema operativo non supportate dal programma di installazione</value>
+  </data>
+  <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
+    <value>UpgradeCode usato per la correlazione dei pacchetti tra le origini</value>
+  </data>
+  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
+    <value>Non è stato possibile aggiornare il fork perché il ramo predefinito è in anticipo di {0} commit. </value>
+    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
   </data>
 </root>

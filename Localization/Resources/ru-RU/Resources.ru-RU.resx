@@ -231,7 +231,7 @@
     <value>Токен личного доступа GitHub, используемый для прямой отправки в репозиторий диспетчера пакетов Windows. Если токен не предоставлен, инструмент запросит учетные данные для входа в GitHub.</value>
   </data>
   <data name="Heading" xml:space="preserve">
-    <value>Автор манифеста Windows v{0}</value>
+    <value>Средство создания манифестов Диспетчера пакетов Windows версии {0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
   </data>
   <data name="Homepage_KeywordDescription" xml:space="preserve">
@@ -761,5 +761,137 @@
   </data>
   <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
     <value>Отменить это обновление и начать заново?</value>
+  </data>
+  <data name="ResolveMatchingConflicts_Message" xml:space="preserve">
+    <value>Чтобы разрешить соответствующие конфликты вручную, используйте флаг --interactive.</value>
+    <comment>`--interactive` - refers to a flag that can be included with the command</comment>
+  </data>
+  <data name="DefenderVirus_ErrorMessage" xml:space="preserve">
+    <value>Операция не была завершена, так как скачанный файл содержит вирус или потенциально нежелательную программу. Дополнительные сведения о потенциально нежелательных программах и доступных вариантах см. на странице https://aka.ms/winget-create-security</value>
+  </data>
+  <data name="InstallerSelection_MenuItem" xml:space="preserve">
+    <value>УСТАНОВЩИК {0}: {1}</value>
+    <comment>{0} - represents the installer index number
+{1} - represents the associated installer metadata</comment>
+  </data>
+  <data name="EditManifests_Message" xml:space="preserve">
+    <value>Вы хотите изменить манифесты?</value>
+  </data>
+  <data name="SaveAndExit_MenuItem" xml:space="preserve">
+    <value>СОХРАНИТЬ И ВЫЙТИ</value>
+  </data>
+  <data name="SelectManifestToEdit_Message" xml:space="preserve">
+    <value>Какой манифест вы хотите изменить?</value>
+  </data>
+  <data name="DownloadConnectionTimeout_Error" xml:space="preserve">
+    <value>Не удалось выполнить запрос на скачивание, так как истекло время ожидания подключения. Проверьте URL-адрес установщика и повторите попытку.</value>
+  </data>
+  <data name="ArchitectureOverride_Warning" xml:space="preserve">
+    <value>Если указанный установщик не соответствует существующему установщику даже при переопределении архитектуры, может потребоваться изменить существующий манифест вручную. Убедитесь, что в существующем манифесте указан всего один установщик, совпадающий с переопределяющей архитектурой, а также указан тип нового установщика. Чтобы изменить существующий манифест, используйте команду обновления с флагом "--interactive" и отправьте новые изменения. После публикации изменений повторите попытку.</value>
+    <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
+  </data>
+  <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
+    <value>Обнаружено несколько архитектур. Для переопределения можно указать только одну архитектуру.</value>
+  </data>
+  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
+    <value>Не удалось проанализировать указанную архитектуру переопределения {0}.</value>
+    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
+    <value>Переопределить архитектуру установщика</value>
+  </data>
+  <data name="OverridingArchitecture_Warning" xml:space="preserve">
+    <value>Переопределение {0} архитектурой {1}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding architecture</comment>
+  </data>
+  <data name="AgreementLabel_KeywordDescription" xml:space="preserve">
+    <value>Метка соглашения, т.е. EULA, AgeRating и т. п. Это поле должно быть локализованным. Требуется параметр Agreement или AgreementUrl. При отображении соглашений метка AgreementLabel выделяется полужирным шрифтом.</value>
+  </data>
+  <data name="AgreementUrl_KeywordDescription" xml:space="preserve">
+    <value>URL-адрес соглашения</value>
+  </data>
+  <data name="Agreement_KeywordDescription" xml:space="preserve">
+    <value>Текстовое содержимое соглашения</value>
+  </data>
+  <data name="AllowedMarkets_KeywordDescription" xml:space="preserve">
+    <value>Включенные целевые рынки установщика</value>
+  </data>
+  <data name="AppsAndFeaturesEntries_KeywordDescription" xml:space="preserve">
+    <value>Различные значения ключей в записи ARP установщика</value>
+  </data>
+  <data name="DisplayName_KeywordDescription" xml:space="preserve">
+    <value>Значение реестра DisplayName</value>
+  </data>
+  <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
+    <value>Требование к повышению прав установщика</value>
+  </data>
+  <data name="ExcludedMarkets_KeywordDescription" xml:space="preserve">
+    <value>Исключенные целевые рынки установщика</value>
+  </data>
+  <data name="InstallerAbortsTerminal_KeywordDescription" xml:space="preserve">
+    <value>Указывает, прервет ли установщик работу терминала. Значение по умолчанию — false</value>
+  </data>
+  <data name="InstallLocationRequired_KeywordDescription" xml:space="preserve">
+    <value>Указывает, требуется ли предоставлять установщику расположение установки</value>
+  </data>
+  <data name="Markets_KeywordDescription" xml:space="preserve">
+    <value>Рынки установщика</value>
+  </data>
+  <data name="ReleaseDate_KeywordDescription" xml:space="preserve">
+    <value>Дата выпуска установщика</value>
+  </data>
+  <data name="ReleaseNotesUrl_KeywordDescription" xml:space="preserve">
+    <value>URL-адрес заметок о выпуске пакета</value>
+  </data>
+  <data name="ReleaseNotes_KeywordDescription" xml:space="preserve">
+    <value>Заметки о выпуске пакета</value>
+  </data>
+  <data name="RequireExplicitUpgrade_KeywordDescription" xml:space="preserve">
+    <value>Указывает, следует ли по умолчанию закреплять установщик после обновления</value>
+  </data>
+  <data name="AddNewItem_MenuItem" xml:space="preserve">
+    <value>ДОБАВИТЬ НОВЫЙ ЭЛЕМЕНТ</value>
+  </data>
+  <data name="AgreementContent_KeywordDescription" xml:space="preserve">
+    <value>Текстовое содержимое соглашения</value>
+  </data>
+  <data name="Agreements_KeywordDescription" xml:space="preserve">
+    <value>Соглашения для пакета</value>
+  </data>
+  <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
+    <value>Значение реестра DisplayVersion</value>
+  </data>
+  <data name="EditAgreements_Message" xml:space="preserve">
+    <value>Изменить поле "Соглашения"?</value>
+    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  </data>
+  <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
+    <value>Коды выхода установщика для распространенных ошибок</value>
+  </data>
+  <data name="InstallerReturnCode_KeywordDescription" xml:space="preserve">
+    <value>Код выхода, который может быть возвращен установщиком после выполнения</value>
+  </data>
+  <data name="ReleaseDateTime_KeywordDescription" xml:space="preserve">
+    <value>Дата выпуска установщика</value>
+  </data>
+  <data name="RemoveLastItem_MenuItem" xml:space="preserve">
+    <value>УДАЛИТЬ ПОСЛЕДНИЙ ЭЛЕМЕНТ</value>
+  </data>
+  <data name="ReturnResponse_KeywordDescription" xml:space="preserve">
+    <value>Список возвращаемых откликов для распространенных ошибок</value>
+  </data>
+  <data name="SelectItemToEdit_Message" xml:space="preserve">
+    <value>Выберите элемент для изменения или добавления нового</value>
+  </data>
+  <data name="UnsupportedOSArchitectures_KeywordDescription" xml:space="preserve">
+    <value>Список архитектур ОС, которые не поддерживаются установщиком</value>
+  </data>
+  <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
+    <value>UpgradeCode используется для корреляции пакетов между источниками</value>
+  </data>
+  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
+    <value>Не удалось обновить разветвление, поскольку ветвь по умолчанию опережает на {0} фиксаций. </value>
+    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
   </data>
 </root>
