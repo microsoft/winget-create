@@ -231,7 +231,7 @@
     <value>Windows 패키지 관리자의 직접 전송에 사용되는 GitHub 개인 액세스 토큰입니다. 토큰을 제공하지 않으면 GitHub 로그인 자격 증명을 입력하라는 메시지가 나타납니다.</value>
   </data>
   <data name="Heading" xml:space="preserve">
-    <value>Windows 매니페스트 작성자 v{0}</value>
+    <value>Windows 패키지 관리자 매니페스트 작성자 v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
   </data>
   <data name="Homepage_KeywordDescription" xml:space="preserve">
@@ -761,5 +761,137 @@
   </data>
   <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
     <value>이 업데이트를 취소하고 다시 시작하시겠습니까?</value>
+  </data>
+  <data name="ResolveMatchingConflicts_Message" xml:space="preserve">
+    <value>일치하는 충돌을 수동으로 해결하려면 --interactive 플래그를 사용하십시오.</value>
+    <comment>`--interactive` - refers to a flag that can be included with the command</comment>
+  </data>
+  <data name="DefenderVirus_ErrorMessage" xml:space="preserve">
+    <value>다운로드한 파일에 바이러스 또는 사용자 동의 없이 설치된 소프트웨어가 포함되어 있어 작업이 성공적으로 완료되지 않았습니다. 잠재적으로 원치 않는 소프트웨어 및 사용 가능한 옵션에 대한 자세한 내용은 https://aka.ms/winget-create-security를 참조하세요.</value>
+  </data>
+  <data name="InstallerSelection_MenuItem" xml:space="preserve">
+    <value>설치 관리자 {0}: {1}</value>
+    <comment>{0} - represents the installer index number
+{1} - represents the associated installer metadata</comment>
+  </data>
+  <data name="EditManifests_Message" xml:space="preserve">
+    <value>매니페스트를 편집하시겠습니까?</value>
+  </data>
+  <data name="SaveAndExit_MenuItem" xml:space="preserve">
+    <value>저장하고 끝내기</value>
+  </data>
+  <data name="SelectManifestToEdit_Message" xml:space="preserve">
+    <value>어떤 매니페스트를 편집하시겠습니까?</value>
+  </data>
+  <data name="DownloadConnectionTimeout_Error" xml:space="preserve">
+    <value>연결 시간이 초과되어 다운로드 요청을 완료할 수 없습니다. 설치 관리자 URL을 확인하고 다시 시도하세요.</value>
+  </data>
+  <data name="ArchitectureOverride_Warning" xml:space="preserve">
+    <value>제공한 설치 관리자가 아키텍처를 재정의할 때도 기존 설치 관리자와 일치하지 않으면 기존 매니페스트를 수동으로 편집해야 할 수 있습니다. 기존 매니페스트에 새 설치 관리자의 재정의 아키텍처 및 설치 관리자 유형과 일치하는 단일 설치 관리자가 있는지 확인하세요. 기존 매니페스트를 수정하려면 업데이트 명령과 함께 '--interactive' 플래그를 사용하고 새 변경 내용을 제출하세요. 변경 내용이 게시되면 다시 시도하세요.</value>
+    <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
+  </data>
+  <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
+    <value>여러 아키텍처가 검색되었습니다. 재정의를 위해 아키텍처를 하나만 지정할 수 있습니다.</value>
+  </data>
+  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
+    <value>지정한 재정의 아키텍처 {0} 구문 분석할 수 없습니다.</value>
+    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
+    <value>설치 관리자의 아키텍처 재정의</value>
+  </data>
+  <data name="OverridingArchitecture_Warning" xml:space="preserve">
+    <value>아키텍처 {1}으(로) {0} 재정의하는 중</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding architecture</comment>
+  </data>
+  <data name="AgreementLabel_KeywordDescription" xml:space="preserve">
+    <value>Agreement의 레이블입니다. 예: EULA, AgeRating 등. 이 필드는 지역화되어야 합니다. Agreement 또는 AgreementUrl이 필요합니다. 계약을 표시할 때 AgreementLabel을 굵게 표시합니다.</value>
+  </data>
+  <data name="AgreementUrl_KeywordDescription" xml:space="preserve">
+    <value>계약 URL</value>
+  </data>
+  <data name="Agreement_KeywordDescription" xml:space="preserve">
+    <value>계약 텍스트 콘텐츠</value>
+  </data>
+  <data name="AllowedMarkets_KeywordDescription" xml:space="preserve">
+    <value>포함된 설치 관리자 대상 지역/국가</value>
+  </data>
+  <data name="AppsAndFeaturesEntries_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자의 ARP 항목 아래에 있는 다양한 키 값</value>
+  </data>
+  <data name="DisplayName_KeywordDescription" xml:space="preserve">
+    <value>DisplayName 레지스트리 값</value>
+  </data>
+  <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자의 권한 상승 요구 사항</value>
+  </data>
+  <data name="ExcludedMarkets_KeywordDescription" xml:space="preserve">
+    <value>제외된 설치 관리자 대상 지역/국가</value>
+  </data>
+  <data name="InstallerAbortsTerminal_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자가 터미널을 중단할지 여부를 나타냅니다. 기본값은 false입니다.</value>
+  </data>
+  <data name="InstallLocationRequired_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자에 제공된 설치 위치가 필요한지 여부를 나타냅니다.</value>
+  </data>
+  <data name="Markets_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 지역/국가</value>
+  </data>
+  <data name="ReleaseDate_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 릴리스 날짜</value>
+  </data>
+  <data name="ReleaseNotesUrl_KeywordDescription" xml:space="preserve">
+    <value>패키지 릴리스 정보 URL</value>
+  </data>
+  <data name="ReleaseNotes_KeywordDescription" xml:space="preserve">
+    <value>패키지 릴리스 정보</value>
+  </data>
+  <data name="RequireExplicitUpgrade_KeywordDescription" xml:space="preserve">
+    <value>기본적으로 업그레이드에서 설치 관리자를 고정해야 하는지 여부를 나타냅니다.</value>
+  </data>
+  <data name="AddNewItem_MenuItem" xml:space="preserve">
+    <value>새 항목 추가</value>
+  </data>
+  <data name="AgreementContent_KeywordDescription" xml:space="preserve">
+    <value>계약 텍스트 콘텐츠</value>
+  </data>
+  <data name="Agreements_KeywordDescription" xml:space="preserve">
+    <value>패키지의 계약</value>
+  </data>
+  <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
+    <value>DisplayVersion 레지스트리 값</value>
+  </data>
+  <data name="EditAgreements_Message" xml:space="preserve">
+    <value>계약 필드를 편집하시겠어요?</value>
+    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  </data>
+  <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
+    <value>일반적인 오류에 대한 설치 관리자 종료 코드</value>
+  </data>
+  <data name="InstallerReturnCode_KeywordDescription" xml:space="preserve">
+    <value>실행 후 설치 관리자가 반환할 수 있는 종료 코드</value>
+  </data>
+  <data name="ReleaseDateTime_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자 릴리스 날짜</value>
+  </data>
+  <data name="RemoveLastItem_MenuItem" xml:space="preserve">
+    <value>마지막 항목 제거</value>
+  </data>
+  <data name="ReturnResponse_KeywordDescription" xml:space="preserve">
+    <value>일반적인 오류에 대한 반환 응답 목록</value>
+  </data>
+  <data name="SelectItemToEdit_Message" xml:space="preserve">
+    <value>편집할 항목 선택 또는 새 항목 추가</value>
+  </data>
+  <data name="UnsupportedOSArchitectures_KeywordDescription" xml:space="preserve">
+    <value>설치 관리자가 지원하지 않는 OS 아키텍처 목록</value>
+  </data>
+  <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
+    <value>소스 간 패키지의 상관 관계에 사용되는 UpgradeCode</value>
+  </data>
+  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
+    <value>기본 분기가 {0} 커밋에 의해 앞서 있어 포크를 업데이트하지 못했습니다. </value>
+    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
   </data>
 </root>

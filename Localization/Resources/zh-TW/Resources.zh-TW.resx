@@ -231,7 +231,7 @@
     <value>GitHub 個人存取權杖，用於直接提交至 Windows 封裝管理員存放庫。如果未提供權杖，工具會提示您輸入 GitHub 登入認證。</value>
   </data>
   <data name="Heading" xml:space="preserve">
-    <value>Windows 資訊清單建立器 v{0}</value>
+    <value>Windows 封裝管理員資訊清單建立者 v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
   </data>
   <data name="Homepage_KeywordDescription" xml:space="preserve">
@@ -761,5 +761,137 @@
   </data>
   <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
     <value>是否要捨棄此更新並重新開始？</value>
+  </data>
+  <data name="ResolveMatchingConflicts_Message" xml:space="preserve">
+    <value>若要手動解決相符的衝突，請使用 --互動式旗標。</value>
+    <comment>`--interactive` - refers to a flag that can be included with the command</comment>
+  </data>
+  <data name="DefenderVirus_ErrorMessage" xml:space="preserve">
+    <value>作業未順利完成，因為下載的檔案包含病毒或潛在的垃圾軟體。如需潛在的垃圾軟體和可用選項的詳細資訊，請參閱https://aka.ms/winget-create-security</value>
+  </data>
+  <data name="InstallerSelection_MenuItem" xml:space="preserve">
+    <value>安裝程式 {0}: {1}</value>
+    <comment>{0} - represents the installer index number
+{1} - represents the associated installer metadata</comment>
+  </data>
+  <data name="EditManifests_Message" xml:space="preserve">
+    <value>您要編輯您的資訊清單嗎？</value>
+  </data>
+  <data name="SaveAndExit_MenuItem" xml:space="preserve">
+    <value>儲存並結束</value>
+  </data>
+  <data name="SelectManifestToEdit_Message" xml:space="preserve">
+    <value>您要編輯哪一個資訊清單？</value>
+  </data>
+  <data name="DownloadConnectionTimeout_Error" xml:space="preserve">
+    <value>無法完成下載要求，因為連線已逾時。請驗證您的安裝程式 URL，然後再試一次。</value>
+  </data>
+  <data name="ArchitectureOverride_Warning" xml:space="preserve">
+    <value>如果您提供的安裝程式即使覆寫架構也不符合現有的安裝程式，您可能需要手動編輯現有的資訊清單。請確定現有的資訊清單具有符合新安裝程式覆寫架構和安裝程式類型的單一安裝程式。若要修改現有的資訊清單，請使用 '--interactive' 旗標搭配更新命令，然後提交新的變更。變更發佈後，請再試一次。</value>
+    <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
+  </data>
+  <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
+    <value>偵測到多個架構。只能為覆寫指定一個架構。</value>
+  </data>
+  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
+    <value>無法剖析指定的覆寫架構{0}。</value>
+    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
+    <value>覆蓋安裝程式的架構</value>
+  </data>
+  <data name="OverridingArchitecture_Warning" xml:space="preserve">
+    <value>正在以架構 {1} 覆寫 {0}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding architecture</comment>
+  </data>
+  <data name="AgreementLabel_KeywordDescription" xml:space="preserve">
+    <value>合約的標籤。亦即 EULA、AgeRating 等。此欄位應當地語系化。需要合約或 AgreementUrl。當我們顯示合約時，會將 AgreementLabel 設為粗體</value>
+  </data>
+  <data name="AgreementUrl_KeywordDescription" xml:space="preserve">
+    <value>合約 URL</value>
+  </data>
+  <data name="Agreement_KeywordDescription" xml:space="preserve">
+    <value>合約文字內容</value>
+  </data>
+  <data name="AllowedMarkets_KeywordDescription" xml:space="preserve">
+    <value>包含的安裝程式目標市場</value>
+  </data>
+  <data name="AppsAndFeaturesEntries_KeywordDescription" xml:space="preserve">
+    <value>安裝程式之 ARP 項目下的各種機碼值</value>
+  </data>
+  <data name="DisplayName_KeywordDescription" xml:space="preserve">
+    <value>DisplayName 登錄值</value>
+  </data>
+  <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
+    <value>安裝程式的提高權限需求</value>
+  </data>
+  <data name="ExcludedMarkets_KeywordDescription" xml:space="preserve">
+    <value>排除的安裝程式目標市場</value>
+  </data>
+  <data name="InstallerAbortsTerminal_KeywordDescription" xml:space="preserve">
+    <value>指出安裝程式是否會中止終端機。預設為 false</value>
+  </data>
+  <data name="InstallLocationRequired_KeywordDescription" xml:space="preserve">
+    <value>指出安裝程式是否需要提供安裝位置</value>
+  </data>
+  <data name="Markets_KeywordDescription" xml:space="preserve">
+    <value>安裝程式市場</value>
+  </data>
+  <data name="ReleaseDate_KeywordDescription" xml:space="preserve">
+    <value>安裝程式發行日期</value>
+  </data>
+  <data name="ReleaseNotesUrl_KeywordDescription" xml:space="preserve">
+    <value>套件版本資訊 URL</value>
+  </data>
+  <data name="ReleaseNotes_KeywordDescription" xml:space="preserve">
+    <value>套件版本資訊</value>
+  </data>
+  <data name="RequireExplicitUpgrade_KeywordDescription" xml:space="preserve">
+    <value>指出安裝程式是否應預設從升級釘選</value>
+  </data>
+  <data name="AddNewItem_MenuItem" xml:space="preserve">
+    <value>新增項目</value>
+  </data>
+  <data name="AgreementContent_KeywordDescription" xml:space="preserve">
+    <value>合約文字內容</value>
+  </data>
+  <data name="Agreements_KeywordDescription" xml:space="preserve">
+    <value>套件的合約</value>
+  </data>
+  <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
+    <value>DisplayVersion 登錄值</value>
+  </data>
+  <data name="EditAgreements_Message" xml:space="preserve">
+    <value>要編輯 [合約] 欄位嗎?</value>
+    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  </data>
+  <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
+    <value>常見錯誤的安裝程式結束代碼</value>
+  </data>
+  <data name="InstallerReturnCode_KeywordDescription" xml:space="preserve">
+    <value>執行後可由安裝程式傳回的結束代碼</value>
+  </data>
+  <data name="ReleaseDateTime_KeywordDescription" xml:space="preserve">
+    <value>安裝程式發行日期</value>
+  </data>
+  <data name="RemoveLastItem_MenuItem" xml:space="preserve">
+    <value>移除上一個項目</value>
+  </data>
+  <data name="ReturnResponse_KeywordDescription" xml:space="preserve">
+    <value>常見錯誤的傳回回應清單</value>
+  </data>
+  <data name="SelectItemToEdit_Message" xml:space="preserve">
+    <value>選取要編輯的項目或新增的項目</value>
+  </data>
+  <data name="UnsupportedOSArchitectures_KeywordDescription" xml:space="preserve">
+    <value>安裝程式不支援的 OS 架構清單</value>
+  </data>
+  <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
+    <value>用於跨來源之套件關聯性的 UpgradeCode</value>
+  </data>
+  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
+    <value>無法更新分叉，因為預設分支在 {0} 個認可之前。 </value>
+    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
   </data>
 </root>

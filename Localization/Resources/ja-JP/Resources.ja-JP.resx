@@ -193,7 +193,7 @@
     <comment>Describes a usage scenario for the New Command that launches the manifest creation process with the user providing an installer URL to be downloaded and extracted.</comment>
   </data>
   <data name="Example_NewCommand_SaveLocallyOrSubmit" xml:space="preserve">
-    <value>ローカルに保存してプル要求を送信する</value>
+    <value>ローカルに保存してプル リクエストを送信する</value>
     <comment>Describes a usage scenario for the New Command that allows the user to decide where to save the newly-generated manifest locally and whether to submit directly to GitHub for a pull request.</comment>
   </data>
   <data name="Example_NewCommand_StartFromScratch" xml:space="preserve">
@@ -231,7 +231,7 @@
     <value>Windows パッケージマネージャーのリポジトリへの直接送信に使用される GitHub personal アクセストークン。トークンが指定されていない場合は、GitHub ログイン資格情報の入力を求めるツールが表示されます。</value>
   </data>
   <data name="Heading" xml:space="preserve">
-    <value>Windows マニフェスト クリエーター v {0}</value>
+    <value>Windows パッケージ マネージャー マニフェスト作成者 v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
   </data>
   <data name="Homepage_KeywordDescription" xml:space="preserve">
@@ -349,7 +349,7 @@
     <value>発行元名 | 例: Microsoft|</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
-    <value>プル要求はここにあります: {0}</value>
+    <value>プル リクエストはここにあります: {0}</value>
     <comment>{0} - will be replaced with the pull request URI</comment>
   </data>
   <data name="RetrievingManifest_Message" xml:space="preserve">
@@ -377,13 +377,13 @@
     <value>キャッシュされた GitHub トークンを設定します。 -- token パラメーターを使用してキャッシュするトークンを指定できます。指定しない場合、OAuth フローが開始されます。</value>
   </data>
   <data name="SkippingPullRequest_Message" xml:space="preserve">
-    <value>プル要求の送信をスキップしています...</value>
+    <value>プル リクエストの送信をスキップしています...</value>
   </data>
   <data name="SubmitCommand_HelpText" xml:space="preserve">
     <value>有効なマニフェストを Windows パッケージ マネージャーのリポジトリに直接送信します。</value>
   </data>
   <data name="SubmittingPullRequest_Message" xml:space="preserve">
-    <value>マニフェストのプル要求を送信しています...</value>
+    <value>マニフェストのプル リクエストを送信しています...</value>
   </data>
   <data name="SubmitToWinget_HelpText" xml:space="preserve">
     <value>Windows パッケージマネージャーのリポジトリに送信するためのブール値。True の場合、更新されたマニフェストは、提供された GitHub トークンを使用して直接送信されます。既定値は false です。</value>
@@ -761,5 +761,137 @@
   </data>
   <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
     <value>この更新を破棄して最初からやり直しますか?</value>
+  </data>
+  <data name="ResolveMatchingConflicts_Message" xml:space="preserve">
+    <value>一致する競合を手動で解決するには、--interactive フラグを使用します。</value>
+    <comment>`--interactive` - refers to a flag that can be included with the command</comment>
+  </data>
+  <data name="DefenderVirus_ErrorMessage" xml:space="preserve">
+    <value>ダウンロードされたファイルにウイルスまたは望ましくない可能性のあるソフトウェアが含まれているため、操作は正常に完了しませんでした。望ましくない可能性のあるソフトウェアの詳細と利用可能なオプションについては、https://aka.ms/winget-create-security をご覧ください</value>
+  </data>
+  <data name="InstallerSelection_MenuItem" xml:space="preserve">
+    <value>インストーラー {0}: {1}</value>
+    <comment>{0} - represents the installer index number
+{1} - represents the associated installer metadata</comment>
+  </data>
+  <data name="EditManifests_Message" xml:space="preserve">
+    <value>マニフェストを編集しますか?</value>
+  </data>
+  <data name="SaveAndExit_MenuItem" xml:space="preserve">
+    <value>保存して終了する</value>
+  </data>
+  <data name="SelectManifestToEdit_Message" xml:space="preserve">
+    <value>どのマニフェストを編集しますか?</value>
+  </data>
+  <data name="DownloadConnectionTimeout_Error" xml:space="preserve">
+    <value>接続がタイムアウトしたため、ダウンロード要求を完了できません。インストーラーの URL を確認して、もう一度お試しください。</value>
+  </data>
+  <data name="ArchitectureOverride_Warning" xml:space="preserve">
+    <value>指定したインストーラーが、アーキテクチャをオーバーライドしても既存のインストーラーと一致しない場合は、既存のマニフェストを手動で編集する必要があります。既存のマニフェストに、新しいインストーラーのオーバーライド アーキテクチャとインストーラーの種類に一致するインストーラーが 1 つ存在することを確認してください。既存のマニフェストを変更するには、更新コマンドで '--interactive' フラグを使用して、新しい変更を送信します。変更が公開されたら、もう一度お試しください。</value>
+    <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
+  </data>
+  <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
+    <value>複数のアーキテクチャが検出されました。オーバーライドに指定できるアーキテクチャは 1 つだけです。</value>
+  </data>
+  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
+    <value>指定されたオーバーライド アーキテクチャ {0}を解析できません。</value>
+    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
+    <value>インストーラーのアーキテクチャをオーバーライドする</value>
+  </data>
+  <data name="OverridingArchitecture_Warning" xml:space="preserve">
+    <value>アーキテクチャ {1} で {0} をオーバーライドする</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding architecture</comment>
+  </data>
+  <data name="AgreementLabel_KeywordDescription" xml:space="preserve">
+    <value>契約のラベル。例: EULA、AgeRating など。このフィールドはローカライズする必要があります。Agreement または AgreementUrl のいずれかが必要です。契約を表示すると、AgreementLabel が太字になります</value>
+  </data>
+  <data name="AgreementUrl_KeywordDescription" xml:space="preserve">
+    <value>契約 URL</value>
+  </data>
+  <data name="Agreement_KeywordDescription" xml:space="preserve">
+    <value>契約のテキスト コンテンツ</value>
+  </data>
+  <data name="AllowedMarkets_KeywordDescription" xml:space="preserve">
+    <value>含まれているインストーラーのターゲット市場</value>
+  </data>
+  <data name="AppsAndFeaturesEntries_KeywordDescription" xml:space="preserve">
+    <value>インストーラーの ARP エントリの下のさまざまなキー値</value>
+  </data>
+  <data name="DisplayName_KeywordDescription" xml:space="preserve">
+    <value>DisplayName レジストリ値</value>
+  </data>
+  <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
+    <value>インストーラーの昇格要件</value>
+  </data>
+  <data name="ExcludedMarkets_KeywordDescription" xml:space="preserve">
+    <value>除外されたインストーラーのターゲット市場</value>
+  </data>
+  <data name="InstallerAbortsTerminal_KeywordDescription" xml:space="preserve">
+    <value>インストーラーがターミナルを中止するかどうかを示します。既定値は false です</value>
+  </data>
+  <data name="InstallLocationRequired_KeywordDescription" xml:space="preserve">
+    <value>インストーラーが提供されたインストール場所を必要とするかどうかを示します</value>
+  </data>
+  <data name="Markets_KeywordDescription" xml:space="preserve">
+    <value>インストーラーの市場</value>
+  </data>
+  <data name="ReleaseDate_KeywordDescription" xml:space="preserve">
+    <value>インストーラーのリリース日</value>
+  </data>
+  <data name="ReleaseNotesUrl_KeywordDescription" xml:space="preserve">
+    <value>パッケージのリリース ノートの URL</value>
+  </data>
+  <data name="ReleaseNotes_KeywordDescription" xml:space="preserve">
+    <value>パッケージのリリース ノート</value>
+  </data>
+  <data name="RequireExplicitUpgrade_KeywordDescription" xml:space="preserve">
+    <value>インストーラーをアップグレードから既定で固定する必要があるかどうかを示します</value>
+  </data>
+  <data name="AddNewItem_MenuItem" xml:space="preserve">
+    <value>新しい項目を追加</value>
+  </data>
+  <data name="AgreementContent_KeywordDescription" xml:space="preserve">
+    <value>契約のテキスト コンテンツ</value>
+  </data>
+  <data name="Agreements_KeywordDescription" xml:space="preserve">
+    <value>パッケージの契約</value>
+  </data>
+  <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
+    <value>DisplayVersion レジストリ値</value>
+  </data>
+  <data name="EditAgreements_Message" xml:space="preserve">
+    <value>[契約] フィールドを編集しますか?</value>
+    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  </data>
+  <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
+    <value>一般的なエラーのインストーラー終了コード</value>
+  </data>
+  <data name="InstallerReturnCode_KeywordDescription" xml:space="preserve">
+    <value>実行後にインストーラーが返すことができる終了コード</value>
+  </data>
+  <data name="ReleaseDateTime_KeywordDescription" xml:space="preserve">
+    <value>インストーラーのリリース日</value>
+  </data>
+  <data name="RemoveLastItem_MenuItem" xml:space="preserve">
+    <value>最後の項目を削除</value>
+  </data>
+  <data name="ReturnResponse_KeywordDescription" xml:space="preserve">
+    <value>一般的なエラーに対する返答の一覧</value>
+  </data>
+  <data name="SelectItemToEdit_Message" xml:space="preserve">
+    <value>編集する項目を選択するか、新しい項目を追加します</value>
+  </data>
+  <data name="UnsupportedOSArchitectures_KeywordDescription" xml:space="preserve">
+    <value>インストーラーでサポートされていない OS アーキテクチャの一覧</value>
+  </data>
+  <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
+    <value>ソース間のパッケージの関連付けに使用される UpgradeCode</value>
+  </data>
+  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
+    <value>既定のブランチが {0} コミットより進んでいるため、フォークの更新に失敗しました。 </value>
+    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
   </data>
 </root>

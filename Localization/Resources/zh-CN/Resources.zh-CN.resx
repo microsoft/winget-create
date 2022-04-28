@@ -231,7 +231,7 @@
     <value>GitHub 个人访问令牌，用于直接提交到 Windows 程序包管理器库。如果未提供任何令牌，工具将提示 GitHub 登录凭据。</value>
   </data>
   <data name="Heading" xml:space="preserve">
-    <value>Windows 清单创建程序 v{0}</value>
+    <value>Windows 程序包管理器清单创建程序 v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
   </data>
   <data name="Homepage_KeywordDescription" xml:space="preserve">
@@ -761,5 +761,137 @@
   </data>
   <data name="DiscardUpdateAndStartOver_Message" xml:space="preserve">
     <value>是否要放弃此更新并重新开始?</value>
+  </data>
+  <data name="ResolveMatchingConflicts_Message" xml:space="preserve">
+    <value>若要手动解决匹配冲突，请使用 --interactive 标志。</value>
+    <comment>`--interactive` - refers to a flag that can be included with the command</comment>
+  </data>
+  <data name="DefenderVirus_ErrorMessage" xml:space="preserve">
+    <value>操作未能成功完成，因为下载的文件包含病毒或可能不需要的软件。有关可能不需要的软件和可用的选项的详细信息，请参阅 https://aka.ms/winget-create-security</value>
+  </data>
+  <data name="InstallerSelection_MenuItem" xml:space="preserve">
+    <value>安装程序{0}： {1}</value>
+    <comment>{0} - represents the installer index number
+{1} - represents the associated installer metadata</comment>
+  </data>
+  <data name="EditManifests_Message" xml:space="preserve">
+    <value>是否要编辑清单?</value>
+  </data>
+  <data name="SaveAndExit_MenuItem" xml:space="preserve">
+    <value>保存并退出</value>
+  </data>
+  <data name="SelectManifestToEdit_Message" xml:space="preserve">
+    <value>要编辑哪个清单?</value>
+  </data>
+  <data name="DownloadConnectionTimeout_Error" xml:space="preserve">
+    <value>无法完成下载请求，因为连接已超时。请验证安装程序 URL，然后重试。</value>
+  </data>
+  <data name="ArchitectureOverride_Warning" xml:space="preserve">
+    <value>如果提供的安装程序在替代体系结构时仍无法匹配现有安装程序，则可能需要手动编辑现有清单。请确保现有清单具有与新安装程序的替代体系结构和安装程序类型匹配的单个安装程序。若要修改现有清单，请将 "--interactive" 标志与更新命令一起使用，并提交新更改。发布更改后，请重试。</value>
+    <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
+  </data>
+  <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
+    <value>检测到多个体系结构。只能为替代指定一个体系结构。</value>
+  </data>
+  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
+    <value>无法分析指定的替代体系结构{0}。</value>
+    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
+    <value>替代安装程序的体系结构</value>
+  </data>
+  <data name="OverridingArchitecture_Warning" xml:space="preserve">
+    <value>正在使用体系结构{1}替代{0}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding architecture</comment>
+  </data>
+  <data name="AgreementLabel_KeywordDescription" xml:space="preserve">
+    <value>协议的标签。即 EULA、AgeRating 等。应本地化此字段。协议或 AgreementUrl 是必需的。当我们显示协议时，我们会加粗 AgreementLabel</value>
+  </data>
+  <data name="AgreementUrl_KeywordDescription" xml:space="preserve">
+    <value>协议 URL</value>
+  </data>
+  <data name="Agreement_KeywordDescription" xml:space="preserve">
+    <value>协议文本内容</value>
+  </data>
+  <data name="AllowedMarkets_KeywordDescription" xml:space="preserve">
+    <value>包含的安装程序目标市场</value>
+  </data>
+  <data name="AppsAndFeaturesEntries_KeywordDescription" xml:space="preserve">
+    <value>安装程序的 ARP 条目下的各种键值</value>
+  </data>
+  <data name="DisplayName_KeywordDescription" xml:space="preserve">
+    <value>DisplayName 注册表值</value>
+  </data>
+  <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
+    <value>安装程序的提升要求</value>
+  </data>
+  <data name="ExcludedMarkets_KeywordDescription" xml:space="preserve">
+    <value>排除的安装程序目标市场</value>
+  </data>
+  <data name="InstallerAbortsTerminal_KeywordDescription" xml:space="preserve">
+    <value>指示安装程序是否中止终端。默认值为 false</value>
+  </data>
+  <data name="InstallLocationRequired_KeywordDescription" xml:space="preserve">
+    <value>指示安装程序是否需要提供安装位置</value>
+  </data>
+  <data name="Markets_KeywordDescription" xml:space="preserve">
+    <value>安装程序市场</value>
+  </data>
+  <data name="ReleaseDate_KeywordDescription" xml:space="preserve">
+    <value>安装程序发布日期</value>
+  </data>
+  <data name="ReleaseNotesUrl_KeywordDescription" xml:space="preserve">
+    <value>包发行说明 URL</value>
+  </data>
+  <data name="ReleaseNotes_KeywordDescription" xml:space="preserve">
+    <value>包发行说明</value>
+  </data>
+  <data name="RequireExplicitUpgrade_KeywordDescription" xml:space="preserve">
+    <value>指示默认情况下是否应从升级中固定安装程序</value>
+  </data>
+  <data name="AddNewItem_MenuItem" xml:space="preserve">
+    <value>添加新项</value>
+  </data>
+  <data name="AgreementContent_KeywordDescription" xml:space="preserve">
+    <value>协议文本内容</value>
+  </data>
+  <data name="Agreements_KeywordDescription" xml:space="preserve">
+    <value>程序包的协议</value>
+  </data>
+  <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
+    <value>DisplayVersion 注册表值</value>
+  </data>
+  <data name="EditAgreements_Message" xml:space="preserve">
+    <value>是否要编辑"协议"字段？</value>
+    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  </data>
+  <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
+    <value>安装程序退出常见错误的代码</value>
+  </data>
+  <data name="InstallerReturnCode_KeywordDescription" xml:space="preserve">
+    <value>执行后安装程序可以返回的退出代码</value>
+  </data>
+  <data name="ReleaseDateTime_KeywordDescription" xml:space="preserve">
+    <value>安装程序发布日期</value>
+  </data>
+  <data name="RemoveLastItem_MenuItem" xml:space="preserve">
+    <value>删除最后一项</value>
+  </data>
+  <data name="ReturnResponse_KeywordDescription" xml:space="preserve">
+    <value>常见错误的返回响应列表</value>
+  </data>
+  <data name="SelectItemToEdit_Message" xml:space="preserve">
+    <value>选择要编辑的项目或添加新项</value>
+  </data>
+  <data name="UnsupportedOSArchitectures_KeywordDescription" xml:space="preserve">
+    <value>安装程序不支持的 OS 体系结构列表</value>
+  </data>
+  <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
+    <value>用于跨源关联包的 UpgradeCode</value>
+  </data>
+  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
+    <value>无法更新分叉，因为默认分支领先 {0} 个提交。 </value>
+    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
   </data>
 </root>
