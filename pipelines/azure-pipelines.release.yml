@@ -179,7 +179,12 @@ jobs:
             $(exePathFrameworkDependent)
             $(exePathFrameworkDependent).txt
             $(appxBundlePath)
-            $(appxBundlePath).txt              
+            $(appxBundlePath).txt
+
+      - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+        displayName: 'Generation Task'
+        inputs:
+            BuildDropPath: '$(Build.ArtifactStagingDirectory)'
 
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: wingetcreate
