@@ -181,6 +181,11 @@ jobs:
             $(appxBundlePath)
             $(appxBundlePath).txt
 
+      - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+        displayName: 'Generation Task'
+        inputs:
+            BuildDropPath: '$(Build.ArtifactStagingDirectory)'                  
+
       - publish: $(Build.ArtifactStagingDirectory)
         artifact: wingetcreate
         displayName: Publish appx, exe, and hash files
