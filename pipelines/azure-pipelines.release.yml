@@ -182,7 +182,7 @@ jobs:
             $(appxBundlePath).txt
 
       - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
-        displayName: 'Generation Task'
+        displayName: 'Generate SBOM'
         inputs:
             BuildDropPath: '$(Build.ArtifactStagingDirectory)'
 
