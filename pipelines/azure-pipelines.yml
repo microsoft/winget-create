@@ -96,6 +96,11 @@ jobs:
             /p:UapAppxPackageBuildMode=SideloadOnly
             /p:AppxPackageSigningEnabled=false'
 
+      - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+        displayName: 'Generate SBOM'
+        inputs:
+            BuildDropPath: '$(appxPackageDir)'
+
       - publish: $(appxBundlePath)
         artifact: msixbundle
         displayName: Publish msix bundle
