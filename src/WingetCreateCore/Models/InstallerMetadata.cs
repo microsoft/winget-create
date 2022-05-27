@@ -29,16 +29,16 @@ namespace Microsoft.WingetCreateCore.Models
         /// <summary>
         /// Gets or sets the architecture detected from the URL string.
         /// </summary>
-        public InstallerArchitecture? UrlArchitecture { get; set; }
+        public Architecture? UrlArchitecture { get; set; }
 
         /// <summary>
         /// Gets or sets the architecture detected from the binary.
         /// </summary>
-        public InstallerArchitecture? BinaryArchitecture { get; set; }
+        public Architecture? BinaryArchitecture { get; set; }
 
         /// <summary>
         /// Gets or sets the architecture specified as an override.
         /// </summary>
-        public InstallerArchitecture? OverrideArchitecture { get; set; }
+        public Architecture? OverrideArchitecture { get; set; }
     }
 }

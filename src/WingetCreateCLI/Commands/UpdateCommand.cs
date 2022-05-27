@@ -519,7 +519,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     string installerUrl = installerUrlOverride[0];
                     string overrideArchString = installerUrlOverride[1];
-                    InstallerArchitecture? overrideArch = overrideArchString.ToEnumOrDefault<InstallerArchitecture>();
+                    Architecture? overrideArch = overrideArchString.ToEnumOrDefault<Architecture>();
                     if (overrideArch.HasValue)
                     {
                         installerMetadata.InstallerUrl = installerUrl;

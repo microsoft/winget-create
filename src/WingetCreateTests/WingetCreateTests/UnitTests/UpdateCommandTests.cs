@@ -223,10 +223,10 @@ namespace Microsoft.WingetCreateUnitTests
             var archs = new[] { "arm64", "arm", "win64", "win32" };
             var expectedArchs = new[]
             {
-                InstallerArchitecture.Arm64,
-                InstallerArchitecture.Arm,
-                InstallerArchitecture.X64,
-                InstallerArchitecture.X86,
+                Architecture.Arm64,
+                Architecture.Arm,
+                Architecture.X64,
+                Architecture.X86,
             };
 
             TestUtils.InitializeMockDownloads(archs.Select(a => $"{a}/{TestConstants.TestMsiInstaller}").ToArray());
@@ -259,7 +259,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
             foreach (var updatedInstaller in updatedManifests.InstallerManifest.Installers)
             {
-                Assert.AreNotEqual(InstallerArchitecture.Arm64, updatedInstaller.Architecture, "Architecture should not be detected from string.");
+                Assert.AreNotEqual(Architecture.Arm64, updatedInstaller.Architecture, "Architecture should not be detected from string.");
                 Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
             }
         }
@@ -323,7 +323,7 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.InitializeMockDownload();
             TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
             string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
-            InstallerArchitecture expectedArch = InstallerArchitecture.Arm;
+            Architecture expectedArch = Architecture.Arm;
 
             // Test without architecture override should fail.
             (UpdateCommand badCommand, var manifests) =
@@ -371,8 +371,8 @@ namespace Microsoft.WingetCreateUnitTests
         {
             var expectedArchs = new[]
             {
-                InstallerArchitecture.Arm,
-                InstallerArchitecture.X64,
+                Architecture.Arm,
+                Architecture.X64,
             };
 
             string x64ExeInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";

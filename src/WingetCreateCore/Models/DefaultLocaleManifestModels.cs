@@ -35,9 +35,37 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
+    
+    
     }
     
-    /// <summary>A representation of a multiple-file manifest representing a default app metadata in the OWC. v1.1.0</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class Documentation 
+    {
+        /// <summary>The label of the documentation for providing software guides such as manuals and troubleshooting URLs.</summary>
+        [Newtonsoft.Json.JsonProperty("DocumentLabel", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(100, MinimumLength = 1)]
+        public string DocumentLabel { get; set; }
+    
+        /// <summary>The documentation URL.</summary>
+        [Newtonsoft.Json.JsonProperty("DocumentUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(2048)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
+        public string DocumentUrl { get; set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
+    
+    
+    }
+    
+    /// <summary>A representation of a multiple-file manifest representing a default app metadata in the OWC. v1.2.0</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class DefaultLocaleManifest 
     {
@@ -162,6 +190,21 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
         public string ReleaseNotesUrl { get; set; }
     
+        /// <summary>The purchase url for acquiring entitlement for the package.</summary>
+        [Newtonsoft.Json.JsonProperty("PurchaseUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(2048)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
+        public string PurchaseUrl { get; set; }
+    
+        /// <summary>The notes displayed to the user upon completion of a package installation.</summary>
+        [Newtonsoft.Json.JsonProperty("InstallationNotes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(256, MinimumLength = 1)]
+        public string InstallationNotes { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Documentations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.MaxLength(256)]
+        public System.Collections.Generic.List<Documentation> Documentations { get; set; }
+    
         /// <summary>The manifest type</summary>
         [Newtonsoft.Json.JsonProperty("ManifestType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -171,7 +214,7 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.1.0";
+        public string ManifestVersion { get; set; } = "1.2.0";
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
@@ -181,5 +224,7 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
+    
+    
     }
 }

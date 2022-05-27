@@ -273,7 +273,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (type.IsEnumerable())
                 {
                     Type elementType = type.GetGenericArguments().SingleOrDefault();
-                    if (elementType.IsNonStringClassType() && !Prompt.Confirm(Resources.EditAgreements_Message))
+                    if (elementType.IsNonStringClassType() && !Prompt.Confirm(string.Format(Resources.EditObjectTypeField_Message, property.Name)))
                     {
                         continue;
                     }

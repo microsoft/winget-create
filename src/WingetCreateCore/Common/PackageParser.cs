@@ -11,7 +11,6 @@ namespace Microsoft.WingetCreateCore
     using System.IO;
     using System.Linq;
     using System.Net.Http;
-    using System.Runtime.InteropServices;
     using System.Security.Cryptography;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -298,7 +297,7 @@ namespace Microsoft.WingetCreateCore
             else
             {
                 // For a single installer, detect the architecture. If no architecture is detected, default to architecture from existing manifest.
-                newInstaller.Architecture = GetArchFromUrl(url) ?? GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? installer.Architecture;
+                newInstaller.Architecture = GetArchFromUrl(url) ?? GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? installer.Architecture;
             }
 
             newInstaller.InstallerUrl = url;
@@ -465,7 +464,7 @@ namespace Microsoft.WingetCreateCore
             var baseInstaller = new Installer();
             baseInstaller.InstallerUrl = url;
             baseInstaller.InstallerSha256 = GetFileHash(path);
-            baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+            baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
 
             bool parseMsixResult = false;
 
@@ -500,28 +499,28 @@ namespace Microsoft.WingetCreateCore
         /// </summary>
         /// <param name="url">Installer url string.</param>
         /// <returns>Installer architecture enum.</returns>
-        private static InstallerArchitecture? GetArchFromUrl(string url)
+        private static Architecture? GetArchFromUrl(string url)
         {
-            List<InstallerArchitecture> archMatches = new List<InstallerArchitecture>();
+            List<Architecture> archMatches = new List<Architecture>();
 
             // Arm must only be checked if arm64 check fails, otherwise it'll match for arm64 too
             if (Regex.Match(url, "arm64|aarch64", RegexOptions.IgnoreCase).Success)
             {
-                archMatches.Add(InstallerArchitecture.Arm64);
+                archMatches.Add(Architecture.Arm64);
             }
             else if (Regex.Match(url, @"\barm\b", RegexOptions.IgnoreCase).Success)
             {
-                archMatches.Add(InstallerArchitecture.Arm);
+                archMatches.Add(Architecture.Arm);
             }
 
             if (Regex.Match(url, "x64|win64|_64|64-bit", RegexOptions.IgnoreCase).Success)
             {
-                archMatches.Add(InstallerArchitecture.X64);
+                archMatches.Add(Architecture.X64);
             }
 
             if (Regex.Match(url, "x86|win32|ia32|_86|32-bit", RegexOptions.IgnoreCase).Success)
             {
-                archMatches.Add(InstallerArchitecture.X86);
+                archMatches.Add(Architecture.X86);
             }
 
             return archMatches.Count == 1 ? archMatches.Single() : null;
@@ -713,7 +712,7 @@ namespace Microsoft.WingetCreateCore
                         archString.EqualsIC("Arm64") ? "Arm64" :
                         archString.EqualsIC("Arm") ? "Arm" : archString;
 
-                    baseInstaller.Architecture = archString.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+                    baseInstaller.Architecture = archString.ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
 
                     if (baseInstaller.InstallerLocale == null)
                     {
@@ -793,7 +792,7 @@ namespace Microsoft.WingetCreateCore
 
         private static void SetInstallerPropertiesFromAppxMetadata(AppxMetadata appxMetadata, Installer installer, InstallerManifest installerManifest)
         {
-            installer.Architecture = appxMetadata.Architecture.ToEnumOrDefault<InstallerArchitecture>() ?? InstallerArchitecture.Neutral;
+            installer.Architecture = appxMetadata.Architecture.ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
 
             installer.MinimumOSVersion = SetInstallerStringPropertyIfNeeded(installerManifest?.MinimumOSVersion, appxMetadata.MinOSVersion?.ToString());
             installer.PackageFamilyName = SetInstallerStringPropertyIfNeeded(installerManifest?.PackageFamilyName, appxMetadata.PackageFamilyName);
@@ -839,7 +838,7 @@ namespace Microsoft.WingetCreateCore
                         appxMetadatas.Add(new AppxMetadata(appxFile.GetStream()));
                     }
                 }
-                catch (COMException)
+                catch (System.Runtime.InteropServices.COMException)
                 {
                     // Check if package is an Msix
                     var appxMetadata = new AppxMetadata(path);
@@ -862,7 +861,7 @@ namespace Microsoft.WingetCreateCore
 
                 return appxMetadatas.First();
             }
-            catch (COMException)
+            catch (System.Runtime.InteropServices.COMException)
             {
                 // Binary wasn't an MSIX
                 return null;
