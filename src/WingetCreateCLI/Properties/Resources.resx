@@ -915,4 +915,8 @@
   <data name="ReturnResponseUrl_KeywordDescription" xml:space="preserve">
     <value>The return response url to provide additional guidance for expected return codes</value>
   </data>
+  <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
+    <value>List of winget arguments the installer does not support</value>
+    <comment>"winget" is the proper name of the tool</comment>
+  </data>
 </root>

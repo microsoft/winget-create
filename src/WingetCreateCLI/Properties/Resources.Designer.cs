@@ -2131,6 +2131,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List of winget arguments the installer does not support.
+        /// </summary>
+        public static string UnsupportedArguments_KeywordDescription {
+            get {
+                return ResourceManager.GetString("UnsupportedArguments_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of OS architectures the installer does not support.
         /// </summary>
         public static string UnsupportedOSArchitectures_KeywordDescription {

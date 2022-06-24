@@ -425,6 +425,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("UnsupportedOSArchitectures", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public System.Collections.Generic.List<UnsupportedOSArchitecture> UnsupportedOSArchitectures { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("UnsupportedArguments", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public System.Collections.Generic.List<UnsupportedArgument> UnsupportedArguments { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("AppsAndFeaturesEntries", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(128)]
         public System.Collections.Generic.List<AppsAndFeaturesEntry> AppsAndFeaturesEntries { get; set; }
@@ -676,6 +679,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("UnsupportedOSArchitectures", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public System.Collections.Generic.List<UnsupportedOSArchitecture> UnsupportedOSArchitectures { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("UnsupportedArguments", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public System.Collections.Generic.List<UnsupportedArgument> UnsupportedArguments { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("AppsAndFeaturesEntries", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(128)]
         public System.Collections.Generic.List<AppsAndFeaturesEntry> AppsAndFeaturesEntries { get; set; }
@@ -807,6 +813,17 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     
         [System.Runtime.Serialization.EnumMember(Value = @"arm64")]
         Arm64 = 3,
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public enum UnsupportedArgument
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"log")]
+        Log = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"location")]
+        Location = 1,
     
     }
     
