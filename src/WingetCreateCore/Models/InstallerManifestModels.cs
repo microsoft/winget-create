@@ -42,6 +42,30 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [System.Runtime.Serialization.EnumMember(Value = @"pwa")]
         Pwa = 9,
     
+        [System.Runtime.Serialization.EnumMember(Value = @"portable")]
+        Portable = 10,
+    
+    }
+    
+    /// <summary>The installer target architecture</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public enum Architecture
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"x86")]
+        X86 = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"x64")]
+        X64 = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"arm")]
+        Arm = 2,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"arm64")]
+        Arm64 = 3,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"neutral")]
+        Neutral = 4,
+    
     }
     
     /// <summary>Scope indicates if the installer is per user or per machine</summary>
@@ -243,11 +267,10 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){0,3}$")]
         public string MinimumOSVersion { get; set; }
     
-        /// <summary>The installer target architecture</summary>
         [Newtonsoft.Json.JsonProperty("Architecture", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public InstallerArchitecture Architecture { get; set; }
+        public Architecture Architecture { get; set; }
     
         [Newtonsoft.Json.JsonProperty("InstallerType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
@@ -303,7 +326,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         public System.Collections.Generic.List<string> Protocols { get; set; }
     
         [Newtonsoft.Json.JsonProperty("FileExtensions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.MaxLength(256)]
+        [System.ComponentModel.DataAnnotations.MaxLength(512)]
         public System.Collections.Generic.List<string> FileExtensions { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Dependencies", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -342,8 +365,14 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("RequireExplicitUpgrade", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? RequireExplicitUpgrade { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("DisplayInstallWarnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? DisplayInstallWarnings { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("UnsupportedOSArchitectures", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public System.Collections.Generic.List<UnsupportedOSArchitecture> UnsupportedOSArchitectures { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("UnsupportedArguments", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public System.Collections.Generic.List<UnsupportedArgument> UnsupportedArguments { get; set; }
     
         [Newtonsoft.Json.JsonProperty("AppsAndFeaturesEntries", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(128)]
@@ -365,7 +394,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     
     }
     
-    /// <summary>A representation of a single-file manifest representing an app installers in the OWC. v1.1.0</summary>
+    /// <summary>A representation of a single-file manifest representing an app installers in the OWC. v1.2.0</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class InstallerManifest 
     {
@@ -434,7 +463,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         public System.Collections.Generic.List<string> Protocols { get; set; }
     
         [Newtonsoft.Json.JsonProperty("FileExtensions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.MaxLength(256)]
+        [System.ComponentModel.DataAnnotations.MaxLength(512)]
         public System.Collections.Generic.List<string> FileExtensions { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Dependencies", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -476,6 +505,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("UnsupportedOSArchitectures", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public System.Collections.Generic.List<UnsupportedOSArchitecture> UnsupportedOSArchitectures { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("UnsupportedArguments", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public System.Collections.Generic.List<UnsupportedArgument> UnsupportedArguments { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("AppsAndFeaturesEntries", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(128)]
         public System.Collections.Generic.List<AppsAndFeaturesEntry> AppsAndFeaturesEntries { get; set; }
@@ -483,6 +515,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("ElevationRequirement", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ElevationRequirement? ElevationRequirement { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("DisplayInstallWarnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? DisplayInstallWarnings { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Installers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
@@ -499,7 +534,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.1.0";
+        public string ManifestVersion { get; set; } = "1.2.0";
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
@@ -551,26 +586,6 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
-    public enum InstallerArchitecture
-    {
-        [System.Runtime.Serialization.EnumMember(Value = @"x86")]
-        X86 = 0,
-    
-        [System.Runtime.Serialization.EnumMember(Value = @"x64")]
-        X64 = 1,
-    
-        [System.Runtime.Serialization.EnumMember(Value = @"arm")]
-        Arm = 2,
-    
-        [System.Runtime.Serialization.EnumMember(Value = @"arm64")]
-        Arm64 = 3,
-    
-        [System.Runtime.Serialization.EnumMember(Value = @"neutral")]
-        Neutral = 4,
-    
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public enum InstallModes
     {
         [System.Runtime.Serialization.EnumMember(Value = @"interactive")]
@@ -594,6 +609,12 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("ReturnResponse", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ExpectedReturnCodeReturnResponse ReturnResponse { get; set; }
+    
+        /// <summary>The return response url to provide additional guidance for expected return codes</summary>
+        [Newtonsoft.Json.JsonProperty("ReturnResponseUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(2048)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
+        public string ReturnResponseUrl { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
@@ -621,6 +642,17 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     
         [System.Runtime.Serialization.EnumMember(Value = @"arm64")]
         Arm64 = 3,
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public enum UnsupportedArgument
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"log")]
+        Log = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"location")]
+        Location = 1,
     
     }
     
@@ -671,6 +703,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     
         [System.Runtime.Serialization.EnumMember(Value = @"blockedByPolicy")]
         BlockedByPolicy = 14,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"custom")]
+        Custom = 15,
     
     }
     

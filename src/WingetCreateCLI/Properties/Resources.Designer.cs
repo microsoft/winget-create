@@ -448,6 +448,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Indicates whether winget should display a warning message if the install or upgrade is known to interfere with running applications.
+        /// </summary>
+        public static string DisplayInstallWarnings_KeywordDescription {
+            get {
+                return ResourceManager.GetString("DisplayInstallWarnings_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The DisplayName registry value.
         /// </summary>
         public static string DisplayName_KeywordDescription {
@@ -489,6 +498,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string DisplayVersion_KeywordDescription {
             get {
                 return ResourceManager.GetString("DisplayVersion_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List of documentation.
+        /// </summary>
+        public static string Documentations_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Documentations_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The label of the documentation for providing software guides such as manuals and troubleshooting URLs.
+        /// </summary>
+        public static string DocumentLabel_KeywordDescription {
+            get {
+                return ResourceManager.GetString("DocumentLabel_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The documentation URL.
+        /// </summary>
+        public static string DocumentUrl_KeywordDescription {
+            get {
+                return ResourceManager.GetString("DocumentUrl_KeywordDescription", resourceCulture);
             }
         }
         
@@ -547,20 +583,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Would you like to edit the Agreements field?.
-        /// </summary>
-        public static string EditAgreements_Message {
-            get {
-                return ResourceManager.GetString("EditAgreements_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Would you like to edit your manifests?.
         /// </summary>
         public static string EditManifests_Message {
             get {
                 return ResourceManager.GetString("EditManifests_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to edit the {0} field?.
+        /// </summary>
+        public static string EditObjectTypeField_Message {
+            get {
+                return ResourceManager.GetString("EditObjectTypeField_Message", resourceCulture);
             }
         }
         
@@ -840,6 +876,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InitiatingGitHubLogin_Message {
             get {
                 return ResourceManager.GetString("InitiatingGitHubLogin_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The notes displayed to the user upon completion of a package installation.
+        /// </summary>
+        public static string InstallationNotes_KeywordDescription {
+            get {
+                return ResourceManager.GetString("InstallationNotes_KeywordDescription", resourceCulture);
             }
         }
         
@@ -1645,6 +1690,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The purchase url for acquiring entitlement for the package.
+        /// </summary>
+        public static string PurchaseUrl_KeywordDescription {
+            get {
+                return ResourceManager.GetString("PurchaseUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the &apos;-t&apos; flag or store one using the &apos;token --store&apos; command..
         /// </summary>
         public static string RateLimitExceeded_Message {
@@ -1776,6 +1830,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ReturnResponse_KeywordDescription {
             get {
                 return ResourceManager.GetString("ReturnResponse_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The return response url to provide additional guidance for expected return codes.
+        /// </summary>
+        public static string ReturnResponseUrl_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ReturnResponseUrl_KeywordDescription", resourceCulture);
             }
         }
         
@@ -2064,6 +2127,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UnmatchedInstaller_Error {
             get {
                 return ResourceManager.GetString("UnmatchedInstaller_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List of winget arguments the installer does not support.
+        /// </summary>
+        public static string UnsupportedArguments_KeywordDescription {
+            get {
+                return ResourceManager.GetString("UnsupportedArguments_KeywordDescription", resourceCulture);
             }
         }
         

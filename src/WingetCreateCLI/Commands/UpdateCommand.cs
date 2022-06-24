@@ -366,6 +366,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets, WingetCreateCore.Models.Installer.Markets>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets2, WingetCreateCore.Models.Installer.Markets2>(); // Markets2 is not used, but is required to satisfy mapping configuration.
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Agreement, WingetCreateCore.Models.DefaultLocale.Agreement>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Documentation, WingetCreateCore.Models.DefaultLocale.Documentation>();
             });
             var mapper = config.CreateMapper();
 
@@ -519,7 +520,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     string installerUrl = installerUrlOverride[0];
                     string overrideArchString = installerUrlOverride[1];
-                    InstallerArchitecture? overrideArch = overrideArchString.ToEnumOrDefault<InstallerArchitecture>();
+                    Architecture? overrideArch = overrideArchString.ToEnumOrDefault<Architecture>();
                     if (overrideArch.HasValue)
                     {
                         installerMetadata.InstallerUrl = installerUrl;

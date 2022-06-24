@@ -862,9 +862,9 @@
   <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
     <value>The DisplayVersion registry value</value>
   </data>
-  <data name="EditAgreements_Message" xml:space="preserve">
-    <value>Would you like to edit the Agreements field?</value>
-    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  <data name="EditObjectTypeField_Message" xml:space="preserve">
+    <value>Would you like to edit the {0} field?</value>
+    <comment>{0} - will be replaced with the name of the object type field</comment>
   </data>
   <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
     <value>Installer exit codes for common errors</value>
@@ -893,5 +893,30 @@
   <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
     <value>Failed to update fork because the default branch is ahead by {0} commit(s). </value>
     <comment>{0} - represents the number of commits the default branch is ahead by</comment>
+  </data>
+  <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
+    <value>Indicates whether winget should display a warning message if the install or upgrade is known to interfere with running applications</value>
+  </data>
+  <data name="Documentations_KeywordDescription" xml:space="preserve">
+    <value>List of documentation</value>
+  </data>
+  <data name="DocumentLabel_KeywordDescription" xml:space="preserve">
+    <value>The label of the documentation for providing software guides such as manuals and troubleshooting URLs</value>
+  </data>
+  <data name="DocumentUrl_KeywordDescription" xml:space="preserve">
+    <value>The documentation URL</value>
+  </data>
+  <data name="InstallationNotes_KeywordDescription" xml:space="preserve">
+    <value>The notes displayed to the user upon completion of a package installation</value>
+  </data>
+  <data name="PurchaseUrl_KeywordDescription" xml:space="preserve">
+    <value>The purchase url for acquiring entitlement for the package</value>
+  </data>
+  <data name="ReturnResponseUrl_KeywordDescription" xml:space="preserve">
+    <value>The return response url to provide additional guidance for expected return codes</value>
+  </data>
+  <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
+    <value>List of winget arguments the installer does not support</value>
+    <comment>"winget" is the proper name of the tool</comment>
   </data>
 </root>
