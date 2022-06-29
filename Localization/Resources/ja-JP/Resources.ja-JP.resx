@@ -862,9 +862,9 @@
   <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
     <value>DisplayVersion レジストリ値</value>
   </data>
-  <data name="EditAgreements_Message" xml:space="preserve">
-    <value>[契約] フィールドを編集しますか?</value>
-    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  <data name="EditObjectTypeField_Message" xml:space="preserve">
+    <value>{0}フィールドを編集しますか?</value>
+    <comment>{0} - will be replaced with the name of the object type field</comment>
   </data>
   <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
     <value>一般的なエラーのインストーラー終了コード</value>
@@ -893,5 +893,30 @@
   <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
     <value>既定のブランチが {0} コミットより進んでいるため、フォークの更新に失敗しました。 </value>
     <comment>{0} - represents the number of commits the default branch is ahead by</comment>
+  </data>
+  <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
+    <value>インストールまたはアップグレードが実行中のアプリケーションに干渉することがわかっている場合に、winget が警告メッセージを表示する必要があるかどうかを示します</value>
+  </data>
+  <data name="Documentations_KeywordDescription" xml:space="preserve">
+    <value>ドキュメントの一覧</value>
+  </data>
+  <data name="DocumentLabel_KeywordDescription" xml:space="preserve">
+    <value>マニュアルやトラブルシューティング URL などのソフトウェア ガイドを提供するためのドキュメントのラベル</value>
+  </data>
+  <data name="DocumentUrl_KeywordDescription" xml:space="preserve">
+    <value>ドキュメントの URL</value>
+  </data>
+  <data name="InstallationNotes_KeywordDescription" xml:space="preserve">
+    <value>パッケージのインストールの完了時にユーザーに表示されるメモ</value>
+  </data>
+  <data name="PurchaseUrl_KeywordDescription" xml:space="preserve">
+    <value>パッケージの権利を取得するための購入 URL</value>
+  </data>
+  <data name="ReturnResponseUrl_KeywordDescription" xml:space="preserve">
+    <value>予想されるリターン コードの追加ガイダンスを提供するリターン応答 URL</value>
+  </data>
+  <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
+    <value>インストーラーでサポートされていない winget 引数の一覧</value>
+    <comment>"winget" is the proper name of the tool</comment>
   </data>
 </root>

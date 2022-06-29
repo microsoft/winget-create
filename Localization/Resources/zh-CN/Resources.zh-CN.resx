@@ -862,9 +862,9 @@
   <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
     <value>DisplayVersion 注册表值</value>
   </data>
-  <data name="EditAgreements_Message" xml:space="preserve">
-    <value>是否要编辑"协议"字段？</value>
-    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  <data name="EditObjectTypeField_Message" xml:space="preserve">
+    <value>是否要编辑{0}字段？</value>
+    <comment>{0} - will be replaced with the name of the object type field</comment>
   </data>
   <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
     <value>安装程序退出常见错误的代码</value>
@@ -893,5 +893,30 @@
   <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
     <value>无法更新分叉，因为默认分支领先 {0} 个提交。 </value>
     <comment>{0} - represents the number of commits the default branch is ahead by</comment>
+  </data>
+  <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
+    <value>指示在已知安装或升级干扰正在运行的应用程序时 Winget 是否应显示警告消息</value>
+  </data>
+  <data name="Documentations_KeywordDescription" xml:space="preserve">
+    <value>文档列表</value>
+  </data>
+  <data name="DocumentLabel_KeywordDescription" xml:space="preserve">
+    <value>提供软件指南（如手册和 URL 疑难解答）的文档标签</value>
+  </data>
+  <data name="DocumentUrl_KeywordDescription" xml:space="preserve">
+    <value>文档 URL</value>
+  </data>
+  <data name="InstallationNotes_KeywordDescription" xml:space="preserve">
+    <value>包安装完成时向用户显示的备注</value>
+  </data>
+  <data name="PurchaseUrl_KeywordDescription" xml:space="preserve">
+    <value>获取包权利的购买 url</value>
+  </data>
+  <data name="ReturnResponseUrl_KeywordDescription" xml:space="preserve">
+    <value>用于为预期返回代码提供其他指导的返回响应 URL</value>
+  </data>
+  <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
+    <value>安装程序不支持的 winget 参数列表</value>
+    <comment>"winget" is the proper name of the tool</comment>
   </data>
 </root>
