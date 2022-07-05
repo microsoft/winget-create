@@ -862,9 +862,9 @@
   <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
     <value>Der DisplayVersion-Registrierungswert</value>
   </data>
-  <data name="EditAgreements_Message" xml:space="preserve">
-    <value>Möchten Sie das Feld „Vereinbarungen“ bearbeiten?</value>
-    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  <data name="EditObjectTypeField_Message" xml:space="preserve">
+    <value>Möchten Sie das Feld {0} bearbeiten?</value>
+    <comment>{0} - will be replaced with the name of the object type field</comment>
   </data>
   <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
     <value>Exitcodes des Installationsprogramms für häufige Fehler</value>
@@ -893,5 +893,30 @@
   <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
     <value>Verzweigung konnte nicht aktualisiert werden, da der Standardzweig um {0} Commit(s) voraus ist. </value>
     <comment>{0} - represents the number of commits the default branch is ahead by</comment>
+  </data>
+  <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
+    <value>Gibt an, ob WinGet eine Warnmeldung anzeigen soll, wenn die Installation oder das Upgrade bekanntermaßen die Ausführung von Anwendungen beeinträchtigt.</value>
+  </data>
+  <data name="Documentations_KeywordDescription" xml:space="preserve">
+    <value>Liste der Dokumentationen</value>
+  </data>
+  <data name="DocumentLabel_KeywordDescription" xml:space="preserve">
+    <value>Die Bezeichnung der Dokumentation für die Bereitstellung von Softwareanleitungen wie Handbücher und URLs für die Problembehandlung</value>
+  </data>
+  <data name="DocumentUrl_KeywordDescription" xml:space="preserve">
+    <value>Die Dokumentations-URL</value>
+  </data>
+  <data name="InstallationNotes_KeywordDescription" xml:space="preserve">
+    <value>Die Hinweise, die dem Benutzer nach Abschluss einer Paketinstallation angezeigt werden</value>
+  </data>
+  <data name="PurchaseUrl_KeywordDescription" xml:space="preserve">
+    <value>Die Kauf-URL für den Erwerb der Berechtigung für das Paket.</value>
+  </data>
+  <data name="ReturnResponseUrl_KeywordDescription" xml:space="preserve">
+    <value>Die Antwort-URL für die Rückgabe, um zusätzliche Anleitungen für erwartete Rückgabecodes bereitzustellen</value>
+  </data>
+  <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
+    <value>Liste der winget-Argumente, die vom Installationsprogramm nicht unterstützt werden</value>
+    <comment>"winget" is the proper name of the tool</comment>
   </data>
 </root>

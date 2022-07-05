@@ -862,9 +862,9 @@
   <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
     <value>O valor de registro DisplayVersion</value>
   </data>
-  <data name="EditAgreements_Message" xml:space="preserve">
-    <value>Você gostaria de editar o campo Contratos?</value>
-    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  <data name="EditObjectTypeField_Message" xml:space="preserve">
+    <value>Deseja editar o campo de {0}?</value>
+    <comment>{0} - will be replaced with the name of the object type field</comment>
   </data>
   <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
     <value>Códigos de saída do instalador para erros comuns</value>
@@ -893,5 +893,30 @@
   <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
     <value>Falha ao atualizar a bifurcação porque a ramificação padrão está à frente {0} confirmações. </value>
     <comment>{0} - represents the number of commits the default branch is ahead by</comment>
+  </data>
+  <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
+    <value>Indica se o winget deve exibir uma mensagem de aviso se a instalação ou atualização é conhecida por interferir nos aplicativos em execução</value>
+  </data>
+  <data name="Documentations_KeywordDescription" xml:space="preserve">
+    <value>Lista de documentação</value>
+  </data>
+  <data name="DocumentLabel_KeywordDescription" xml:space="preserve">
+    <value>O rótulo da documentação para fornecer guias de software, como manuais e URLs de solução de problemas</value>
+  </data>
+  <data name="DocumentUrl_KeywordDescription" xml:space="preserve">
+    <value>A URL da documentação</value>
+  </data>
+  <data name="InstallationNotes_KeywordDescription" xml:space="preserve">
+    <value>As anotações exibidas ao usuário após a conclusão de uma instalação de pacote</value>
+  </data>
+  <data name="PurchaseUrl_KeywordDescription" xml:space="preserve">
+    <value>A URL de compra para adquirir direitos para o pacote</value>
+  </data>
+  <data name="ReturnResponseUrl_KeywordDescription" xml:space="preserve">
+    <value>A URL de resposta de retorno para fornecer diretrizes adicionais para os códigos de retorno esperados</value>
+  </data>
+  <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
+    <value>Lista de argumentos winget que o instalador não dá suporte</value>
+    <comment>"winget" is the proper name of the tool</comment>
   </data>
 </root>

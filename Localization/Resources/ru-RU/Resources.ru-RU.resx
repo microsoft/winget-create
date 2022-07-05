@@ -862,9 +862,9 @@
   <data name="DisplayVersion_KeywordDescription" xml:space="preserve">
     <value>Значение реестра DisplayVersion</value>
   </data>
-  <data name="EditAgreements_Message" xml:space="preserve">
-    <value>Изменить поле "Соглашения"?</value>
-    <comment>`Agreements` refers to a specific field name that the user can edit.</comment>
+  <data name="EditObjectTypeField_Message" xml:space="preserve">
+    <value>Вы хотите изменить {0} поля?</value>
+    <comment>{0} - will be replaced with the name of the object type field</comment>
   </data>
   <data name="ExpectedReturnCodes_KeywordDescription" xml:space="preserve">
     <value>Коды выхода установщика для распространенных ошибок</value>
@@ -893,5 +893,30 @@
   <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
     <value>Не удалось обновить разветвление, поскольку ветвь по умолчанию опережает на {0} фиксаций. </value>
     <comment>{0} - represents the number of commits the default branch is ahead by</comment>
+  </data>
+  <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
+    <value>Указывает, должен ли winget отображать предупреждающее сообщение, если известно, что установка или обновление мешают работе приложений.</value>
+  </data>
+  <data name="Documentations_KeywordDescription" xml:space="preserve">
+    <value>Список документации</value>
+  </data>
+  <data name="DocumentLabel_KeywordDescription" xml:space="preserve">
+    <value>Метка документации для предоставления руководств по программному обеспечению, таких как руководства и URL-адреса для устранения неполадок.</value>
+  </data>
+  <data name="DocumentUrl_KeywordDescription" xml:space="preserve">
+    <value>URL-адрес документации</value>
+  </data>
+  <data name="InstallationNotes_KeywordDescription" xml:space="preserve">
+    <value>Заметки, отображаемые пользователю после завершения установки пакета</value>
+  </data>
+  <data name="PurchaseUrl_KeywordDescription" xml:space="preserve">
+    <value>URL-адрес покупки для получения прав для пакета</value>
+  </data>
+  <data name="ReturnResponseUrl_KeywordDescription" xml:space="preserve">
+    <value>URL-адрес ответа возврата для предоставления дополнительных указаний по ожидаемым кодам возврата.</value>
+  </data>
+  <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
+    <value>Список аргументов winget, которые не поддерживаются установщиком</value>
+    <comment>"winget" is the proper name of the tool</comment>
   </data>
 </root>
