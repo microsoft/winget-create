@@ -20,6 +20,7 @@ namespace Microsoft.WingetCreateCore
     using YamlDotNet.Core;
     using YamlDotNet.Core.Events;
     using YamlDotNet.Serialization;
+    using YamlDotNet.Serialization.EventEmitters;
     using YamlDotNet.Serialization.NamingConventions;
     using YamlDotNet.Serialization.TypeInspectors;
 
@@ -43,6 +44,7 @@ namespace Microsoft.WingetCreateCore
                 .WithNamingConvention(PascalCaseNamingConvention.Instance)
                 .WithTypeConverter(new YamlStringEnumConverter())
                 .WithEmissionPhaseObjectGraphVisitor(args => new YamlSkipPropertyVisitor(args.InnerVisitor))
+                .WithEventEmitter(nextEmitter => new MultilineScalarFlowStyleEmitter(nextEmitter))
                 .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull);
             return serializer.Build();
         }
@@ -302,6 +304,31 @@ namespace Microsoft.WingetCreateCore
                 }
 
                 return base.EnterMapping(key, value, context);
+            }
+        }
+
+        /// <summary>
+        /// A custom emitter for YamlDotNet which ensures all multiline fields use a <see cref="ScalarStyle.Literal"/>.
+        /// </summary>
+        private class MultilineScalarFlowStyleEmitter : ChainedEventEmitter
+        {
+            public MultilineScalarFlowStyleEmitter(IEventEmitter nextEmitter) : base(nextEmitter) { }
+
+            public override void Emit(ScalarEventInfo eventInfo, IEmitter emitter)
+            {
+                if (typeof(string).IsAssignableFrom(eventInfo.Source.Type))
+                {
+                    var outString = eventInfo.Source.Value as string;
+                    if (!string.IsNullOrEmpty(outString))
+                    {
+                        bool isMultiLine = new[] { '\r', '\n', '\x85', '\x2028', '\x2029' }.Any(outString.Contains);
+                        if (isMultiLine)
+                        {
+                            eventInfo = new ScalarEventInfo(eventInfo.Source) {Style = ScalarStyle.Literal};
+                        }
+                    }
+                }
+                this.nextEmitter.Emit(eventInfo, emitter);
             }
         }
     }
