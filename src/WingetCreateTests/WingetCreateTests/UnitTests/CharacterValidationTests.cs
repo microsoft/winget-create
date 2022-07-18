@@ -75,7 +75,7 @@ namespace Microsoft.WingetCreateUnitTests
                 SingletonManifest read = Serialization.DeserializeFromPath<SingletonManifest>(testManifestFilePath);
 
                 // we know when written that \r\n and \x85 characters are replaced with \n.
-                var writtenFixed = string.Join('\n', written.Description.Split(new string[] {"\n", "\r\n", "\x85"}, StringSplitOptions.None));
+                var writtenFixed = string.Join('\n', written.Description.Split(new string[] { "\n", "\r\n", "\x85" }, StringSplitOptions.None));
                 
                 Assert.AreEqual(writtenFixed, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
                 File.Delete(testManifestFilePath);
