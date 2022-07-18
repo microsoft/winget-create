@@ -9,8 +9,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Models.Singleton;
     using NUnit.Framework;
-    using WinGetUtil.Models.V1;
-
+ 
     /// <summary>
     /// Unit tests for verifying unicode text and directionality.
     /// </summary>
@@ -29,8 +28,6 @@ namespace Microsoft.WingetCreateUnitTests
             "नमस्ते धन्यवाद",
             "도망각하갂",
         };
-        
-        
 
         /// <summary>
         /// Verifies text support for unicode characters.
@@ -69,26 +66,18 @@ namespace Microsoft.WingetCreateUnitTests
                 "Me too!\x2029:)",
             };
 
-            string[] delimiters = {"\r\n", "\r", "\n", "\x85", "\x2028", "\x2029"};
             string testManifestFilePath = Path.Combine(Path.GetTempPath(), "TestManifest.yaml");
 
             foreach (var i in stringsWithNewLines)
             {
-                SingletonManifest written = new SingletonManifest {Description = i};
+                SingletonManifest written = new SingletonManifest { Description = i };
                 File.WriteAllText(testManifestFilePath, written.ToYaml());
                 SingletonManifest read = Serialization.DeserializeFromPath<SingletonManifest>(testManifestFilePath);
 
                 // we know when written that \r\n and \x85 characters are replaced with \n.
-                var writtenFixed = string.Join(
-                    '\n',
-                    written.Description.Split(new string[] {"\n", "\r\n", "\x85"}, StringSplitOptions.None));
+                var writtenFixed = string.Join('\n', written.Description.Split(new string[] {"\n", "\r\n", "\x85"}, StringSplitOptions.None));
                 
-                Assert.AreEqual
-                (
-                    writtenFixed,
-                    read.Description,
-                    $"String {read.Description} had the wrong number of newlines :(."
-                );
+                Assert.AreEqual(writtenFixed, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
                 File.Delete(testManifestFilePath);
             }
         }
