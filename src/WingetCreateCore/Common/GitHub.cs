@@ -324,7 +324,7 @@ namespace Microsoft.WingetCreateCore.Common
                     // If the fork is behind by too many commits, syncing will also fail with a NotFoundException.
                     // Updating the fork can fail if it is a non-fast forward update, but this should not be blocking as pull request submission can still proceed.
                     // If creating a reference fails, that means syncing the fork also failed, therefore the user will need to manually sync their repo regardless.
-                    if (!forkSyncAttempted)
+                    if (!forkSyncAttempted && submitToFork)
                     {
                         forkSyncAttempted = true;
                         await this.UpdateForkedRepoWithUpstreamCommits(repo);
