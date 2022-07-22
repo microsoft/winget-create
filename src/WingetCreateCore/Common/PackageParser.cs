@@ -280,8 +280,7 @@ namespace Microsoft.WingetCreateCore
         public static bool ParsePackageAndUpdateInstallerNode(Installer installer, string path, string url)
         {
             List<Installer> newInstallers = new List<Installer>();
-            bool parseResult = ParsePortableInstallerType(path, installer, newInstallers) ||
-                ParseExeInstallerType(path, installer, newInstallers) ||
+            bool parseResult = ParseExeInstallerType(path, installer, newInstallers) ||
                 ParseMsix(path, installer, null, newInstallers) ||
                 ParseMsi(path, installer, null, newInstallers);
 
@@ -471,8 +470,7 @@ namespace Microsoft.WingetCreateCore
 
             bool parseMsixResult = false;
 
-            bool parseResult = ParsePortableInstallerType(path, baseInstaller, newInstallers) ||
-                ParseExeInstallerType(path, baseInstaller, newInstallers) ||
+            bool parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
                 (parseMsixResult = ParseMsix(path, baseInstaller, manifests, newInstallers)) ||
                 ParseMsi(path, baseInstaller, manifests, newInstallers);
 
@@ -620,6 +618,7 @@ namespace Microsoft.WingetCreateCore
                 case InstallerType.Nullsoft:
                 case InstallerType.Exe:
                 case InstallerType.Burn:
+                case InstallerType.Portable:
                     return CompatibilitySet.Exe;
                 case InstallerType.Wix:
                 case InstallerType.Msi:
@@ -630,20 +629,6 @@ namespace Microsoft.WingetCreateCore
                 default:
                     return CompatibilitySet.None;
             }
-        }
-
-        private static bool ParsePortableInstallerType(string path, Installer baseInstaller, List<Installer> newInstallers)
-        {
-            using (var fileStream = File.Open(path, FileMode.Open))
-            {
-                PEHeaders pEHeaders = new PEHeaders(fileStream);
-                if (pEHeaders.IsExe == true)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private static bool ParseExeInstallerType(string path, Installer baseInstaller, List<Installer> newInstallers)
