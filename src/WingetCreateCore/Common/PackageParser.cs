@@ -11,9 +11,7 @@ namespace Microsoft.WingetCreateCore
     using System.IO;
     using System.Linq;
     using System.Net.Http;
-    using System.Reflection.PortableExecutable;
     using System.Security.Cryptography;
-    using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Xml;
