@@ -4,7 +4,6 @@
 namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.IO;
@@ -149,10 +148,11 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 do
                 {
-                    if (this.WingetRepoOwner == DefaultWingetRepoOwner &&
-                        this.WingetRepo == DefaultWingetRepo)
+                    this.PromptPackageIdentifier(manifests);
+
+                    if (this.WingetRepoOwner == DefaultWingetRepoOwner && this.WingetRepo == DefaultWingetRepo)
                     {
-                        if (!await this.PromptPackageIdentifierAndCheckDuplicates(manifests))
+                        if (await this.IsDuplicatePackageIdentifier(manifests.VersionManifest.PackageIdentifier))
                         {
                             Console.WriteLine();
                             Logger.ErrorLocalized(nameof(Resources.PackageIdAlreadyExists_Error));
@@ -340,36 +340,33 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Prompts for the package identifier and checks if the package identifier already exists.
-        /// If the package identifier is valid, the value is applied to the other manifests.
+        /// Prompts for the package identifier and applies the value to all manifests.
         /// </summary>
         /// <param name="manifests">Manifests object model.</param>
-        /// <returns>Boolean value indicating whether the package identifier is valid.</returns>
-        private async Task<bool> PromptPackageIdentifierAndCheckDuplicates(Manifests manifests)
+        private void PromptPackageIdentifier(Manifests manifests)
         {
             VersionManifest versionManifest = manifests.VersionManifest;
             PromptHelper.PromptPropertyAndSetValue(versionManifest, nameof(versionManifest.PackageIdentifier), versionManifest.PackageIdentifier);
+            manifests.InstallerManifest.PackageIdentifier = versionManifest.PackageIdentifier;
+            manifests.DefaultLocaleManifest.PackageIdentifier = versionManifest.PackageIdentifier;
+        }
 
-            string exactMatch;
+        /// <summary>
+        /// Checks if the package identifier already exists in the default winget-pkgs repository.
+        /// </summary>
+        /// <param name="packageIdentifier">Package identifier string.</param>
+        /// <returns>Boolean value indicating whether the package identifier is a duplicate and already exists.</returns>
+        private async Task<bool> IsDuplicatePackageIdentifier(string packageIdentifier)
+        {
             try
             {
-                exactMatch = await this.GitHubClient.FindPackageId(versionManifest.PackageIdentifier);
+                string exactMatch = await this.GitHubClient.FindPackageId(packageIdentifier);
+                return !string.IsNullOrEmpty(exactMatch);
             }
             catch (Octokit.RateLimitExceededException)
             {
                 Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
                 return false;
-            }
-
-            if (!string.IsNullOrEmpty(exactMatch))
-            {
-                return false;
-            }
-            else
-            {
-                manifests.InstallerManifest.PackageIdentifier = versionManifest.PackageIdentifier;
-                manifests.DefaultLocaleManifest.PackageIdentifier = versionManifest.PackageIdentifier;
-                return true;
             }
         }
     }
