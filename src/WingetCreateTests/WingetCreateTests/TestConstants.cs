@@ -54,6 +54,11 @@ namespace Microsoft.WingetCreateTests
         public const string TestMultifileMsixPackageIdentifier = "Multifile.MsixTest";
 
         /// <summary>
+        /// PackageIdentifier for test portable.
+        /// </summary>
+        public const string TestPortablePackageIdentifier = "WingetCreateE2E.PortableTest";
+
+        /// <summary>
         /// File name of the test exe manifest.
         /// </summary>
         public const string TestExeManifest = "WingetCreateE2E.ExeTest.yaml";
@@ -62,6 +67,11 @@ namespace Microsoft.WingetCreateTests
         /// File name of the test msi manifest.
         /// </summary>
         public const string TestMsiManifest = "WingetCreateE2E.MsiTest.yaml";
+
+        /// <summary>
+        /// File name of the test portable manifest.
+        /// </summary>
+        public const string TestPortableManifest = "WingetCreateE2E.PortableTest.yaml";
 
         /// <summary>
         /// Path of the directory with the multifile msix test manifests.
