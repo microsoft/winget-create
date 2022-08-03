@@ -340,6 +340,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Is this a portable package?.
+        /// </summary>
+        public static string ConfirmPortablePackage_Message {
+            get {
+                return ResourceManager.GetString("ConfirmPortablePackage_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package copyright.
         /// </summary>
         public static string Copyright_KeywordDescription {
@@ -1596,6 +1605,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Platform_KeywordDescription {
             get {
                 return ResourceManager.GetString("Platform_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What is the command alias of the portable package |e.g. nuget|.
+        /// </summary>
+        public static string PortableCommandAlias_Message {
+            get {
+                return ResourceManager.GetString("PortableCommandAlias_Message", resourceCulture);
             }
         }
         

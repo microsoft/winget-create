@@ -296,13 +296,17 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 bool prompted = false;
 
-                // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
+                // If the installerType is EXE, prompt the user for whether the package is a portable
                 if (installer.InstallerType == InstallerType.Exe)
                 {
                     Console.WriteLine();
-                    Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
-                    prompted = true;
-                    PromptInstallerSwitchesForExe(manifest);
+                    if (!PromptForPortableExe(installer))
+                    {
+                        // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
+                        Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
+                        prompted = true;
+                        PromptInstallerSwitchesForExe(installer);
+                    }
                 }
 
                 foreach (var requiredProperty in requiredInstallerProperties)
@@ -326,7 +330,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void PromptInstallerSwitchesForExe<T>(T manifest)
+        private static void PromptInstallerSwitchesForExe<T>(T manifestInstaller)
         {
             InstallerSwitches installerSwitches = new InstallerSwitches();
 
@@ -335,7 +339,35 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             if (!string.IsNullOrEmpty(installerSwitches.Silent) || !string.IsNullOrEmpty(installerSwitches.SilentWithProgress))
             {
-                manifest.GetType().GetProperty(nameof(InstallerSwitches)).SetValue(manifest, installerSwitches);
+                manifestInstaller.GetType().GetProperty(nameof(InstallerSwitches)).SetValue(manifestInstaller, installerSwitches);
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user to confirm whether the package is a portable.
+        /// If true, then prompts for related portable metadata.
+        /// </summary>
+        /// <typeparam name="T">Manifest installer.</typeparam>
+        /// <param name="manifestInstaller">Manifest installer object model.</param>
+        /// <returns>Boolean value indicating whether the package is a portable.</returns>
+        private static bool PromptForPortableExe<T>(T manifestInstaller)
+        {
+            if (Prompt.Confirm(Resources.ConfirmPortablePackage_Message))
+            {
+                manifestInstaller.GetType().GetProperty(nameof(Installer.InstallerType)).SetValue(manifestInstaller, InstallerType.Portable);
+                string portableCommandAlias = Prompt.Input<string>(Resources.PortableCommandAlias_Message);
+
+                if (!string.IsNullOrEmpty(portableCommandAlias))
+                {
+                    List<string> portableCommands = new List<string> { portableCommandAlias };
+                    manifestInstaller.GetType().GetProperty(nameof(Installer.Commands)).SetValue(manifestInstaller, portableCommands);
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
