@@ -96,6 +96,16 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
+        /// Returns null if the target string is empty.
+        /// </summary>
+        /// <param name="s">Target string value.</param>
+        /// <returns>Null if the string is empty; otherwise the original string value.</returns>
+        public static string NullIfEmpty(this string s)
+        {
+            return string.IsNullOrEmpty(s) ? null : s;
+        }
+
+        /// <summary>
         /// Determines if the properties of an object are all equal to null excluding properties with dictionary type if needed.
         /// </summary>
         /// <param name="o">Object to be evaluated.</param>

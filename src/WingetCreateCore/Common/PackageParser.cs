@@ -136,14 +136,15 @@ namespace Microsoft.WingetCreateCore
 
             string urlFile = Path.GetFileName(url.Split('?').Last());
             string contentDispositionFile = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
+            string requestUrl = response.RequestMessage.RequestUri.ToString();
 
             if (!Directory.Exists(InstallerDownloadPath))
             {
                 Directory.CreateDirectory(InstallerDownloadPath);
             }
 
-            string targetFile = GetNumericFilename(Path.Combine(InstallerDownloadPath, contentDispositionFile ?? urlFile));
-
+            string targetFileName = contentDispositionFile.NullIfEmpty() ?? urlFile.NullIfEmpty() ?? Path.GetFileName(requestUrl);
+            string targetFile = GetNumericFilename(Path.Combine(InstallerDownloadPath, targetFileName));
             using var targetFileStream = File.OpenWrite(targetFile);
             var contentStream = await response.Content.ReadAsStreamAsync();
 
