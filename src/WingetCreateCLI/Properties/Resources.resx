@@ -890,10 +890,6 @@
   <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
     <value>UpgradeCode used for correlation of packages across sources</value>
   </data>
-  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
-    <value>Failed to update fork because the default branch is ahead by {0} commit(s). </value>
-    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
-  </data>
   <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
     <value>Indicates whether winget should display a warning message if the install or upgrade is known to interfere with running applications</value>
   </data>
@@ -918,5 +914,8 @@
   <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
     <value>List of winget arguments the installer does not support</value>
     <comment>"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="SyncForkWithUpstream_Message" xml:space="preserve">
+    <value>Unable to create a reference to the forked repository. This can be caused when the forked repository is behind by too many commits. Sync your fork and try again.</value>
   </data>
 </root>
