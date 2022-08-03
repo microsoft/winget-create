@@ -616,6 +616,9 @@ namespace Microsoft.WingetCreateCore
                 case InstallerType.Nullsoft:
                 case InstallerType.Exe:
                 case InstallerType.Burn:
+                // Portable is included as a compatible installer type since
+                // they are detected as 'exe' installers. This is to ensure
+                // updating a portable manifest is supported.
                 case InstallerType.Portable:
                     return CompatibilitySet.Exe;
                 case InstallerType.Wix:

@@ -307,22 +307,30 @@ namespace Microsoft.WingetCreateCore.Common
             var upstreamMasterSha = upstreamMaster.Object.Sha;
 
             Reference newBranch = null;
+            bool forkSyncAttempted = false;
 
             try
             {
-                var retryPolicy = Policy.Handle<ApiException>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
+                var retryPolicy = Policy
+                    .Handle<ApiException>()
+                    .Or<NonFastForwardException>()
+                    .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
+
                 await retryPolicy.ExecuteAsync(async () =>
                 {
-                    try
+                    // Related issue: https://github.com/microsoft/winget-create/issues/282
+                    // There is a known issue where a reference is unable to be created if the fork is behind by too many commits.
+                    // Always attempt to sync fork during first execution in order to mitigate the possibility of this scenario occurring.
+                    // If the fork is behind by too many commits, syncing will also fail with a NotFoundException.
+                    // Updating the fork can fail if it is a non-fast forward update, but this should not be blocking as pull request submission can still proceed.
+                    // If creating a reference fails, that means syncing the fork also failed, therefore the user will need to manually sync their repo regardless.
+                    if (!forkSyncAttempted && submitToFork)
                     {
-                        await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
-                    }
-                    catch (Octokit.NotFoundException)
-                    {
-                        // Creating a reference can sometimes fail with a NotFoundException if the fork is not up to date with the upstream repository.
+                        forkSyncAttempted = true;
                         await this.UpdateForkedRepoWithUpstreamCommits(repo);
-                        throw;
                     }
+
+                    await this.github.Git.Reference.Create(repo.Id, new NewReference($"refs/{newBranchNameHeads}", upstreamMasterSha));
                 });
 
                 // Update from upstream branch master

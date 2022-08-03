@@ -754,15 +754,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to update fork because the default branch is ahead by {0} commit(s). .
-        /// </summary>
-        public static string FastForwardUpdateFailed_Message {
-            get {
-                return ResourceManager.GetString("FastForwardUpdateFailed_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to [{0}] value is.
         /// </summary>
         public static string FieldValueIs_Message {
@@ -2046,6 +2037,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Switches_KeywordDescription {
             get {
                 return ResourceManager.GetString("Switches_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to create a reference to the forked repository. This can be caused when the forked repository is behind by too many commits. Sync your fork and try again..
+        /// </summary>
+        public static string SyncForkWithUpstream_Message {
+            get {
+                return ResourceManager.GetString("SyncForkWithUpstream_Message", resourceCulture);
             }
         }
         

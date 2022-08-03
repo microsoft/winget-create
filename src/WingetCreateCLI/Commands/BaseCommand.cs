@@ -503,9 +503,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
                     return false;
                 }
-                else if (e is NonFastForwardException nonFastForwardException)
+                else if (e is Octokit.NotFoundException)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.FastForwardUpdateFailed_Message), nonFastForwardException.CommitsAheadBy);
+                    // This exception can occur if the client is unable to create a reference due to being behind by too many commits.
+                    // The user will need to manually update their master branch of their winget-pkgs fork.
+                    Logger.ErrorLocalized(nameof(Resources.SyncForkWithUpstream_Message));
                     return false;
                 }
                 else
