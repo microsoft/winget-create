@@ -9,7 +9,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Models.Singleton;
     using NUnit.Framework;
- 
+
     /// <summary>
     /// Unit tests for verifying unicode text and directionality.
     /// </summary>
@@ -76,11 +76,9 @@ namespace Microsoft.WingetCreateUnitTests
 
                 // we know when written that \r\n and \x85 characters are replaced with \n.
                 var writtenFixed = string.Join('\n', written.Description.Split(new string[] { "\n", "\r\n", "\x85" }, StringSplitOptions.None));
-                
                 Assert.AreEqual(writtenFixed, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
                 File.Delete(testManifestFilePath);
             }
         }
-        
     }
 }

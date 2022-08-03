@@ -921,6 +921,7 @@
   <data name="PortableCommandAlias_Message" xml:space="preserve">
     <value>What is the command alias of the portable package |e.g. nuget|</value>
     <comment>`command alias` refers to the name of the exe file that will be used when running the application from the command line.</comment>
+  </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>Unable to create a reference to the forked repository. This can be caused when the forked repository is behind by too many commits. Sync your fork and try again.</value>
   </data>
