@@ -890,10 +890,6 @@
   <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
     <value>UpgradeCode используется для корреляции пакетов между источниками</value>
   </data>
-  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
-    <value>Не удалось обновить разветвление, поскольку ветвь по умолчанию опережает на {0} фиксаций. </value>
-    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
-  </data>
   <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
     <value>Указывает, должен ли winget отображать предупреждающее сообщение, если известно, что установка или обновление мешают работе приложений.</value>
   </data>
@@ -918,5 +914,15 @@
   <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
     <value>Список аргументов winget, которые не поддерживаются установщиком</value>
     <comment>"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="ConfirmPortablePackage_Message" xml:space="preserve">
+    <value>Это переносно пакет?</value>
+  </data>
+  <data name="PortableCommandAlias_Message" xml:space="preserve">
+    <value>Псевдоним команды переносного пакета |например, nuget|</value>
+    <comment>`command alias` refers to the name of the exe file that will be used when running the application from the command line.</comment>
+  </data>
+  <data name="SyncForkWithUpstream_Message" xml:space="preserve">
+    <value>Не удалось создать ссылку на разветвленный репозиторий. Это может быть вызвано тем, что разветвленный репозиторий отстает из-за слишком большого числа фиксаций. Синхронизируйте разветвление и повторите попытку.</value>
   </data>
 </root>

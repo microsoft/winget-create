@@ -890,10 +890,6 @@
   <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
     <value>ソース間のパッケージの関連付けに使用される UpgradeCode</value>
   </data>
-  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
-    <value>既定のブランチが {0} コミットより進んでいるため、フォークの更新に失敗しました。 </value>
-    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
-  </data>
   <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
     <value>インストールまたはアップグレードが実行中のアプリケーションに干渉することがわかっている場合に、winget が警告メッセージを表示する必要があるかどうかを示します</value>
   </data>
@@ -918,5 +914,15 @@
   <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
     <value>インストーラーでサポートされていない winget 引数の一覧</value>
     <comment>"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="ConfirmPortablePackage_Message" xml:space="preserve">
+    <value>これはポータブル パッケージですか?</value>
+  </data>
+  <data name="PortableCommandAlias_Message" xml:space="preserve">
+    <value>ポータブル パッケージのコマンド エイリアスとは |例: nuget|</value>
+    <comment>`command alias` refers to the name of the exe file that will be used when running the application from the command line.</comment>
+  </data>
+  <data name="SyncForkWithUpstream_Message" xml:space="preserve">
+    <value>フォークされたリポジトリへの参照を作成できません。これは、フォークされたリポジトリの前にあるコミットの数が多すぎる場合に発生する可能性があります。フォークを同期して、もう一度お試しください。</value>
   </data>
 </root>

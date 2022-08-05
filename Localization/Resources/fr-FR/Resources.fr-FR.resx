@@ -890,10 +890,6 @@
   <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
     <value>UpgradeCode utilisé pour la corrélation des packages entre les sources</value>
   </data>
-  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
-    <value>Échec de la mise à jour de la duplication (fork), car la branche par défaut a {0} validation(s) d’avance. </value>
-    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
-  </data>
   <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
     <value>Indique si winget doit afficher un message d’avertissement dans le cas où l’installation ou la mise à niveau est connue pour interférer avec les applications en cours d’exécution</value>
   </data>
@@ -918,5 +914,15 @@
   <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
     <value>Liste des arguments winget que le programme d’installation ne prend pas en charge</value>
     <comment>"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="ConfirmPortablePackage_Message" xml:space="preserve">
+    <value>S'agit-il d'un paquet portable ?</value>
+  </data>
+  <data name="PortableCommandAlias_Message" xml:space="preserve">
+    <value>Quel est l’alias de commande du package portable | exemple : nuget|</value>
+    <comment>`command alias` refers to the name of the exe file that will be used when running the application from the command line.</comment>
+  </data>
+  <data name="SyncForkWithUpstream_Message" xml:space="preserve">
+    <value>Impossible de créer une référence pour le référentiel fourche. Cela peut être dû à un trop grand nombre de validations du référentiel fourche. Synchronisez la fourche et réessayez.</value>
   </data>
 </root>

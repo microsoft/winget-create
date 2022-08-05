@@ -890,10 +890,6 @@
   <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
     <value>用于跨源关联包的 UpgradeCode</value>
   </data>
-  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
-    <value>无法更新分叉，因为默认分支领先 {0} 个提交。 </value>
-    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
-  </data>
   <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
     <value>指示在已知安装或升级干扰正在运行的应用程序时 Winget 是否应显示警告消息</value>
   </data>
@@ -918,5 +914,15 @@
   <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
     <value>安装程序不支持的 winget 参数列表</value>
     <comment>"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="ConfirmPortablePackage_Message" xml:space="preserve">
+    <value>这是可移植包吗？</value>
+  </data>
+  <data name="PortableCommandAlias_Message" xml:space="preserve">
+    <value>可移植包的命令别名|e.g. nuget|</value>
+    <comment>`command alias` refers to the name of the exe file that will be used when running the application from the command line.</comment>
+  </data>
+  <data name="SyncForkWithUpstream_Message" xml:space="preserve">
+    <value>无法创建对分叉存储库的引用。当存储库因提交过多而滞后时，可能会导致这种情况。同步分叉，然后重试。</value>
   </data>
 </root>

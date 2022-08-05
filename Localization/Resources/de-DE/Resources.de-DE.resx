@@ -890,10 +890,6 @@
   <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
     <value>UpgradeCode, der für die Korrelation von Paketen aus verschiedenen Quellen verwendet wird</value>
   </data>
-  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
-    <value>Verzweigung konnte nicht aktualisiert werden, da der Standardzweig um {0} Commit(s) voraus ist. </value>
-    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
-  </data>
   <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
     <value>Gibt an, ob WinGet eine Warnmeldung anzeigen soll, wenn die Installation oder das Upgrade bekanntermaßen die Ausführung von Anwendungen beeinträchtigt.</value>
   </data>
@@ -918,5 +914,15 @@
   <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
     <value>Liste der winget-Argumente, die vom Installationsprogramm nicht unterstützt werden</value>
     <comment>"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="ConfirmPortablePackage_Message" xml:space="preserve">
+    <value>Handelt es sich um ein portierbares Paket?</value>
+  </data>
+  <data name="PortableCommandAlias_Message" xml:space="preserve">
+    <value>Wie lautet der Befehlsalias des portierbaren Pakets |z. B. nuget|</value>
+    <comment>`command alias` refers to the name of the exe file that will be used when running the application from the command line.</comment>
+  </data>
+  <data name="SyncForkWithUpstream_Message" xml:space="preserve">
+    <value>Es kann kein Verweis auf das verzweigte Repository erstellt werden. Dies kann darauf zurückzuführen sein, dass das verzweigte Repository durch zu viele Commits zurückliegt. Synchronisieren Sie Ihre Verzweigung, und versuchen Sie es noch mal.</value>
   </data>
 </root>
