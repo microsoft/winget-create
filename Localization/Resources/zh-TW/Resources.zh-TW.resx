@@ -890,10 +890,6 @@
   <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
     <value>用於跨來源之套件關聯性的 UpgradeCode</value>
   </data>
-  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
-    <value>無法更新分叉，因為預設分支在 {0} 個認可之前。 </value>
-    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
-  </data>
   <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
     <value>指出如果已知安裝或升級干擾執行的應用程式，winget 是否應該顯示警告訊息</value>
   </data>
@@ -918,5 +914,15 @@
   <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
     <value>安裝程式不支援的 winget 引數清單</value>
     <comment>"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="ConfirmPortablePackage_Message" xml:space="preserve">
+    <value>這是可攜式套件嗎?</value>
+  </data>
+  <data name="PortableCommandAlias_Message" xml:space="preserve">
+    <value>可攜式套件的命令別名是什麼 |例如 nuget|</value>
+    <comment>`command alias` refers to the name of the exe file that will be used when running the application from the command line.</comment>
+  </data>
+  <data name="SyncForkWithUpstream_Message" xml:space="preserve">
+    <value>無法建立復刻存放庫的參照。當復刻存放庫因太多認可而落後時，就可能會造成這種情況。同步您的分叉，然後再試一次。</value>
   </data>
 </root>

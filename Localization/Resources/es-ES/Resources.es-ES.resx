@@ -890,10 +890,6 @@
   <data name="UpgradeCode_KeywordDescription" xml:space="preserve">
     <value>UpgradeCode usado para la correlación de paquetes entre orígenes</value>
   </data>
-  <data name="FastForwardUpdateFailed_Message" xml:space="preserve">
-    <value>No se ha podido actualizar la bifurcación porque la rama predeterminada tiene {0}confirmaciones delante. </value>
-    <comment>{0} - represents the number of commits the default branch is ahead by</comment>
-  </data>
   <data name="DisplayInstallWarnings_KeywordDescription" xml:space="preserve">
     <value>Indica si winget debe mostrar un mensaje de advertencia si se sabe que la instalación o actualización interfiera con las aplicaciones en ejecución</value>
   </data>
@@ -918,5 +914,15 @@
   <data name="UnsupportedArguments_KeywordDescription" xml:space="preserve">
     <value>Lista de argumentos winget que el instalador no admite</value>
     <comment>"winget" is the proper name of the tool</comment>
+  </data>
+  <data name="ConfirmPortablePackage_Message" xml:space="preserve">
+    <value>¿Se trata de un paquete portátil?</value>
+  </data>
+  <data name="PortableCommandAlias_Message" xml:space="preserve">
+    <value>¿Cuál es el alias de comandos del paquete portátil |e.g. nuget|</value>
+    <comment>`command alias` refers to the name of the exe file that will be used when running the application from the command line.</comment>
+  </data>
+  <data name="SyncForkWithUpstream_Message" xml:space="preserve">
+    <value>No se puede crear una referencia al repositorio bifurcado. Esto puede deberse a que el repositorio bifurcado está atrasado por demasiadas confirmaciones. Sincronice la bifurcación e inténtelo de nuevo.</value>
   </data>
 </root>
