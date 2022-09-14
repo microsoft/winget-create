@@ -312,7 +312,10 @@ namespace Microsoft.WingetCreateCore
         /// </summary>
         private class MultilineScalarFlowStyleEmitter : ChainedEventEmitter
         {
-            public MultilineScalarFlowStyleEmitter(IEventEmitter nextEmitter) : base(nextEmitter) { }
+            public MultilineScalarFlowStyleEmitter(IEventEmitter nextEmitter)
+                : base(nextEmitter)
+            {
+            }
 
             public override void Emit(ScalarEventInfo eventInfo, IEmitter emitter)
             {
@@ -324,10 +327,11 @@ namespace Microsoft.WingetCreateCore
                         bool isMultiLine = new[] { '\r', '\n', '\x85', '\x2028', '\x2029' }.Any(outString.Contains);
                         if (isMultiLine)
                         {
-                            eventInfo = new ScalarEventInfo(eventInfo.Source) {Style = ScalarStyle.Literal};
+                            eventInfo = new ScalarEventInfo(eventInfo.Source) { Style = ScalarStyle.Literal };
                         }
                     }
                 }
+
                 this.nextEmitter.Emit(eventInfo, emitter);
             }
         }
