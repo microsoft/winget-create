@@ -44,7 +44,9 @@ jobs:
       version: "$(majorMinorVersion).$(buildVersion).0"
       appxBundleFile: "Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle"
       appxBundlePath: '$(appxPackageDir)\$(appxBundleFile)'
+      exeDirSelfContained: '$(appxPackageDir)\selfcontained'
       exeDirFrameworkDependent: '$(appxPackageDir)\dependent'
+      exePathSelfContained: '$(exeDirSelfContained)\WingetCreateCLI\wingetcreate-self-contained.exe'
       exePathFrameworkDependent: '$(exeDirFrameworkDependent)\WingetCreateCLI\wingetcreate.exe'
     pool:
       vmImage: $(vmImageName)
@@ -57,6 +59,7 @@ jobs:
           echo $(version)
           echo $(appxBundlePath)
           echo $(appxBundleFile)
+          echo $(exePathSelfContained)
           echo $(exePathFrameworkDependent)
           echo "##vso[task.setvariable variable=manifestVersion;isOutput=true]$(version)"
           echo "##vso[task.setvariable variable=appxBundleFile;isOutput=true]$(appxBundleFile)"
@@ -119,6 +122,15 @@ jobs:
           projects: $(workingDirectory)/**/WingetCreateCLI.csproj
           arguments: "--configuration Release --runtime=win-x64 --output $(exeDirFrameworkDependent) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
 
+      - task: DotNetCoreCLI@2
+        displayName: Build standalone, self-contained exe
+        inputs:
+          command: publish
+          publishWebProjects: false
+          zipAfterPublish: false
+          projects: $(workingDirectory)/**/WingetCreateCLI.csproj
+          arguments: "--configuration Release --runtime=win-x64 --output $(exeDirSelfContained) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=true"
+
       - task: MSBuild@1
         displayName: Build Solution
         inputs:
@@ -166,7 +178,9 @@ jobs:
 
       - powershell: |
           ren "$(exeDirFrameworkDependent)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate.exe
+          ren "$(exeDirSelfContained)\WingetCreateCLI\WingetCreateCLI.exe" wingetcreate-self-contained.exe
           (Get-FileHash -Algorithm SHA256 -Path $(exePathFrameworkDependent)).Hash > "$(exePathFrameworkDependent).txt"
+          (Get-FileHash -Algorithm SHA256 -Path $(exePathSelfContained)).Hash > "$(exePathSelfContained).txt"
           (Get-FileHash -Algorithm SHA256 -Path $(appxBundlePath)).Hash > "$(appxBundlePath).txt"
         displayName: "Create hash files"
 
@@ -177,7 +191,9 @@ jobs:
           flattenFolders: true
           contents: |
             $(exePathFrameworkDependent)
+            $(exePathSelfContained)
             $(exePathFrameworkDependent).txt
+            $(exePathSelfContained).txt
             $(appxBundlePath)
             $(appxBundlePath).txt
 
