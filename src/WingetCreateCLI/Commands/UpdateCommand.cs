@@ -402,6 +402,11 @@ namespace Microsoft.WingetCreateCLI.Commands
             manifests.VersionManifest.ManifestVersion = latestManifestVersion;
             manifests.DefaultLocaleManifest.ManifestVersion = latestManifestVersion;
             manifests.InstallerManifest.ManifestVersion = latestManifestVersion;
+
+            foreach (var localeManifest in manifests.LocaleManifests)
+            {
+                localeManifest.ManifestVersion = latestManifestVersion;
+            }
         }
 
         /// <summary>
