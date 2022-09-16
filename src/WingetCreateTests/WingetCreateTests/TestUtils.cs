@@ -6,6 +6,7 @@ namespace Microsoft.WingetCreateTests
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -112,6 +113,17 @@ namespace Microsoft.WingetCreateTests
             string testFilePath = GetTestFile(manifestFileName);
             var initialManifestContent = new List<string> { File.ReadAllText(testFilePath) };
             return initialManifestContent;
+        }
+
+        /// <summary>
+        /// Obtains the initial manifest content string from the provided manifest directory name.
+        /// </summary>
+        /// <param name="manifestDirName">Manifest directory name string.</param>
+        /// <returns>List of manifest content strings.</returns>
+        public static List<string> GetInitialMultifileManifestContent(string manifestDirName)
+        {
+            string testDirPath = GetTestFile(manifestDirName);
+            return Directory.GetFiles(testDirPath).Select(f => File.ReadAllText(f)).ToList();
         }
 
         /// <summary>

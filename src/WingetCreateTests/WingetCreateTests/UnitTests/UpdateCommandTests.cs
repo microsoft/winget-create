@@ -466,12 +466,32 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Tests that the manifest version gets updated to the latest manifest schema version for multifile manifests.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateMultifileToLatestManifestVersion()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("Multifile.MsixTest", null, this.tempPath, null, true);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            string initialManifestVersion = initialManifests.VersionManifest.ManifestVersion;
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            Assert.AreNotEqual(initialManifestVersion, updatedManifests.InstallerManifest.ManifestVersion, "ManifestVersion should be updated to latest.");
+            Assert.AreNotEqual(initialManifestVersion, updatedManifests.VersionManifest.ManifestVersion, "ManifestVersion should be updated to latest.");
+            Assert.AreNotEqual(initialManifestVersion, updatedManifests.DefaultLocaleManifest.ManifestVersion, "ManifestVersion should be updated to latest.");
+            Assert.AreNotEqual(initialManifestVersion, updatedManifests.LocaleManifests[0].ManifestVersion, "ManifestVersion should be updated to latest.");
+        }
+
+        /// <summary>
         /// Verifies that deserialization prioritizes alias-defined fields and can correctly assign those field values.
         /// </summary>
         [Test]
         public void UpdateDeserializesAliasDefinedFields()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.DeserializeAliasFields", null, this.tempPath, null);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var singletonManifest = initialManifests.SingletonManifest;
@@ -558,7 +578,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsTrue(updatedInstaller.Commands[0] == "portableCommand", "Command value should be preserved.");
         }
 
-        private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls)
+        private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls, bool isMultifile = false)
         {
             var updateCommand = new UpdateCommand
             {
@@ -572,8 +592,7 @@ namespace Microsoft.WingetCreateUnitTests
                 updateCommand.InstallerUrls = installerUrls;
             }
 
-            var initialManifestContent = TestUtils.GetInitialManifestContent($"{id}.yaml");
-
+            var initialManifestContent = isMultifile ? TestUtils.GetInitialMultifileManifestContent(id) : TestUtils.GetInitialManifestContent($"{id}.yaml");
             return (updateCommand, initialManifestContent);
         }
 
