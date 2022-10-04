@@ -35,7 +35,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// The url path to the manifest documentation site.
         /// </summary>
-        private const string ManifestDocumentationUrl = "https://github.com/microsoft/winget-cli/blob/master/doc/ManifestSpecv1.0.md";
+        private const string ManifestDocumentationUrl = "https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.2.0";
 
         /// <summary>
         /// Installer types for which we can trust that the detected architecture is correct, so don't need to prompt the user to confirm.
