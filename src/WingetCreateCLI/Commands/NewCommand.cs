@@ -7,6 +7,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Version;
     using Newtonsoft.Json;
     using Sharprompt;
+    using YamlDotNet.Core.Tokens;
 
     /// <summary>
     /// Command to launch a wizard that prompt users for information to generate a new manifest.
@@ -106,6 +108,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 List<InstallerMetadata> installerUpdateList = new List<InstallerMetadata>();
+                IEnumerable<string> selectedPortablePackages;
 
                 foreach (var installerUrl in this.InstallerUrls)
                 {
@@ -115,7 +118,38 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return false;
                     }
 
-                    installerUpdateList.Add(new InstallerMetadata { InstallerUrl = installerUrl, PackageFile = packageFile });
+                    // Convert this to semantic
+                    if (Path.GetExtension(packageFile).Equals(".zip"))
+                    {
+                        string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFile));
+                        ZipFile.ExtractToDirectory(packageFile, extractDirectory, true);
+
+                        var extractedFiles = Directory.EnumerateFiles(extractDirectory, "*.*", SearchOption.AllDirectories);
+                        int fileCount = extractedFiles.Count();
+
+                        List<NestedInstallerFile> nestedInstallerFiles = new List<NestedInstallerFile>();
+                        if (fileCount == 0)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            selectedPortablePackages = Prompt.MultiSelect("select the installers in this package", extractedFiles, minimum: 1);
+                            List<string> relativeFilePaths = new List<string>();
+
+                            foreach (string portablePackage in selectedPortablePackages)
+                            {
+                                relativeFilePaths.Add(Path.GetRelativePath(extractDirectory, portablePackage));
+                            }
+
+                            installerUpdateList.Add(new InstallerMetadata { InstallerUrl = installerUrl, PackageFile = packageFile, RelativeFilePaths = relativeFilePaths, IsZipFile = true });
+                        }
+
+                    }
+                    else
+                    {
+                        installerUpdateList.Add(new InstallerMetadata { InstallerUrl = installerUrl, PackageFile = packageFile });
+                    }
                 }
 
                 try

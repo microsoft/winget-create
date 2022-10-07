@@ -468,6 +468,29 @@ namespace Microsoft.WingetCreateCore
             baseInstaller.InstallerSha256 = GetFileHash(path);
             baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
 
+            if (installerMetadata.IsZipFile)
+            {
+                baseInstaller.InstallerType = InstallerType.Zip;
+
+                List<NestedInstallerFile> nestedInstallerFiles = new List<NestedInstallerFile>();
+                foreach (string relativeFilePath in installerMetadata.RelativeFilePaths)
+                {
+                    nestedInstallerFiles.Add(new NestedInstallerFile { RelativeFilePath = relativeFilePath });
+                }
+
+                baseInstaller.NestedInstallerFiles = nestedInstallerFiles;
+
+                // Only multiple portables inside a zip are supported.
+                if (nestedInstallerFiles.Count() > 1)
+                {
+                    baseInstaller.NestedInstallerType = NestedInstallerType.Portable;
+                    newInstallers.Add(baseInstaller);
+                    return true;
+                }
+
+                path = installerMetadata.RelativeFilePaths.First();
+            }
+
             bool parseMsixResult = false;
 
             bool parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
@@ -648,19 +671,31 @@ namespace Microsoft.WingetCreateCore
                     .Split(' ').First()
                     .ToLowerInvariant();
 
+                InstallerType? installerTypeEnum;
+
                 if (installerType.EqualsIC("wix"))
                 {
                     // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
-                    baseInstaller.InstallerType = InstallerType.Burn;
+                    installerTypeEnum = InstallerType.Burn;
                 }
                 else if (KnownInstallerResourceNames.Contains(installerType))
                 {
                     // If it's a known exe installer type, set as appropriately
-                    baseInstaller.InstallerType = installerType.ToEnumOrDefault<InstallerType>();
+                    installerTypeEnum = installerType.ToEnumOrDefault<InstallerType>();
                 }
                 else
                 {
-                    baseInstaller.InstallerType = InstallerType.Exe;
+                    installerTypeEnum = InstallerType.Exe;
+                }
+
+                // ConvertThis into a method.
+                if (baseInstaller.InstallerType == InstallerType.Zip)
+                {
+                    baseInstaller.NestedInstallerType = (NestedInstallerType)Enum.Parse(typeof(InstallerType), installerTypeEnum.ToString());
+                }
+                else
+                {
+                    baseInstaller.InstallerType = installerTypeEnum;
                 }
 
                 newInstallers.Add(baseInstaller);
@@ -670,7 +705,25 @@ namespace Microsoft.WingetCreateCore
             catch (Win32Exception)
             {
                 // Installer doesn't have a resource header
-                return false;
+                // Check if extension is .exe and resort to portable installerType
+                if (Path.GetExtension(path) == ".exe")
+                {
+                    if (baseInstaller.InstallerType == InstallerType.Zip)
+                    {
+                        baseInstaller.NestedInstallerType = NestedInstallerType.Portable;
+                    }
+                    else
+                    {
+                        baseInstaller.InstallerType = InstallerType.Portable;
+                    }
+
+                    newInstallers.Add(baseInstaller);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
         }
 

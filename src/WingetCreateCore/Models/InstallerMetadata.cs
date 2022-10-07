@@ -40,5 +40,15 @@ namespace Microsoft.WingetCreateCore.Models
         /// Gets or sets the architecture specified as an override.
         /// </summary>
         public Architecture? OverrideArchitecture { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the installer came from a zip.
+        /// </summary>
+        public bool IsZipFile { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets the nested installer files contained inside a zip.
+        /// </summary>
+        public List<string> RelativeFilePaths { get; set; }
     }
 }
