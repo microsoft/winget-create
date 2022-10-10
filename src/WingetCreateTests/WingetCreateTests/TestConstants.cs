@@ -39,6 +39,11 @@ namespace Microsoft.WingetCreateTests
         public const string TestMsixInstaller = "WingetCreateTestMsixInstaller.msixbundle";
 
         /// <summary>
+        /// File name of the test ZIP installer.
+        /// </summary>
+        public const string TestZipInstaller = "WingetCreateTestZipInstaller.zip";
+
+        /// <summary>
         /// PackageIdentifier for test exe.
         /// </summary>
         public const string TestExePackageIdentifier = "WingetCreateE2E.ExeTest";
@@ -59,6 +64,11 @@ namespace Microsoft.WingetCreateTests
         public const string TestPortablePackageIdentifier = "WingetCreateE2E.PortableTest";
 
         /// <summary>
+        /// PackageIdentifier for test zip.
+        /// </summary>
+        public const string TestZipPackageIdentifier = "WingetCreateE2E.ZipTest";
+
+        /// <summary>
         /// File name of the test exe manifest.
         /// </summary>
         public const string TestExeManifest = "WingetCreateE2E.ExeTest.yaml";
@@ -77,5 +87,10 @@ namespace Microsoft.WingetCreateTests
         /// Path of the directory with the multifile msix test manifests.
         /// </summary>
         public const string TestMultifileMsixManifestDir = "Multifile.MsixTest";
+
+        /// <summary>
+        ///  File name of the test zip manifest.
+        /// </summary>
+        public const string TestZipManifest = "WingetCreateE2E.ZipTest.yaml";
     }
 }

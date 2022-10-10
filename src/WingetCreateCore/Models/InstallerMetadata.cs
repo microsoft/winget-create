@@ -50,5 +50,10 @@ namespace Microsoft.WingetCreateCore.Models
         /// Gets or sets the nested installer files contained inside a zip.
         /// </summary>
         public List<string> RelativeFilePaths { get; set; }
+
+        /// <summary>
+        /// Gets or sets the directory path of the extracted files from the target zip package file.
+        /// </summary>
+        public string ExtractedDirectory { get; set; }
     }
 }

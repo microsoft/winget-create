@@ -5,6 +5,7 @@ namespace Microsoft.WingetCreateUnitTests
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -589,6 +590,31 @@ namespace Microsoft.WingetCreateUnitTests
 
             Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Portable, "InstallerType should be portable");
             Assert.IsTrue(updatedInstaller.Commands[0] == "portableCommand", "Command value should be preserved.");
+        }
+
+        [Test]
+        public async Task UpdateZipNonPortable()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.Zip", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
+            var updatedInstaller = updatedInstallerManifest.Installers.First();
+
+            Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Zip, "InstallerType should be zip");
+            Assert.IsTrue(updatedInstaller.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType should be exe");
+
+
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+            var initialNestedInstallerFile = initialInstaller.NestedInstallerFiles.First();
+
+            var updatedNestedInstallerFile = updatedInstaller.NestedInstallerFiles.First();
+            Assert.IsTrue(initialNestedInstallerFile.RelativeFilePath == updatedNestedInstallerFile.RelativeFilePath, "RelativeFilePath should be preserved.");
+            Assert.IsTrue(initialNestedInstallerFile.PortableCommandAlias == updatedNestedInstallerFile.PortableCommandAlias, "PortableCommandAlias should be preserved.");
+            Assert.IsTrue
         }
 
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls, bool isMultifile = false)

@@ -82,6 +82,16 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
+        /// Determines if the file is a zip based on the file extension.
+        /// </summary>
+        /// <param name="path">File path to be evaluated.</param>
+        /// <returns>Boolean value indicating whether the path points to a zip file.</returns>
+        public static bool IsZipFile(this string path)
+        {
+            return Path.GetExtension(path) == ".zip";
+        }
+
+        /// <summary>
         /// Returns the enum member attribute value if one exists.
         /// </summary>
         /// <param name="enumVal">Target enum value.</param>

@@ -37,12 +37,17 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// The url path to the manifest documentation site.
         /// </summary>
-        private const string ManifestDocumentationUrl = "https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.2.0";
+        private const string ManifestDocumentationUrl = "https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.4.0";
 
         /// <summary>
         /// Installer types for which we can trust that the detected architecture is correct, so don't need to prompt the user to confirm.
         /// </summary>
         private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msix, InstallerType.Appx };
+
+        /// <summary>
+        /// Installer type file extensions that are supported.
+        /// </summary>
+        private static readonly string[] SupportedInstallerTypeExtensions = new[] { ".msix", ".msi", ".exe" };
 
         /// <summary>
         /// Gets the usage examples for the New command.
@@ -108,7 +113,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 List<InstallerMetadata> installerUpdateList = new List<InstallerMetadata>();
-                IEnumerable<string> selectedPortablePackages;
 
                 foreach (var installerUrl in this.InstallerUrls)
                 {
@@ -118,33 +122,51 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return false;
                     }
 
-                    // Convert this to semantic
-                    if (Path.GetExtension(packageFile).Equals(".zip"))
+                    if (packageFile.IsZipFile())
                     {
                         string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFile));
-                        ZipFile.ExtractToDirectory(packageFile, extractDirectory, true);
 
-                        var extractedFiles = Directory.EnumerateFiles(extractDirectory, "*.*", SearchOption.AllDirectories);
+                        try
+                        {
+                            ZipFile.ExtractToDirectory(packageFile, extractDirectory, true);
+                        }
+                        catch (InvalidDataException invalidDataException)
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), invalidDataException);
+                            return false;
+                        }
+
+                        List<string> extractedFiles = Directory.EnumerateFiles(extractDirectory, "*.*", SearchOption.AllDirectories)
+                            .Select(filePath => filePath = Path.GetRelativePath(extractDirectory, filePath))
+                            .Where(filePath => SupportedInstallerTypeExtensions.Contains(Path.GetExtension(filePath)))
+                            .ToList();
+
                         int fileCount = extractedFiles.Count();
+                        List<string> selectedInstallers;
 
-                        List<NestedInstallerFile> nestedInstallerFiles = new List<NestedInstallerFile>();
                         if (fileCount == 0)
                         {
+                            Logger.ErrorLocalized(nameof(Resources.NoInstallersFoundInArchive_ErrorMessage));
                             return false;
+                        }
+                        else if (fileCount == 1)
+                        {
+                            selectedInstallers = extractedFiles;
                         }
                         else
                         {
-                            selectedPortablePackages = Prompt.MultiSelect("select the installers in this package", extractedFiles, minimum: 1);
-                            List<string> relativeFilePaths = new List<string>();
-
-                            foreach (string portablePackage in selectedPortablePackages)
-                            {
-                                relativeFilePaths.Add(Path.GetRelativePath(extractDirectory, portablePackage));
-                            }
-
-                            installerUpdateList.Add(new InstallerMetadata { InstallerUrl = installerUrl, PackageFile = packageFile, RelativeFilePaths = relativeFilePaths, IsZipFile = true });
+                            selectedInstallers = Prompt.MultiSelect(Resources.SelectInstallersFromZip_Message, extractedFiles, minimum: 1).ToList();
                         }
 
+                        installerUpdateList.Add(
+                            new InstallerMetadata
+                            {
+                                InstallerUrl = installerUrl,
+                                PackageFile = packageFile,
+                                RelativeFilePaths = selectedInstallers,
+                                IsZipFile = true,
+                                ExtractedDirectory = extractDirectory,
+                            });
                     }
                     else
                     {
@@ -334,14 +356,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (installer.InstallerType == InstallerType.Exe)
                 {
                     Console.WriteLine();
-                    if (!PromptForPortableExe(installer))
-                    {
-                        // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
-                        Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
-                        prompted = true;
-                        PromptInstallerSwitchesForExe(installer);
-                    }
+
+                    // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
+                    Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
+                    prompted = true;
+                    PromptInstallerSwitchesForExe(installer);
                 }
+
+                PromptForPortableAlias(installer);
 
                 foreach (var requiredProperty in requiredInstallerProperties)
                 {
@@ -377,31 +399,30 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        /// <summary>
-        /// Prompts the user to confirm whether the package is a portable.
-        /// If true, then prompts for related portable metadata.
-        /// </summary>
-        /// <typeparam name="T">Manifest installer.</typeparam>
-        /// <param name="manifestInstaller">Manifest installer object model.</param>
-        /// <returns>Boolean value indicating whether the package is a portable.</returns>
-        private static bool PromptForPortableExe<T>(T manifestInstaller)
+        private static void PromptForPortableAlias(Installer installer)
         {
-            if (Prompt.Confirm(Resources.ConfirmPortablePackage_Message))
+            if (installer.InstallerType == InstallerType.Portable)
             {
-                manifestInstaller.GetType().GetProperty(nameof(Installer.InstallerType)).SetValue(manifestInstaller, InstallerType.Portable);
                 string portableCommandAlias = Prompt.Input<string>(Resources.PortableCommandAlias_Message);
 
                 if (!string.IsNullOrEmpty(portableCommandAlias))
                 {
                     List<string> portableCommands = new List<string> { portableCommandAlias };
-                    manifestInstaller.GetType().GetProperty(nameof(Installer.Commands)).SetValue(manifestInstaller, portableCommands);
+                    installer.Commands = portableCommands;
                 }
-
-                return true;
             }
-            else
+
+            if (installer.NestedInstallerType == NestedInstallerType.Portable)
             {
-                return false;
+                foreach (NestedInstallerFile nestedInstallerFile in installer.NestedInstallerFiles)
+                {
+                    string portableCommandAlias = Prompt.Input<string>(Resources.PortableCommandAlias_Message);
+
+                    if (!string.IsNullOrEmpty(portableCommandAlias))
+                    {
+                        nestedInstallerFile.PortableCommandAlias = portableCommandAlias;
+                    }
+                }
             }
         }
 

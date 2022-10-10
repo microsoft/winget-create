@@ -925,4 +925,13 @@
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>Unable to create a reference to the forked repository. This can be caused when the forked repository is behind by too many commits. Sync your fork and try again.</value>
   </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>The package file is not a valid zip archive.</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>No supported installer(s) found in zip archive.</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>Select the installer(s) from the zip package:</value>
+  </data>
 </root>

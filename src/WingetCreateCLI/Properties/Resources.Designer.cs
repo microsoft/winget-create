@@ -1132,6 +1132,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The package file is not a valid zip archive..
+        /// </summary>
+        public static string InvalidZipFile_ErrorMessage {
+            get {
+                return ResourceManager.GetString("InvalidZipFile_ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overrides default language.
         /// </summary>
         public static string Language_KeywordDescription {
@@ -1416,6 +1425,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NoChangeDetectedInUpdatedManifest_Message {
             get {
                 return ResourceManager.GetString("NoChangeDetectedInUpdatedManifest_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No supported installer(s) found in zip archive..
+        /// </summary>
+        public static string NoInstallersFoundInArchive_ErrorMessage {
+            get {
+                return ResourceManager.GetString("NoInstallersFoundInArchive_ErrorMessage", resourceCulture);
             }
         }
         
@@ -1875,6 +1893,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SelectAction_Message {
             get {
                 return ResourceManager.GetString("SelectAction_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the installer(s) from the zip package:.
+        /// </summary>
+        public static string SelectInstallersFromZip_Message {
+            get {
+                return ResourceManager.GetString("SelectInstallersFromZip_Message", resourceCulture);
             }
         }
         

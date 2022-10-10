@@ -466,30 +466,26 @@ namespace Microsoft.WingetCreateCore
             var baseInstaller = new Installer();
             baseInstaller.InstallerUrl = url;
             baseInstaller.InstallerSha256 = GetFileHash(path);
-            baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
 
             if (installerMetadata.IsZipFile)
             {
                 baseInstaller.InstallerType = InstallerType.Zip;
+                List<string> relativeFilePaths = installerMetadata.RelativeFilePaths;
+
+                // Update target package file path to point to the first nested installer.
+                // Even for multiple nested portables, we only parse the first package.
+                path = Path.Combine(installerMetadata.ExtractedDirectory, relativeFilePaths.First());
 
                 List<NestedInstallerFile> nestedInstallerFiles = new List<NestedInstallerFile>();
-                foreach (string relativeFilePath in installerMetadata.RelativeFilePaths)
+                foreach (string relativeFilePath in relativeFilePaths)
                 {
                     nestedInstallerFiles.Add(new NestedInstallerFile { RelativeFilePath = relativeFilePath });
                 }
 
                 baseInstaller.NestedInstallerFiles = nestedInstallerFiles;
-
-                // Only multiple portables inside a zip are supported.
-                if (nestedInstallerFiles.Count() > 1)
-                {
-                    baseInstaller.NestedInstallerType = NestedInstallerType.Portable;
-                    newInstallers.Add(baseInstaller);
-                    return true;
-                }
-
-                path = installerMetadata.RelativeFilePaths.First();
             }
+
+            baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
 
             bool parseMsixResult = false;
 
@@ -688,15 +684,7 @@ namespace Microsoft.WingetCreateCore
                     installerTypeEnum = InstallerType.Exe;
                 }
 
-                // ConvertThis into a method.
-                if (baseInstaller.InstallerType == InstallerType.Zip)
-                {
-                    baseInstaller.NestedInstallerType = (NestedInstallerType)Enum.Parse(typeof(InstallerType), installerTypeEnum.ToString());
-                }
-                else
-                {
-                    baseInstaller.InstallerType = installerTypeEnum;
-                }
+                SetInstallerType(baseInstaller, installerTypeEnum.Value);
 
                 newInstallers.Add(baseInstaller);
 
@@ -708,15 +696,7 @@ namespace Microsoft.WingetCreateCore
                 // Check if extension is .exe and resort to portable installerType
                 if (Path.GetExtension(path) == ".exe")
                 {
-                    if (baseInstaller.InstallerType == InstallerType.Zip)
-                    {
-                        baseInstaller.NestedInstallerType = NestedInstallerType.Portable;
-                    }
-                    else
-                    {
-                        baseInstaller.InstallerType = InstallerType.Portable;
-                    }
-
+                    SetInstallerType(baseInstaller, InstallerType.Portable);
                     newInstallers.Add(baseInstaller);
                     return true;
                 }
@@ -749,9 +729,11 @@ namespace Microsoft.WingetCreateCore
             {
                 using (var database = new QDatabase(path, Deployment.WindowsInstaller.DatabaseOpenMode.ReadOnly))
                 {
-                    baseInstaller.InstallerType = IsWix(database)
-                        ? InstallerType.Wix
-                        : InstallerType.Msi;
+                    InstallerType installerType = IsWix(database)
+                            ? InstallerType.Wix
+                            : InstallerType.Msi;
+
+                    SetInstallerType(baseInstaller, installerType);
 
                     var properties = database.Properties.ToList();
 
@@ -907,7 +889,8 @@ namespace Microsoft.WingetCreateCore
                 }
 
                 baseInstaller.SignatureSha256 = signatureSha256;
-                baseInstaller.InstallerType = InstallerType.Msix;
+
+                SetInstallerType(baseInstaller, InstallerType.Msix);
 
                 // Add installer nodes for MSIX installers
                 foreach (var appxMetadata in appxMetadatas)
@@ -924,6 +907,18 @@ namespace Microsoft.WingetCreateCore
             {
                 // Binary wasn't an MSIX
                 return null;
+            }
+        }
+
+        private static void SetInstallerType(Installer baseInstaller, InstallerType installerType)
+        {
+            if (baseInstaller.InstallerType == InstallerType.Zip)
+            {
+                baseInstaller.NestedInstallerType = (NestedInstallerType)Enum.Parse(typeof(NestedInstallerType), installerType.ToString());
+            }
+            else
+            {
+                baseInstaller.InstallerType = installerType;
             }
         }
 
