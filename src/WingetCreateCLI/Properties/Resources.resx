@@ -928,6 +928,10 @@
   <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
     <value>The package file is not a valid zip archive.</value>
   </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>Nested installer not found in zip archive: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
   <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
     <value>No supported installer(s) found in zip archive.</value>
   </data>

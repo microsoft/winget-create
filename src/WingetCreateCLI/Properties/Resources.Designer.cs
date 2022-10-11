@@ -1375,6 +1375,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nested installer not found in zip archive: {0}.
+        /// </summary>
+        public static string NestedInstallerFileNotFound_Error {
+            get {
+                return ResourceManager.GetString("NestedInstallerFileNotFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Press ENTER to submit the value for each question including accepting the (default) value..
         /// </summary>
         public static string NewCommand_Description {

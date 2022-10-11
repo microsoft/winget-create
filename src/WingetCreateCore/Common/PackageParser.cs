@@ -470,8 +470,8 @@ namespace Microsoft.WingetCreateCore
             if (installerMetadata.IsZipFile)
             {
                 baseInstaller.InstallerType = InstallerType.Zip;
-                List<string> relativeFilePaths = installerMetadata.RelativeFilePaths;
 
+                List<string> relativeFilePaths = installerMetadata.RelativeFilePaths;
                 // Update target package file path to point to the first nested installer.
                 // Even for multiple nested portables, we only parse the first package.
                 path = Path.Combine(installerMetadata.ExtractedDirectory, relativeFilePaths.First());

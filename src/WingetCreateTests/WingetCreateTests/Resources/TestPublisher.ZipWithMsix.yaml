@@ -1,0 +1,24 @@
+﻿PackageIdentifier: TestPublisher.ZipWithMsix
+PackageVersion: 0.1.2
+PackageName: Test zip app with msix
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used for testing a zip package with an msix installer.
+Installers:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
+  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  NestedInstallerType: msix
+  NestedInstallerFiles:
+  - RelativeFilePath: WingetCreateTestMsixInstaller.msixbundle
+- Architecture: x86
+  InstallerType: zip
+  InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
+  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  NestedInstallerType: msix
+  NestedInstallerFiles:
+  - RelativeFilePath: WingetCreateTestMsixInstaller.msixbundle
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.4.0

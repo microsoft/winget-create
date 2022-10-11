@@ -6,6 +6,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -256,6 +257,37 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (string.IsNullOrEmpty(packageFile))
                 {
                     return null;
+                }
+
+                if (packageFile.IsZipFile())
+                {
+                    installerUpdate.IsZipFile = true;
+
+                    // Obtain all possible relative file paths and check if there is a match.
+                    List<string> relativeFilePaths = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles.Select(x => x.RelativeFilePath)).ToList();
+                    string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFile));
+
+                    try
+                    {
+                        ZipFile.ExtractToDirectory(packageFile, extractDirectory, true);
+                    }
+                    catch (InvalidDataException invalidDataException)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), invalidDataException);
+                        return null;
+                    }
+
+                    foreach (string relativeFilePath in relativeFilePaths)
+                    {
+                        if (!File.Exists(Path.Combine(extractDirectory, relativeFilePath)))
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.NestedInstallerFileNotFound_Error), relativeFilePath);
+                            return null;
+                        }
+                    }
+
+                    installerUpdate.ExtractedDirectory = extractDirectory;
+                    installerUpdate.RelativeFilePaths = relativeFilePaths;
                 }
 
                 installerUpdate.PackageFile = packageFile;
