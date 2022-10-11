@@ -925,15 +925,45 @@
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>Unable to create a reference to the forked repository. This can be caused when the forked repository is behind by too many commits. Sync your fork and try again.</value>
   </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>Represents the default installed package location. Used for deeper installation detection</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>The optional Sha256 of the installed file</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>List of installed files</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>The optional installed file type</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>Details about the installation. Used for deeper installation detection</value>
+  </data>
   <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
     <value>The package file is not a valid zip archive.</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>The optional parameter for invocable files</value>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>Nested installer not found in zip archive: {0}</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
   </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>List of nested installer files contained inside an archive</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>The nested installer type contained inside an archive</value>
+  </data>
   <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
     <value>No supported installer(s) found in zip archive.</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>The command alias to be used for calling the nested portable package</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>The relative file path to the nested installer file</value>
   </data>
   <data name="SelectInstallersFromZip_Message" xml:space="preserve">
     <value>Select the installer(s) from the zip archive:</value>

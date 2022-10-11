@@ -18,7 +18,7 @@ Tags:
 InstallerType: zip
 Installers:
   - Architecture: x64
-    InstallerUrl: https://fakedomain.com/WingetCreateTestMsiInstaller.msi
+    InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
     InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
     NestedInstallerType: msi
     NestedInstallerFiles:

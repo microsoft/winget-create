@@ -376,6 +376,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Represents the default installed package location. Used for deeper installation detection.
+        /// </summary>
+        public static string DefaultInstallLocation_KeywordDescription {
+            get {
+                return ResourceManager.GetString("DefaultInstallLocation_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package meta-data default locale |e.g. en-US|.
         /// </summary>
         public static string DefaultLocale_KeywordDescription {
@@ -772,6 +781,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List of installed files.
+        /// </summary>
+        public static string Files_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Files_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The optional Sha256 of the installed file.
+        /// </summary>
+        public static string FileSha256_KeywordDescription {
+            get {
+                return ResourceManager.GetString("FileSha256_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The optional installed file type.
+        /// </summary>
+        public static string FileType_KeywordDescription {
+            get {
+                return ResourceManager.GetString("FileType_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filter menu items by typing a search query below..
         /// </summary>
         public static string FilterMenuItems_Message {
@@ -876,6 +912,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InitiatingGitHubLogin_Message {
             get {
                 return ResourceManager.GetString("InitiatingGitHubLogin_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details about the installation. Used for deeper installation detection.
+        /// </summary>
+        public static string InstallationMetadata_KeywordDescription {
+            get {
+                return ResourceManager.GetString("InstallationMetadata_KeywordDescription", resourceCulture);
             }
         }
         
@@ -1141,6 +1186,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The optional parameter for invocable files.
+        /// </summary>
+        public static string InvocationParameter_KeywordDescription {
+            get {
+                return ResourceManager.GetString("InvocationParameter_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overrides default language.
         /// </summary>
         public static string Language_KeywordDescription {
@@ -1380,6 +1434,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NestedInstallerFileNotFound_Error {
             get {
                 return ResourceManager.GetString("NestedInstallerFileNotFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List of nested installer files contained inside an archive.
+        /// </summary>
+        public static string NestedInstallerFiles_KeywordDescription {
+            get {
+                return ResourceManager.GetString("NestedInstallerFiles_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The nested installer type contained inside an archive.
+        /// </summary>
+        public static string NestedInstallerType_KeywordDescription {
+            get {
+                return ResourceManager.GetString("NestedInstallerType_KeywordDescription", resourceCulture);
             }
         }
         
@@ -1636,6 +1708,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The command alias to be used for calling the nested portable package.
+        /// </summary>
+        public static string PortableCommandAlias_KeywordDescription {
+            get {
+                return ResourceManager.GetString("PortableCommandAlias_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to What is the command alias of the portable package |e.g. nuget|.
         /// </summary>
         public static string PortableCommandAlias_Message {
@@ -1749,6 +1830,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string RegexFieldValidation_Error {
             get {
                 return ResourceManager.GetString("RegexFieldValidation_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The relative file path to the nested installer file.
+        /// </summary>
+        public static string RelativeFilePath_KeywordDescription {
+            get {
+                return ResourceManager.GetString("RelativeFilePath_KeywordDescription", resourceCulture);
             }
         }
         
