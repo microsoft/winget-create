@@ -1906,7 +1906,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select the installer(s) from the zip package:.
+        ///   Looks up a localized string similar to Select the installer(s) from the zip archive:.
         /// </summary>
         public static string SelectInstallersFromZip_Message {
             get {

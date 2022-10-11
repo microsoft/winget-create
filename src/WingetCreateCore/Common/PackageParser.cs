@@ -470,10 +470,11 @@ namespace Microsoft.WingetCreateCore
             if (installerMetadata.IsZipFile)
             {
                 baseInstaller.InstallerType = InstallerType.Zip;
-
                 List<string> relativeFilePaths = installerMetadata.RelativeFilePaths;
+
                 // Update target package file path to point to the first nested installer.
-                // Even for multiple nested portables, we only parse the first package.
+                // Even for multiple nested portables, we only need to parse the first package
+                // since we already verified that the relative file paths exist in the zip archive.
                 path = Path.Combine(installerMetadata.ExtractedDirectory, relativeFilePaths.First());
 
                 List<NestedInstallerFile> nestedInstallerFiles = new List<NestedInstallerFile>();
@@ -732,7 +733,6 @@ namespace Microsoft.WingetCreateCore
                     InstallerType installerType = IsWix(database)
                             ? InstallerType.Wix
                             : InstallerType.Msi;
-
                     SetInstallerType(baseInstaller, installerType);
 
                     var properties = database.Properties.ToList();
@@ -889,7 +889,6 @@ namespace Microsoft.WingetCreateCore
                 }
 
                 baseInstaller.SignatureSha256 = signatureSha256;
-
                 SetInstallerType(baseInstaller, InstallerType.Msix);
 
                 // Add installer nodes for MSIX installers

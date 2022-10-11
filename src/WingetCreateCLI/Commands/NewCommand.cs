@@ -26,7 +26,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Version;
     using Newtonsoft.Json;
     using Sharprompt;
-    using YamlDotNet.Core.Tokens;
 
     /// <summary>
     /// Command to launch a wizard that prompt users for information to generate a new manifest.
@@ -37,7 +36,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// The url path to the manifest documentation site.
         /// </summary>
-        private const string ManifestDocumentationUrl = "https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.4.0";
+        private const string ManifestDocumentationUrl = "https://aka.ms/winget-manifest-schema";
 
         /// <summary>
         /// Installer types for which we can trust that the detected architecture is correct, so don't need to prompt the user to confirm.
@@ -141,15 +140,15 @@ namespace Microsoft.WingetCreateCLI.Commands
                             .Where(filePath => SupportedInstallerTypeExtensions.Contains(Path.GetExtension(filePath)))
                             .ToList();
 
-                        int fileCount = extractedFiles.Count();
+                        int extractedFilesCount = extractedFiles.Count();
                         List<string> selectedInstallers;
 
-                        if (fileCount == 0)
+                        if (extractedFilesCount == 0)
                         {
                             Logger.ErrorLocalized(nameof(Resources.NoInstallersFoundInArchive_ErrorMessage));
                             return false;
                         }
-                        else if (fileCount == 1)
+                        else if (extractedFilesCount == 1)
                         {
                             selectedInstallers = extractedFiles;
                         }
@@ -363,7 +362,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     PromptInstallerSwitchesForExe(installer);
                 }
 
-                PromptForPortableAlias(installer);
+                PromptForPortableAliasIfApplicable(installer);
 
                 foreach (var requiredProperty in requiredInstallerProperties)
                 {
@@ -399,7 +398,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void PromptForPortableAlias(Installer installer)
+        private static void PromptForPortableAliasIfApplicable(Installer installer)
         {
             if (installer.InstallerType == InstallerType.Portable)
             {

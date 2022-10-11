@@ -936,6 +936,6 @@
     <value>No supported installer(s) found in zip archive.</value>
   </data>
   <data name="SelectInstallersFromZip_Message" xml:space="preserve">
-    <value>Select the installer(s) from the zip package:</value>
+    <value>Select the installer(s) from the zip archive:</value>
   </data>
 </root>

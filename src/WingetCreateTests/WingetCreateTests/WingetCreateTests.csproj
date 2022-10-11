@@ -108,6 +108,9 @@
     <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\WingetCreateE2E.ZipTest.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\WingetCreateE2E.PortableTest.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
