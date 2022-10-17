@@ -123,7 +123,7 @@ namespace Microsoft.WingetCreateCore
             }
 
             serialized.AppendLine();
-            serialized.AppendLine(manifestYaml);
+            serialized.Append(manifestYaml);
 
             return serialized.ToString();
         }
