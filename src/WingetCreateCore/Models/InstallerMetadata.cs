@@ -52,6 +52,11 @@ namespace Microsoft.WingetCreateCore.Models
         public List<string> RelativeFilePaths { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the nested installers in a zip have multiple architectures.
+        /// </summary>
+        public bool MultipleNestedInstallerArchitectures { get; set; }
+
+        /// <summary>
         /// Gets or sets the directory path of the extracted files from the target zip package file.
         /// </summary>
         public string ExtractedDirectory { get; set; }

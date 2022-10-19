@@ -475,7 +475,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The DisplayName registry value.
+        ///   Looks up a localized string similar to The DisplayName of the package or file.
         /// </summary>
         public static string DisplayName_KeywordDescription {
             get {
@@ -1416,6 +1416,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string MultipleMatchedInstaller_Error {
             get {
                 return ResourceManager.GetString("MultipleMatchedInstaller_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple nested installer architectures were detected for following archive packages:.
+        /// </summary>
+        public static string MultipleNestedArchitectures_Message {
+            get {
+                return ResourceManager.GetString("MultipleNestedArchitectures_Message", resourceCulture);
             }
         }
         

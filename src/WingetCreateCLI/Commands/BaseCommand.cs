@@ -211,10 +211,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Displays the appropriate warning messages for installers with detected architecture mismatches.
+        /// Displays the appropriate installer architecture warning messages.
         /// </summary>
         /// <param name="installerMetadataList">List of <see cref="InstallerMetadata"/>.</param>
-        protected static void DisplayMismatchedArchitectures(List<InstallerMetadata> installerMetadataList)
+        protected static void DisplayArchitectureWarnings(List<InstallerMetadata> installerMetadataList)
         {
             var mismatchedArchInstallers = installerMetadataList.Where(
                 i => i.UrlArchitecture.HasValue &&
@@ -231,6 +231,19 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Logger.Warn($"{mismatch.InstallerUrl}");
                     Console.WriteLine();
                 }
+            }
+
+            var multipleNestedArchInstallers = installerMetadataList.Where(i => i.MultipleNestedInstallerArchitectures);
+
+            if (multipleNestedArchInstallers.Any())
+            {
+                Logger.WarnLocalized(nameof(Resources.MultipleNestedArchitectures_Message));
+                foreach (var multipleNestedArchInstaller in multipleNestedArchInstallers)
+                {
+                    Logger.Warn($"{multipleNestedArchInstaller.InstallerUrl}");
+                }
+
+                Console.WriteLine();
             }
         }
 

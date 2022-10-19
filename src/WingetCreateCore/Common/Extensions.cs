@@ -97,7 +97,7 @@ namespace Microsoft.WingetCreateCore.Common
         /// </summary>
         /// <param name="installerType">The installer type to be evaluated.</param>
         /// <returns>Boolean value indicating whether the installer type is ZIP.</returns>
-        public static bool IsArchiveType(this InstallerType installerType)
+        public static bool IsArchiveType(this InstallerType? installerType)
         {
             return installerType == InstallerType.Zip;
         }

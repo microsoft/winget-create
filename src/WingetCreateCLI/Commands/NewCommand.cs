@@ -60,7 +60,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 yield return new Example(Resources.Example_NewCommand_DownloadInstaller, new NewCommand { InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>, .." } });
                 yield return new Example(Resources.Example_NewCommand_SaveLocallyOrSubmit, new NewCommand
                 {
-                    InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>, .." },
+                    InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>, ..." },
                     OutputDir = "<OutputDirectory>",
                     GitHubToken = "<GitHubPersonalAccessToken>",
                 });
@@ -191,7 +191,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 try
                 {
                     PackageParser.ParsePackages(installerUpdateList, manifests);
-                    DisplayMismatchedArchitectures(installerUpdateList);
+                    DisplayArchitectureWarnings(installerUpdateList);
                 }
                 catch (IOException iOException) when (iOException.HResult == -2147024671)
                 {

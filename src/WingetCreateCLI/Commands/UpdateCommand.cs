@@ -264,7 +264,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     installerUpdate.IsZipFile = true;
 
                     // Obtain all possible relative file paths and check if there is a match.
-                    List<string> relativeFilePaths = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles.Select(x => x.RelativeFilePath)).ToList();
+                    List<string> relativeFilePaths = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles.Select(x => x.RelativeFilePath)).Distinct().ToList();
                     string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFile));
 
                     if (Directory.Exists(extractDirectory))
@@ -292,6 +292,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                         throw;
                     }
 
+                    installerUpdate.RelativeFilePaths = new List<string>();
+
                     foreach (string relativeFilePath in relativeFilePaths)
                     {
                         if (!File.Exists(Path.Combine(extractDirectory, relativeFilePath)))
@@ -299,10 +301,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                             Logger.ErrorLocalized(nameof(Resources.NestedInstallerFileNotFound_Error), relativeFilePath);
                             return null;
                         }
+
+                        installerUpdate.RelativeFilePaths.Add(relativeFilePath);
                     }
 
                     installerUpdate.ExtractedDirectory = extractDirectory;
-                    installerUpdate.RelativeFilePaths = relativeFilePaths;
                 }
 
                 installerUpdate.PackageFile = packageFile;
@@ -311,7 +314,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             try
             {
                 PackageParser.UpdateInstallerNodesAsync(installerMetadataList, installerManifest);
-                DisplayMismatchedArchitectures(installerMetadataList);
+                DisplayArchitectureWarnings(installerMetadataList);
                 ResetVersionSpecificFields(manifests);
             }
             catch (InvalidOperationException)

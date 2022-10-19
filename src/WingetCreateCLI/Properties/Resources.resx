@@ -821,7 +821,7 @@
     <value>Various key values under installer's ARP entry</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>The DisplayName registry value</value>
+    <value>The DisplayName of the package or file</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>The installer's elevation requirement</value>
@@ -967,6 +967,10 @@
   </data>
   <data name="SelectInstallersFromZip_Message" xml:space="preserve">
     <value>Select the installer(s) from the zip archive:</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>Multiple nested installer architectures were detected for following archive packages:</value>
+    <comment>{0} - repesents the installer url of the package that triggered the warning</comment>
   </data>
   <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
     <value>The downloaded zip path exceeds the system-defined maximum length.</value>

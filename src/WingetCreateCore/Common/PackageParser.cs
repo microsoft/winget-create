@@ -461,38 +461,56 @@ namespace Microsoft.WingetCreateCore
         private static bool ParsePackageAndGenerateInstallerNodes(InstallerMetadata installerMetadata, Manifests manifests)
         {
             var url = installerMetadata.InstallerUrl;
-            var path = installerMetadata.PackageFile;
+            var packageFile = installerMetadata.PackageFile;
             var newInstallers = installerMetadata.NewInstallers;
             var baseInstaller = new Installer();
             baseInstaller.InstallerUrl = url;
-            baseInstaller.InstallerSha256 = GetFileHash(path);
+            baseInstaller.InstallerSha256 = GetFileHash(packageFile);
+
+            List<string> installerPaths = new List<string>();
 
             if (installerMetadata.IsZipFile)
             {
                 baseInstaller.InstallerType = InstallerType.Zip;
                 List<string> relativeFilePaths = installerMetadata.RelativeFilePaths;
 
-                // Update target package file path to point to the first nested installer.
-                // Even for multiple nested portables, we only need to parse the first package
-                // since we already verified that the relative file paths exist in the zip archive.
-                path = Path.Combine(installerMetadata.ExtractedDirectory, relativeFilePaths.First());
-
                 List<NestedInstallerFile> nestedInstallerFiles = new List<NestedInstallerFile>();
                 foreach (string relativeFilePath in relativeFilePaths)
                 {
                     nestedInstallerFiles.Add(new NestedInstallerFile { RelativeFilePath = relativeFilePath });
+                    installerPaths.Add(Path.Combine(installerMetadata.ExtractedDirectory, relativeFilePath));
                 }
 
                 baseInstaller.NestedInstallerFiles = nestedInstallerFiles;
             }
+            else
+            {
+                installerPaths.Add(packageFile);
+            }
 
-            baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
-
+            bool parseResult = false;
             bool parseMsixResult = false;
+            Architecture? detectedBinaryArch = null;
 
-            bool parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
-                (parseMsixResult = ParseMsix(path, baseInstaller, manifests, newInstallers)) ||
-                ParseMsi(path, baseInstaller, manifests, newInstallers);
+            // There will only be multiple installer paths if there are multiple nested portable installers in an zip archive.
+            foreach (string path in installerPaths)
+            {
+                Architecture currentBinaryArch = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
+
+                // Verify that the binary architecture is consistent across all nested portables.
+                if (detectedBinaryArch.HasValue && detectedBinaryArch.Value != currentBinaryArch)
+                {
+                    installerMetadata.MultipleNestedInstallerArchitectures = true;
+                }
+
+                detectedBinaryArch = currentBinaryArch;
+
+                parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
+                    (parseMsixResult = ParseMsix(path, baseInstaller, manifests, newInstallers)) ||
+                    ParseMsi(path, baseInstaller, manifests, newInstallers);
+            }
+
+            baseInstaller.Architecture = detectedBinaryArch.Value;
 
             if (!parseMsixResult)
             {
@@ -693,18 +711,7 @@ namespace Microsoft.WingetCreateCore
             }
             catch (Win32Exception)
             {
-                // Installer doesn't have a resource header
-                // Check if extension is .exe and resort to portable installerType
-                if (Path.GetExtension(path) == ".exe")
-                {
-                    SetInstallerType(baseInstaller, InstallerType.Portable);
-                    newInstallers.Add(baseInstaller);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
         }
 
@@ -911,7 +918,7 @@ namespace Microsoft.WingetCreateCore
 
         private static void SetInstallerType(Installer baseInstaller, InstallerType installerType)
         {
-            if (installerType.IsArchiveType())
+            if (baseInstaller.InstallerType.IsArchiveType())
             {
                 baseInstaller.NestedInstallerType = (NestedInstallerType)Enum.Parse(typeof(NestedInstallerType), installerType.ToString());
             }
