@@ -490,27 +490,29 @@ namespace Microsoft.WingetCreateCore
 
             bool parseResult = false;
             bool parseMsixResult = false;
-            Architecture? detectedBinaryArch = null;
+
+            Architecture? nestedArchitecture = null;
 
             // There will only be multiple installer paths if there are multiple nested portable installers in an zip archive.
             foreach (string path in installerPaths)
             {
-                Architecture currentBinaryArch = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
+                bool parseExeResult = false;
 
-                // Verify that the binary architecture is consistent across all nested portables.
-                if (detectedBinaryArch.HasValue && detectedBinaryArch.Value != currentBinaryArch)
-                {
-                    installerMetadata.MultipleNestedInstallerArchitectures = true;
-                }
-
-                detectedBinaryArch = currentBinaryArch;
-
-                parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
+                parseResult = (parseExeResult = ParseExeInstallerType(path, baseInstaller, newInstallers)) ||
                     (parseMsixResult = ParseMsix(path, baseInstaller, manifests, newInstallers)) ||
                     ParseMsi(path, baseInstaller, manifests, newInstallers);
-            }
 
-            baseInstaller.Architecture = detectedBinaryArch.Value;
+                // Check if the detected architectures are the same for all nested portables (exe).
+                if (parseExeResult)
+                {
+                    if (nestedArchitecture.HasValue && nestedArchitecture != baseInstaller.Architecture)
+                    {
+                        installerMetadata.MultipleNestedInstallerArchitectures = true;
+                    }
+
+                    nestedArchitecture = baseInstaller.Architecture;
+                }
+            }
 
             if (!parseMsixResult)
             {
@@ -704,6 +706,8 @@ namespace Microsoft.WingetCreateCore
                 }
 
                 SetInstallerType(baseInstaller, installerTypeEnum.Value);
+
+                baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
 
                 newInstallers.Add(baseInstaller);
 
