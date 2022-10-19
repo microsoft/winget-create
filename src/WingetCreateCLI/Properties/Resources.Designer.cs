@@ -2426,5 +2426,14 @@ namespace Microsoft.WingetCreateCLI.Properties {
                 return ResourceManager.GetString("WritingCacheTokenFailed_Message", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The downloaded zip path exceeds the system-defined maximum length..
+        /// </summary>
+        public static string ZipPathExceedsMaxLength_ErrorMessage {
+            get {
+                return ResourceManager.GetString("ZipPathExceedsMaxLength_ErrorMessage", resourceCulture);
+            }
+        }
     }
 }

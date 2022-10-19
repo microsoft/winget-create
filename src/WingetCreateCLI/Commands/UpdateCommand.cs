@@ -267,14 +267,29 @@ namespace Microsoft.WingetCreateCLI.Commands
                     List<string> relativeFilePaths = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles.Select(x => x.RelativeFilePath)).ToList();
                     string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFile));
 
+                    if (Directory.Exists(extractDirectory))
+                    {
+                        Directory.Delete(extractDirectory, true);
+                    }
+
                     try
                     {
                         ZipFile.ExtractToDirectory(packageFile, extractDirectory, true);
                     }
-                    catch (InvalidDataException invalidDataException)
+                    catch (Exception ex)
                     {
-                        Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), invalidDataException);
-                        return null;
+                        if (ex is InvalidDataException || ex is IOException || ex is NotSupportedException)
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), ex);
+                            return null;
+                        }
+                        else if (ex is PathTooLongException)
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.ZipPathExceedsMaxLength_ErrorMessage), ex);
+                            return null;
+                        }
+
+                        throw;
                     }
 
                     foreach (string relativeFilePath in relativeFilePaths)

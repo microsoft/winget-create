@@ -911,7 +911,7 @@ namespace Microsoft.WingetCreateCore
 
         private static void SetInstallerType(Installer baseInstaller, InstallerType installerType)
         {
-            if (baseInstaller.InstallerType == InstallerType.Zip)
+            if (installerType.IsArchiveType())
             {
                 baseInstaller.NestedInstallerType = (NestedInstallerType)Enum.Parse(typeof(NestedInstallerType), installerType.ToString());
             }

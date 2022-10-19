@@ -46,7 +46,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Installer type file extensions that are supported.
         /// </summary>
-        private static readonly string[] SupportedInstallerTypeExtensions = new[] { ".msix", ".msi", ".exe" };
+        private static readonly string[] SupportedInstallerTypeExtensions = new[] { ".msix", ".msi", ".exe", ".msixbundle", ".appx", ".appxbundle" };
 
         /// <summary>
         /// Gets the usage examples for the New command.
@@ -125,19 +125,34 @@ namespace Microsoft.WingetCreateCLI.Commands
                     {
                         string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFile));
 
+                        if (Directory.Exists(extractDirectory))
+                        {
+                            Directory.Delete(extractDirectory, true);
+                        }
+
                         try
                         {
                             ZipFile.ExtractToDirectory(packageFile, extractDirectory, true);
                         }
-                        catch (InvalidDataException invalidDataException)
+                        catch (Exception ex)
                         {
-                            Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), invalidDataException);
-                            return false;
+                            if (ex is InvalidDataException || ex is IOException || ex is NotSupportedException)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), ex);
+                                return false;
+                            }
+                            else if (ex is PathTooLongException)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.ZipPathExceedsMaxLength_ErrorMessage), ex);
+                                return false;
+                            }
+
+                            throw;
                         }
 
                         List<string> extractedFiles = Directory.EnumerateFiles(extractDirectory, "*.*", SearchOption.AllDirectories)
                             .Select(filePath => filePath = Path.GetRelativePath(extractDirectory, filePath))
-                            .Where(filePath => SupportedInstallerTypeExtensions.Contains(Path.GetExtension(filePath)))
+                            .Where(filePath => SupportedInstallerTypeExtensions.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
                             .ToList();
 
                         int extractedFilesCount = extractedFiles.Count();
