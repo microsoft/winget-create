@@ -2437,7 +2437,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The downloaded zip path exceeds the system-defined maximum length..
+        ///   Looks up a localized string similar to The downloaded zip contains path exceeding the system-defined maximum length..
         /// </summary>
         public static string ZipPathExceedsMaxLength_ErrorMessage {
             get {

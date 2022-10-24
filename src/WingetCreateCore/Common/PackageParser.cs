@@ -488,52 +488,51 @@ namespace Microsoft.WingetCreateCore
                 installerPaths.Add(packageFile);
             }
 
-            bool parseResult = false;
-            bool parseMsixResult = false;
-
             Architecture? nestedArchitecture = null;
 
             // There will only be multiple installer paths if there are multiple nested portable installers in an zip archive.
             foreach (string path in installerPaths)
             {
-                bool parseExeResult = false;
+                bool parseMsixResult = false;
 
-                parseResult = (parseExeResult = ParseExeInstallerType(path, baseInstaller, newInstallers)) ||
+                bool parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
                     (parseMsixResult = ParseMsix(path, baseInstaller, manifests, newInstallers)) ||
                     ParseMsi(path, baseInstaller, manifests, newInstallers);
 
+                if (!parseResult)
+                {
+                    return false;
+                }
+
                 // Check if the detected architectures are the same for all nested portables (exe).
-                if (parseExeResult)
+                if (nestedArchitecture.HasValue && nestedArchitecture != baseInstaller.Architecture)
                 {
-                    if (nestedArchitecture.HasValue && nestedArchitecture != baseInstaller.Architecture)
-                    {
-                        installerMetadata.MultipleNestedInstallerArchitectures = true;
-                    }
-
-                    nestedArchitecture = baseInstaller.Architecture;
+                    installerMetadata.MultipleNestedInstallerArchitectures = true;
                 }
-            }
 
-            if (!parseMsixResult)
-            {
+                nestedArchitecture = baseInstaller.Architecture;
+
                 // Only capture architecture if installer is non-msix as the architecture for msix installers is deterministic
-                var urlArchitecture = installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
-                installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
-                installerMetadata.BinaryArchitecture = baseInstaller.Architecture;
-
-                var overrideArch = installerMetadata.OverrideArchitecture;
-
-                if (overrideArch.HasValue)
+                if (!parseMsixResult)
                 {
-                    baseInstaller.Architecture = overrideArch.Value;
-                }
-                else if (urlArchitecture.HasValue)
-                {
-                    baseInstaller.Architecture = urlArchitecture.Value;
+                    var urlArchitecture = installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
+                    installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
+                    installerMetadata.BinaryArchitecture = baseInstaller.Architecture;
+
+                    var overrideArch = installerMetadata.OverrideArchitecture;
+
+                    if (overrideArch.HasValue)
+                    {
+                        baseInstaller.Architecture = overrideArch.Value;
+                    }
+                    else if (urlArchitecture.HasValue)
+                    {
+                        baseInstaller.Architecture = urlArchitecture.Value;
+                    }
                 }
             }
 
-            return parseResult;
+            return true;
         }
 
         /// <summary>
