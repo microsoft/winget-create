@@ -489,12 +489,11 @@ namespace Microsoft.WingetCreateCore
             }
 
             Architecture? nestedArchitecture = null;
+            bool parseMsixResult = false;
 
             // There will only be multiple installer paths if there are multiple nested portable installers in an zip archive.
             foreach (string path in installerPaths)
             {
-                bool parseMsixResult = false;
-
                 bool parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
                     (parseMsixResult = ParseMsix(path, baseInstaller, manifests, newInstallers)) ||
                     ParseMsi(path, baseInstaller, manifests, newInstallers);
@@ -511,24 +510,24 @@ namespace Microsoft.WingetCreateCore
                 }
 
                 nestedArchitecture = baseInstaller.Architecture;
+            }
 
-                // Only capture architecture if installer is non-msix as the architecture for msix installers is deterministic
-                if (!parseMsixResult)
+            // Only capture architecture if installer is non-msix as the architecture for msix installers is deterministic
+            if (!parseMsixResult)
+            {
+                var urlArchitecture = installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
+                installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
+                installerMetadata.BinaryArchitecture = baseInstaller.Architecture;
+
+                var overrideArch = installerMetadata.OverrideArchitecture;
+
+                if (overrideArch.HasValue)
                 {
-                    var urlArchitecture = installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
-                    installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
-                    installerMetadata.BinaryArchitecture = baseInstaller.Architecture;
-
-                    var overrideArch = installerMetadata.OverrideArchitecture;
-
-                    if (overrideArch.HasValue)
-                    {
-                        baseInstaller.Architecture = overrideArch.Value;
-                    }
-                    else if (urlArchitecture.HasValue)
-                    {
-                        baseInstaller.Architecture = urlArchitecture.Value;
-                    }
+                    baseInstaller.Architecture = overrideArch.Value;
+                }
+                else if (urlArchitecture.HasValue)
+                {
+                    baseInstaller.Architecture = urlArchitecture.Value;
                 }
             }
 

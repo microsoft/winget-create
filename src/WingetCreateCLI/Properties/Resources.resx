@@ -972,6 +972,6 @@
     <value>Multiple nested installer architectures were detected for following archive packages:</value>
   </data>
   <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
-    <value>The downloaded zip path exceeds the system-defined maximum length.</value>
+    <value>The downloaded zip contains path exceeding the system-defined maximum length.</value>
   </data>
 </root>
