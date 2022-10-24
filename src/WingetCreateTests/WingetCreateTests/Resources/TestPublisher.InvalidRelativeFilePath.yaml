@@ -1,0 +1,17 @@
+﻿PackageIdentifier: TestPublisher.InvalidRelativeFilePath
+PackageVersion: 0.1.2
+PackageName: Test zip app with and invalid relative path
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used for testing a zip package with an invalid relative file path.
+Installers:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
+  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  NestedInstallerType: exe
+  NestedInstallerFiles:
+  - RelativeFilePath: fakeRelativeFilePath.exe
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.4.0

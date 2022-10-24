@@ -345,6 +345,36 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies that using the same installerURL with multiple architecture overrides can successfully update multiple installers.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateSameInstallerWithDifferentArchitectures()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            (UpdateCommand command, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.SameInstallerDiffArch", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86" });
+
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
+            var initialSecondInstaller = initialManifests.SingletonManifest.Installers[1];
+
+            var updatedFirstInstaller = updatedManifests.InstallerManifest.Installers[0];
+            var updatedSecondInstaller = updatedManifests.InstallerManifest.Installers[1];
+
+            Assert.AreEqual(Architecture.X64, updatedFirstInstaller.Architecture, $"Architecture should be preserved.");
+            Assert.AreEqual(Architecture.X86, updatedSecondInstaller.Architecture, $"Architecture should be preserved.");
+
+            Assert.AreNotEqual(initialFirstInstaller.InstallerSha256, updatedFirstInstaller.InstallerSha256, $"InstallerSha256 should be updated.");
+            Assert.AreNotEqual(initialSecondInstaller.InstallerSha256, updatedSecondInstaller.InstallerSha256, $"InstallerSha256 should be updated.");
+        }
+
+        /// <summary>
         /// Verifies that if a matching failure occurs when trying to perform an architecture override, a warning message is displayed.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
@@ -538,6 +568,19 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Ensures that all fields from the Singleton v1.4. manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullSingletonVersion1_4()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullSingleton1_4", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
         /// Ensures that version specific fields are reset after an update.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
@@ -576,6 +619,138 @@ namespace Microsoft.WingetCreateUnitTests
 
             Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Portable, "InstallerType should be portable");
             Assert.IsTrue(updatedInstaller.Commands[0] == "portableCommand", "Command value should be preserved.");
+        }
+
+        /// <summary>
+        /// Ensures that updating a zip package containing an single exe installer works as expected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateZipWithExe()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.ZipWithExe", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
+            var updatedInstaller = updatedInstallerManifest.Installers.First();
+
+            Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedInstaller.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType should be EXE");
+
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+            var initialNestedInstallerFile = initialInstaller.NestedInstallerFiles.First();
+
+            var updatedNestedInstallerFile = updatedInstaller.NestedInstallerFiles.First();
+            Assert.IsTrue(initialNestedInstallerFile.RelativeFilePath == updatedNestedInstallerFile.RelativeFilePath, "RelativeFilePath should be preserved.");
+            Assert.IsTrue(initialInstaller.InstallerSha256 != updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
+        /// <summary>
+        /// Ensures that updating a zip package containing an single portable installer works as expected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateZipWithPortable()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.ZipWithPortable", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
+            var updatedInstaller = updatedInstallerManifest.Installers.First();
+
+            Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedInstaller.NestedInstallerType == NestedInstallerType.Portable, "NestedInstallerType should be PORTABLE");
+
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+            var initialNestedInstallerFile = initialInstaller.NestedInstallerFiles.First();
+
+            var updatedNestedInstallerFile = updatedInstaller.NestedInstallerFiles.First();
+            Assert.IsTrue(initialNestedInstallerFile.RelativeFilePath == updatedNestedInstallerFile.RelativeFilePath, "RelativeFilePath should be preserved.");
+            Assert.IsTrue(initialNestedInstallerFile.PortableCommandAlias == updatedNestedInstallerFile.PortableCommandAlias, "PortableCommandAlias should be preserved.");
+            Assert.IsTrue(initialInstaller.InstallerSha256 != updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
+        /// <summary>
+        /// Ensures that updating a zip package containing an single msi installer works as expected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateZipWithMsi()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.ZipWithMsi", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
+            var updatedInstaller = updatedInstallerManifest.Installers.First();
+
+            Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedInstaller.NestedInstallerType == NestedInstallerType.Msi, "NestedInstallerType should be MSI");
+
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+
+            Assert.IsTrue(initialInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            Assert.IsTrue(initialInstaller.InstallerSha256 != updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            Assert.IsNotNull(updatedInstaller.ProductCode, "ProductCode should be updated.");
+        }
+
+        /// <summary>
+        /// Ensures that updating a zip package containing an single msix installer works as expected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateZipWithMsix()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.ZipWithMsix", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
+            var updatedFirstInstaller = updatedInstallerManifest.Installers[0];
+            var updatedSecondInstaller = updatedInstallerManifest.Installers[1];
+
+            Assert.IsTrue(updatedFirstInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedFirstInstaller.NestedInstallerType == NestedInstallerType.Msix, "NestedInstallerType should be MSIX");
+            Assert.IsTrue(updatedSecondInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedSecondInstaller.NestedInstallerType == NestedInstallerType.Msix, "NestedInstallerType should be MSIX");
+
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstallers = initialManifests.SingletonManifest.Installers;
+            var initialFirstInstaller = initialInstallers[0];
+            var initialSecondInstaller = initialInstallers[1];
+
+            Assert.IsTrue(initialFirstInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedFirstInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            Assert.IsTrue(initialSecondInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedSecondInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+
+            Assert.IsNotNull(updatedFirstInstaller.SignatureSha256, "SignatureSha256 should be updated.");
+            Assert.IsNotNull(updatedSecondInstaller.SignatureSha256, "SignatureSha256 should be updated.");
+
+            Assert.IsTrue(initialFirstInstaller.InstallerSha256 != updatedFirstInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            Assert.IsTrue(initialSecondInstaller.InstallerSha256 != updatedSecondInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
+        /// <summary>
+        /// Verifies that the appropriate error message is displayed if the nested installer is not found.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateZipInvalidRelativeFilePath()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.InvalidRelativeFilePath", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNull(updatedManifests, "Command should have failed");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(string.Format(Resources.NestedInstallerFileNotFound_Error, "fakeRelativeFilePath.exe")), "Failed to show warning for invalid relative file path.");
         }
 
         private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls, bool isMultifile = false)

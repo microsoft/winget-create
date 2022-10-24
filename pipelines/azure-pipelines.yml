@@ -33,6 +33,9 @@ variables:
   # Build platform
   buildPlatform: "x64"
 
+  # Target framework
+  targetFramework: "net6.0-windows10.0.22000.0"
+
 jobs:
   - job: GetVersion
     variables:
@@ -140,6 +143,6 @@ jobs:
         displayName: Run Tests
         inputs:
           testSelector: "testAssemblies"
-          testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\net5.0-windows10.0.22000.0\WingetCreateTests.dll'
+          testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\$(targetFramework)\WingetCreateTests.dll'
           runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
           overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'

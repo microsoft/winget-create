@@ -7,6 +7,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Reflection;
     using System.Threading.Tasks;
@@ -35,12 +36,17 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// The url path to the manifest documentation site.
         /// </summary>
-        private const string ManifestDocumentationUrl = "https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.2.0";
+        private const string ManifestDocumentationUrl = "https://aka.ms/winget-manifest-schema";
 
         /// <summary>
         /// Installer types for which we can trust that the detected architecture is correct, so don't need to prompt the user to confirm.
         /// </summary>
         private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msix, InstallerType.Appx };
+
+        /// <summary>
+        /// Installer type file extensions that are supported.
+        /// </summary>
+        private static readonly string[] SupportedInstallerTypeExtensions = new[] { ".msix", ".msi", ".exe", ".msixbundle", ".appx", ".appxbundle" };
 
         /// <summary>
         /// Gets the usage examples for the New command.
@@ -54,7 +60,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 yield return new Example(Resources.Example_NewCommand_DownloadInstaller, new NewCommand { InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>, .." } });
                 yield return new Example(Resources.Example_NewCommand_SaveLocallyOrSubmit, new NewCommand
                 {
-                    InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>, .." },
+                    InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>, ..." },
                     OutputDir = "<OutputDirectory>",
                     GitHubToken = "<GitHubPersonalAccessToken>",
                 });
@@ -115,13 +121,77 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return false;
                     }
 
-                    installerUpdateList.Add(new InstallerMetadata { InstallerUrl = installerUrl, PackageFile = packageFile });
+                    if (packageFile.IsZipFile())
+                    {
+                        string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFile));
+
+                        if (Directory.Exists(extractDirectory))
+                        {
+                            Directory.Delete(extractDirectory, true);
+                        }
+
+                        try
+                        {
+                            ZipFile.ExtractToDirectory(packageFile, extractDirectory, true);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex is InvalidDataException || ex is IOException || ex is NotSupportedException)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), ex);
+                                return false;
+                            }
+                            else if (ex is PathTooLongException)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.ZipPathExceedsMaxLength_ErrorMessage), ex);
+                                return false;
+                            }
+
+                            throw;
+                        }
+
+                        List<string> extractedFiles = Directory.EnumerateFiles(extractDirectory, "*.*", SearchOption.AllDirectories)
+                            .Select(filePath => filePath = Path.GetRelativePath(extractDirectory, filePath))
+                            .Where(filePath => SupportedInstallerTypeExtensions.Contains(Path.GetExtension(filePath).ToLowerInvariant()))
+                            .ToList();
+
+                        int extractedFilesCount = extractedFiles.Count();
+                        List<string> selectedInstallers;
+
+                        if (extractedFilesCount == 0)
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.NoInstallersFoundInArchive_ErrorMessage));
+                            return false;
+                        }
+                        else if (extractedFilesCount == 1)
+                        {
+                            selectedInstallers = extractedFiles;
+                        }
+                        else
+                        {
+                            selectedInstallers = Prompt.MultiSelect(Resources.SelectInstallersFromZip_Message, extractedFiles, minimum: 1).ToList();
+                        }
+
+                        installerUpdateList.Add(
+                            new InstallerMetadata
+                            {
+                                InstallerUrl = installerUrl,
+                                PackageFile = packageFile,
+                                RelativeFilePaths = selectedInstallers,
+                                IsZipFile = true,
+                                ExtractedDirectory = extractDirectory,
+                            });
+                    }
+                    else
+                    {
+                        installerUpdateList.Add(new InstallerMetadata { InstallerUrl = installerUrl, PackageFile = packageFile });
+                    }
                 }
 
                 try
                 {
                     PackageParser.ParsePackages(installerUpdateList, manifests);
-                    DisplayMismatchedArchitectures(installerUpdateList);
+                    DisplayArchitectureWarnings(installerUpdateList);
                 }
                 catch (IOException iOException) when (iOException.HResult == -2147024671)
                 {
@@ -300,14 +370,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (installer.InstallerType == InstallerType.Exe)
                 {
                     Console.WriteLine();
-                    if (!PromptForPortableExe(installer))
-                    {
-                        // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
-                        Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
-                        prompted = true;
-                        PromptInstallerSwitchesForExe(installer);
-                    }
+
+                    // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
+                    Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
+                    prompted = true;
+                    PromptInstallerSwitchesForExe(installer);
                 }
+
+                PromptForPortableAliasIfApplicable(installer);
 
                 foreach (var requiredProperty in requiredInstallerProperties)
                 {
@@ -343,31 +413,30 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        /// <summary>
-        /// Prompts the user to confirm whether the package is a portable.
-        /// If true, then prompts for related portable metadata.
-        /// </summary>
-        /// <typeparam name="T">Manifest installer.</typeparam>
-        /// <param name="manifestInstaller">Manifest installer object model.</param>
-        /// <returns>Boolean value indicating whether the package is a portable.</returns>
-        private static bool PromptForPortableExe<T>(T manifestInstaller)
+        private static void PromptForPortableAliasIfApplicable(Installer installer)
         {
-            if (Prompt.Confirm(Resources.ConfirmPortablePackage_Message))
+            if (installer.InstallerType == InstallerType.Portable)
             {
-                manifestInstaller.GetType().GetProperty(nameof(Installer.InstallerType)).SetValue(manifestInstaller, InstallerType.Portable);
                 string portableCommandAlias = Prompt.Input<string>(Resources.PortableCommandAlias_Message);
 
                 if (!string.IsNullOrEmpty(portableCommandAlias))
                 {
                     List<string> portableCommands = new List<string> { portableCommandAlias };
-                    manifestInstaller.GetType().GetProperty(nameof(Installer.Commands)).SetValue(manifestInstaller, portableCommands);
+                    installer.Commands = portableCommands;
                 }
-
-                return true;
             }
-            else
+
+            if (installer.NestedInstallerType == NestedInstallerType.Portable)
             {
-                return false;
+                foreach (NestedInstallerFile nestedInstallerFile in installer.NestedInstallerFiles)
+                {
+                    string portableCommandAlias = Prompt.Input<string>(Resources.PortableCommandAlias_Message);
+
+                    if (!string.IsNullOrEmpty(portableCommandAlias))
+                    {
+                        nestedInstallerFile.PortableCommandAlias = portableCommandAlias;
+                    }
+                }
             }
         }
 

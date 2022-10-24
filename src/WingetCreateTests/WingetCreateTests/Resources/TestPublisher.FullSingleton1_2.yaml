@@ -1,4 +1,4 @@
-﻿PackageIdentifier: TestPublisher.FullSingleton1_1
+﻿PackageIdentifier: TestPublisher.FullSingleton1_2
 PackageVersion: 0.1.2.3
 PackageLocale: en-US
 DefaultLocale: en-US
@@ -7,7 +7,7 @@ PublisherUrl: https://fakeTestUrl.com
 PublisherSupportUrl: https://fakeTestUrl.com
 PrivacyUrl: https://fakeTestUrl.com
 Author: fakeAuthor
-PackageName: Full Singleton 1.1 Test
+PackageName: Full Singleton 1.2 Test
 PackageUrl: https://fakeTestUrl.com
 License: MIT
 LicenseUrl: https://fakeTestUrl.com

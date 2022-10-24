@@ -23,7 +23,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     /// Partial SingletonManifest class for defining a string type ReleaseDateTime field.
     /// Workaround for issue with model generating ReleaseDate with DateTimeOffset type.
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class SingletonManifest
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
         /// Gets or sets the Release Date time.
@@ -37,7 +39,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     /// Partial Installer class for defining a string type ReleaseDateTime field.
     /// Workaround for issue with model generating ReleaseDate with DateTimeOffset type.
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class Installer
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
         /// Gets or sets the Release Date time.
@@ -53,7 +57,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     /// Because of this, the Markets and Markets array classes do not get generated, therefore we need to define them here
     /// under the default NSwag generated name "Markets2".
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class Markets2
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
         /// Gets or sets the list of allowed installer target markets.

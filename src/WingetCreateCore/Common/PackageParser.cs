@@ -461,22 +461,60 @@ namespace Microsoft.WingetCreateCore
         private static bool ParsePackageAndGenerateInstallerNodes(InstallerMetadata installerMetadata, Manifests manifests)
         {
             var url = installerMetadata.InstallerUrl;
-            var path = installerMetadata.PackageFile;
+            var packageFile = installerMetadata.PackageFile;
             var newInstallers = installerMetadata.NewInstallers;
             var baseInstaller = new Installer();
             baseInstaller.InstallerUrl = url;
-            baseInstaller.InstallerSha256 = GetFileHash(path);
-            baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
+            baseInstaller.InstallerSha256 = GetFileHash(packageFile);
 
+            List<string> installerPaths = new List<string>();
+
+            if (installerMetadata.IsZipFile)
+            {
+                baseInstaller.InstallerType = InstallerType.Zip;
+                List<string> relativeFilePaths = installerMetadata.RelativeFilePaths;
+
+                List<NestedInstallerFile> nestedInstallerFiles = new List<NestedInstallerFile>();
+                foreach (string relativeFilePath in relativeFilePaths)
+                {
+                    nestedInstallerFiles.Add(new NestedInstallerFile { RelativeFilePath = relativeFilePath });
+                    installerPaths.Add(Path.Combine(installerMetadata.ExtractedDirectory, relativeFilePath));
+                }
+
+                baseInstaller.NestedInstallerFiles = nestedInstallerFiles;
+            }
+            else
+            {
+                installerPaths.Add(packageFile);
+            }
+
+            Architecture? nestedArchitecture = null;
             bool parseMsixResult = false;
 
-            bool parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
-                (parseMsixResult = ParseMsix(path, baseInstaller, manifests, newInstallers)) ||
-                ParseMsi(path, baseInstaller, manifests, newInstallers);
+            // There will only be multiple installer paths if there are multiple nested portable installers in an zip archive.
+            foreach (string path in installerPaths)
+            {
+                bool parseResult = ParseExeInstallerType(path, baseInstaller, newInstallers) ||
+                    (parseMsixResult = ParseMsix(path, baseInstaller, manifests, newInstallers)) ||
+                    ParseMsi(path, baseInstaller, manifests, newInstallers);
 
+                if (!parseResult)
+                {
+                    return false;
+                }
+
+                // Check if the detected architectures are the same for all nested portables (exe).
+                if (nestedArchitecture.HasValue && nestedArchitecture != baseInstaller.Architecture)
+                {
+                    installerMetadata.MultipleNestedInstallerArchitectures = true;
+                }
+
+                nestedArchitecture = baseInstaller.Architecture;
+            }
+
+            // Only capture architecture if installer is non-msix as the architecture for msix installers is deterministic
             if (!parseMsixResult)
             {
-                // Only capture architecture if installer is non-msix as the architecture for msix installers is deterministic
                 var urlArchitecture = installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
                 installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
                 installerMetadata.BinaryArchitecture = baseInstaller.Architecture;
@@ -493,7 +531,7 @@ namespace Microsoft.WingetCreateCore
                 }
             }
 
-            return parseResult;
+            return true;
         }
 
         /// <summary>
@@ -648,20 +686,26 @@ namespace Microsoft.WingetCreateCore
                     .Split(' ').First()
                     .ToLowerInvariant();
 
+                InstallerType? installerTypeEnum;
+
                 if (installerType.EqualsIC("wix"))
                 {
                     // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
-                    baseInstaller.InstallerType = InstallerType.Burn;
+                    installerTypeEnum = InstallerType.Burn;
                 }
                 else if (KnownInstallerResourceNames.Contains(installerType))
                 {
                     // If it's a known exe installer type, set as appropriately
-                    baseInstaller.InstallerType = installerType.ToEnumOrDefault<InstallerType>();
+                    installerTypeEnum = installerType.ToEnumOrDefault<InstallerType>();
                 }
                 else
                 {
-                    baseInstaller.InstallerType = InstallerType.Exe;
+                    installerTypeEnum = InstallerType.Exe;
                 }
+
+                SetInstallerType(baseInstaller, installerTypeEnum.Value);
+
+                baseInstaller.Architecture = GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
 
                 newInstallers.Add(baseInstaller);
 
@@ -669,7 +713,6 @@ namespace Microsoft.WingetCreateCore
             }
             catch (Win32Exception)
             {
-                // Installer doesn't have a resource header
                 return false;
             }
         }
@@ -696,9 +739,10 @@ namespace Microsoft.WingetCreateCore
             {
                 using (var database = new QDatabase(path, Deployment.WindowsInstaller.DatabaseOpenMode.ReadOnly))
                 {
-                    baseInstaller.InstallerType = IsWix(database)
-                        ? InstallerType.Wix
-                        : InstallerType.Msi;
+                    InstallerType installerType = IsWix(database)
+                            ? InstallerType.Wix
+                            : InstallerType.Msi;
+                    SetInstallerType(baseInstaller, installerType);
 
                     var properties = database.Properties.ToList();
 
@@ -854,7 +898,7 @@ namespace Microsoft.WingetCreateCore
                 }
 
                 baseInstaller.SignatureSha256 = signatureSha256;
-                baseInstaller.InstallerType = InstallerType.Msix;
+                SetInstallerType(baseInstaller, InstallerType.Msix);
 
                 // Add installer nodes for MSIX installers
                 foreach (var appxMetadata in appxMetadatas)
@@ -871,6 +915,18 @@ namespace Microsoft.WingetCreateCore
             {
                 // Binary wasn't an MSIX
                 return null;
+            }
+        }
+
+        private static void SetInstallerType(Installer baseInstaller, InstallerType installerType)
+        {
+            if (baseInstaller.InstallerType.IsArchiveType())
+            {
+                baseInstaller.NestedInstallerType = (NestedInstallerType)Enum.Parse(typeof(NestedInstallerType), installerType.ToString());
+            }
+            else
+            {
+                baseInstaller.InstallerType = installerType;
             }
         }
 

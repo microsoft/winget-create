@@ -9,6 +9,7 @@ namespace Microsoft.WingetCreateCore.Common
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization;
+    using Microsoft.WingetCreateCore.Models.Installer;
 
     /// <summary>
     /// Functionality for manipulating data related to the Manifest object model.
@@ -79,6 +80,26 @@ namespace Microsoft.WingetCreateCore.Common
         public static bool IsEnumerable(this Type type)
         {
             return type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Determines if the file is a zip based on the file extension.
+        /// </summary>
+        /// <param name="path">File path to be evaluated.</param>
+        /// <returns>Boolean value indicating whether the path points to a zip file.</returns>
+        public static bool IsZipFile(this string path)
+        {
+            return Path.GetExtension(path).EqualsIC(".zip");
+        }
+
+        /// <summary>
+        /// Checks if the installerType is a ZIP installer type.
+        /// </summary>
+        /// <param name="installerType">The installer type to be evaluated.</param>
+        /// <returns>Boolean value indicating whether the installer type is ZIP.</returns>
+        public static bool IsArchiveType(this InstallerType? installerType)
+        {
+            return installerType == InstallerType.Zip;
         }
 
         /// <summary>

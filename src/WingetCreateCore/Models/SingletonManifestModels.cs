@@ -104,6 +104,39 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     
     }
     
+    /// <summary>Enumeration of supported nested installer types contained inside an archive file</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public enum NestedInstallerType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"msix")]
+        Msix = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"msi")]
+        Msi = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"appx")]
+        Appx = 2,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"exe")]
+        Exe = 3,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"inno")]
+        Inno = 4,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"nullsoft")]
+        Nullsoft = 5,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"wix")]
+        Wix = 6,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"burn")]
+        Burn = 7,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"portable")]
+        Portable = 8,
+    
+    }
+    
     /// <summary>The installer target architecture</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public enum Architecture
@@ -308,6 +341,32 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     
     }
     
+    /// <summary>Details about the installation. Used for deeper installation detection.</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class InstallationMetadata 
+    {
+        /// <summary>Represents the default installed package location. Used for deeper installation detection.</summary>
+        [Newtonsoft.Json.JsonProperty("DefaultInstallLocation", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(2048, MinimumLength = 1)]
+        public string DefaultInstallLocation { get; set; }
+    
+        /// <summary>List of installed files.</summary>
+        [Newtonsoft.Json.JsonProperty("Files", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.MaxLength(2048)]
+        public System.Collections.Generic.List<Files> Files { get; set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
+    
+    
+    }
+    
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class Installer 
     {
@@ -332,6 +391,14 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("InstallerType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public InstallerType? InstallerType { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("NestedInstallerType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public NestedInstallerType? NestedInstallerType { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("NestedInstallerFiles", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.MaxLength(1024)]
+        public System.Collections.Generic.List<NestedInstallerFile> NestedInstallerFiles { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Scope", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
@@ -422,6 +489,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("RequireExplicitUpgrade", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? RequireExplicitUpgrade { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("DisplayInstallWarnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? DisplayInstallWarnings { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("UnsupportedOSArchitectures", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public System.Collections.Generic.List<UnsupportedOSArchitecture> UnsupportedOSArchitectures { get; set; }
     
@@ -436,6 +506,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ElevationRequirement? ElevationRequirement { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("InstallationMetadata", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public InstallationMetadata InstallationMetadata { get; set; }
+    
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
         [Newtonsoft.Json.JsonExtensionData]
@@ -448,14 +521,14 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     
     }
     
-    /// <summary>A representation of a single-file manifest representing an app in the OWC. v1.2.0</summary>
+    /// <summary>A representation of a single-file manifest representing an app in the OWC. v1.4.0</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class SingletonManifest 
     {
         [Newtonsoft.Json.JsonProperty("PackageIdentifier", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(128)]
-        [System.ComponentModel.DataAnnotations.RegularExpression(@"^[^\.\s\\/:\*\?""<>\|\x01-\x1f]{1,32}(\.[^\.\s\\/:\*\?""<>\|\x01-\x1f]{1,32}){1,3}$")]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^[^\.\s\\/:\*\?""<>\|\x01-\x1f]{1,32}(\.[^\.\s\\/:\*\?""<>\|\x01-\x1f]{1,32}){1,7}$")]
         public string PackageIdentifier { get; set; }
     
         [Newtonsoft.Json.JsonProperty("PackageVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -605,6 +678,14 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public InstallerType? InstallerType { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("NestedInstallerType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public NestedInstallerType? NestedInstallerType { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("NestedInstallerFiles", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.MaxLength(1024)]
+        public System.Collections.Generic.List<NestedInstallerFile> NestedInstallerFiles { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("Scope", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public Scope? Scope { get; set; }
@@ -676,6 +757,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("RequireExplicitUpgrade", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? RequireExplicitUpgrade { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("DisplayInstallWarnings", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? DisplayInstallWarnings { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("UnsupportedOSArchitectures", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public System.Collections.Generic.List<UnsupportedOSArchitecture> UnsupportedOSArchitectures { get; set; }
     
@@ -689,6 +773,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("ElevationRequirement", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ElevationRequirement? ElevationRequirement { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("InstallationMetadata", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public InstallationMetadata InstallationMetadata { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Installers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
@@ -705,7 +792,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.2.0";
+        public string ManifestVersion { get; set; } = "1.4.0";
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
@@ -725,13 +812,55 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("PackageIdentifier", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(128)]
-        [System.ComponentModel.DataAnnotations.RegularExpression(@"^[^\.\s\\/:\*\?""<>\|\x01-\x1f]{1,32}(\.[^\.\s\\/:\*\?""<>\|\x01-\x1f]{1,32}){1,3}$")]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^[^\.\s\\/:\*\?""<>\|\x01-\x1f]{1,32}(\.[^\.\s\\/:\*\?""<>\|\x01-\x1f]{1,32}){1,7}$")]
         public string PackageIdentifier { get; set; }
     
         [Newtonsoft.Json.JsonProperty("MinimumVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(128)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^[^\\/:\*\?""<>\|\x01-\x1f]+$")]
         public string MinimumVersion { get; set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
+    
+    
+    }
+    
+    /// <summary>Represents an installed file.</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class Files 
+    {
+        /// <summary>The relative path to the installed file.</summary>
+        [Newtonsoft.Json.JsonProperty("RelativeFilePath", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(2048, MinimumLength = 1)]
+        public string RelativeFilePath { get; set; }
+    
+        /// <summary>Optional Sha256 of the installed file.</summary>
+        [Newtonsoft.Json.JsonProperty("FileSha256", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^[A-Fa-f0-9]{64}$")]
+        public string FileSha256 { get; set; }
+    
+        /// <summary>The optional installed file type. If not specified, the file is treated as other.</summary>
+        [Newtonsoft.Json.JsonProperty("FileType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public FilesFileType? FileType { get; set; }
+    
+        /// <summary>Optional parameter for invocable files.</summary>
+        [Newtonsoft.Json.JsonProperty("InvocationParameter", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(2048, MinimumLength = 1)]
+        public string InvocationParameter { get; set; }
+    
+        /// <summary>Optional display name for invocable files.</summary>
+        [Newtonsoft.Json.JsonProperty("DisplayName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(256, MinimumLength = 1)]
+        public string DisplayName { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
@@ -753,6 +882,33 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     
         [System.Runtime.Serialization.EnumMember(Value = @"Windows.Universal")]
         Windows_Universal = 1,
+    
+    }
+    
+    /// <summary>A nested installer file contained inside an archive</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class NestedInstallerFile 
+    {
+        /// <summary>The relative path to the nested installer file</summary>
+        [Newtonsoft.Json.JsonProperty("RelativeFilePath", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.StringLength(512, MinimumLength = 1)]
+        public string RelativeFilePath { get; set; }
+    
+        /// <summary>The command alias to be used for calling the package. Only applies to the nested portable package</summary>
+        [Newtonsoft.Json.JsonProperty("PortableCommandAlias", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(40, MinimumLength = 1)]
+        public string PortableCommandAlias { get; set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
+    
     
     }
     
@@ -828,55 +984,72 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public enum FilesFileType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"launch")]
+        Launch = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"uninstall")]
+        Uninstall = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"other")]
+        Other = 2,
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public enum ExpectedReturnCodeReturnResponse
     {
         [System.Runtime.Serialization.EnumMember(Value = @"packageInUse")]
         PackageInUse = 0,
     
+        [System.Runtime.Serialization.EnumMember(Value = @"packageInUseByApplication")]
+        PackageInUseByApplication = 1,
+    
         [System.Runtime.Serialization.EnumMember(Value = @"installInProgress")]
-        InstallInProgress = 1,
+        InstallInProgress = 2,
     
         [System.Runtime.Serialization.EnumMember(Value = @"fileInUse")]
-        FileInUse = 2,
+        FileInUse = 3,
     
         [System.Runtime.Serialization.EnumMember(Value = @"missingDependency")]
-        MissingDependency = 3,
+        MissingDependency = 4,
     
         [System.Runtime.Serialization.EnumMember(Value = @"diskFull")]
-        DiskFull = 4,
+        DiskFull = 5,
     
         [System.Runtime.Serialization.EnumMember(Value = @"insufficientMemory")]
-        InsufficientMemory = 5,
+        InsufficientMemory = 6,
     
         [System.Runtime.Serialization.EnumMember(Value = @"noNetwork")]
-        NoNetwork = 6,
+        NoNetwork = 7,
     
         [System.Runtime.Serialization.EnumMember(Value = @"contactSupport")]
-        ContactSupport = 7,
+        ContactSupport = 8,
     
         [System.Runtime.Serialization.EnumMember(Value = @"rebootRequiredToFinish")]
-        RebootRequiredToFinish = 8,
+        RebootRequiredToFinish = 9,
     
         [System.Runtime.Serialization.EnumMember(Value = @"rebootRequiredForInstall")]
-        RebootRequiredForInstall = 9,
+        RebootRequiredForInstall = 10,
     
         [System.Runtime.Serialization.EnumMember(Value = @"rebootInitiated")]
-        RebootInitiated = 10,
+        RebootInitiated = 11,
     
         [System.Runtime.Serialization.EnumMember(Value = @"cancelledByUser")]
-        CancelledByUser = 11,
+        CancelledByUser = 12,
     
         [System.Runtime.Serialization.EnumMember(Value = @"alreadyInstalled")]
-        AlreadyInstalled = 12,
+        AlreadyInstalled = 13,
     
         [System.Runtime.Serialization.EnumMember(Value = @"downgrade")]
-        Downgrade = 13,
+        Downgrade = 14,
     
         [System.Runtime.Serialization.EnumMember(Value = @"blockedByPolicy")]
-        BlockedByPolicy = 14,
+        BlockedByPolicy = 15,
     
         [System.Runtime.Serialization.EnumMember(Value = @"custom")]
-        Custom = 15,
+        Custom = 16,
     
     }
     

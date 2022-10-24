@@ -6,6 +6,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
@@ -258,13 +259,62 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return null;
                 }
 
+                if (packageFile.IsZipFile())
+                {
+                    installerUpdate.IsZipFile = true;
+
+                    // Obtain all possible relative file paths and check if there is a match.
+                    List<string> relativeFilePaths = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles.Select(x => x.RelativeFilePath)).Distinct().ToList();
+                    string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFile));
+
+                    if (Directory.Exists(extractDirectory))
+                    {
+                        Directory.Delete(extractDirectory, true);
+                    }
+
+                    try
+                    {
+                        ZipFile.ExtractToDirectory(packageFile, extractDirectory, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex is InvalidDataException || ex is IOException || ex is NotSupportedException)
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), ex);
+                            return null;
+                        }
+                        else if (ex is PathTooLongException)
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.ZipPathExceedsMaxLength_ErrorMessage), ex);
+                            return null;
+                        }
+
+                        throw;
+                    }
+
+                    installerUpdate.RelativeFilePaths = new List<string>();
+
+                    foreach (string relativeFilePath in relativeFilePaths)
+                    {
+                        if (!File.Exists(Path.Combine(extractDirectory, relativeFilePath)))
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.NestedInstallerFileNotFound_Error), relativeFilePath);
+                            return null;
+                        }
+
+                        installerUpdate.RelativeFilePaths.Add(relativeFilePath);
+                    }
+
+                    installerUpdate.ExtractedDirectory = extractDirectory;
+                }
+
                 installerUpdate.PackageFile = packageFile;
             }
 
             try
             {
                 PackageParser.UpdateInstallerNodesAsync(installerMetadataList, installerManifest);
-                DisplayMismatchedArchitectures(installerMetadataList);
+                DisplayArchitectureWarnings(installerMetadataList);
                 ResetVersionSpecificFields(manifests);
             }
             catch (InvalidOperationException)
@@ -367,6 +417,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets2, WingetCreateCore.Models.Installer.Markets2>(); // Markets2 is not used, but is required to satisfy mapping configuration.
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Agreement, WingetCreateCore.Models.DefaultLocale.Agreement>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Documentation, WingetCreateCore.Models.DefaultLocale.Documentation>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Files, WingetCreateCore.Models.Installer.Files>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallationMetadata, WingetCreateCore.Models.Installer.InstallationMetadata>();
             });
             var mapper = config.CreateMapper();
 
