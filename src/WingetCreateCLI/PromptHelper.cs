@@ -297,9 +297,14 @@ namespace Microsoft.WingetCreateCLI
             Type instanceType = typeof(T);
             Type elementType;
 
-            if (instanceType == typeof(string) || instanceType == typeof(long))
+            if (instanceType == typeof(string))
             {
-                var result = Prompt.Input<T>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
+                string result = Prompt.Input<string>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
+                property.SetValue(model, result.Trim());
+            }
+            else if (instanceType == typeof(long))
+            {
+                long result = Prompt.Input<long>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
                 property.SetValue(model, result);
             }
             else if (instanceType.IsEnum)
