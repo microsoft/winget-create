@@ -821,7 +821,7 @@
     <value>安裝程式之 ARP 項目下的各種機碼值</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>DisplayName 登錄值</value>
+    <value>封裝或檔案的 DisplayName</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>安裝程式的提高權限需求</value>
@@ -924,5 +924,54 @@
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>無法建立復刻存放庫的參照。當復刻存放庫因太多認可而落後時，就可能會造成這種情況。同步您的分叉，然後再試一次。</value>
+  </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>代表預設安裝的套件位置。用於更深入的安裝偵測</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>安裝檔案的選擇性 Sha256</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>已安裝檔案的清單</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>選擇性安裝的檔案類型</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>關於安裝的詳細資料。用於更深入的安裝偵測</value>
+  </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>封裝檔案不是有效的 zip 封存。</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>可叫用檔案的選擇性參數</value>
+  </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>在壓縮封存中找不到巢狀安裝程式: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>封存中包含的巢狀安裝程式檔案清單</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>封存中包含的巢狀安裝程式類型</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>在壓縮封存中找不到支援的安裝程式。</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>用於呼叫巢狀便攜封裝的命令別名</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>巢狀安裝程式檔案的相對檔案路徑</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>從壓縮封存選取安裝程式:</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>偵測到下列封存套件有多個巢狀安裝程式架構:</value>
+  </data>
+  <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
+    <value>下載的 zip 包含超過系統定義長度上限的路徑。</value>
   </data>
 </root>

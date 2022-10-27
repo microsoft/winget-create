@@ -821,7 +821,7 @@
     <value>Vários valores-chave na entrada ARP do instalador</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>O valor de registro DisplayName</value>
+    <value>DisplayName do pacote ou arquivo</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>O requisito de elevação do instalador</value>
@@ -924,5 +924,54 @@
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>Não é possível criar uma referência ao repositório bifurcado. Isso pode ser causado quando o repositório bifurcado está atrasado por muitas confirmações. Sincronize seu garfo e tente novamente.</value>
+  </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>Representa o local do pacote instalado padrão. Usado para detecção de instalação mais profunda</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>Sha256 opcional do arquivo instalado</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>Lista de arquivos instalados</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>O tipo de arquivo opcional instalado</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>Detalhes sobre a instalação. Usado para detecção de instalação mais profunda</value>
+  </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>O arquivo de pacote não é um arquivo zip válido.</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>O parâmetro opcional para arquivos que podem ser chamados</value>
+  </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>Instalador aninhado não encontrado no arquivo zip: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>Lista de arquivos do instalador aninhado contidos em um arquivo morto</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>O tipo de instalador aninhado contido em um arquivo morto</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>Nenhum programa de instalação com suporte foi encontrado no arquivo ZIP.</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>O alias de comando a ser usado para chamar o pacote portátil aninhado</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>O caminho do arquivo relativo para o arquivo do instalador aninhado</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>Selecione o(s) programa(s) de instalação a partir do arquivo ZIP:</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>Várias arquiteturas aninhadas do instalador foram detectadas para os seguintes pacotes de arquivo morto:</value>
+  </data>
+  <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
+    <value>O zip baixado contém um caminho que excede o comprimento máximo definido pelo sistema.</value>
   </data>
 </root>

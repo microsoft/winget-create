@@ -821,7 +821,7 @@
     <value>Различные значения ключей в записи ARP установщика</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>Значение реестра DisplayName</value>
+    <value>DisplayName пакета или файла</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>Требование к повышению прав установщика</value>
@@ -924,5 +924,54 @@
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>Не удалось создать ссылку на разветвленный репозиторий. Это может быть вызвано тем, что разветвленный репозиторий отстает из-за слишком большого числа фиксаций. Синхронизируйте разветвление и повторите попытку.</value>
+  </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>Представляет расположение установленного пакета по умолчанию. Используется для более глубокого обнаружения установки</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>Необязательный Sha256 установленного файла</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>Список установленных файлов</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>Необязательный установленный тип файла</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>Сведения об установке. Используется для более глубокого обнаружения установки</value>
+  </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>Файл пакета не является допустимым ZIP-архивом.</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>Необязательный параметр для невызываемых файлов</value>
+  </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>Вложенный установщик не найден в ZIP-архиве: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>Список вложенных файлов установщика, содержащихся в архиве</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>Тип вложенного установщика, содержащийся в архиве</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>В ZIP-архиве не найдены поддерживаемые установщики.</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>Псевдоним команды, который будет использоваться для вызова вложенного переносимого пакета</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>Относительный путь к вложенному файлу установщика</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>Выберите установщики из ZIP-архива:</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>Обнаружено несколько вложенных архитектур установщика для следующих архивных пакетов:</value>
+  </data>
+  <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
+    <value>Загруженный ZIP-файл содержит путь, превышающий максимальную длину, определенную системой.</value>
   </data>
 </root>

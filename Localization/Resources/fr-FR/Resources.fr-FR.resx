@@ -821,7 +821,7 @@
     <value>Diverses valeurs clés sous l'entrée ARP de l'installateur</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>Valeur de Registre DisplayName</value>
+    <value>DisplayName du package ou du fichier</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>L'exigence d'élévation de l'installateur</value>
@@ -924,5 +924,54 @@
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>Impossible de créer une référence pour le référentiel fourche. Cela peut être dû à un trop grand nombre de validations du référentiel fourche. Synchronisez la fourche et réessayez.</value>
+  </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>Représente l’emplacement du package installé par défaut. Utilisé pour une détection d’installation plus approfondie</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>Sha256 facultatif du fichier installé</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>Liste des fichiers installés</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>Le type de fichier installé facultatif</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>Détails sur l'installation. Utilisé pour une détection plus approfondie de l'installation</value>
+  </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>Le fichier de package n’est pas une archive zip valide.</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>Le paramètre facultatif pour les fichiers invocables</value>
+  </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>L'installateur imbriqué n'a pas été trouvé dans l'archive zip : {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>Liste des fichiers d’installation imbriqués contenus dans une archive</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>Le type d'installateur imbriqué contenu dans une archive</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>Aucun installateur pris en charge n'a été trouvé dans l'archive zip.</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>L'alias de commande à utiliser pour appeler le package portable imbriqué</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>Chemin d’accès relatif au fichier du programme d’installation imbriqué</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>Sélectionnez le(s) programme(s) d'installation dans l'archive zip :</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>Plusieurs architectures de programme d’installation imbriqués ont été détectées pour les packages d’archive suivants :</value>
+  </data>
+  <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
+    <value>Le fichier zip téléchargé contient un chemin dépassant la longueur maximale définie par le système.</value>
   </data>
 </root>
