@@ -821,7 +821,7 @@
     <value>Vari valori chiave nella voce ARP del programma di installazione</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>Valore del registro di sistema DisplayName</value>
+    <value>DisplayName del pacchetto o del file</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>Requisito di elevazione del programma di installazione</value>
@@ -924,5 +924,54 @@
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>Non è possibile creare un riferimento al repository con fork. Questo problema può essere causato dal fatto che il repository con fork è in ritardo di troppi commit. Sincronizzare la fork e riprovare.</value>
+  </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>Rappresenta il percorso predefinito del pacchetto installato. Usato per un rilevamento più approfondito dell'installazione</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>Sha256 facoltativo del file installato</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>Elenco dei file installati</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>Il tipo di file installato facoltativo</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>Dettagli sull'installazione. Usato per il rilevamento più approfondito dell’installazione</value>
+  </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>Il file del pacchetto non è un archivio ZIP valido.</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>Il parametro facoltativo per i file richiamabili</value>
+  </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>Programma di installazione annidato non trovato nell'archivio ZIP: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>Elenco dei file di installazione nidificati contenuti in un archivio</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>Tipo di programma di installazione annidato contenuto in un archivio</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>Nell'archivio ZIP non è stato trovato alcun programma di installazione supportato.</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>L'alias del comando da usare per richiamare il pacchetto portatile annidato</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>Percorso relativo del file del programma di installazione annidato</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>Selezionare i programmi di installazione dall'archivio ZIP:</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>Sono state rilevate più architetture del programma di installazione annidate per i pacchetti di archivio seguenti:</value>
+  </data>
+  <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
+    <value>Il file ZIP scaricato contiene un percorso che supera la lunghezza massima definita dal sistema.</value>
   </data>
 </root>

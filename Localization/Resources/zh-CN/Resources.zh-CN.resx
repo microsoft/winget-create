@@ -821,7 +821,7 @@
     <value>安装程序的 ARP 条目下的各种键值</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>DisplayName 注册表值</value>
+    <value>程序包或文件的 DisplayName</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>安装程序的提升要求</value>
@@ -924,5 +924,54 @@
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>无法创建对分叉存储库的引用。当存储库因提交过多而滞后时，可能会导致这种情况。同步分叉，然后重试。</value>
+  </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>表示默认安装的包位置。用于更深入的安装检测</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>已安装文件的可选 Sha256</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>已安装文件列表</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>可选的已安装文件类型</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>有关安装的详细信息。用于更深入的安装检测</value>
+  </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>包文件不是有效的 zip 存档。</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>可调用文件的可选参数</value>
+  </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>在 zip 存档中找不到嵌套安装程序： {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>存档中包含的嵌套安装程序文件列表</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>存档中包含的嵌套安装程序类型</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>在 zip 存档中找不到受支持的安装程序。</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>用于调用嵌套可移植程序包的命令别名</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>嵌套安装程序文件的相对文件路径</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>从 zip 存档中选择安装程序:</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>检测到以下存档程序包的多个嵌套安装程序体系结构:</value>
+  </data>
+  <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
+    <value>下载的 zip 包含超过系统定义的最大长度的路径。</value>
   </data>
 </root>

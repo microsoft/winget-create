@@ -821,7 +821,7 @@
     <value>Varios valores de la clave en la entrada ARP del instalador</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>Valor del registro DisplayName</value>
+    <value>DisplayName del paquete o archivo</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>El requisito de elevación del instalador</value>
@@ -924,5 +924,54 @@
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>No se puede crear una referencia al repositorio bifurcado. Esto puede deberse a que el repositorio bifurcado está atrasado por demasiadas confirmaciones. Sincronice la bifurcación e inténtelo de nuevo.</value>
+  </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>Representa la ubicación predeterminada del paquete instalado. Se usa para una detección de instalación más detallada</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>Sha256 opcional del archivo instalado</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>Lista de archivos instalados</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>Tipo de archivo instalado opcional</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>Detalles sobre la instalación. Se usa para una detección de instalación más detallada</value>
+  </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>El archivo de paquete no es un archivo zip válido.</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>Parámetro opcional para los archivos invocables</value>
+  </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>No se encontró el instalador anidado en el archivo zip: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>Lista de archivos anidados del instalador contenidos dentro de un archivo</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>El tipo de instalador anidado contenido dentro de un archivo</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>No se encontraron instaladores admitidos en el archivo ZIP.</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>Alias de comando que se usará para llamar al paquete portátil anidado</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>Ruta de acceso relativa al archivo de instalador anidado</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>Seleccione los instaladores del archivo ZIP:</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>Se detectaron varias arquitecturas de instalador anidadas para los siguientes paquetes de archivo:</value>
+  </data>
+  <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
+    <value>El archivo ZIP descargado contiene una ruta de acceso que supera la longitud máxima definida por el sistema.</value>
   </data>
 </root>

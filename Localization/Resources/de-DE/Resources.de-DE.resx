@@ -821,7 +821,7 @@
     <value>Verschiedene Schlüsselwerte unter dem ARP-Eintrag des Installationsprogramms</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>Der DisplayName-Registrierungswert</value>
+    <value>Der Anzeigename des Pakets oder der Datei</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>Die erhöhten Rechte des Installationsprogramms</value>
@@ -924,5 +924,54 @@
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>Es kann kein Verweis auf das verzweigte Repository erstellt werden. Dies kann darauf zurückzuführen sein, dass das verzweigte Repository durch zu viele Commits zurückliegt. Synchronisieren Sie Ihre Verzweigung, und versuchen Sie es noch mal.</value>
+  </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>Stellt den Standardspeicherort des installierten Pakets dar. Wird für eine tiefergehende Installationserkennung verwendet.</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>Der optionale SHA256 der installierten Datei</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>Liste der installierten Dateien</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>Der optionale installierte Dateityp</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>Details zur Installation. Wird für eine tiefergehende Installationserkennung verwendet.</value>
+  </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>Die Paketdatei ist kein gültiges ZIP-Archiv.</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>Der optionale Parameter für aufrufbare Dateien</value>
+  </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>Geschachtelter Installer nicht im ZIP-Archiv gefunden: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>Liste der geschachtelten Installationsprogrammdateien, die in einem Archiv enthalten sind</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>Der geschachtelte Installationsprogrammtyp, der in einem Archiv enthalten ist</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>Im ZIP-Archiv wurden keine unterstützten Installationsprogramme gefunden.</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>Der Befehlsalias, der zum Aufrufen des geschachtelten portierbaren Pakets verwendet werden soll.</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>Der relative Dateipfad zur geschachtelten Installationsprogrammdatei</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>Wählen Sie das/die Installationsprogramm(e) aus dem ZIP-Archiv aus:</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>Für die folgenden Archivpakete wurden mehrere geschachtelte Installationsprogrammarchitekturen erkannt:</value>
+  </data>
+  <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
+    <value>Die heruntergeladene ZIP-Datei enthält einen Pfad, der die vom System definierte maximale Länge überschreitet.</value>
   </data>
 </root>

@@ -821,7 +821,7 @@
     <value>インストーラーの ARP エントリの下のさまざまなキー値</value>
   </data>
   <data name="DisplayName_KeywordDescription" xml:space="preserve">
-    <value>DisplayName レジストリ値</value>
+    <value>パッケージまたはファイルの DisplayName</value>
   </data>
   <data name="ElevationRequirement_KeywordDescription" xml:space="preserve">
     <value>インストーラーの昇格要件</value>
@@ -924,5 +924,54 @@
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
     <value>フォークされたリポジトリへの参照を作成できません。これは、フォークされたリポジトリの前にあるコミットの数が多すぎる場合に発生する可能性があります。フォークを同期して、もう一度お試しください。</value>
+  </data>
+  <data name="DefaultInstallLocation_KeywordDescription" xml:space="preserve">
+    <value>既定のインストール済みパッケージの場所を表します。より詳細なインストールの検出に使用されます</value>
+  </data>
+  <data name="FileSha256_KeywordDescription" xml:space="preserve">
+    <value>インストール済みファイルのオプションの Sha256</value>
+  </data>
+  <data name="Files_KeywordDescription" xml:space="preserve">
+    <value>インストール済みファイルの一覧</value>
+  </data>
+  <data name="FileType_KeywordDescription" xml:space="preserve">
+    <value>オプションのインストール済みファイルの種類</value>
+  </data>
+  <data name="InstallationMetadata_KeywordDescription" xml:space="preserve">
+    <value>インストールに関する詳細情報。より深いインストールの検知に使用されます</value>
+  </data>
+  <data name="InvalidZipFile_ErrorMessage" xml:space="preserve">
+    <value>パッケージ ファイルは有効な zip アーカイブではありません。</value>
+  </data>
+  <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
+    <value>呼び出し可能なファイルのオプションのパラメーター</value>
+  </data>
+  <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
+    <value>入れ子になったインストーラーが次の zip アーカイブ内で見つかりませんでした: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
+    <value>アーカイブ内に含まれている入れ子になったインストーラー ファイルの一覧</value>
+  </data>
+  <data name="NestedInstallerType_KeywordDescription" xml:space="preserve">
+    <value>入れ子になったインストーラーの種類がアーカイブ内に含まれています</value>
+  </data>
+  <data name="NoInstallersFoundInArchive_ErrorMessage" xml:space="preserve">
+    <value>zip アーカイブでサポートされているインストーラーが見つかりません。</value>
+  </data>
+  <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
+    <value>入れ子になったポータブル パッケージの呼び出しに使用されるコマンド エイリアス</value>
+  </data>
+  <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
+    <value>入れ子になったインストーラー ファイルへの相対ファイル パス</value>
+  </data>
+  <data name="SelectInstallersFromZip_Message" xml:space="preserve">
+    <value>zip アーカイブからインストーラーを選択します:</value>
+  </data>
+  <data name="MultipleNestedArchitectures_Message" xml:space="preserve">
+    <value>次のアーカイブ パッケージについて複数の入れ子になったインストーラー アーキテクチャが検出されました:</value>
+  </data>
+  <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
+    <value>ダウンロードされた zip には、システムで定義された最大長を超える長さのパスが含まれています。</value>
   </data>
 </root>
