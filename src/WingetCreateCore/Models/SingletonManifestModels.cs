@@ -446,7 +446,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         public System.Collections.Generic.List<string> Commands { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Protocols", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.MaxLength(16)]
+        [System.ComponentModel.DataAnnotations.MaxLength(64)]
         public System.Collections.Generic.List<string> Protocols { get; set; }
     
         [Newtonsoft.Json.JsonProperty("FileExtensions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -714,7 +714,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         public System.Collections.Generic.List<string> Commands { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Protocols", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.MaxLength(16)]
+        [System.ComponentModel.DataAnnotations.MaxLength(64)]
         public System.Collections.Generic.List<string> Protocols { get; set; }
     
         [Newtonsoft.Json.JsonProperty("FileExtensions", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -1021,35 +1021,41 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [System.Runtime.Serialization.EnumMember(Value = @"insufficientMemory")]
         InsufficientMemory = 6,
     
+        [System.Runtime.Serialization.EnumMember(Value = @"invalidParameter")]
+        InvalidParameter = 7,
+    
         [System.Runtime.Serialization.EnumMember(Value = @"noNetwork")]
-        NoNetwork = 7,
+        NoNetwork = 8,
     
         [System.Runtime.Serialization.EnumMember(Value = @"contactSupport")]
-        ContactSupport = 8,
+        ContactSupport = 9,
     
         [System.Runtime.Serialization.EnumMember(Value = @"rebootRequiredToFinish")]
-        RebootRequiredToFinish = 9,
+        RebootRequiredToFinish = 10,
     
         [System.Runtime.Serialization.EnumMember(Value = @"rebootRequiredForInstall")]
-        RebootRequiredForInstall = 10,
+        RebootRequiredForInstall = 11,
     
         [System.Runtime.Serialization.EnumMember(Value = @"rebootInitiated")]
-        RebootInitiated = 11,
+        RebootInitiated = 12,
     
         [System.Runtime.Serialization.EnumMember(Value = @"cancelledByUser")]
-        CancelledByUser = 12,
+        CancelledByUser = 13,
     
         [System.Runtime.Serialization.EnumMember(Value = @"alreadyInstalled")]
-        AlreadyInstalled = 13,
+        AlreadyInstalled = 14,
     
         [System.Runtime.Serialization.EnumMember(Value = @"downgrade")]
-        Downgrade = 14,
+        Downgrade = 15,
     
         [System.Runtime.Serialization.EnumMember(Value = @"blockedByPolicy")]
-        BlockedByPolicy = 15,
+        BlockedByPolicy = 16,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"systemNotSupported")]
+        SystemNotSupported = 17,
     
         [System.Runtime.Serialization.EnumMember(Value = @"custom")]
-        Custom = 16,
+        Custom = 18,
     
     }
     
