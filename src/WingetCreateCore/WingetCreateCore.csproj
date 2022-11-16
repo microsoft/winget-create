@@ -33,7 +33,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Octokit" Version="0.50.0" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
     <PackageReference Include="Vestris.ResourceLib" Version="2.1.0" />
     <PackageReference Include="WiX" Version="3.11.2" />
     <PackageReference Include="YamlDotNet" Version="11.1.1" />
