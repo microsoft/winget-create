@@ -462,6 +462,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     Logger.ErrorLocalized(nameof(Resources.RepositoryNotFound_Error), this.WingetRepoOwner, this.WingetRepo);
                 }
+                else if (e is HttpRequestException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.NetworkConnectionFailure_Message));
+                }
+                else
+                {
+                    throw;
+                }
 
                 return false;
             }
