@@ -459,6 +459,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Boolean value indicating whether the package identifier is a duplicate and already exists.</returns>
         private async Task<bool> IsDuplicatePackageIdentifier(string packageIdentifier)
         {
+            if (this.GitHubClient == null)
+            {
+                return false;
+            }
+
             try
             {
                 string exactMatch = await this.GitHubClient.FindPackageId(packageIdentifier);

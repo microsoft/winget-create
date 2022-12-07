@@ -7,6 +7,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Logging;
@@ -108,6 +109,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         Logger.Trace("No token found in cache, launching OAuth flow");
                         if (!await this.GetTokenFromOAuth())
                         {
+                            Logger.Trace("Failed to obtain token from OAuth flow.");
                             return false;
                         }
                     }
@@ -398,7 +400,16 @@ namespace Microsoft.WingetCreateCLI.Commands
             Logger.DebugLocalized(nameof(Resources.GitHubAccountMustBeLinked_Message));
             Logger.DebugLocalized(nameof(Resources.ExecutionPaused_Message));
             Console.WriteLine();
-            this.GitHubToken = await GitHubOAuthLoginFlow();
+
+            try
+            {
+                this.GitHubToken = await GitHubOAuthLoginFlow();
+            }
+            catch (WebException)
+            {
+                Logger.ErrorLocalized(nameof(Resources.NetworkConnectionFailure_Message));
+                return false;
+            }
 
             if (string.IsNullOrEmpty(this.GitHubToken))
             {

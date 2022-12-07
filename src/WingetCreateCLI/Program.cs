@@ -5,7 +5,6 @@ namespace Microsoft.WingetCreateCLI
 {
     using System;
     using System.Linq;
-    using System.Net.Http;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -65,10 +64,9 @@ namespace Microsoft.WingetCreateCLI
                             Console.WriteLine();
                         }
                     }
-                    catch (Exception ex) when (ex is Octokit.ApiException || ex is Octokit.RateLimitExceededException || ex is HttpRequestException)
+                    catch (Exception ex) when (ex is Octokit.ApiException || ex is Octokit.RateLimitExceededException)
                     {
                         // Since this is only notifying the user if an update is available, don't block if the token is invalid or a rate limit error is encountered.
-                        // HttpRequestException will occur if there is a network connection failure to GitHub which should not be blocking to allow for manifest generation.
                     }
                 }
                 else
