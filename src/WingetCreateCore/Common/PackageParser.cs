@@ -677,30 +677,44 @@ namespace Microsoft.WingetCreateCore
             try
             {
                 ManifestResource rc = new ManifestResource();
-                rc.LoadFrom(path);
-                string installerType = rc.Manifest.DocumentElement
-                    .GetElementsByTagName("description")
-                    .Cast<XmlNode>()
-                    .FirstOrDefault()?
-                    .InnerText?
-                    .Split(' ').First()
-                    .ToLowerInvariant();
-
                 InstallerType? installerTypeEnum;
+                try
+                {
+                    rc.LoadFrom(path);
+                    string installerType = rc.Manifest.DocumentElement
+                        .GetElementsByTagName("description")
+                        .Cast<XmlNode>()
+                        .FirstOrDefault()?
+                        .InnerText?
+                        .Split(' ').First()
+                        .ToLowerInvariant();
 
-                if (installerType.EqualsIC("wix"))
-                {
-                    // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
-                    installerTypeEnum = InstallerType.Burn;
+                    if (installerType.EqualsIC("wix"))
+                    {
+                        // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
+                        installerTypeEnum = InstallerType.Burn;
+                    }
+                    else if (KnownInstallerResourceNames.Contains(installerType))
+                    {
+                        // If it's a known exe installer type, set as appropriately
+                        installerTypeEnum = installerType.ToEnumOrDefault<InstallerType>();
+                    }
+                    else
+                    {
+                        installerTypeEnum = InstallerType.Exe;
+                    }
                 }
-                else if (KnownInstallerResourceNames.Contains(installerType))
+                catch (Win32Exception err)
                 {
-                    // If it's a known exe installer type, set as appropriately
-                    installerTypeEnum = installerType.ToEnumOrDefault<InstallerType>();
-                }
-                else
-                {
-                    installerTypeEnum = InstallerType.Exe;
+                    if (err.Message == "The specified resource type cannot be found in the image file."
+                        && err.NativeErrorCode == 1813)
+                    {
+                        installerTypeEnum = InstallerType.Exe;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
 
                 SetInstallerType(baseInstaller, installerTypeEnum.Value);
