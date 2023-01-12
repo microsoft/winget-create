@@ -300,7 +300,11 @@ namespace Microsoft.WingetCreateCLI
             if (instanceType == typeof(string))
             {
                 string result = Prompt.Input<string>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
-                property.SetValue(model, result.Trim());
+
+                if (!string.IsNullOrEmpty(result))
+                {
+                    property.SetValue(model, result.Trim());
+                }
             }
             else if (instanceType == typeof(long))
             {
