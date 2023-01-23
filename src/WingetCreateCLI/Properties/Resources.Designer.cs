@@ -1465,6 +1465,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to connect to GitHub. Check your network connection..
+        /// </summary>
+        public static string NetworkConnectionFailure_Message {
+            get {
+                return ResourceManager.GetString("NetworkConnectionFailure_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Press ENTER to submit the value for each question including accepting the (default) value..
         /// </summary>
         public static string NewCommand_Description {
