@@ -71,7 +71,11 @@ namespace Microsoft.WingetCreateCLI
                 }
                 else
                 {
-                    return 1;
+                    // Do not block creating a new manifest if loading the GitHub client fails. InstallerURL could point to a local network.
+                    if (command is not NewCommand)
+                    {
+                        return 1;
+                    }
                 }
             }
 
