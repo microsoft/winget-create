@@ -538,7 +538,7 @@
     <value>Указан недопустимый URL-адрес. Проверьте URL-адрес и повторите попытку.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>Не далось проанализировать пакет из [{0}]</value>
+    <value>Не удалось проанализировать пакет из [{0}]</value>
     <comment>{0} - will be replaced with the failed installer url</comment>
   </data>
   <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
