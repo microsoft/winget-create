@@ -130,6 +130,12 @@ jobs:
             /p:UapAppxPackageBuildMode=SideloadOnly
             /p:AppxPackageSigningEnabled=false'
 
+      - task: UseDotNet@2
+        displayName: 'Install .NET Core SDK required for ESRPCodeSigning'
+        inputs:
+          packageType: sdk
+          version: '6.x'      
+
       - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
         displayName: "ESRP CodeSigning"
         inputs:
