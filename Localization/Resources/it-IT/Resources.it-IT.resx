@@ -974,4 +974,7 @@
   <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
     <value>Il file ZIP scaricato contiene un percorso che supera la lunghezza massima definita dal sistema.</value>
   </data>
+  <data name="NetworkConnectionFailure_Message" xml:space="preserve">
+    <value>Non è stato possibile connettersi a GitHub. Controlla la connessione di rete.</value>
+  </data>
 </root>

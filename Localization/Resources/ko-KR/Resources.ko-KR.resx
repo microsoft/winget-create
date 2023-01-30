@@ -974,4 +974,7 @@
   <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
     <value>다운로드한 zip에 시스템 정의 최대 길이를 초과하는 경로가 포함되어 있습니다.</value>
   </data>
+  <data name="NetworkConnectionFailure_Message" xml:space="preserve">
+    <value>GitHub에 연결하지 못했습니다. 네트워크 연결을 확인하세요.</value>
+  </data>
 </root>

@@ -974,4 +974,7 @@
   <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
     <value>下載的 zip 包含超過系統定義長度上限的路徑。</value>
   </data>
+  <data name="NetworkConnectionFailure_Message" xml:space="preserve">
+    <value>無法連線到 GitHub。檢查您的網路連線。</value>
+  </data>
 </root>
