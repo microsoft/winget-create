@@ -538,7 +538,7 @@
     <value>Указан недопустимый URL-адрес. Проверьте URL-адрес и повторите попытку.</value>
   </data>
   <data name="PackageParsing_Error" xml:space="preserve">
-    <value>Не далось проанализировать пакет из [{0}]</value>
+    <value>Не удалось проанализировать пакет из [{0}]</value>
     <comment>{0} - will be replaced with the failed installer url</comment>
   </data>
   <data name="PackageIdAlreadyExists_Error" xml:space="preserve">
@@ -973,5 +973,8 @@
   </data>
   <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
     <value>Загруженный ZIP-файл содержит путь, превышающий максимальную длину, определенную системой.</value>
+  </data>
+  <data name="NetworkConnectionFailure_Message" xml:space="preserve">
+    <value>Не удалось подключиться к GitHub. Проверьте сетевое подключение.</value>
   </data>
 </root>

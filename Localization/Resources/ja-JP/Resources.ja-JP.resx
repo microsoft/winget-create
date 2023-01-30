@@ -974,4 +974,7 @@
   <data name="ZipPathExceedsMaxLength_ErrorMessage" xml:space="preserve">
     <value>ダウンロードされた zip には、システムで定義された最大長を超える長さのパスが含まれています。</value>
   </data>
+  <data name="NetworkConnectionFailure_Message" xml:space="preserve">
+    <value>GitHub に接続できませんでした。ネットワーク接続を確認してください。</value>
+  </data>
 </root>
