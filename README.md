@@ -19,6 +19,11 @@ The **Windows Package Manager Manifest Creator** is available for download from 
 winget install wingetcreate
 ```
 
+### Install with [Scoop](https://scoop.sh/) ###
+```powershell
+scoop install wingetcreate
+```
+
 ## Using Windows Package Manager Manifest Creator
 
 **WingetCreate** has the following commands:
