@@ -367,14 +367,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                 bool prompted = false;
 
                 // If the installerType is EXE, prompt the user for whether the package is a portable
-                if (installer.InstallerType == InstallerType.Exe)
+                if (installer.InstallerType == InstallerType.Exe || installer.NestedInstallerType == NestedInstallerType.Exe)
                 {
                     Console.WriteLine();
 
-                    // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
-                    Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
-                    prompted = true;
-                    PromptInstallerSwitchesForExe(installer);
+                    if (!PromptForPortableExe(installer))
+                    {
+                        // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
+                        Logger.DebugLocalized(nameof(Resources.AdditionalMetadataNeeded_Message), installer.InstallerUrl);
+                        prompted = true;
+                        PromptInstallerSwitchesForExe(installer);
+                    }
                 }
 
                 PromptForPortableAliasIfApplicable(installer);
@@ -397,6 +400,31 @@ namespace Microsoft.WingetCreateCLI.Commands
                         PromptHelper.PromptPropertyAndSetValue(installer, requiredProperty.Name, requiredProperty.GetValue(installer));
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Prompts the user to confirm whether the package is a portable.
+        /// </summary>
+        /// <returns>Boolean value indicating whether the package is a portable.</returns>
+        private static bool PromptForPortableExe(Installer manifestInstaller)
+        {
+            if (Prompt.Confirm(Resources.ConfirmPortablePackage_Message))
+            {
+                if (manifestInstaller.InstallerType == InstallerType.Zip)
+                {
+                    manifestInstaller.NestedInstallerType = NestedInstallerType.Portable;
+                }
+                else
+                {
+                    manifestInstaller.InstallerType = InstallerType.Portable;
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
