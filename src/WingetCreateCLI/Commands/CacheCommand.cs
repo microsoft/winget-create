@@ -70,6 +70,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
 
                     Console.WriteLine();
+                    var directories = dir.GetDirectories();
+                    Logger.InfoLocalized(nameof(Resources.DirectoriesFound_Message), directories.Length, PackageParser.InstallerDownloadPath);
+                    Console.WriteLine();
+
+                    foreach (DirectoryInfo directory in directories)
+                    {
+                        Logger.WarnLocalized(nameof(Resources.DeletingInstaller_Message), directory.Name + Path.DirectorySeparatorChar);
+                        directory.Delete(true);
+                    }
+
+                    Console.WriteLine();
                     Logger.InfoLocalized(nameof(Resources.InstallerCacheCleaned_Message));
                 }
                 else if (this.List)
@@ -81,6 +92,15 @@ namespace Microsoft.WingetCreateCLI.Commands
                     foreach (string file in files)
                     {
                         Logger.Debug(Path.GetFileName(file));
+                    }
+
+                    Console.WriteLine();
+                    string[] directories = Directory.GetDirectories(PackageParser.InstallerDownloadPath);
+                    Logger.InfoLocalized(nameof(Resources.DirectoriesFound_Message), directories.Length, PackageParser.InstallerDownloadPath);
+                    Console.WriteLine();
+                    foreach (string directory in directories)
+                    {
+                        Logger.Debug(Path.GetRelativePath(PackageParser.InstallerDownloadPath, directory) + Path.DirectorySeparatorChar);
                     }
                 }
                 else if (this.Open)
