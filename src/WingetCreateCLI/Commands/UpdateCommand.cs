@@ -43,6 +43,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>" }, Version = "<Version>" });
                 yield return new Example(Resources.Example_UpdateCommand_SaveAndPublish, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>", OutputDir = "<OutputDirectory>", GitHubToken = "<GitHubPersonalAccessToken>" });
                 yield return new Example(Resources.Example_UpdateCommand_OverrideArchitecture, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>|<InstallerArchitecture>" }, Version = "<Version>" });
+                yield return new Example(Resources.Example_UpdateCommand_SubmitToGitHub, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>", InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>" }, SubmitToGitHub = true, GitHubToken = "<GitHubPersonalAccessToken>" });
             }
         }
 
@@ -63,6 +64,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         [Option('o', "out", Required = false, HelpText = "OutputDirectory_HelpText", ResourceType = typeof(Resources))]
         public string OutputDir { get; set; }
+
+        /// <summary>
+        /// Gets or sets the title for the pull request.
+        /// </summary>
+        [Option('p', "prtitle", Required = false, HelpText = "PullRequestTitle_HelpText", ResourceType = typeof(Resources))]
+        public string PRTitle { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not the updated manifest should be submitted to Github.
@@ -198,7 +205,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
 
                     return await this.LoadGitHubClient(true)
-                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests))
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests, this.PRTitle))
                         : false;
                 }
 
