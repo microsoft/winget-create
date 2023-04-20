@@ -29,6 +29,10 @@ winget install wingetcreate
 scoop install wingetcreate
 ```
 
+## Build status
+
+[![Build Status](https://dev.azure.com/ms/winget-create/_apis/build/status/microsoft.winget-create?branchName=main&label=winget-create)](https://dev.azure.com/ms/winget-create/_build/latest?definitionId=459&branchName=main)
+
 ## Using Windows Package Manager Manifest Creator
 
 **WingetCreate** has the following commands:
