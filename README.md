@@ -105,7 +105,7 @@ When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.
 ### Prerequisites
 
 * Windows 10 1709 (16299) or later
-* [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/)
+* [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)
    * Or use winget to install it ;) (although you may need to adjust the workloads via Tools->Get Tools and Features...)
 * [Git Large File Storage (LFS)](https://git-lfs.github.com/)
 * The following workloads:
