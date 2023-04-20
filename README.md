@@ -137,6 +137,8 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 * Set the solution wide runsettings file for the tests
     * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
+> **Warning**: You should treat your access token like a password. To avoid exposing your PAT, be sure to reset changes to the `WingetCreateTests/Test.runsettings` file before committing your changes. You can also use the command `git update-index --skip-worktree src/WingetCreateTests/WingetCreateTests/Test.runsettings` command to untrack changes to the file and prevent it from being committed.
+
 ## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
