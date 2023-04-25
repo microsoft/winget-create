@@ -14,6 +14,11 @@ namespace Microsoft.WingetCreateTests
         public const string TestPackageIdentifier = "TestPublisher.TestApp";
 
         /// <summary>
+        /// Test pull request title to be used in test cases.
+        /// </summary>
+        public const string TestPRTitle = "TestPublisher.TestApp.TestTitle";
+
+        /// <summary>
         /// Invalid PackageIdentifier to be used in test cases.
         /// </summary>
         public const string TestInvalidPackageIdentifier = "testpublisher.testapp";

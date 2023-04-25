@@ -62,6 +62,7 @@ namespace Microsoft.WingetCreateE2ETests
                 WingetRepo = this.WingetPkgsTestRepo,
                 WingetRepoOwner = this.WingetPkgsTestRepoOwner,
                 Path = manifestPath,
+                PRTitle = packageId + ' ' + PackageVersion,
                 SubmitPRToFork = this.SubmitPRToFork,
                 OpenPRInBrowser = false,
             };
@@ -78,6 +79,7 @@ namespace Microsoft.WingetCreateE2ETests
                 WingetRepo = this.WingetPkgsTestRepo,
                 WingetRepoOwner = this.WingetPkgsTestRepoOwner,
                 SubmitPRToFork = this.SubmitPRToFork,
+                PRTitle = packageId + ' ' + PackageVersion,
                 OpenPRInBrowser = false,
             };
 

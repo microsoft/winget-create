@@ -33,7 +33,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 yield return new Example(
                     Resources.Example_SubmitCommand_SubmitLocalManifest,
-                    new SubmitCommand { Path = "<PathToManifest>", GitHubToken = "<GitHubPersonalAccessToken>" });
+                    new SubmitCommand { Path = "<PathToManifest>", GitHubToken = "<GitHubPersonalAccessToken>", PRTitle = "<PullRequestTitle>" });
             }
         }
 
@@ -48,6 +48,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
         public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
+
+        /// <summary>
+        /// Gets or sets the title for the pull request.
+        /// </summary>
+        [Option('p', "prtitle", Required = false, HelpText = "PullRequestTitle_HelpText", ResourceType = typeof(Resources))]
+        public string PRTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the unbound arguments that exist after the first positional parameter.
@@ -95,13 +101,13 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 Manifests manifests = new Manifests();
                 manifests.SingletonManifest = Serialization.DeserializeFromPath<SingletonManifest>(this.Path);
-                return await this.GitHubSubmitManifests(manifests);
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle);
             }
             else if (Directory.Exists(this.Path) && ValidateManifest(this.Path))
             {
                 List<string> manifestContents = Directory.GetFiles(this.Path).Select(f => File.ReadAllText(f)).ToList();
                 Manifests manifests = Serialization.DeserializeManifestContents(manifestContents);
-                return await this.GitHubSubmitManifests(manifests);
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle);
             }
             else
             {

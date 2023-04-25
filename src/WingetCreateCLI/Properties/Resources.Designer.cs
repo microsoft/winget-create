@@ -727,6 +727,17 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update an existing manifest and submit PR to GitHub
+        /// </summary>
+        public static string Example_UpdateCommand_SubmitToGitHub
+        {
+            get
+            {
+                return ResourceManager.GetString("Example_UpdateCommand_SubmitToGitHub", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The excluded installer target markets.
         /// </summary>
         public static string ExcludedMarkets_KeywordDescription {
@@ -1812,6 +1823,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string PublisherUrl_KeywordDescription {
             get {
                 return ResourceManager.GetString("PublisherUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub. Default is "{PackageId} version {Version}"
+        /// </summary>
+        public static string PullRequestTitle_HelpText {
+            get {
+                return ResourceManager.GetString("PullRequestTitle_HelpText", resourceCulture);
             }
         }
         

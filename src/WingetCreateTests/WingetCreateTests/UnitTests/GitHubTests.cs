@@ -25,6 +25,8 @@ namespace Microsoft.WingetCreateUnitTests
 
         private const string GitHubPullRequestBaseUrl = "https://github.com/{0}/{1}/pull/";
 
+        private const string TitleMismatch = "Pull request title does not match test title.";
+
         private GitHub gitHub;
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verifies that the GitHub client is able to submit a PR by verifying that the generated PR url matches the correct pattern.
+        /// Verifies that the GitHub client is able to submit a PR by verifying that the generated PR url and title match the correct pattern.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
@@ -70,7 +72,8 @@ namespace Microsoft.WingetCreateUnitTests
             manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(latestManifest.First());
             Assert.That(manifests.SingletonManifest.PackageIdentifier, Is.EqualTo(TestConstants.TestPackageIdentifier), FailedToRetrieveManifestFromId);
 
-            PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork);
+            PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, TestConstants.TestPRTitle);
+            Assert.That(TestConstants.TestPRTitle, Is.EqualTo(pullRequest.Title), TitleMismatch);
             await this.gitHub.ClosePullRequest(pullRequest.Number);
             StringAssert.StartsWith(string.Format(GitHubPullRequestBaseUrl, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo), pullRequest.HtmlUrl, PullRequestFailedToGenerate);
         }
