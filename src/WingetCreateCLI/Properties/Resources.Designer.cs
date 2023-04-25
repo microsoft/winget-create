@@ -1836,11 +1836,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub.
+        ///   Looks up a localized string similar to Pull request can be found here: {0}.
         /// </summary>
         public static string PullRequestURI_Message {
             get {
-                return ResourceManager.GetString("PullRequestTitle_HelpText", resourceCulture);
+                return ResourceManager.GetString("PullRequestURI_Message", resourceCulture);
             }
         }
         
