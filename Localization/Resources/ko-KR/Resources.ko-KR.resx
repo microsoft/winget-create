@@ -627,9 +627,9 @@
     <comment>{0} - Will be replaced with the number of installers found in the cache folder
 {1} - Will be replaced with the path to the downloaded installer cache folder</comment>
   </data>
-  <data name="DeletingItem_Message" xml:space="preserve">
+  <data name="DeletingInstaller_Message" xml:space="preserve">
     <value>{0} 삭제 중</value>
-    <comment>{0} - Will be replaced with the name of the item to be deleted.</comment>
+    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
   </data>
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>설치 관리자 캐시가 정리되었습니다.</value>
