@@ -414,9 +414,9 @@ namespace Microsoft.WingetCreateCLI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Deleting {0}.
         /// </summary>
-        public static string DeletingInstaller_Message {
+        public static string DeletingItem_Message {
             get {
-                return ResourceManager.GetString("DeletingInstaller_Message", resourceCulture);
+                return ResourceManager.GetString("DeletingItem_Message", resourceCulture);
             }
         }
         
@@ -455,7 +455,18 @@ namespace Microsoft.WingetCreateCLI.Properties {
                 return ResourceManager.GetString("DetectedArchMismatch_Message", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to {0} directories found in {1}.
+        /// </summary>
+        public static string DirectoriesFound_Message
+        {
+            get
+            {
+                return ResourceManager.GetString("DirectoriesFound_Message", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Would you like to discard this update and start over?.
         /// </summary>

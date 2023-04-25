@@ -167,6 +167,11 @@
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>The full package description</value>
   </data>
+  <data name="DirectoriesFound_Message" xml:space="preserve">
+    <value>{0} directories found in {1}</value>
+    <comment>{0} - Will be replaced with the number of directories found in the cache folder
+{1} - Will be replaced with the path to the cache folder</comment>
+  </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>DONE</value>
   </data>
@@ -634,9 +639,9 @@
     <comment>{0} - Will be replaced with the number of installers found in the cache folder
 {1} - Will be replaced with the path to the downloaded installer cache folder</comment>
   </data>
-  <data name="DeletingInstaller_Message" xml:space="preserve">
+  <data name="DeletingItem_Message" xml:space="preserve">
     <value>Deleting {0}</value>
-    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+    <comment>{0} - Will be replaced with the name of the item to be deleted.</comment>
   </data>
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>Installer cache cleaned.</value>
