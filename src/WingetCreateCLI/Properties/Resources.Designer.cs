@@ -414,9 +414,9 @@ namespace Microsoft.WingetCreateCLI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Deleting {0}.
         /// </summary>
-        public static string DeletingInstaller_Message {
+        public static string DeletingItem_Message {
             get {
-                return ResourceManager.GetString("DeletingInstaller_Message", resourceCulture);
+                return ResourceManager.GetString("DeletingItem_Message", resourceCulture);
             }
         }
         

@@ -65,7 +65,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     foreach (FileInfo file in files)
                     {
-                        Logger.WarnLocalized(nameof(Resources.DeletingInstaller_Message), file.Name);
+                        Logger.WarnLocalized(nameof(Resources.DeletingItem_Message), file.Name);
                         file.Delete();
                     }
 
@@ -76,7 +76,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     foreach (DirectoryInfo directory in directories)
                     {
-                        Logger.WarnLocalized(nameof(Resources.DeletingInstaller_Message), directory.Name + Path.DirectorySeparatorChar);
+                        Logger.WarnLocalized(nameof(Resources.DeletingItem_Message), directory.Name + Path.DirectorySeparatorChar);
                         directory.Delete(true);
                     }
 
