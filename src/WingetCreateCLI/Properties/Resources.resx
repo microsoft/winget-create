@@ -215,6 +215,10 @@
     <value>Search for an existing manifest and update the installer url and version</value>
     <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
   </data>
+  <data name="Example_UpdateCommand_SubmitToGitHub" xml:space="preserve">
+    <value>Update an existing manifest and submit PR to GitHub</value>
+    <comment>Describes a usage scenario for the Update Command that updates an existing manifest and submits a pull request to GitHub.</comment>
+  </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>List of file extensions the package could support</value>
   </data>
@@ -352,6 +356,9 @@
   </data>
   <data name="Publisher_KeywordDescription" xml:space="preserve">
     <value>The publisher name |e.g. Microsoft|</value>
+  </data>
+  <data name="PullRequestTitle_HelpText" xml:space="preserve">
+    <value>The title of the pull request submitted to GitHub. Default is "{PackageId} version {Version}"</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>Pull request can be found here: {0}</value>

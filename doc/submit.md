@@ -5,15 +5,18 @@ To use the **submit** command, you simply need to provide your [GitHub token](ht
 
 ## Usage
 
-`wingetcreate.exe submit [\<options>] <PathToManifest>`
+Submit local manifest file to Windows Package Manager repo:
+
+`wingetcreate.exe submit --prtitle <PullRequestTitle> --token <GitHubPersonalAccessToken> <PathToManifest>`
 
 ## Arguments
 
 The following arguments are available:
 
-| <div style="width:100px">Argument</div> | Description                                                                                                                                                          |
-| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **-t, --token**                         | GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials. |
+| Argument  | Description |
+|--------------|-------------|
+| **-p, --prtitle** |  The title of the pull request submitted to GitHub. Default is "{PackageId} version {Version}"
+| **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
 
 If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line along with the **--submit** command and the device is registered with Github, **WingetCreate** will submit your PR to [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/).
 

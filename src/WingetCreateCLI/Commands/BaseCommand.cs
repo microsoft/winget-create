@@ -493,8 +493,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Submits a pull request with multifile manifests using the user's GitHub access token.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be submitted.</param>
+        /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
-        protected async Task<bool> GitHubSubmitManifests(Manifests manifests)
+        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null)
         {
             if (string.IsNullOrEmpty(this.GitHubToken))
             {
@@ -507,7 +508,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork);
+                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle);
                 this.PullRequestNumber = pullRequest.Number;
                 PullRequestEvent pullRequestEvent = new PullRequestEvent { IsSuccessful = true, PullRequestNumber = pullRequest.Number };
                 TelemetryManager.Log.WriteEvent(pullRequestEvent);
@@ -530,12 +531,18 @@ namespace Microsoft.WingetCreateCLI.Commands
                     StackTrace = e.StackTrace,
                 });
 
-                if (e is Octokit.ForbiddenException)
+                if (e is ForbiddenException || e is ArgumentException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
                     return false;
                 }
-                else if (e is Octokit.NotFoundException)
+                else if (e is ApiValidationException ex)
+                {
+                    // This exception is thrown in case of validation failure from GitHub Api.
+                    // One such occasion is when the PR title exceeds max length.
+                    Logger.ErrorLocalized(nameof(Resources.Error_Prefix), ex.ApiError.Errors[0].Message);
+                }
+                else if (e is NotFoundException)
                 {
                     // This exception can occur if the client is unable to create a reference due to being behind by too many commits.
                     // The user will need to manually update their master branch of their winget-pkgs fork.
