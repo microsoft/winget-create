@@ -992,6 +992,10 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>Multiple scopes detected. Only one scope can be specified for an override.</value>
   </data>
+  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
+    <value>Too many overrides specified for the following installer URL: {0}</value>
+    <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
+  </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
     <value>Overriding {0} with scope {1}</value>
     <comment>{0} - represents the InstallerUrl 

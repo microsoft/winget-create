@@ -1627,6 +1627,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Too many overrides specified for the following installer URL: {0}.
+        /// </summary>
+        public static string OverrideLimitExceeded_Error {
+            get {
+                return ResourceManager.GetString("OverrideLimitExceeded_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overriding {0} with architecture {1}.
         /// </summary>
         public static string OverridingArchitecture_Warning {

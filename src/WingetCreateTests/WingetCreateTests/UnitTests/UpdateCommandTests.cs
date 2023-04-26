@@ -513,6 +513,24 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies that an error is shown if there are too many overrides specified for a given installer.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task NumberOfOverridesExceeded()
+        {
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            string installerUrlOverride = $"{installerUrl}|x64|user|test";
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { installerUrlOverride });
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNull(updatedManifests, "Command should have failed");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(string.Format(Resources.OverrideLimitExceeded_Error, installerUrlOverride)), "Failed to show warning for override limit exceeded.");
+        }
+
+        /// <summary>
         /// Tests that the provided installer url with leading and trailing spaces is trimmed prior to being updated.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>

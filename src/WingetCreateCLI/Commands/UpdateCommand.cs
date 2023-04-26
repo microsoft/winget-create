@@ -584,7 +584,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     // There can be at most 3 elements at one time (installerUrl|archOverride|scopeOverride)
                     if (installerUrlOverride.Length > 3)
                     {
-                        Logger.ErrorLocalized(nameof(Resources.MultipleArchitectureOverride_Error));
+                        Logger.ErrorLocalized(nameof(Resources.OverrideLimitExceeded_Error), item);
                         return null;
                     }
 
