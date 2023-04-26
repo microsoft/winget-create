@@ -1447,6 +1447,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multiple scopes detected. Only one scope can be specified for an override..
+        /// </summary>
+        public static string MultipleScopeOverride_Error {
+            get {
+                return ResourceManager.GetString("MultipleScopeOverride_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package name |e.g. Visual Studio|.
         /// </summary>
         public static string Name_KeywordDescription {

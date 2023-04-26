@@ -302,6 +302,13 @@ namespace Microsoft.WingetCreateCore
                 newInstaller.Architecture = GetArchFromUrl(url) ?? GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? installer.Architecture;
             }
 
+            // Try to determine the installer scope from the url
+            var scopeFromUrl = GetScopeFromUrl(url);
+            if (scopeFromUrl.HasValue)
+            {
+                newInstaller.Scope = scopeFromUrl.Value;
+            }
+
             newInstaller.InstallerUrl = url;
             newInstaller.InstallerSha256 = GetFileHash(path);
             UpdateInstallerMetadata(installer, newInstallers.First());
@@ -351,53 +358,67 @@ namespace Microsoft.WingetCreateCore
                 i => IsCompatibleInstallerType(i.InstallerType ?? installerManifest.InstallerType, newInstaller.InstallerType));
             }
 
-            var overrideArchMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
-            if (overrideArchMatches.Count() == 1)
+            // Match installers using the installer architecture with the following priority: OverrideArchitecture > UrlArchitecture > BinaryArchitecture.
+            IEnumerable<Installer> architectureMatches;
+            if (installerMetadata.OverrideArchitecture.HasValue)
             {
-                return overrideArchMatches.Single();
+                architectureMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
             }
             else
             {
-                // Try filtering with scope override if there are still multiple matches.
-                var overrideScopeMatches = installerTypeMatches.Where(i => i.Scope == installerMetadata.OverrideScope);
-                if (overrideScopeMatches.Count() == 1)
+                if (installerMetadata.UrlArchitecture.HasValue)
                 {
-                    return overrideScopeMatches.Single();
+                    architectureMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.UrlArchitecture);
+                }
+                else
+                {
+                    var binaryArchitecture = installerMetadata.BinaryArchitecture ?? newInstaller.Architecture;
+                    architectureMatches = installerTypeMatches.Where(i => i.Architecture == binaryArchitecture);
                 }
             }
 
-            var binaryArchitecture = installerMetadata.BinaryArchitecture ?? newInstaller.Architecture;
-
-            // Msixbundle installers can have multiple installers with different architectures
-            // For those installers, the binaryArchitecture will be detected as null, therefore we default to the architecture specified in the newInstaller object.
-            var binaryArchMatches = installerTypeMatches.Where(i => i.Architecture == binaryArchitecture);
-            var urlArchMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.UrlArchitecture);
-
-            int numOfBinaryArchMatches = binaryArchMatches.Count();
-            int numOfUrlArchMatches = urlArchMatches.Count();
-
-            // Count > 1 indicates multiple matches were found. Count == 0 indicates no matches were found.
-            // Since url string matching isn't always reliable, failing to find a match is okay.
-            // We only want to show an error if a string match finds multiple matches.
-            // If url string matching fails to find a match, show all errors that may occur from ArchAndTypeMatches.
-            if (numOfUrlArchMatches > 1)
+            int architectureMatchesCount = architectureMatches.Count();
+            if (architectureMatchesCount == 1)
             {
-                multipleMatchedInstallers.Add(newInstaller);
+                return architectureMatches.Single();
             }
-            else if (numOfUrlArchMatches == 0)
+            else if (architectureMatchesCount == 0)
             {
-                if (numOfBinaryArchMatches == 0)
+                unmatchedInstallers.Add(newInstaller);
+            }
+            else
+            {
+                // If there are multiple architecture matches, use scope to further narrow down the matches (if present).
+                IEnumerable<Installer> scopeMatches;
+                if (installerMetadata.OverrideScope.HasValue)
+                {
+                    scopeMatches = architectureMatches.Where(i => i.Scope == installerMetadata.OverrideScope);
+                }
+                else if (installerMetadata.UrlScope.HasValue)
+                {
+                    scopeMatches = architectureMatches.Where(i => i.Scope == installerMetadata.UrlScope);
+                }
+                else
+                {
+                    scopeMatches = architectureMatches;
+                }
+
+                int scopeMatchesCount = scopeMatches.Count();
+                if (scopeMatchesCount == 1)
+                {
+                    return scopeMatches.Single();
+                }
+                else if (scopeMatchesCount == 0)
                 {
                     unmatchedInstallers.Add(newInstaller);
                 }
-                else if (numOfBinaryArchMatches > 1)
+                else
                 {
                     multipleMatchedInstallers.Add(newInstaller);
                 }
             }
 
-            var matchingExistingInstaller = numOfUrlArchMatches == 1 ? urlArchMatches.Single() : numOfBinaryArchMatches == 1 ? binaryArchMatches.Single() : null;
-            return matchingExistingInstaller;
+            return null;
         }
 
         /// <summary>
@@ -527,6 +548,7 @@ namespace Microsoft.WingetCreateCore
                 var urlArchitecture = installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
                 installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
                 installerMetadata.BinaryArchitecture = baseInstaller.Architecture;
+                installerMetadata.UrlScope = GetScopeFromUrl(baseInstaller.InstallerUrl);
 
                 var overrideArch = installerMetadata.OverrideArchitecture;
 
@@ -573,6 +595,27 @@ namespace Microsoft.WingetCreateCore
             }
 
             return archMatches.Count == 1 ? archMatches.Single() : null;
+        }
+
+        /// <summary>
+        /// Performs a regex match to determine the installer scope based on the url string.
+        /// </summary>
+        /// <param name="url">Installer url string.</param>
+        /// <returns>Installer scope enum.</returns>
+        private static Scope? GetScopeFromUrl(string url)
+        {
+            if (Regex.Match(url, "user", RegexOptions.IgnoreCase).Success)
+            {
+                return Scope.User;
+            }
+            else if (Regex.Match(url, "machine", RegexOptions.IgnoreCase).Success)
+            {
+                return Scope.Machine;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>

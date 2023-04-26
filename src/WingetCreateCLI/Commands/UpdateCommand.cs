@@ -584,12 +584,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                     // There can be at most 3 elements at one time (installerUrl|archOverride|scopeOverride)
                     if (installerUrlOverride.Length > 3)
                     {
-                        // Change error message string
                         Logger.ErrorLocalized(nameof(Resources.MultipleArchitectureOverride_Error));
                         return null;
                     }
 
                     installerMetadata.InstallerUrl = installerUrlOverride[0];
+
+                    bool archOverridePresent = false;
+                    bool scopeOverridePresent = false;
 
                     for (int i = 1; i < installerUrlOverride.Length; i++)
                     {
@@ -599,11 +601,29 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                         if (overrideArch.HasValue)
                         {
-                            installerMetadata.OverrideArchitecture = overrideArch.Value;
+                            if (archOverridePresent)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.MultipleArchitectureOverride_Error));
+                                return null;
+                            }
+                            else
+                            {
+                                archOverridePresent = true;
+                                installerMetadata.OverrideArchitecture = overrideArch.Value;
+                            }
                         }
                         else if (overrideScope.HasValue)
                         {
-                            installerMetadata.OverrideScope = overrideScope.Value;
+                            if (scopeOverridePresent)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.MultipleScopeOverride_Error));
+                                return null;
+                            }
+                            else
+                            {
+                                scopeOverridePresent = true;
+                                installerMetadata.OverrideScope = overrideScope.Value;
+                            }
                         }
                         else
                         {

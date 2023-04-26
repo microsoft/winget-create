@@ -218,7 +218,7 @@ namespace Microsoft.WingetCreateUnitTests
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task UpdateBasedOnInstallerUrlMatch()
+        public async Task UpdateWithArchDetectedFromInstallerUrl()
         {
             var archs = new[] { "arm64", "arm", "win64", "win32" };
             var expectedArchs = new[]
@@ -231,7 +231,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             TestUtils.InitializeMockDownloads(archs.Select(a => $"{a}/{TestConstants.TestMsiInstaller}").ToArray());
 
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithInstallerUrl", null, this.tempPath, null);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithArchFromInstallerUrl", null, this.tempPath, null);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
@@ -240,6 +240,35 @@ namespace Microsoft.WingetCreateUnitTests
             foreach (var item in expectedArchs.Zip(updatedManifests.InstallerManifest.Installers, (expectedArch, installer) => (expectedArch, installer)))
             {
                 Assert.AreEqual(item.expectedArch, item.installer.Architecture, "Architecture not parsed correctly from url string");
+                Assert.AreNotEqual(initialInstaller.InstallerSha256, item.installer.InstallerSha256, "InstallerSha256 should be updated");
+            }
+        }
+
+        /// <summary>
+        /// Verifies that the scope can be detected from the installer URL and is able to find a match.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateWithScopeDetectedFromInstallerUrl()
+        {
+            var scopes = new[] { "user", "machine" };
+            var expectedScopes = new[]
+            {
+                Scope.User,
+                Scope.Machine,
+            };
+
+            TestUtils.InitializeMockDownloads(scopes.Select(a => $"{a}/{TestConstants.TestMsiInstaller}").ToArray());
+
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithScopeFromInstallerUrl", null, this.tempPath, null);
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            foreach (var item in expectedScopes.Zip(updatedManifests.InstallerManifest.Installers, (expectedScope, installer) => (expectedScope, installer)))
+            {
+                Assert.AreEqual(item.expectedScope, item.installer.Scope, "Scope is not parsed correctly from url string");
                 Assert.AreNotEqual(initialInstaller.InstallerSha256, item.installer.InstallerSha256, "InstallerSha256 should be updated");
             }
         }
@@ -314,6 +343,22 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verfies that an error message is shown if multiple architectures are specified for an override.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFailsOverrideWithMultipleScopes()
+        {
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            (UpdateCommand badCommand, var manifests) =
+                GetUpdateCommandAndManifestData("TestPublisher.ScopeOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|user|machine" });
+            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
+            Assert.IsNull(failedUpdateManifests, "Command should have failed due to multiple scope overrides specified for a single installer.");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.MultipleScopeOverride_Error), "Failed to show multiple scope overrides error.");
+        }
+
+        /// <summary>
         /// Verifies that the overriding architecture can be matched to the architecture specified in the existing manifest and the update succeeds.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
@@ -355,18 +400,18 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
             string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
 
-            // Test without architecture override should fail.
+            // Test without scope override should fail.
             (UpdateCommand badCommand, var manifests) =
                 GetUpdateCommandAndManifestData("TestPublisher.ScopeOverride", "1.2.3.4", this.tempPath, new[] { testInstallerUrl, testInstallerUrl });
             var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
             Assert.IsNull(failedUpdateManifests, "Command should have failed without scope override as there are multiple installers with the same architecture.");
 
-            // Test with architecture override should pass.
+            // Test with scope override should pass.
             (UpdateCommand goodCommand, var initialManifestContent) =
                 GetUpdateCommandAndManifestData("TestPublisher.ScopeOverride", "1.2.3.4", this.tempPath, new[] { $"{testInstallerUrl}|user", $"{testInstallerUrl}|machine" });
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(goodCommand, initialManifestContent);
-            Assert.IsNotNull(updatedManifests, "Command should have succeeded as installer should be overrided with ARM architecture.");
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded as installers should be overrided with scope.");
 
             var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
             var initialSecondInstaller = initialManifests.SingletonManifest.Installers[1];
@@ -376,6 +421,45 @@ namespace Microsoft.WingetCreateUnitTests
 
             Assert.AreEqual(Scope.User, updatedFirstInstaller.Scope, $"Scope should be preserved.");
             Assert.AreEqual(Scope.Machine, updatedSecondInstaller.Scope, $"Scope should be preserved.");
+
+            Assert.AreNotEqual(initialFirstInstaller.InstallerSha256, updatedFirstInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            Assert.AreNotEqual(initialSecondInstaller.InstallerSha256, updatedSecondInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
+        /// <summary>
+        /// Verifies that the overriding both the architecture and scope is supported and the update succeeds.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateWithArchAndScopeOverrides()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+
+            // Test without architecture override should fail.
+            (UpdateCommand badCommand, var manifests) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchAndScopeOverride", "1.2.3.4", this.tempPath, new[] { testInstallerUrl, testInstallerUrl });
+            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
+            Assert.IsNull(failedUpdateManifests, "Command should have failed without overrides");
+
+            // Test with scope and architecture override should pass.
+            (UpdateCommand goodCommand, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.ArchAndScopeOverride", "1.2.3.4", this.tempPath, new[] { $"{testInstallerUrl}|user|arm", $"{testInstallerUrl}|arm|machine" });
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(goodCommand, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded as installers should be overrided with architecture and scope.");
+
+            var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
+            var initialSecondInstaller = initialManifests.SingletonManifest.Installers[1];
+
+            var updatedFirstInstaller = updatedManifests.InstallerManifest.Installers[0];
+            var updatedSecondInstaller = updatedManifests.InstallerManifest.Installers[1];
+
+            Assert.AreEqual(Scope.User, updatedFirstInstaller.Scope, $"Scope should be preserved.");
+            Assert.AreEqual(Scope.Machine, updatedSecondInstaller.Scope, $"Scope should be preserved.");
+            Assert.AreEqual(Architecture.Arm, updatedFirstInstaller.Architecture, $"Architecture should be preserved.");
+            Assert.AreEqual(Architecture.Arm, updatedSecondInstaller.Architecture, $"Architecture should be preserved.");
 
             Assert.AreNotEqual(initialFirstInstaller.InstallerSha256, updatedFirstInstaller.InstallerSha256, "InstallerSha256 should be updated");
             Assert.AreNotEqual(initialSecondInstaller.InstallerSha256, updatedSecondInstaller.InstallerSha256, "InstallerSha256 should be updated");
@@ -426,38 +510,6 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.ArchitectureOverride_Warning), "Failed to show warning for architecture override.");
-        }
-
-        /// <summary>
-        /// Test the architecture override with multiple installers. Verifies that if the override architecture does not match any installer,
-        /// the architecture detected from the url or the binary will be used instead to perform the matching.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        [Test]
-        public async Task UpdateWithMultipleArchitectureOverrides()
-        {
-            var expectedArchs = new[]
-            {
-                Architecture.Arm,
-                Architecture.X64,
-            };
-
-            string x64ExeInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
-            string x86ExeInstallerUrl = $"https://fakedomain.com/win32/{TestConstants.TestExeInstaller}";
-            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller, $"win32/{TestConstants.TestExeInstaller}");
-            (UpdateCommand command, var initialManifestContent) =
-                GetUpdateCommandAndManifestData("TestPublisher.MultipleArchitectureOverride", "1.2.3.4", this.tempPath, new[] { $"{x64ExeInstallerUrl}|arm", $"{x86ExeInstallerUrl}|x64" });
-
-            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
-            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
-            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
-            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
-
-            foreach (var item in expectedArchs.Zip(updatedManifests.InstallerManifest.Installers, (expectedArch, installer) => (expectedArch, installer)))
-            {
-                Assert.AreEqual(item.expectedArch, item.installer.Architecture, "Architecture override failed.");
-                Assert.AreNotEqual(initialInstaller.InstallerSha256, item.installer.InstallerSha256, "InstallerSha256 should be updated");
-            }
         }
 
         /// <summary>

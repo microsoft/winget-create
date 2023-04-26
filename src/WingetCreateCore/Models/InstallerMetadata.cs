@@ -42,6 +42,11 @@ namespace Microsoft.WingetCreateCore.Models
         public Architecture? OverrideArchitecture { get; set; }
 
         /// <summary>
+        /// Gets or sets the scope detected from the URL string.
+        /// </summary>
+        public Scope? UrlScope { get; set; }
+
+        /// <summary>
         /// Gets or sets the scope specified as an override.
         /// </summary>
         public Scope? OverrideScope { get; set; }

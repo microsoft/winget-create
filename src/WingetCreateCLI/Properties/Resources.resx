@@ -989,6 +989,9 @@
   <data name="NetworkConnectionFailure_Message" xml:space="preserve">
     <value>Failed to connect to GitHub. Check your network connection.</value>
   </data>
+  <data name="MultipleScopeOverride_Error" xml:space="preserve">
+    <value>Multiple scopes detected. Only one scope can be specified for an override.</value>
+  </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
     <value>Overriding {0} with scope {1}</value>
     <comment>{0} - represents the InstallerUrl 
