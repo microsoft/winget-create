@@ -1001,4 +1001,7 @@
     <comment>{0} - represents the InstallerUrl 
 {1} - represents the overriding scope</comment>
   </data>
+  <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
+    <value>Override the scope of an installer</value>
+  </data>
 </root>

@@ -32,6 +32,9 @@ Override the architecture of an installer:
 
 `wingetcreate.exe update --urls <InstallerUrl1>|<InstallerArchitecture> --version <Version> <PackageIdentifier>`
 
+Override the scope of an installer:
+`wingetcreate.exe update --urls <InstallerUrl1>|<InstallerScope> --version <Version> <PackageIdentifier>`
+
 Update an existing manifest and submit PR to GitHub:
 
 `wingetcreate.exe update --submit --token <GitHubPersonalAccessToken> --urls <InstallerUrl1> <InstallerUrl2> --version <Version> <PackageIdentifier>`
