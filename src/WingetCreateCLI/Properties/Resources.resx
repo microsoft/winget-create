@@ -805,9 +805,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Multiple architectures detected. Only one architecture can be specified for an override.</value>
   </data>
-  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
-    <value>Unable to parse the specified override architecture {0}.</value>
-    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  <data name="UnableToParseOverride_Error" xml:space="preserve">
+    <value>Unable to parse the specified override {0}.</value>
+    <comment>{0} - represents the override string that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Override the architecture of an installer</value>
@@ -988,5 +988,10 @@
   </data>
   <data name="NetworkConnectionFailure_Message" xml:space="preserve">
     <value>Failed to connect to GitHub. Check your network connection.</value>
+  </data>
+  <data name="OverridingScope_Warning" xml:space="preserve">
+    <value>Overriding {0} with scope {1}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding scope</comment>
   </data>
 </root>

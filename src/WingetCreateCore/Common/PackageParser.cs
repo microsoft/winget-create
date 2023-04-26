@@ -356,6 +356,15 @@ namespace Microsoft.WingetCreateCore
             {
                 return overrideArchMatches.Single();
             }
+            else
+            {
+                // Try filtering with scope override if there are still multiple matches.
+                var overrideScopeMatches = installerTypeMatches.Where(i => i.Scope == installerMetadata.OverrideScope);
+                if (overrideScopeMatches.Count() == 1)
+                {
+                    return overrideScopeMatches.Single();
+                }
+            }
 
             var binaryArchitecture = installerMetadata.BinaryArchitecture ?? newInstaller.Architecture;
 

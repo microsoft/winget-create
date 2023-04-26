@@ -232,7 +232,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             // Generate list of InstallerUpdate objects and parse out any specified architecture overrides.
-            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.Select(i => i.Trim()).ToList());
+            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForOverrides(this.InstallerUrls.Select(i => i.Trim()).ToList());
 
             // If the installer update list is null there was an issue when parsing for architecture override.
             if (installerMetadataList == null)
@@ -248,6 +248,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (installerUpdate.OverrideArchitecture.HasValue)
                 {
                     Logger.WarnLocalized(nameof(Resources.OverridingArchitecture_Warning), installerUpdate.InstallerUrl, installerUpdate.OverrideArchitecture);
+                }
+                if (installerUpdate.OverrideScope.HasValue)
+                {
+                    Logger.WarnLocalized(nameof(Resources.OverridingScope_Warning), installerUpdate.InstallerUrl, installerUpdate.OverrideScope);
                 }
             }
 
@@ -561,11 +565,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Parse out architecture overrides included in the installer URLs and returns the parsed list of installer URLs.
+        /// Parses the installer urls for any architecture or scope overrides.
         /// </summary>
         /// <param name="installerUrlsToBeParsed">List of installer URLs to be parsed for architecture overrides.</param>
         /// <returns>List of <see cref="InstallerMetadata"/> helper objects used for updating the installers.</returns>
-        private List<InstallerMetadata> ParseInstallerUrlsForArchOverride(List<string> installerUrlsToBeParsed)
+        private List<InstallerMetadata> ParseInstallerUrlsForOverrides(List<string> installerUrlsToBeParsed)
         {
             List<InstallerMetadata> installerMetadataList = new List<InstallerMetadata>();
             foreach (string item in installerUrlsToBeParsed)
@@ -577,24 +581,35 @@ namespace Microsoft.WingetCreateCLI.Commands
                     // '|' character indicates that an architecture override can be parsed from the installer.
                     string[] installerUrlOverride = item.Split('|');
 
-                    if (installerUrlOverride.Length > 2)
+                    // There can be at most 3 elements at one time (installerUrl|archOverride|scopeOverride)
+                    if (installerUrlOverride.Length > 3)
                     {
+                        // Change error message string
                         Logger.ErrorLocalized(nameof(Resources.MultipleArchitectureOverride_Error));
                         return null;
                     }
 
-                    string installerUrl = installerUrlOverride[0];
-                    string overrideArchString = installerUrlOverride[1];
-                    Architecture? overrideArch = overrideArchString.ToEnumOrDefault<Architecture>();
-                    if (overrideArch.HasValue)
+                    installerMetadata.InstallerUrl = installerUrlOverride[0];
+
+                    for (int i = 1; i < installerUrlOverride.Length; i++)
                     {
-                        installerMetadata.InstallerUrl = installerUrl;
-                        installerMetadata.OverrideArchitecture = overrideArch.Value;
-                    }
-                    else
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.UnableToParseArchOverride_Error), overrideArchString);
-                        return null;
+                        string overrideString =  installerUrlOverride[i];
+                        Architecture? overrideArch = overrideString.ToEnumOrDefault<Architecture>();
+                        Scope? overrideScope = overrideString.ToEnumOrDefault<Scope>();
+
+                        if (overrideArch.HasValue)
+                        {
+                            installerMetadata.OverrideArchitecture = overrideArch.Value;
+                        }
+                        else if (overrideScope.HasValue)
+                        {
+                            installerMetadata.OverrideScope = overrideScope.Value;
+                        }
+                        else
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.UnableToParseOverride_Error), overrideString);
+                            return null;
+                        }
                     }
                 }
                 else

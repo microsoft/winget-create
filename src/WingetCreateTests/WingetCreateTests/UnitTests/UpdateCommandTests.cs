@@ -294,7 +294,7 @@ namespace Microsoft.WingetCreateUnitTests
             var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
             Assert.IsNull(failedUpdateManifests, "Command should have failed due to invalid architecture specified for override.");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(string.Format(Resources.UnableToParseArchOverride_Error, invalidArch)), "Failed to show architecture override parsing error.");
+            Assert.That(result, Does.Contain(string.Format(Resources.UnableToParseOverride_Error, invalidArch)), "Failed to show architecture override parsing error.");
         }
 
         /// <summary>
@@ -342,6 +342,43 @@ namespace Microsoft.WingetCreateUnitTests
             var updatedInstaller = updatedManifests.InstallerManifest.Installers.Single();
             Assert.AreEqual(expectedArch, updatedInstaller.Architecture, $"Architecture should be {expectedArch} from override.");
             Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
+        /// <summary>
+        /// Verifies that the overriding scope can be matched to the scope specified in the existing manifest and the update succeeds.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateWithScopeOverrides()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+
+            // Test without architecture override should fail.
+            (UpdateCommand badCommand, var manifests) =
+                GetUpdateCommandAndManifestData("TestPublisher.ScopeOverride", "1.2.3.4", this.tempPath, new[] { testInstallerUrl, testInstallerUrl });
+            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
+            Assert.IsNull(failedUpdateManifests, "Command should have failed without scope override as there are multiple installers with the same architecture.");
+
+            // Test with architecture override should pass.
+            (UpdateCommand goodCommand, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.ScopeOverride", "1.2.3.4", this.tempPath, new[] { $"{testInstallerUrl}|user", $"{testInstallerUrl}|machine" });
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(goodCommand, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded as installer should be overrided with ARM architecture.");
+
+            var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
+            var initialSecondInstaller = initialManifests.SingletonManifest.Installers[1];
+
+            var updatedFirstInstaller = updatedManifests.InstallerManifest.Installers[0];
+            var updatedSecondInstaller = updatedManifests.InstallerManifest.Installers[1];
+
+            Assert.AreEqual(Scope.User, updatedFirstInstaller.Scope, $"Scope should be preserved.");
+            Assert.AreEqual(Scope.Machine, updatedSecondInstaller.Scope, $"Scope should be preserved.");
+
+            Assert.AreNotEqual(initialFirstInstaller.InstallerSha256, updatedFirstInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            Assert.AreNotEqual(initialSecondInstaller.InstallerSha256, updatedSecondInstaller.InstallerSha256, "InstallerSha256 should be updated");
         }
 
         /// <summary>

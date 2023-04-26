@@ -412,20 +412,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deleting {0}.
-        /// </summary>
-        public static string DeletingItem_Message {
-            get {
-                return ResourceManager.GetString("DeletingItem_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cached token was invalid, deleting token from cache....
         /// </summary>
         public static string DeletingInvalidCachedToken_Message {
             get {
                 return ResourceManager.GetString("DeletingInvalidCachedToken_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting {0}.
+        /// </summary>
+        public static string DeletingItem_Message {
+            get {
+                return ResourceManager.GetString("DeletingItem_Message", resourceCulture);
             }
         }
         
@@ -455,18 +455,16 @@ namespace Microsoft.WingetCreateCLI.Properties {
                 return ResourceManager.GetString("DetectedArchMismatch_Message", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to {0} directories found in {1}.
         /// </summary>
-        public static string DirectoriesFound_Message
-        {
-            get
-            {
+        public static string DirectoriesFound_Message {
+            get {
                 return ResourceManager.GetString("DirectoriesFound_Message", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Would you like to discard this update and start over?.
         /// </summary>
@@ -738,16 +736,14 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update an existing manifest and submit PR to GitHub
+        ///   Looks up a localized string similar to Update an existing manifest and submit PR to GitHub.
         /// </summary>
-        public static string Example_UpdateCommand_SubmitToGitHub
-        {
-            get
-            {
+        public static string Example_UpdateCommand_SubmitToGitHub {
+            get {
                 return ResourceManager.GetString("Example_UpdateCommand_SubmitToGitHub", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The excluded installer target markets.
         /// </summary>
@@ -1631,6 +1627,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Overriding {0} with scope {1}.
+        /// </summary>
+        public static string OverridingScope_Warning {
+            get {
+                return ResourceManager.GetString("OverridingScope_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of package dependencies from current source.
         /// </summary>
         public static string PackageDependencies_KeywordDescription {
@@ -1838,7 +1843,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub. Default is "{PackageId} version {Version}"
+        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub. Default is &quot;{PackageId} version {Version}&quot;.
         /// </summary>
         public static string PullRequestTitle_HelpText {
             get {
@@ -2288,11 +2293,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to parse the specified override architecture {0}..
+        ///   Looks up a localized string similar to Unable to parse the specified override {0}..
         /// </summary>
-        public static string UnableToParseArchOverride_Error {
+        public static string UnableToParseOverride_Error {
             get {
-                return ResourceManager.GetString("UnableToParseArchOverride_Error", resourceCulture);
+                return ResourceManager.GetString("UnableToParseOverride_Error", resourceCulture);
             }
         }
         
