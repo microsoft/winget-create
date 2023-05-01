@@ -605,13 +605,13 @@ namespace Microsoft.WingetCreateCore
         /// <returns>Installer scope enum.</returns>
         private static Scope? GetScopeFromUrl(string url)
         {
-            if (Regex.Match(url, "user", RegexOptions.IgnoreCase).Success)
-            {
-                return Scope.User;
-            }
-            else if (Regex.Match(url, "machine|allusers", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, "machine|allusers", RegexOptions.IgnoreCase).Success)
             {
                 return Scope.Machine;
+            }
+            else if (Regex.Match(url, "user", RegexOptions.IgnoreCase).Success)
+            {
+                return Scope.User;
             }
             else
             {
