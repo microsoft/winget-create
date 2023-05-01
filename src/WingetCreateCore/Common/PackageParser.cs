@@ -328,8 +328,9 @@ namespace Microsoft.WingetCreateCore
 
         /// <summary>
         /// Finds an existing installer that matches the new installer by checking the installerType and the following:
-        /// 1. Matching based on architecture specified as an override.
-        /// 2. Matching based on architecture detected from URL string or binary.
+        /// 1. Matching based on architecture specified as an override if present.
+        /// 2. Matching based on architecture detected from URL string if present.
+        /// 3. If no singular match is found based on architecture, use scope to narrow down the match results if a scope override is present.
         /// </summary>
         /// <param name="newInstaller">New installer to be matched.</param>
         /// <param name="existingInstallers">List of existing installers to be matched.</param>
@@ -608,7 +609,7 @@ namespace Microsoft.WingetCreateCore
             {
                 return Scope.User;
             }
-            else if (Regex.Match(url, "machine", RegexOptions.IgnoreCase).Success)
+            else if (Regex.Match(url, "machine|allusers", RegexOptions.IgnoreCase).Success)
             {
                 return Scope.Machine;
             }

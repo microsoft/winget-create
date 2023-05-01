@@ -799,7 +799,7 @@
     <value>Unable to complete the download request as the connection has timed out. Please verify your installer URL and try again.</value>
   </data>
   <data name="ArchitectureOverride_Warning" xml:space="preserve">
-    <value>If the installer you provided fails to match an existing installer even when overriding the architecture, you may need to edit the existing manifest manually. Make sure that the existing manifest has a single installer that matches the overriding architecture and installer type of the new installer. To modify an existing manifest, use the '--interactive' flag with the update command and submit the new changes. Once the changes are published, please try again.</value>
+    <value>If the installer you provided fails to match an existing installer even when overriding the architecture, you may need to override the scope or edit the existing manifest manually. Make sure that the existing manifest has a single installer that matches the overriding architecture, scope and installer type of the new installer. To modify an existing manifest, use the '--interactive' flag with the update command and submit the new changes. Once the changes are published, please try again.</value>
     <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
   </data>
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">

@@ -232,16 +232,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().ToArray();
             }
 
-            // Generate list of InstallerUpdate objects and parse out any specified architecture overrides.
+            // Generate list of InstallerUpdate objects and parse out any specified architecture or scope overrides.
             List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForOverrides(this.InstallerUrls.Select(i => i.Trim()).ToList());
 
-            // If the installer update list is null there was an issue when parsing for architecture override.
+            // If the installer update list is null there was an issue when parsing for architecture or scope override.
             if (installerMetadataList == null)
             {
                 return null;
             }
 
-            // Reassign list with parsed installer URLs without architecture overrides.
+            // Reassign list with parsed installer URLs without architecture or scope overrides.
             this.InstallerUrls = installerMetadataList.Select(x => x.InstallerUrl).ToList();
 
             foreach (var installerUpdate in installerMetadataList)
@@ -250,6 +250,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     Logger.WarnLocalized(nameof(Resources.OverridingArchitecture_Warning), installerUpdate.InstallerUrl, installerUpdate.OverrideArchitecture);
                 }
+
                 if (installerUpdate.OverrideScope.HasValue)
                 {
                     Logger.WarnLocalized(nameof(Resources.OverridingScope_Warning), installerUpdate.InstallerUrl, installerUpdate.OverrideScope);
@@ -596,7 +597,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     for (int i = 1; i < installerUrlOverride.Length; i++)
                     {
-                        string overrideString =  installerUrlOverride[i];
+                        string overrideString = installerUrlOverride[i];
                         Architecture? overrideArch = overrideString.ToEnumOrDefault<Architecture>();
                         Scope? overrideScope = overrideString.ToEnumOrDefault<Scope>();
 
