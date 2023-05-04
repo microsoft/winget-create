@@ -302,13 +302,6 @@ namespace Microsoft.WingetCreateCore
                 newInstaller.Architecture = GetArchFromUrl(url) ?? GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? installer.Architecture;
             }
 
-            // Try to determine the installer scope from the url
-            var scopeFromUrl = GetScopeFromUrl(url);
-            if (scopeFromUrl.HasValue)
-            {
-                newInstaller.Scope = scopeFromUrl.Value;
-            }
-
             newInstaller.InstallerUrl = url;
             newInstaller.InstallerSha256 = GetFileHash(path);
             UpdateInstallerMetadata(installer, newInstallers.First());
@@ -394,10 +387,6 @@ namespace Microsoft.WingetCreateCore
                 if (installerMetadata.OverrideScope.HasValue)
                 {
                     scopeMatches = architectureMatches.Where(i => i.Scope == installerMetadata.OverrideScope);
-                }
-                else if (installerMetadata.UrlScope.HasValue)
-                {
-                    scopeMatches = architectureMatches.Where(i => i.Scope == installerMetadata.UrlScope);
                 }
                 else
                 {
@@ -549,7 +538,6 @@ namespace Microsoft.WingetCreateCore
                 var urlArchitecture = installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
                 installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
                 installerMetadata.BinaryArchitecture = baseInstaller.Architecture;
-                installerMetadata.UrlScope = GetScopeFromUrl(baseInstaller.InstallerUrl);
 
                 var overrideArch = installerMetadata.OverrideArchitecture;
 
@@ -596,27 +584,6 @@ namespace Microsoft.WingetCreateCore
             }
 
             return archMatches.Count == 1 ? archMatches.Single() : null;
-        }
-
-        /// <summary>
-        /// Performs a regex match to determine the installer scope based on the url string.
-        /// </summary>
-        /// <param name="url">Installer url string.</param>
-        /// <returns>Installer scope enum.</returns>
-        private static Scope? GetScopeFromUrl(string url)
-        {
-            if (Regex.Match(url, "machine|allusers", RegexOptions.IgnoreCase).Success)
-            {
-                return Scope.Machine;
-            }
-            else if (Regex.Match(url, "user", RegexOptions.IgnoreCase).Success)
-            {
-                return Scope.User;
-            }
-            else
-            {
-                return null;
-            }
         }
 
         /// <summary>

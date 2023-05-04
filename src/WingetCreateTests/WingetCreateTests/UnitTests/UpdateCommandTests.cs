@@ -245,35 +245,6 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verifies that the scope can be detected from the installer URL and is able to find a match.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
-        [Test]
-        public async Task UpdateWithScopeDetectedFromInstallerUrl()
-        {
-            var scopes = new[] { "user", "machine" };
-            var expectedScopes = new[]
-            {
-                Scope.User,
-                Scope.Machine,
-            };
-
-            TestUtils.InitializeMockDownloads(scopes.Select(a => $"{a}/{TestConstants.TestMsiInstaller}").ToArray());
-
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithScopeFromInstallerUrl", null, this.tempPath, null);
-            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
-            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
-            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
-            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
-
-            foreach (var item in expectedScopes.Zip(updatedManifests.InstallerManifest.Installers, (expectedScope, installer) => (expectedScope, installer)))
-            {
-                Assert.AreEqual(item.expectedScope, item.installer.Scope, "Scope is not parsed correctly from url string");
-                Assert.AreNotEqual(initialInstaller.InstallerSha256, item.installer.InstallerSha256, "InstallerSha256 should be updated");
-            }
-        }
-
-        /// <summary>
         /// Verifies that the architecture obtained from updating an msix does not come from the url string.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
