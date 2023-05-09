@@ -172,15 +172,18 @@ namespace Microsoft.WingetCreateCLI.Commands
                             selectedInstallers = Prompt.MultiSelect(Resources.SelectInstallersFromZip_Message, extractedFiles, minimum: 1).ToList();
                         }
 
-                        installerUpdateList.Add(
+                        foreach (var installer in selectedInstallers)
+                        {
+                            installerUpdateList.Add(
                             new InstallerMetadata
                             {
                                 InstallerUrl = installerUrl,
                                 PackageFile = packageFile,
-                                RelativeFilePaths = selectedInstallers,
+                                RelativeFilePaths = new List<string> { installer },
                                 IsZipFile = true,
                                 ExtractedDirectory = extractDirectory,
                             });
+                        }
                     }
                     else
                     {
@@ -270,6 +273,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             PromptRequiredProperties(manifests.VersionManifest);
             PromptRequiredProperties(manifests.InstallerManifest, manifests.VersionManifest);
             PromptRequiredProperties(manifests.DefaultLocaleManifest, manifests.VersionManifest);
+            MergeNestedInstallerFilesIfApplicable(manifests.InstallerManifest);
 
             Console.WriteLine();
             if (Prompt.Confirm(Resources.ModifyOptionalDefaultLocaleFields_Message))
@@ -359,6 +363,12 @@ namespace Microsoft.WingetCreateCLI.Commands
             List<Installer> installers = new List<Installer>((ICollection<Installer>)property.GetValue(manifest));
             foreach (var installer in installers)
             {
+                Console.WriteLine();
+                if (installer.InstallerType == InstallerType.Zip)
+                {
+                    Logger.InfoLocalized(nameof(Resources.NestedInstallerParsing_HelpText), installer.NestedInstallerFiles.First().RelativeFilePath, installer.InstallerUrl);
+                }
+
                 var installerProperties = installer.GetType().GetProperties().ToList();
 
                 var requiredInstallerProperties = installerProperties
@@ -369,8 +379,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 // If the installerType is EXE, prompt the user for whether the package is a portable
                 if (installer.InstallerType == InstallerType.Exe || installer.NestedInstallerType == NestedInstallerType.Exe)
                 {
-                    Console.WriteLine();
-
                     if (!PromptForPortableExe(installer))
                     {
                         // If we know the installertype is EXE, prompt the user for installer switches (silent and silentwithprogress)
@@ -465,6 +473,38 @@ namespace Microsoft.WingetCreateCLI.Commands
                         nestedInstallerFile.PortableCommandAlias = portableCommandAlias;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Merge nested installer files into a single installer if:
+        /// 1. Matching installers have NestedInstallerType: portable.
+        /// 2. Matching installers have the same architecture.
+        /// 3. Matching installers have the same hash.
+        /// </summary>
+        private static void MergeNestedInstallerFilesIfApplicable(InstallerManifest installerManifest)
+        {
+            var nestedPortableInstallers = installerManifest.Installers.Where(i => i.NestedInstallerType == NestedInstallerType.Portable).ToList();
+            var mergeableInstallersList = nestedPortableInstallers.GroupBy(i => i.Architecture + i.InstallerSha256).ToList();
+            foreach (var installers in mergeableInstallersList)
+            {
+                // First installer in each list is used to merge into
+                var installerToMergeInto = installers.First();
+
+                // Remove the first installer from the manifest, will be added back once the merge is complete
+                installerManifest.Installers.Remove(installerToMergeInto);
+
+                var installersToMerge = installers.Skip(1).ToList();
+
+                // Append NestedInstallerFiles of other matching installers and remove them from the manifest
+                foreach (var installer in installersToMerge)
+                {
+                    installerToMergeInto.NestedInstallerFiles.AddRange(installer.NestedInstallerFiles);
+                    installerManifest.Installers.Remove(installer);
+                }
+
+                // Add the installer with the merged nested installer files back to the manifest
+                installerManifest.Installers.Add(installerToMergeInto);
             }
         }
 

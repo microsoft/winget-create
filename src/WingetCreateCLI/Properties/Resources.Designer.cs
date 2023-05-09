@@ -1472,6 +1472,17 @@ namespace Microsoft.WingetCreateCLI.Properties {
                 return ResourceManager.GetString("Name_KeywordDescription", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing nested installer &apos;{0}&apos; from {1}.
+        /// </summary>
+        public static string NestedInstallerParsing_HelpText
+        {
+            get
+            {
+                return ResourceManager.GetString("NestedInstallerParsing_HelpText", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Nested installer not found in zip archive: {0}.
