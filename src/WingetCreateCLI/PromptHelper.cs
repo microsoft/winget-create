@@ -411,6 +411,14 @@ namespace Microsoft.WingetCreateCLI
                 {
                     value = null;
                 }
+                else
+                {
+                    // Trim values if we have List<string>
+                    if (instanceType == typeof(string))
+                    {
+                        value = (IEnumerable<T>)value.Select(v => v.ToString().Trim());
+                    }
+                }
 
                 property.SetValue(model, value);
             }
