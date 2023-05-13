@@ -457,21 +457,18 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (!string.IsNullOrEmpty(portableCommandAlias))
                 {
-                    List<string> portableCommands = new List<string> { portableCommandAlias };
+                    List<string> portableCommands = new List<string> { portableCommandAlias.Trim() };
                     installer.Commands = portableCommands;
                 }
             }
 
             if (installer.NestedInstallerType == NestedInstallerType.Portable)
             {
-                foreach (NestedInstallerFile nestedInstallerFile in installer.NestedInstallerFiles)
-                {
-                    string portableCommandAlias = Prompt.Input<string>(Resources.PortableCommandAlias_Message);
+                string portableCommandAlias = Prompt.Input<string>(Resources.PortableCommandAlias_Message);
 
-                    if (!string.IsNullOrEmpty(portableCommandAlias))
-                    {
-                        nestedInstallerFile.PortableCommandAlias = portableCommandAlias;
-                    }
+                if (!string.IsNullOrEmpty(portableCommandAlias))
+                {
+                    installer.NestedInstallerFiles.First().PortableCommandAlias = portableCommandAlias.Trim();
                 }
             }
         }
