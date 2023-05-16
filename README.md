@@ -102,7 +102,7 @@ Windows Server 2022 now supports App Execution Aliases, which means the alias `w
 
 The CLI also supports creating or updating manifests with multiple installer URLs. You can either create new manifests with multiple installer nodes using the [New Command](doc/new.md) or update existing manifests with multiple installer URLs using the [Update Command](doc/update.md).
 
-## GitHub Personal Access Token Permissions
+## GitHub Personal Access Token (classic) Permissions
 
 When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) to be used with WingetCreate, make sure the following permissions are selected.
 
