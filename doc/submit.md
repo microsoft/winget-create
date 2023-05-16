@@ -18,7 +18,9 @@ The following arguments are available:
 | **-p, --prtitle** |  The title of the pull request submitted to GitHub. Default is "{PackageId} version {Version}"
 | **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
 
-If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line along with the **--submit** command and the device is registered with Github, **WingetCreate** will submit your PR to [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/).
+If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line with the **submit** command and the device is registered with GitHub, **Winget-Create** will submit your PR to [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/).
+
+Instructions on setting up GitHub Token for Winget-Create can be found [here](../README.md#github-personal-access-token-classic-permissions).
 
 ## Output
 
