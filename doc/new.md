@@ -65,6 +65,6 @@ If you are content with the changes, choose **no** and the manifest will be save
 The last option **Winget-Create** will offer is for you to submit the manifest to the [Windows Package Manager repository](https://github.com/microsoft/winget-pkgs).  
 If you choose yes, you will automatically submit your Pull Request (PR) to the [Windows Package Manager repository](https://github.com/microsoft/winget-pkgs).
 
-> [!NOTE]  
-If you have not logged on to GitHub, you will be taken to the GitHub authentication web page before allowing you to submit your manifest.  
+If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line, you can skip the login process. Instructions on setting up GitHub Token for Winget-Create can be found [here](../README.md#github-personal-access-token-classic-permissions).
 
+> **Note**: If you have not logged on to GitHub, you will be taken to the GitHub authentication web page before allowing you to submit your manifest. 

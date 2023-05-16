@@ -58,5 +58,6 @@ The following arguments are available:
 
 If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line along with the **--submit** flag, **Winget-Create** will automatically submit your PR to [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/).  
 
+Instructions on setting up GitHub Token for Winget-Create can be found [here](../README.md#github-personal-access-token-classic-permissions).
 ## Output 
 If you would like to write the file to disk rather than submit to the repository, you can pass in the **--output** command along with the file name to write to.
