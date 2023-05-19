@@ -167,6 +167,11 @@
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>Die vollständige Paketbeschreibung</value>
   </data>
+  <data name="DirectoriesFound_Message" xml:space="preserve">
+    <value>{0} in {1} gefundenen Verzeichnisse</value>
+    <comment>{0} - Will be replaced with the number of directories found in the cache folder
+{1} - Will be replaced with the path to the cache folder</comment>
+  </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>FERTIG</value>
   </data>
@@ -209,6 +214,10 @@
   <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
     <value>Suchen Sie nach einem vorhandenen Manifest und aktualisieren Sie die URL des Installationsprogramms und die Version</value>
     <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
+  </data>
+  <data name="Example_UpdateCommand_SubmitToGitHub" xml:space="preserve">
+    <value>Vorhandenes Manifest aktualisieren und PR an GitHub übermitteln</value>
+    <comment>Describes a usage scenario for the Update Command that updates an existing manifest and submits a pull request to GitHub.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>Liste der Dateierweiterungen, die das Paket unterstützen könnte</value>
@@ -347,6 +356,9 @@
   </data>
   <data name="Publisher_KeywordDescription" xml:space="preserve">
     <value>Der Name des Herausgebers |z. B. Microsoft|</value>
+  </data>
+  <data name="PullRequestTitle_HelpText" xml:space="preserve">
+    <value>Der Titel des an GitHub übermittelten Pull Requests. Standard ist "{PackageId} Version {Version}"</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>Der Pull-Request kann hier gefunden werden: {0}</value>
@@ -627,9 +639,9 @@
     <comment>{0} - Will be replaced with the number of installers found in the cache folder
 {1} - Will be replaced with the path to the downloaded installer cache folder</comment>
   </data>
-  <data name="DeletingInstaller_Message" xml:space="preserve">
+  <data name="DeletingItem_Message" xml:space="preserve">
     <value>{0} wird gelöscht.</value>
-    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+    <comment>{0} - Will be replaced with the name of the item to be deleted.</comment>
   </data>
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>Der Installercache wurde bereinigt.</value>
@@ -787,15 +799,15 @@
     <value>Die Downloadanforderung kann nicht abgeschlossen werden, da für die Verbindung ein Timeout aufgetreten ist. Überprüfen Sie die Installer-URL, und versuchen Sie es noch mal.</value>
   </data>
   <data name="ArchitectureOverride_Warning" xml:space="preserve">
-    <value>Wenn das angegebene Installationsprogramm nicht mit einem vorhandenen Installer übereinstimmt, auch wenn die Architektur überschrieben wird, müssen Sie das vorhandene Manifest möglicherweise manuell bearbeiten. Stellen Sie sicher, dass das vorhandene Manifest über einen einzelnen Installer verfügt, der der überschreibenden Architektur und dem Installertyp des neuen Installers entspricht. Um ein vorhandenes Manifest zu ändern, verwenden Sie das Flag "-interactive" mit dem Updatebefehl, und übermitteln Sie die neuen Änderungen. Nachdem die Änderungen veröffentlicht wurden, versuchen Sie es noch mal.</value>
+    <value>Wenn das angegebene Installationsprogramm nicht mit einem vorhandenen Installationsprogramm übereinstimmt, auch wenn die Architektur überschrieben wird, müssen Sie den Bereich möglicherweise überschreiben oder das vorhandene Manifest manuell bearbeiten. Stellen Sie sicher, dass das vorhandene Manifest über einen einzelnen Installer verfügt, der der überschreibenden Architektur, dem Bereich und dem Installertyp des neuen Installers entspricht. Um ein vorhandenes Manifest zu ändern, verwenden Sie das Flag "-interactive" mit dem Updatebefehl, und übermitteln Sie die neuen Änderungen. Nachdem die Änderungen veröffentlicht wurden, versuchen Sie es noch mal.</value>
     <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
   </data>
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Es wurden mehrere Architekturen erkannt. Für eine Außerkraftsetzung kann nur eine Architektur angegeben werden.</value>
   </data>
-  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
-    <value>Die angegebene Überschreibungsarchitektur {0} kann nicht analysiert werden.</value>
-    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  <data name="UnableToParseOverride_Error" xml:space="preserve">
+    <value>Die angegebene Überbrückung {0} kann nicht analysiert werden.</value>
+    <comment>{0} - represents the override string that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Überschreiben der Architektur eines Installationsprogramms</value>
@@ -946,6 +958,11 @@
   <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
     <value>Der optionale Parameter für aufrufbare Dateien</value>
   </data>
+  <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
+    <value>Geschachtelter Installer „{0}“ wird aus {1} analysiert</value>
+    <comment>{0} - will be replaced with RelativeFilePath of the nested installer
+    {1} - will be replaced by the InstallerUrl</comment>
+  </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>Geschachtelter Installer nicht im ZIP-Archiv gefunden: {0}</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
@@ -976,5 +993,20 @@
   </data>
   <data name="NetworkConnectionFailure_Message" xml:space="preserve">
     <value>Fehler beim Herstellen einer Verbindung mit GitHub. Überprüfen Sie Ihre Netzwerkverbindung.</value>
+  </data>
+  <data name="MultipleScopeOverride_Error" xml:space="preserve">
+    <value>Es wurden mehrere Bereiche erkannt. Für eine Außerkraftsetzung kann nur ein Bereich angegeben werden.</value>
+  </data>
+  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
+    <value>Für die folgende Installer-URL wurden zu viele Außerkraftsetzungen angegeben: {0}</value>
+    <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
+  </data>
+  <data name="OverridingScope_Warning" xml:space="preserve">
+    <value>Überschreiben von {0} mit Bereich {1}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding scope</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
+    <value>Überschreiben des Bereichs eines Installationsprogramms</value>
   </data>
 </root>

@@ -167,6 +167,11 @@
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>完整程序包说明</value>
   </data>
+  <data name="DirectoriesFound_Message" xml:space="preserve">
+    <value>在 {1} 中找到 {0} 目录</value>
+    <comment>{0} - Will be replaced with the number of directories found in the cache folder
+{1} - Will be replaced with the path to the cache folder</comment>
+  </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>完成</value>
   </data>
@@ -209,6 +214,10 @@
   <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
     <value>搜索现有清单并更新安装程序 URL 和版本</value>
     <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
+  </data>
+  <data name="Example_UpdateCommand_SubmitToGitHub" xml:space="preserve">
+    <value>更新现有清单并将 PR 提交到 GitHub</value>
+    <comment>Describes a usage scenario for the Update Command that updates an existing manifest and submits a pull request to GitHub.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>程序包可以支持的文件扩展名列表</value>
@@ -347,6 +356,9 @@
   </data>
   <data name="Publisher_KeywordDescription" xml:space="preserve">
     <value>发布者名 |例如 Microsoft|</value>
+  </data>
+  <data name="PullRequestTitle_HelpText" xml:space="preserve">
+    <value>提交到 GitHub 的拉取请求标题。默认值为“{PackageId}版本{Version}”</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>可在以下位置找到拉取请求: {0}</value>
@@ -627,9 +639,9 @@
     <comment>{0} - Will be replaced with the number of installers found in the cache folder
 {1} - Will be replaced with the path to the downloaded installer cache folder</comment>
   </data>
-  <data name="DeletingInstaller_Message" xml:space="preserve">
+  <data name="DeletingItem_Message" xml:space="preserve">
     <value>正在删除 {0}</value>
-    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+    <comment>{0} - Will be replaced with the name of the item to be deleted.</comment>
   </data>
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>安装程序缓存已清理。</value>
@@ -787,15 +799,15 @@
     <value>无法完成下载请求，因为连接已超时。请验证安装程序 URL，然后重试。</value>
   </data>
   <data name="ArchitectureOverride_Warning" xml:space="preserve">
-    <value>如果提供的安装程序在替代体系结构时仍无法匹配现有安装程序，则可能需要手动编辑现有清单。请确保现有清单具有与新安装程序的替代体系结构和安装程序类型匹配的单个安装程序。若要修改现有清单，请将 "--interactive" 标志与更新命令一起使用，并提交新更改。发布更改后，请重试。</value>
+    <value>如果提供的安装程序在替代体系结构时仍无法匹配现有安装程序，则可能需要替代范围或手动编辑现有清单。请确保现有清单具有与新安装程序的替代体系结构、范围和安装程序类型匹配的单个安装程序。若要修改现有清单，请将“--interactive”标志与更新命令一起使用，并提交新更改。发布更改后，请重试。</value>
     <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
   </data>
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>检测到多个体系结构。只能为替代指定一个体系结构。</value>
   </data>
-  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
-    <value>无法分析指定的替代体系结构{0}。</value>
-    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  <data name="UnableToParseOverride_Error" xml:space="preserve">
+    <value>无法分析指定的替代 {0}。</value>
+    <comment>{0} - represents the override string that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>替代安装程序的体系结构</value>
@@ -946,6 +958,11 @@
   <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
     <value>可调用文件的可选参数</value>
   </data>
+  <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
+    <value>正在从{1}分析嵌套安装程序“{0}”</value>
+    <comment>{0} - will be replaced with RelativeFilePath of the nested installer
+    {1} - will be replaced by the InstallerUrl</comment>
+  </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>在 zip 存档中找不到嵌套安装程序： {0}</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
@@ -976,5 +993,20 @@
   </data>
   <data name="NetworkConnectionFailure_Message" xml:space="preserve">
     <value>未能连接到 GitHub。请检查网络连接。</value>
+  </data>
+  <data name="MultipleScopeOverride_Error" xml:space="preserve">
+    <value>检测到多个作用域。只能为替代指定一个作用域。</value>
+  </data>
+  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
+    <value>为以下安装程序 URL 指定的替代太多： {0}</value>
+    <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
+  </data>
+  <data name="OverridingScope_Warning" xml:space="preserve">
+    <value>使用范围{1}替代{0}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding scope</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
+    <value>替代重写安装程序的范围</value>
   </data>
 </root>
