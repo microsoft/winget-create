@@ -167,6 +167,11 @@
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>Descripción completa del paquete</value>
   </data>
+  <data name="DirectoriesFound_Message" xml:space="preserve">
+    <value>{0} directorios encontrados en {1}</value>
+    <comment>{0} - Will be replaced with the number of directories found in the cache folder
+{1} - Will be replaced with the path to the cache folder</comment>
+  </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>LISTO</value>
   </data>
@@ -209,6 +214,10 @@
   <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
     <value>Buscar un manifiesto existente y actualizar la dirección URL y la versión del instalador</value>
     <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
+  </data>
+  <data name="Example_UpdateCommand_SubmitToGitHub" xml:space="preserve">
+    <value>Actualizar un manifiesto existente y enviar la solicitud de incorporación de cambios a GitHub</value>
+    <comment>Describes a usage scenario for the Update Command that updates an existing manifest and submits a pull request to GitHub.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>Lista de extensiones de archivo que puede admitir el paquete</value>
@@ -347,6 +356,9 @@
   </data>
   <data name="Publisher_KeywordDescription" xml:space="preserve">
     <value>El nombre del editor |por ejemplo, Microsoft|</value>
+  </data>
+  <data name="PullRequestTitle_HelpText" xml:space="preserve">
+    <value>Título de la solicitud de incorporación de cambios enviada a GitHub. El valor predeterminado es "{PackageId} versión {Version}"</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>La solicitud de incorporación de cambios se puede encontrar aquí: {0}</value>
@@ -627,9 +639,9 @@
     <comment>{0} - Will be replaced with the number of installers found in the cache folder
 {1} - Will be replaced with the path to the downloaded installer cache folder</comment>
   </data>
-  <data name="DeletingInstaller_Message" xml:space="preserve">
+  <data name="DeletingItem_Message" xml:space="preserve">
     <value>Eliminando {0}</value>
-    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+    <comment>{0} - Will be replaced with the name of the item to be deleted.</comment>
   </data>
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>Caché del instalador limpiada.</value>
@@ -787,15 +799,15 @@
     <value>No se puede completar la solicitud de descarga porque se agotó el tiempo de espera de la conexión. Compruebe la dirección URL del instalador e inténtelo de nuevo.</value>
   </data>
   <data name="ArchitectureOverride_Warning" xml:space="preserve">
-    <value>Si el instalador proporcionado no coincide con un instalador existente incluso al invalidar la arquitectura, es posible que tenga que editar el manifiesto existente manualmente. Asegúrese de que el manifiesto existente tiene un único instalador que coincida con la arquitectura de invalidación y el tipo de instalador del nuevo instalador. Para modificar un manifiesto existente, use la marca "--interactive" con el comando actualizar y envíe los nuevos cambios. Una vez publicados los cambios, vuelva a intentarlo.</value>
+    <value>Si el instalador proporcionado no coincide con un instalador existente incluso al invalidar la arquitectura, es posible que tenga que invalidar el ámbito o editar el manifiesto existente manualmente. Asegúrese de que el manifiesto existente tiene un único instalador que coincida con la arquitectura de invalidación, el ámbito y el tipo de instalador del nuevo instalador. Para modificar un manifiesto existente, use la marca "--interactivo" con el comando update y envíe los nuevos cambios. Una vez publicados los cambios, vuelva a intentarlo.</value>
     <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
   </data>
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Se detectaron varias arquitecturas. Solo se puede especificar una arquitectura para una invalidación.</value>
   </data>
-  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
-    <value>No se puede analizar la arquitectura de invalidación especificada {0}.</value>
-    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  <data name="UnableToParseOverride_Error" xml:space="preserve">
+    <value>No se puede analizar la invalidación especificada {0}.</value>
+    <comment>{0} - represents the override string that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Invalidar la arquitectura de un instalador</value>
@@ -946,6 +958,11 @@
   <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
     <value>Parámetro opcional para los archivos invocables</value>
   </data>
+  <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
+    <value>Analizando instalador anidado '{0}' desde {1}</value>
+    <comment>{0} - will be replaced with RelativeFilePath of the nested installer
+    {1} - will be replaced by the InstallerUrl</comment>
+  </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>No se encontró el instalador anidado en el archivo zip: {0}</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
@@ -976,5 +993,20 @@
   </data>
   <data name="NetworkConnectionFailure_Message" xml:space="preserve">
     <value>No se pudo conectar con GitHub. Comprueba la conexión de red.</value>
+  </data>
+  <data name="MultipleScopeOverride_Error" xml:space="preserve">
+    <value>Se detectaron varios ámbitos. Solo se puede especificar un ámbito para una invalidación.</value>
+  </data>
+  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
+    <value>Se especificaron demasiadas invalidaciones para la siguiente dirección URL del instalador: {0}</value>
+    <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
+  </data>
+  <data name="OverridingScope_Warning" xml:space="preserve">
+    <value>Invalidación {0}con ámbito{1}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding scope</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
+    <value>Invalidar el ámbito de un instalador</value>
   </data>
 </root>

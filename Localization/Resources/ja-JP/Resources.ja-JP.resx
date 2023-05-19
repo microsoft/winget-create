@@ -167,6 +167,11 @@
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>完全なパッケージの説明</value>
   </data>
+  <data name="DirectoriesFound_Message" xml:space="preserve">
+    <value>{1} に {0} 個のディレクトリが見つかりました</value>
+    <comment>{0} - Will be replaced with the number of directories found in the cache folder
+{1} - Will be replaced with the path to the cache folder</comment>
+  </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>完了</value>
   </data>
@@ -209,6 +214,10 @@
   <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
     <value>既存のマニフェストを検索し、インストーラー URL とバージョンを更新します</value>
     <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
+  </data>
+  <data name="Example_UpdateCommand_SubmitToGitHub" xml:space="preserve">
+    <value>既存のマニフェストを更新し、GitHub に PR を送信する</value>
+    <comment>Describes a usage scenario for the Update Command that updates an existing manifest and submits a pull request to GitHub.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>パッケージでサポートされているファイル拡張子の一覧</value>
@@ -347,6 +356,9 @@
   </data>
   <data name="Publisher_KeywordDescription" xml:space="preserve">
     <value>発行元名 | 例: Microsoft|</value>
+  </data>
+  <data name="PullRequestTitle_HelpText" xml:space="preserve">
+    <value>GitHub に送信されたpull requestのタイトル。既定値は "{PackageId} バージョン {Version}" です</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>プル リクエストはここにあります: {0}</value>
@@ -627,9 +639,9 @@
     <comment>{0} - Will be replaced with the number of installers found in the cache folder
 {1} - Will be replaced with the path to the downloaded installer cache folder</comment>
   </data>
-  <data name="DeletingInstaller_Message" xml:space="preserve">
+  <data name="DeletingItem_Message" xml:space="preserve">
     <value>{0} を削除します</value>
-    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+    <comment>{0} - Will be replaced with the name of the item to be deleted.</comment>
   </data>
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>インストーラーのキャッシュがクリーンアップされました。</value>
@@ -787,15 +799,15 @@
     <value>接続がタイムアウトしたため、ダウンロード要求を完了できません。インストーラーの URL を確認して、もう一度お試しください。</value>
   </data>
   <data name="ArchitectureOverride_Warning" xml:space="preserve">
-    <value>指定したインストーラーが、アーキテクチャをオーバーライドしても既存のインストーラーと一致しない場合は、既存のマニフェストを手動で編集する必要があります。既存のマニフェストに、新しいインストーラーのオーバーライド アーキテクチャとインストーラーの種類に一致するインストーラーが 1 つ存在することを確認してください。既存のマニフェストを変更するには、更新コマンドで '--interactive' フラグを使用して、新しい変更を送信します。変更が公開されたら、もう一度お試しください。</value>
+    <value>指定したインストーラーが、アーキテクチャをオーバーライドしても既存のインストーラーと一致しない場合は、スコープをオーバーライドしたり既存のマニフェストを手動で編集したりする必要があります。既存のマニフェストに、新しいインストーラーのオーバーライド アーキテクチャ、スコープおよびインストーラーの種類に一致するインストーラーが 1 つ存在することを確認してください。既存のマニフェストを変更するには、更新コマンドで '--interactive' フラグを使用して、新しい変更を送信します。変更が公開されたら、もう一度お試しください。</value>
     <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
   </data>
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>複数のアーキテクチャが検出されました。オーバーライドに指定できるアーキテクチャは 1 つだけです。</value>
   </data>
-  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
-    <value>指定されたオーバーライド アーキテクチャ {0}を解析できません。</value>
-    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  <data name="UnableToParseOverride_Error" xml:space="preserve">
+    <value>指定されたオーバーライド {0} を解析できません。</value>
+    <comment>{0} - represents the override string that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>インストーラーのアーキテクチャをオーバーライドする</value>
@@ -946,6 +958,11 @@
   <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
     <value>呼び出し可能なファイルのオプションのパラメーター</value>
   </data>
+  <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
+    <value>入れ子になったインストーラー '{0}' を {1} から解析しています</value>
+    <comment>{0} - will be replaced with RelativeFilePath of the nested installer
+    {1} - will be replaced by the InstallerUrl</comment>
+  </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>入れ子になったインストーラーが次の zip アーカイブ内で見つかりませんでした: {0}</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
@@ -976,5 +993,20 @@
   </data>
   <data name="NetworkConnectionFailure_Message" xml:space="preserve">
     <value>GitHub に接続できませんでした。ネットワーク接続を確認してください。</value>
+  </data>
+  <data name="MultipleScopeOverride_Error" xml:space="preserve">
+    <value>複数のスコープが検出されました。オーバーライドに指定できるスコープは 1 つだけです。</value>
+  </data>
+  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
+    <value>次のインストーラー URL に指定されたオーバーライドが多すぎます: {0}</value>
+    <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
+  </data>
+  <data name="OverridingScope_Warning" xml:space="preserve">
+    <value>スコープ {1} で {0} をオーバーライドします</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding scope</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
+    <value>インストーラーのスコープをオーバーライドする</value>
   </data>
 </root>
