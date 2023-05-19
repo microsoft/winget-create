@@ -321,8 +321,9 @@ namespace Microsoft.WingetCreateCore
 
         /// <summary>
         /// Finds an existing installer that matches the new installer by checking the installerType and the following:
-        /// 1. Matching based on architecture specified as an override.
-        /// 2. Matching based on architecture detected from URL string or binary.
+        /// 1. Matching based on architecture specified as an override if present.
+        /// 2. Matching based on architecture detected from URL string if present.
+        /// 3. If no singular match is found based on architecture, use scope to narrow down the match results if a scope override is present.
         /// </summary>
         /// <param name="newInstaller">New installer to be matched.</param>
         /// <param name="existingInstallers">List of existing installers to be matched.</param>
@@ -351,44 +352,63 @@ namespace Microsoft.WingetCreateCore
                 i => IsCompatibleInstallerType(i.InstallerType ?? installerManifest.InstallerType, newInstaller.InstallerType));
             }
 
-            var overrideArchMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
-            if (overrideArchMatches.Count() == 1)
+            // Match installers using the installer architecture with the following priority: OverrideArchitecture > UrlArchitecture > BinaryArchitecture.
+            IEnumerable<Installer> architectureMatches;
+            if (installerMetadata.OverrideArchitecture.HasValue)
             {
-                return overrideArchMatches.Single();
+                architectureMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.OverrideArchitecture);
+            }
+            else
+            {
+                if (installerMetadata.UrlArchitecture.HasValue)
+                {
+                    architectureMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.UrlArchitecture);
+                }
+                else
+                {
+                    var binaryArchitecture = installerMetadata.BinaryArchitecture ?? newInstaller.Architecture;
+                    architectureMatches = installerTypeMatches.Where(i => i.Architecture == binaryArchitecture);
+                }
             }
 
-            var binaryArchitecture = installerMetadata.BinaryArchitecture ?? newInstaller.Architecture;
-
-            // Msixbundle installers can have multiple installers with different architectures
-            // For those installers, the binaryArchitecture will be detected as null, therefore we default to the architecture specified in the newInstaller object.
-            var binaryArchMatches = installerTypeMatches.Where(i => i.Architecture == binaryArchitecture);
-            var urlArchMatches = installerTypeMatches.Where(i => i.Architecture == installerMetadata.UrlArchitecture);
-
-            int numOfBinaryArchMatches = binaryArchMatches.Count();
-            int numOfUrlArchMatches = urlArchMatches.Count();
-
-            // Count > 1 indicates multiple matches were found. Count == 0 indicates no matches were found.
-            // Since url string matching isn't always reliable, failing to find a match is okay.
-            // We only want to show an error if a string match finds multiple matches.
-            // If url string matching fails to find a match, show all errors that may occur from ArchAndTypeMatches.
-            if (numOfUrlArchMatches > 1)
+            int architectureMatchesCount = architectureMatches.Count();
+            if (architectureMatchesCount == 1)
             {
-                multipleMatchedInstallers.Add(newInstaller);
+                return architectureMatches.Single();
             }
-            else if (numOfUrlArchMatches == 0)
+            else if (architectureMatchesCount == 0)
             {
-                if (numOfBinaryArchMatches == 0)
+                unmatchedInstallers.Add(newInstaller);
+            }
+            else
+            {
+                // If there are multiple architecture matches, use scope to further narrow down the matches (if present).
+                IEnumerable<Installer> scopeMatches;
+                if (installerMetadata.OverrideScope.HasValue)
+                {
+                    scopeMatches = architectureMatches.Where(i => i.Scope == installerMetadata.OverrideScope);
+                }
+                else
+                {
+                    scopeMatches = architectureMatches;
+                }
+
+                int scopeMatchesCount = scopeMatches.Count();
+                if (scopeMatchesCount == 1)
+                {
+                    return scopeMatches.Single();
+                }
+                else if (scopeMatchesCount == 0)
                 {
                     unmatchedInstallers.Add(newInstaller);
                 }
-                else if (numOfBinaryArchMatches > 1)
+                else
                 {
                     multipleMatchedInstallers.Add(newInstaller);
                 }
             }
 
-            var matchingExistingInstaller = numOfUrlArchMatches == 1 ? urlArchMatches.Single() : numOfBinaryArchMatches == 1 ? binaryArchMatches.Single() : null;
-            return matchingExistingInstaller;
+            return null;
         }
 
         /// <summary>

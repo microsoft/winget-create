@@ -1,6 +1,6 @@
-﻿PackageIdentifier: TestPublisher.MatchWithInstallerUrl
+﻿PackageIdentifier: TestPublisher.MatchWithArchFromInstallerUrl
 PackageVersion: 0.1.2
-PackageName: Match With Installer Url
+PackageName: Match With Arch From Installer Url
 Publisher: Test publisher
 License: MIT
 ShortDescription: A manifest used to test the update command by matching installers based on the URL.

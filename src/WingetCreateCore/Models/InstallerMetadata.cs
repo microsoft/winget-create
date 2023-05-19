@@ -42,6 +42,11 @@ namespace Microsoft.WingetCreateCore.Models
         public Architecture? OverrideArchitecture { get; set; }
 
         /// <summary>
+        /// Gets or sets the scope specified as an override.
+        /// </summary>
+        public Scope? OverrideScope { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the installer came from a zip.
         /// </summary>
         public bool IsZipFile { get; set; } = false;

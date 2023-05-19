@@ -43,6 +43,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 yield return new Example(Resources.Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>" }, Version = "<Version>" });
                 yield return new Example(Resources.Example_UpdateCommand_SaveAndPublish, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>", OutputDir = "<OutputDirectory>", GitHubToken = "<GitHubPersonalAccessToken>" });
                 yield return new Example(Resources.Example_UpdateCommand_OverrideArchitecture, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>|<InstallerArchitecture>" }, Version = "<Version>" });
+                yield return new Example(Resources.Example_UpdateCommand_OverrideScope, new UpdateCommand { Id = "<PackageIdentifier>", InstallerUrls = new string[] { "<InstallerUrl1>|<InstallerScope>" }, Version = "<Version>" });
                 yield return new Example(Resources.Example_UpdateCommand_SubmitToGitHub, new UpdateCommand { Id = "<PackageIdentifier>", Version = "<Version>", InstallerUrls = new string[] { "<InstallerUrl1>", "<InstallerUrl2>" }, SubmitToGitHub = true, GitHubToken = "<GitHubPersonalAccessToken>" });
             }
         }
@@ -231,16 +232,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().ToArray();
             }
 
-            // Generate list of InstallerUpdate objects and parse out any specified architecture overrides.
-            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForArchOverride(this.InstallerUrls.Select(i => i.Trim()).ToList());
+            // Generate list of InstallerUpdate objects and parse out any specified architecture or scope overrides.
+            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForOverrides(this.InstallerUrls.Select(i => i.Trim()).ToList());
 
-            // If the installer update list is null there was an issue when parsing for architecture override.
+            // If the installer update list is null there was an issue when parsing for architecture or scope override.
             if (installerMetadataList == null)
             {
                 return null;
             }
 
-            // Reassign list with parsed installer URLs without architecture overrides.
+            // Reassign list with parsed installer URLs without architecture or scope overrides.
             this.InstallerUrls = installerMetadataList.Select(x => x.InstallerUrl).ToList();
 
             foreach (var installerUpdate in installerMetadataList)
@@ -248,6 +249,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (installerUpdate.OverrideArchitecture.HasValue)
                 {
                     Logger.WarnLocalized(nameof(Resources.OverridingArchitecture_Warning), installerUpdate.InstallerUrl, installerUpdate.OverrideArchitecture);
+                }
+
+                if (installerUpdate.OverrideScope.HasValue)
+                {
+                    Logger.WarnLocalized(nameof(Resources.OverridingScope_Warning), installerUpdate.InstallerUrl, installerUpdate.OverrideScope);
                 }
             }
 
@@ -561,11 +567,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Parse out architecture overrides included in the installer URLs and returns the parsed list of installer URLs.
+        /// Parses the installer urls for any architecture or scope overrides.
         /// </summary>
         /// <param name="installerUrlsToBeParsed">List of installer URLs to be parsed for architecture overrides.</param>
         /// <returns>List of <see cref="InstallerMetadata"/> helper objects used for updating the installers.</returns>
-        private List<InstallerMetadata> ParseInstallerUrlsForArchOverride(List<string> installerUrlsToBeParsed)
+        private List<InstallerMetadata> ParseInstallerUrlsForOverrides(List<string> installerUrlsToBeParsed)
         {
             List<InstallerMetadata> installerMetadataList = new List<InstallerMetadata>();
             foreach (string item in installerUrlsToBeParsed)
@@ -577,24 +583,55 @@ namespace Microsoft.WingetCreateCLI.Commands
                     // '|' character indicates that an architecture override can be parsed from the installer.
                     string[] installerUrlOverride = item.Split('|');
 
-                    if (installerUrlOverride.Length > 2)
+                    // There can be at most 3 elements at one time (installerUrl|archOverride|scopeOverride)
+                    if (installerUrlOverride.Length > 3)
                     {
-                        Logger.ErrorLocalized(nameof(Resources.MultipleArchitectureOverride_Error));
+                        Logger.ErrorLocalized(nameof(Resources.OverrideLimitExceeded_Error), item);
                         return null;
                     }
 
-                    string installerUrl = installerUrlOverride[0];
-                    string overrideArchString = installerUrlOverride[1];
-                    Architecture? overrideArch = overrideArchString.ToEnumOrDefault<Architecture>();
-                    if (overrideArch.HasValue)
+                    installerMetadata.InstallerUrl = installerUrlOverride[0];
+
+                    bool archOverridePresent = false;
+                    bool scopeOverridePresent = false;
+
+                    for (int i = 1; i < installerUrlOverride.Length; i++)
                     {
-                        installerMetadata.InstallerUrl = installerUrl;
-                        installerMetadata.OverrideArchitecture = overrideArch.Value;
-                    }
-                    else
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.UnableToParseArchOverride_Error), overrideArchString);
-                        return null;
+                        string overrideString = installerUrlOverride[i];
+                        Architecture? overrideArch = overrideString.ToEnumOrDefault<Architecture>();
+                        Scope? overrideScope = overrideString.ToEnumOrDefault<Scope>();
+
+                        if (overrideArch.HasValue)
+                        {
+                            if (archOverridePresent)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.MultipleArchitectureOverride_Error));
+                                return null;
+                            }
+                            else
+                            {
+                                archOverridePresent = true;
+                                installerMetadata.OverrideArchitecture = overrideArch.Value;
+                            }
+                        }
+                        else if (overrideScope.HasValue)
+                        {
+                            if (scopeOverridePresent)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.MultipleScopeOverride_Error));
+                                return null;
+                            }
+                            else
+                            {
+                                scopeOverridePresent = true;
+                                installerMetadata.OverrideScope = overrideScope.Value;
+                            }
+                        }
+                        else
+                        {
+                            Logger.ErrorLocalized(nameof(Resources.UnableToParseOverride_Error), overrideString);
+                            return null;
+                        }
                     }
                 }
                 else
@@ -675,7 +712,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             while (true)
             {
-                string url = Prompt.Input<string>(Resources.NewInstallerUrl_Message, null, new[] { FieldValidation.ValidateProperty(newInstaller, nameof(Installer.InstallerUrl)) });
+                string url = Prompt.Input<string>(Resources.NewInstallerUrl_Message, null, new[] { FieldValidation.ValidateProperty(newInstaller, nameof(Installer.InstallerUrl)) }).Trim();
                 string packageFile = await DownloadPackageFile(url);
 
                 if (string.IsNullOrEmpty(packageFile))

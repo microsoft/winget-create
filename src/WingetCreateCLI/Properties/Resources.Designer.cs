@@ -205,7 +205,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If the installer you provided fails to match an existing installer even when overriding the architecture, you may need to edit the existing manifest manually. Make sure that the existing manifest has a single installer that matches the overriding architecture and installer type of the new installer. To modify an existing manifest, use the &apos;--interactive&apos; flag with the update command and submit the new changes. Once the changes are published, please try again..
+        ///   Looks up a localized string similar to If the installer you provided fails to match an existing installer even when overriding the architecture, you may need to override the scope or edit the existing manifest manually. Make sure that the existing manifest has a single installer that matches the overriding architecture, scope and installer type of the new installer. To modify an existing manifest, use the &apos;--interactive&apos; flag with the update command and submit the new changes. Once the changes are published, please try again..
         /// </summary>
         public static string ArchitectureOverride_Warning {
             get {
@@ -412,20 +412,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deleting {0}.
-        /// </summary>
-        public static string DeletingItem_Message {
-            get {
-                return ResourceManager.GetString("DeletingItem_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cached token was invalid, deleting token from cache....
         /// </summary>
         public static string DeletingInvalidCachedToken_Message {
             get {
                 return ResourceManager.GetString("DeletingInvalidCachedToken_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting {0}.
+        /// </summary>
+        public static string DeletingItem_Message {
+            get {
+                return ResourceManager.GetString("DeletingItem_Message", resourceCulture);
             }
         }
         
@@ -455,18 +455,16 @@ namespace Microsoft.WingetCreateCLI.Properties {
                 return ResourceManager.GetString("DetectedArchMismatch_Message", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to {0} directories found in {1}.
         /// </summary>
-        public static string DirectoriesFound_Message
-        {
-            get
-            {
+        public static string DirectoriesFound_Message {
+            get {
                 return ResourceManager.GetString("DirectoriesFound_Message", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Would you like to discard this update and start over?.
         /// </summary>
@@ -720,6 +718,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Override the scope of an installer.
+        /// </summary>
+        public static string Example_UpdateCommand_OverrideScope {
+            get {
+                return ResourceManager.GetString("Example_UpdateCommand_OverrideScope", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save and publish updated manifest.
         /// </summary>
         public static string Example_UpdateCommand_SaveAndPublish {
@@ -738,16 +745,14 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update an existing manifest and submit PR to GitHub
+        ///   Looks up a localized string similar to Update an existing manifest and submit PR to GitHub.
         /// </summary>
-        public static string Example_UpdateCommand_SubmitToGitHub
-        {
-            get
-            {
+        public static string Example_UpdateCommand_SubmitToGitHub {
+            get {
                 return ResourceManager.GetString("Example_UpdateCommand_SubmitToGitHub", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The excluded installer target markets.
         /// </summary>
@@ -1451,11 +1456,31 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multiple scopes detected. Only one scope can be specified for an override..
+        /// </summary>
+        public static string MultipleScopeOverride_Error {
+            get {
+                return ResourceManager.GetString("MultipleScopeOverride_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package name |e.g. Visual Studio|.
         /// </summary>
         public static string Name_KeywordDescription {
             get {
                 return ResourceManager.GetString("Name_KeywordDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing nested installer &apos;{0}&apos; from {1}.
+        /// </summary>
+        public static string NestedInstallerParsing_HelpText
+        {
+            get
+            {
+                return ResourceManager.GetString("NestedInstallerParsing_HelpText", resourceCulture);
             }
         }
         
@@ -1622,11 +1647,29 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Too many overrides specified for the following installer URL: {0}.
+        /// </summary>
+        public static string OverrideLimitExceeded_Error {
+            get {
+                return ResourceManager.GetString("OverrideLimitExceeded_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Overriding {0} with architecture {1}.
         /// </summary>
         public static string OverridingArchitecture_Warning {
             get {
                 return ResourceManager.GetString("OverridingArchitecture_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overriding {0} with scope {1}.
+        /// </summary>
+        public static string OverridingScope_Warning {
+            get {
+                return ResourceManager.GetString("OverridingScope_Warning", resourceCulture);
             }
         }
         
@@ -1838,7 +1881,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub. Default is "{PackageId} version {Version}"
+        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub. Default is &quot;{PackageId} version {Version}&quot;.
         /// </summary>
         public static string PullRequestTitle_HelpText {
             get {
@@ -2288,11 +2331,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to parse the specified override architecture {0}..
+        ///   Looks up a localized string similar to Unable to parse the specified override {0}..
         /// </summary>
-        public static string UnableToParseArchOverride_Error {
+        public static string UnableToParseOverride_Error {
             get {
-                return ResourceManager.GetString("UnableToParseArchOverride_Error", resourceCulture);
+                return ResourceManager.GetString("UnableToParseOverride_Error", resourceCulture);
             }
         }
         

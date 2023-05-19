@@ -225,8 +225,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             if (mismatchedArchInstallers.Any())
             {
-                Logger.WarnLocalized(nameof(Resources.DetectedArchMismatch_Message));
                 Console.WriteLine();
+                Logger.WarnLocalized(nameof(Resources.DetectedArchMismatch_Message));
                 foreach (var mismatch in mismatchedArchInstallers)
                 {
                     Logger.WarnLocalized(nameof(Resources.InstallerBinaryMismatch_Message), mismatch.UrlArchitecture, mismatch.BinaryArchitecture);

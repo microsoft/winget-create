@@ -799,15 +799,15 @@
     <value>Unable to complete the download request as the connection has timed out. Please verify your installer URL and try again.</value>
   </data>
   <data name="ArchitectureOverride_Warning" xml:space="preserve">
-    <value>If the installer you provided fails to match an existing installer even when overriding the architecture, you may need to edit the existing manifest manually. Make sure that the existing manifest has a single installer that matches the overriding architecture and installer type of the new installer. To modify an existing manifest, use the '--interactive' flag with the update command and submit the new changes. Once the changes are published, please try again.</value>
+    <value>If the installer you provided fails to match an existing installer even when overriding the architecture, you may need to override the scope or edit the existing manifest manually. Make sure that the existing manifest has a single installer that matches the overriding architecture, scope and installer type of the new installer. To modify an existing manifest, use the '--interactive' flag with the update command and submit the new changes. Once the changes are published, please try again.</value>
     <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
   </data>
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Multiple architectures detected. Only one architecture can be specified for an override.</value>
   </data>
-  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
-    <value>Unable to parse the specified override architecture {0}.</value>
-    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  <data name="UnableToParseOverride_Error" xml:space="preserve">
+    <value>Unable to parse the specified override {0}.</value>
+    <comment>{0} - represents the override string that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Override the architecture of an installer</value>
@@ -958,6 +958,11 @@
   <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
     <value>The optional parameter for invocable files</value>
   </data>
+  <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
+    <value>Parsing nested installer '{0}' from {1}</value>
+    <comment>{0} - will be replaced with RelativeFilePath of the nested installer
+    {1} - will be replaced by the InstallerUrl</comment>
+  </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>Nested installer not found in zip archive: {0}</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
@@ -988,5 +993,20 @@
   </data>
   <data name="NetworkConnectionFailure_Message" xml:space="preserve">
     <value>Failed to connect to GitHub. Check your network connection.</value>
+  </data>
+  <data name="MultipleScopeOverride_Error" xml:space="preserve">
+    <value>Multiple scopes detected. Only one scope can be specified for an override.</value>
+  </data>
+  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
+    <value>Too many overrides specified for the following installer URL: {0}</value>
+    <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
+  </data>
+  <data name="OverridingScope_Warning" xml:space="preserve">
+    <value>Overriding {0} with scope {1}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding scope</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
+    <value>Override the scope of an installer</value>
   </data>
 </root>
