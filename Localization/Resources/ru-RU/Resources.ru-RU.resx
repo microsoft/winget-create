@@ -167,6 +167,11 @@
   <data name="Description_KeywordDescription" xml:space="preserve">
     <value>Полное описание пакета</value>
   </data>
+  <data name="DirectoriesFound_Message" xml:space="preserve">
+    <value>Каталогов найдено в {1}: {0}</value>
+    <comment>{0} - Will be replaced with the number of directories found in the cache folder
+{1} - Will be replaced with the path to the cache folder</comment>
+  </data>
   <data name="DoneSymbol_String" xml:space="preserve">
     <value>ГОТОВО</value>
   </data>
@@ -209,6 +214,10 @@
   <data name="Example_UpdateCommand_SearchAndUpdateVersionAndInstallerURL" xml:space="preserve">
     <value>Поиск существующего манифеста и обновление URL-адреса и версии установщика</value>
     <comment>Describes a usage scenario for the Update Command that pulls down a manifest by ID and updates the installer URL field and version field with the values provided by the user.</comment>
+  </data>
+  <data name="Example_UpdateCommand_SubmitToGitHub" xml:space="preserve">
+    <value>Обновить существующий манифеста и отправить PR в GitHub</value>
+    <comment>Describes a usage scenario for the Update Command that updates an existing manifest and submits a pull request to GitHub.</comment>
   </data>
   <data name="FileExtensions_KeywordDescription" xml:space="preserve">
     <value>Список расширений файлов, которые поддерживает пакет</value>
@@ -347,6 +356,9 @@
   </data>
   <data name="Publisher_KeywordDescription" xml:space="preserve">
     <value>Название издателя |например, Microsoft|</value>
+  </data>
+  <data name="PullRequestTitle_HelpText" xml:space="preserve">
+    <value>Название запроса на вытягивание, отправленного в GitHub. По умолчанию используется "{PackageId} версии {Version}"</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>Запрос на включение внесенных изменений можно найти здесь: {0}</value>
@@ -627,9 +639,9 @@
     <comment>{0} - Will be replaced with the number of installers found in the cache folder
 {1} - Will be replaced with the path to the downloaded installer cache folder</comment>
   </data>
-  <data name="DeletingInstaller_Message" xml:space="preserve">
+  <data name="DeletingItem_Message" xml:space="preserve">
     <value>Удаление {0}.</value>
-    <comment>{0} - Will be replaced with the name of the installer to be deleted.</comment>
+    <comment>{0} - Will be replaced with the name of the item to be deleted.</comment>
   </data>
   <data name="InstallerCacheCleaned_Message" xml:space="preserve">
     <value>Кэш с установщиками очищен.</value>
@@ -787,15 +799,15 @@
     <value>Не удалось выполнить запрос на скачивание, так как истекло время ожидания подключения. Проверьте URL-адрес установщика и повторите попытку.</value>
   </data>
   <data name="ArchitectureOverride_Warning" xml:space="preserve">
-    <value>Если указанный установщик не соответствует существующему установщику даже при переопределении архитектуры, может потребоваться изменить существующий манифест вручную. Убедитесь, что в существующем манифесте указан всего один установщик, совпадающий с переопределяющей архитектурой, а также указан тип нового установщика. Чтобы изменить существующий манифест, используйте команду обновления с флагом "--interactive" и отправьте новые изменения. После публикации изменений повторите попытку.</value>
+    <value>Если указанный установщик не соответствует существующему установщику даже при переопределении архитектуры, может потребоваться переопределить область или изменить существующий манифест вручную. Убедитесь, что в существующем манифесте указан только один установщик, совпадающий с новым установщиком по переопределяющей архитектуре, области и типу. Чтобы изменить существующий манифест, используйте команду обновления с флагом "--interactive" и отправьте новые изменения. После публикации изменений повторите попытку.</value>
     <comment>'--interactive' refers to a flag that can be included with the command-line arguments for this tool.</comment>
   </data>
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Обнаружено несколько архитектур. Для переопределения можно указать только одну архитектуру.</value>
   </data>
-  <data name="UnableToParseArchOverride_Error" xml:space="preserve">
-    <value>Не удалось проанализировать указанную архитектуру переопределения {0}.</value>
-    <comment>{0} - represents the override architecture that failed to parse.</comment>
+  <data name="UnableToParseOverride_Error" xml:space="preserve">
+    <value>Не удалось проанализировать указанное переопределение {0}.</value>
+    <comment>{0} - represents the override string that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Переопределить архитектуру установщика</value>
@@ -946,6 +958,11 @@
   <data name="InvocationParameter_KeywordDescription" xml:space="preserve">
     <value>Необязательный параметр для невызываемых файлов</value>
   </data>
+  <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
+    <value>Анализ вложенного установщика "{0}" из {1}</value>
+    <comment>{0} - will be replaced with RelativeFilePath of the nested installer
+    {1} - will be replaced by the InstallerUrl</comment>
+  </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>Вложенный установщик не найден в ZIP-архиве: {0}</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
@@ -976,5 +993,20 @@
   </data>
   <data name="NetworkConnectionFailure_Message" xml:space="preserve">
     <value>Не удалось подключиться к GitHub. Проверьте сетевое подключение.</value>
+  </data>
+  <data name="MultipleScopeOverride_Error" xml:space="preserve">
+    <value>Обнаружено несколько областей. Для переопределения можно указать только один область.</value>
+  </data>
+  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
+    <value>Для следующего URL-адреса установщика указано слишком много переопределее: {0}</value>
+    <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
+  </data>
+  <data name="OverridingScope_Warning" xml:space="preserve">
+    <value>Переопределение {0} областью {1}</value>
+    <comment>{0} - represents the InstallerUrl 
+{1} - represents the overriding scope</comment>
+  </data>
+  <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
+    <value>Переопределить область установщика</value>
   </data>
 </root>
