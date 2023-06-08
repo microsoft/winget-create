@@ -46,6 +46,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         protected const string ProgramApplicationAlias = "wingetcreate.exe";
 
         /// <summary>
+        /// Dictionary to store paths to downloaded installers from a given URL.
+        /// </summary>
+        private static readonly Dictionary<string, string> DownloadedInstallers = new();
+
+        /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
         public virtual string GitHubToken { get; set; }
@@ -279,11 +284,28 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             Logger.InfoLocalized(nameof(Resources.DownloadInstaller_Message), installerUrl);
 
+            // Do not download if we have already seen this URL.
+            if (DownloadedInstallers.ContainsKey(installerUrl))
+            {
+                string packageFilePath = DownloadedInstallers[installerUrl];
+
+                // Check if file has not been deleted mid-execution.
+                if (File.Exists(packageFilePath))
+                {
+                    return packageFilePath;
+                }
+                else
+                {
+                    DownloadedInstallers.Remove(installerUrl);
+                }
+            }
+
             try
             {
-                string packageFile = await PackageParser.DownloadFileAsync(installerUrl);
+                string packageFilePath = await PackageParser.DownloadFileAsync(installerUrl);
                 TelemetryManager.Log.WriteEvent(new DownloadInstallerEvent { IsSuccessful = true });
-                return packageFile;
+                DownloadedInstallers.Add(installerUrl, packageFilePath);
+                return packageFilePath;
             }
             catch (Exception e)
             {
