@@ -1881,7 +1881,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub. Default is &quot;{PackageId} version {Version}&quot;.
+        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub.
         /// </summary>
         public static string PullRequestTitle_HelpText {
             get {

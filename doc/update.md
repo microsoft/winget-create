@@ -50,7 +50,7 @@ The following arguments are available:
 | **-v, --version** |  Version to be used when updating the package version field.
 | **-o, --out** |  The output directory where the newly created manifests will be saved locally
 | **-s, --submit** |  Boolean value for submitting to the Windows Package Manager repo. If true, updated manifest will be submitted directly using the provided GitHub Token
-| **-p, --prtitle** |  The title of the pull request submitted to GitHub. Default is "{PackageId} version {Version}"
+| **-p, --prtitle** |  The title of the pull request submitted to GitHub.
 | **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
 | **-?, --help** |  Gets additional help on this command. |
 

@@ -206,7 +206,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
 
                     return await this.LoadGitHubClient(true)
-                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests, this.PRTitle))
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
+                            updatedManifests,
+                            this.GetPRTitle(originalManifests)))
                         : false;
                 }
 
@@ -734,6 +736,25 @@ namespace Microsoft.WingetCreateCLI.Commands
             Console.WriteLine(Resources.PressKeyToContinue_Message);
             Console.ReadKey();
             Console.Clear();
+        }
+
+        private string GetPRTitle(Manifests repositoryManifest)
+        {
+            // Use custom PR title if provided by the user.
+            if (!string.IsNullOrEmpty(this.PRTitle))
+            {
+                return this.PRTitle;
+            }
+
+            // Handle case where manifest is still using singleton format
+            string repositoryVersion = repositoryManifest.SingletonManifest != null ? repositoryManifest.SingletonManifest.PackageVersion : repositoryManifest.InstallerManifest.PackageVersion;
+
+            return WinGetUtil.CompareVersions(this.Version, repositoryVersion) switch
+            {
+                > 0 => $"New version: {this.Id} version {this.Version}",
+                < 0 => $"Add version: {this.Id} version {this.Version}",
+                _ => $"Update version: {this.Id} version {this.Version}",
+            };
         }
     }
 }
