@@ -70,7 +70,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Gets or sets the title for the pull request.
         /// </summary>
         [Option('p', "prtitle", Required = false, HelpText = "PullRequestTitle_HelpText", ResourceType = typeof(Resources))]
-        public string PRTitle { get; set; }
+        public override string PRTitle { get => base.PRTitle; set => base.PRTitle = value; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not the updated manifest should be submitted to Github.
@@ -208,7 +208,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return await this.LoadGitHubClient(true)
                         ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                             updatedManifests,
-                            this.GetPRTitle(originalManifests)))
+                            this.GetPRTitle(updatedManifests, originalManifests)))
                         : false;
                 }
 
@@ -736,25 +736,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             Console.WriteLine(Resources.PressKeyToContinue_Message);
             Console.ReadKey();
             Console.Clear();
-        }
-
-        private string GetPRTitle(Manifests repositoryManifest)
-        {
-            // Use custom PR title if provided by the user.
-            if (!string.IsNullOrEmpty(this.PRTitle))
-            {
-                return this.PRTitle;
-            }
-
-            // Handle case where manifest is still using singleton format
-            string repositoryVersion = repositoryManifest.SingletonManifest != null ? repositoryManifest.SingletonManifest.PackageVersion : repositoryManifest.InstallerManifest.PackageVersion;
-
-            return WinGetUtil.CompareVersions(this.Version, repositoryVersion) switch
-            {
-                > 0 => $"New version: {this.Id} version {this.Version}",
-                < 0 => $"Add version: {this.Id} version {this.Version}",
-                _ => $"Update version: {this.Id} version {this.Version}",
-            };
         }
     }
 }

@@ -252,7 +252,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     {
                         return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                             manifests,
-                            $"New package: {manifests.InstallerManifest.PackageIdentifier} version {manifests.InstallerManifest.PackageVersion}");
+                            this.GetPRTitle(manifests));
                     }
 
                     return false;
