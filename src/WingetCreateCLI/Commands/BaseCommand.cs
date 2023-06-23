@@ -599,8 +599,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return this.PRTitle;
             }
 
-            string packageId = currentManifest.SingletonManifest != null ? currentManifest.SingletonManifest.PackageIdentifier : currentManifest.InstallerManifest.PackageIdentifier;
-            string currentVersion = currentManifest.SingletonManifest != null ? currentManifest.SingletonManifest.PackageVersion : currentManifest.InstallerManifest.PackageVersion;
+            string packageId = currentManifest.VersionManifest != null ? currentManifest.VersionManifest.PackageIdentifier : currentManifest.SingletonManifest.PackageIdentifier;
+            string currentVersion = currentManifest.VersionManifest != null ? currentManifest.VersionManifest.PackageVersion : currentManifest.SingletonManifest.PackageVersion;
 
             // If no manifest exists in the repository, this is a new package.
             if (repositoryManifest == null)
@@ -608,7 +608,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return $"New package: {packageId} version {currentVersion}";
             }
 
-            string repositoryVersion = repositoryManifest.SingletonManifest != null ? repositoryManifest.SingletonManifest.PackageVersion : repositoryManifest.InstallerManifest.PackageVersion;
+            string repositoryVersion = repositoryManifest.VersionManifest != null ? repositoryManifest.VersionManifest.PackageVersion : repositoryManifest.SingletonManifest.PackageVersion;
 
             return WinGetUtil.CompareVersions(currentVersion, repositoryVersion) switch
             {
