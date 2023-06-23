@@ -416,7 +416,7 @@ namespace Microsoft.WingetCreateCLI
                     // Trim values if we have List<string>
                     if (instanceType == typeof(string))
                     {
-                        value = (IEnumerable<T>)value.Select(v => v.ToString().Trim());
+                        value = (IEnumerable<T>)value.Select(v => v.ToString().Trim()).ToList();
                     }
                 }
 
