@@ -358,7 +358,7 @@
     <value>The publisher name |e.g. Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>The title of the pull request submitted to GitHub. Default is "{PackageId} version {Version}"</value>
+    <value>The title of the pull request submitted to GitHub.</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>Pull request can be found here: {0}</value>

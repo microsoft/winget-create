@@ -70,7 +70,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Gets or sets the title for the pull request.
         /// </summary>
         [Option('p', "prtitle", Required = false, HelpText = "PullRequestTitle_HelpText", ResourceType = typeof(Resources))]
-        public string PRTitle { get; set; }
+        public override string PRTitle { get => base.PRTitle; set => base.PRTitle = value; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not the updated manifest should be submitted to Github.
@@ -206,7 +206,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
 
                     return await this.LoadGitHubClient(true)
-                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(updatedManifests, this.PRTitle))
+                        ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
+                            updatedManifests,
+                            this.GetPRTitle(updatedManifests, originalManifests)))
                         : false;
                 }
 
