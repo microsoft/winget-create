@@ -53,7 +53,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Gets or sets the title for the pull request.
         /// </summary>
         [Option('p', "prtitle", Required = false, HelpText = "PullRequestTitle_HelpText", ResourceType = typeof(Resources))]
-        public string PRTitle { get; set; }
+        public override string PRTitle { get => base.PRTitle; set => base.PRTitle = value; }
 
         /// <summary>
         /// Gets or sets the unbound arguments that exist after the first positional parameter.
