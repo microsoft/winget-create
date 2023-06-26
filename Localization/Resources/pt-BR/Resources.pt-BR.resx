@@ -358,7 +358,7 @@
     <value>O nome do fornecedor |ex.: Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>O título da solicitação pull enviada ao GitHub. O padrão é "{PackageId} versão {Version}"</value>
+    <value>O título da solicitação pull enviada ao GitHub.</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>A solicitação de pull pode ser encontrada aqui: {0}</value>

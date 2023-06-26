@@ -358,7 +358,7 @@
     <value>Der Name des Herausgebers |z. B. Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>Der Titel des an GitHub übermittelten Pull Requests. Standard ist "{PackageId} Version {Version}"</value>
+    <value>Der Titel des Pull Requests, der an GitHub übermittelt wurde.</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>Der Pull-Request kann hier gefunden werden: {0}</value>
