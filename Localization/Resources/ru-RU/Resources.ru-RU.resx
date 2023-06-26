@@ -358,7 +358,7 @@
     <value>Название издателя |например, Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>Название запроса на вытягивание, отправленного в GitHub. По умолчанию используется "{PackageId} версии {Version}"</value>
+    <value>Название запроса на вытягивание, отправленного в GitHub.</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>Запрос на включение внесенных изменений можно найти здесь: {0}</value>

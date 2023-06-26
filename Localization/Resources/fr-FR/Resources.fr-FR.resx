@@ -358,7 +358,7 @@
     <value>Le nom de l’éditeur |par exemple, Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>Titre de la demande de tirage (pull request) envoyée à GitHub. La valeur par défaut est « {PackageId} version {Version} »</value>
+    <value>Le titre de la demande de tirage a été envoyée à GitHub.</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>La demande d’extraction est disponible ici : {0}</value>
