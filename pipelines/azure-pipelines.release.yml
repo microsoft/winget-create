@@ -230,7 +230,8 @@ jobs:
       manifestVersion: $[dependencies.Build.outputs['OutputVersionStep.manifestVersion']]
       appxBundleFile: $[dependencies.Build.outputs['OutputVersionStep.appxBundleFile']]
       vcLibsBundleFile: "Microsoft.VCLibs.x64.14.00.Desktop.appx"
-      packageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)/$(appxBundleFile)"
+      msixPackageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)/$(appxBundleFile)"
+      portablePackageUrl: "https://github.com/microsoft/winget-create/releases/download/v$(manifestVersion)/wingetcreate.exe"
     steps:
       - checkout: none
 
@@ -246,5 +247,5 @@ jobs:
           # Download, install, and execute update.
           iwr https://aka.ms/wingetcreate/latest/msixbundle -OutFile $(appxBundleFile)
           Add-AppxPackage $(appxBundleFile)
-          wingetcreate update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit
+          wingetcreate update Microsoft.WingetCreate --urls $(msixPackageUrl) '$(portablePackageUrl)|x64' '$(portablePackageUrl)|x86' -v $(manifestVersion) -t $(GITHUB_PAT) --submit
         displayName: Update package manifest in the OWC
