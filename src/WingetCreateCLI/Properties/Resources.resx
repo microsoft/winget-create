@@ -1009,4 +1009,7 @@
   <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
     <value>Override the scope of an installer</value>
   </data>
+  <data name="UnmatchedNestedInstaller_Error" xml:space="preserve">
+    <value>No matches found for "{0}" from {1}</value>
+  </data>
 </root>

@@ -1472,17 +1472,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
                 return ResourceManager.GetString("Name_KeywordDescription", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Parsing nested installer &apos;{0}&apos; from {1}.
-        /// </summary>
-        public static string NestedInstallerParsing_HelpText
-        {
-            get
-            {
-                return ResourceManager.GetString("NestedInstallerParsing_HelpText", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized string similar to Nested installer not found in zip archive: {0}.
@@ -1499,6 +1488,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NestedInstallerFiles_KeywordDescription {
             get {
                 return ResourceManager.GetString("NestedInstallerFiles_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing nested installer &apos;{0}&apos; from {1}.
+        /// </summary>
+        public static string NestedInstallerParsing_HelpText {
+            get {
+                return ResourceManager.GetString("NestedInstallerParsing_HelpText", resourceCulture);
             }
         }
         
@@ -1881,7 +1879,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub.
+        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub..
         /// </summary>
         public static string PullRequestTitle_HelpText {
             get {
@@ -2363,6 +2361,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UnmatchedInstaller_Error {
             get {
                 return ResourceManager.GetString("UnmatchedInstaller_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No matches found for &quot;{0}&quot; from {1}.
+        /// </summary>
+        public static string UnmatchedNestedInstaller_Error {
+            get {
+                return ResourceManager.GetString("UnmatchedNestedInstaller_Error", resourceCulture);
             }
         }
         
