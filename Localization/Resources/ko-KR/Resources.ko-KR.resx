@@ -358,7 +358,7 @@
     <value>판매자 이름 |예: Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>GitHub에 제출된 끌어오기 요청의 제목입니다. 기본값은 "{PackageId} 버전 {Version}"입니다.</value>
+    <value>GitHub에 제출된 끌어오기 요청의 제목입니다.</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>끌어오기 요청을 다음에서 찾을 수 있음: {0}</value>

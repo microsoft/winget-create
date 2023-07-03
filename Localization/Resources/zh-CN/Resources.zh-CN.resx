@@ -358,7 +358,7 @@
     <value>发布者名 |例如 Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>提交到 GitHub 的拉取请求标题。默认值为“{PackageId}版本{Version}”</value>
+    <value>提交到 GitHub 的拉取请求的标题。</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>可在以下位置找到拉取请求: {0}</value>
