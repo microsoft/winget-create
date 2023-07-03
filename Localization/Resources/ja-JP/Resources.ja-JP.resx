@@ -358,7 +358,7 @@
     <value>発行元名 | 例: Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>GitHub に送信されたpull requestのタイトル。既定値は "{PackageId} バージョン {Version}" です</value>
+    <value>GitHub に送信されたプル リクエストのタイトル。</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>プル リクエストはここにあります: {0}</value>

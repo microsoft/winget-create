@@ -358,7 +358,7 @@
     <value>Il nome dell'editore [es. Microsoft]</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>Titolo della richiesta pull inviata a GitHub. L'impostazione predefinita è "{Version} versione {PackageId}"</value>
+    <value>Titolo della richiesta pull inviata a GitHub.</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>La richiesta pull è disponibile qui: {0}</value>

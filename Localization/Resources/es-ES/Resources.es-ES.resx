@@ -358,7 +358,7 @@
     <value>El nombre del editor |por ejemplo, Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>Título de la solicitud de incorporación de cambios enviada a GitHub. El valor predeterminado es "{PackageId} versión {Version}"</value>
+    <value>Título de la solicitud de incorporación de cambios enviada a GitHub.</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>La solicitud de incorporación de cambios se puede encontrar aquí: {0}</value>

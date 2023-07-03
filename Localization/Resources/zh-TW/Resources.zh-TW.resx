@@ -358,7 +358,7 @@
     <value>發行者名稱 |例如 Microsoft|</value>
   </data>
   <data name="PullRequestTitle_HelpText" xml:space="preserve">
-    <value>提交至 GitHub 的提取要求標題。預設值為「{PackageId}版本{Version}」</value>
+    <value>提交至 GitHub 的提取要求標題。</value>
   </data>
   <data name="PullRequestURI_Message" xml:space="preserve">
     <value>提取要求可在這裡找到：{0}</value>
