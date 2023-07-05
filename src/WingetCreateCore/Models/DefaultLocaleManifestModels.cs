@@ -240,7 +240,7 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
     
         /// <summary>The notes displayed to the user upon completion of a package installation.</summary>
         [Newtonsoft.Json.JsonProperty("InstallationNotes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(256, MinimumLength = 1)]
+        [System.ComponentModel.DataAnnotations.StringLength(10000, MinimumLength = 1)]
         public string InstallationNotes { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Documentations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
