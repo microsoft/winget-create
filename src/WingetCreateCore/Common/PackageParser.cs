@@ -721,7 +721,9 @@ namespace Microsoft.WingetCreateCore
                     }
                     else
                     {
-                        installerTypeEnum = InstallerType.Exe;
+                        installerTypeEnum = (baseInstaller.InstallerType == InstallerType.Portable ||
+                                baseInstaller.NestedInstallerType == NestedInstallerType.Portable) ?
+                                InstallerType.Portable : InstallerType.Exe;
                     }
                 }
                 catch (Win32Exception err)
@@ -731,7 +733,9 @@ namespace Microsoft.WingetCreateCore
                         (err.Message == "The specified image file did not contain a resource section."
                         && err.NativeErrorCode == 1812))
                     {
-                        installerTypeEnum = InstallerType.Exe;
+                        installerTypeEnum = (baseInstaller.InstallerType == InstallerType.Portable ||
+                                baseInstaller.NestedInstallerType == NestedInstallerType.Portable) ?
+                                InstallerType.Portable : InstallerType.Exe;
                     }
                     else
                     {
