@@ -934,6 +934,60 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The icon file type.
+        /// </summary>
+        public static string IconFileType_KeywordDescription {
+            get {
+                return ResourceManager.GetString("IconFileType_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The icon resolution.
+        /// </summary>
+        public static string IconResolution_KeywordDescription {
+            get {
+                return ResourceManager.GetString("IconResolution_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List of icons.
+        /// </summary>
+        public static string Icons_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Icons_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The SHA256 hash of the icon file.
+        /// </summary>
+        public static string IconSha256_KeywordDescription {
+            get {
+                return ResourceManager.GetString("IconSha256_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The icon theme.
+        /// </summary>
+        public static string IconTheme_KeywordDescription {
+            get {
+                return ResourceManager.GetString("IconTheme_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The url of the hosted icon file.
+        /// </summary>
+        public static string IconUrl_KeywordDescription {
+            get {
+                return ResourceManager.GetString("IconUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initiating GitHub login....
         /// </summary>
         public static string InitiatingGitHubLogin_Message {
@@ -1472,17 +1526,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
                 return ResourceManager.GetString("Name_KeywordDescription", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Parsing nested installer &apos;{0}&apos; from {1}.
-        /// </summary>
-        public static string NestedInstallerParsing_HelpText
-        {
-            get
-            {
-                return ResourceManager.GetString("NestedInstallerParsing_HelpText", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized string similar to Nested installer not found in zip archive: {0}.
@@ -1499,6 +1542,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NestedInstallerFiles_KeywordDescription {
             get {
                 return ResourceManager.GetString("NestedInstallerFiles_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing nested installer &apos;{0}&apos; from {1}.
+        /// </summary>
+        public static string NestedInstallerParsing_HelpText {
+            get {
+                return ResourceManager.GetString("NestedInstallerParsing_HelpText", resourceCulture);
             }
         }
         
@@ -1881,7 +1933,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub.
+        ///   Looks up a localized string similar to The title of the pull request submitted to GitHub..
         /// </summary>
         public static string PullRequestTitle_HelpText {
             get {

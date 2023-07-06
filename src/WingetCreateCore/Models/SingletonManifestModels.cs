@@ -65,6 +65,48 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     
     }
     
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class Icon 
+    {
+        /// <summary>The url of the hosted icon file</summary>
+        [Newtonsoft.Json.JsonProperty("IconUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(2048)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
+        public string IconUrl { get; set; }
+    
+        /// <summary>The icon file type</summary>
+        [Newtonsoft.Json.JsonProperty("IconFileType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public IconFileType IconFileType { get; set; }
+    
+        /// <summary>Optional icon resolution</summary>
+        [Newtonsoft.Json.JsonProperty("IconResolution", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public IconResolution? IconResolution { get; set; }
+    
+        /// <summary>Optional icon theme</summary>
+        [Newtonsoft.Json.JsonProperty("IconTheme", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public IconTheme? IconTheme { get; set; }
+    
+        /// <summary>Optional Sha256 of the icon file</summary>
+        [Newtonsoft.Json.JsonProperty("IconSha256", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^[A-Fa-f0-9]{64}$")]
+        public string IconSha256 { get; set; }
+    
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+    
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
+    
+    
+    }
+    
     /// <summary>Enumeration of supported installer types. InstallerType is required in either root level or individual Installer level</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public enum InstallerType
@@ -521,7 +563,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     
     }
     
-    /// <summary>A representation of a single-file manifest representing an app in the OWC. v1.4.0</summary>
+    /// <summary>A representation of a single-file manifest representing an app in the OWC. v1.5.0</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class SingletonManifest 
     {
@@ -650,12 +692,16 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     
         /// <summary>The notes displayed to the user upon completion of a package installation.</summary>
         [Newtonsoft.Json.JsonProperty("InstallationNotes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.StringLength(256, MinimumLength = 1)]
+        [System.ComponentModel.DataAnnotations.StringLength(10000, MinimumLength = 1)]
         public string InstallationNotes { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Documentations", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.MaxLength(256)]
         public System.Collections.Generic.List<Documentation> Documentations { get; set; }
+    
+        [Newtonsoft.Json.JsonProperty("Icons", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.MaxLength(1024)]
+        public System.Collections.Generic.List<Icon> Icons { get; set; }
     
         [Newtonsoft.Json.JsonProperty("Channel", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.StringLength(16, MinimumLength = 1)]
@@ -792,7 +838,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.4.0";
+        public string ManifestVersion { get; set; } = "1.5.0";
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
@@ -803,6 +849,87 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
             set { _additionalProperties = value; }
         }
     
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public enum IconFileType
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"png")]
+        Png = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"jpeg")]
+        Jpeg = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"ico")]
+        Ico = 2,
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public enum IconResolution
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"custom")]
+        Custom = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"16x16")]
+        _16x16 = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"20x20")]
+        _20x20 = 2,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"24x24")]
+        _24x24 = 3,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"30x30")]
+        _30x30 = 4,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"32x32")]
+        _32x32 = 5,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"36x36")]
+        _36x36 = 6,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"40x40")]
+        _40x40 = 7,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"48x48")]
+        _48x48 = 8,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"60x60")]
+        _60x60 = 9,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"64x64")]
+        _64x64 = 10,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"72x72")]
+        _72x72 = 11,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"80x80")]
+        _80x80 = 12,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"96x96")]
+        _96x96 = 13,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"256x256")]
+        _256x256 = 14,
+    
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public enum IconTheme
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"default")]
+        Default = 0,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"light")]
+        Light = 1,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"dark")]
+        Dark = 2,
+    
+        [System.Runtime.Serialization.EnumMember(Value = @"highContrast")]
+        HighContrast = 3,
     
     }
     

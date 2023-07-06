@@ -1,4 +1,4 @@
-﻿PackageIdentifier: TestPublisher.FullSingleton1_2
+﻿PackageIdentifier: TestPublisher.FullSingleton1_5
 PackageVersion: 0.1.2.3
 PackageLocale: en-US
 DefaultLocale: en-US
@@ -7,7 +7,7 @@ PublisherUrl: https://fakeTestUrl.com
 PublisherSupportUrl: https://fakeTestUrl.com
 PrivacyUrl: https://fakeTestUrl.com
 Author: fakeAuthor
-PackageName: Full Singleton 1.2 Test
+PackageName: Full Singleton 1.5 Test
 PackageUrl: https://fakeTestUrl.com
 License: MIT
 LicenseUrl: https://fakeTestUrl.com
@@ -29,6 +29,12 @@ InstallationNotes: fakeInstallationNotes
 Documentations:
 - DocumentLabel: fakeDocumentLabel
 - DocumentUrl: fakeDocumentUrl
+Icons:
+  - IconUrl: https://fakeTestIcon
+    IconFileType: png
+    IconResolution: 32x32
+    IconTheme: light
+    IconSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8321
 Installers:
 - MinimumOSVersion: 10.0.0.0
   Architecture: x64
@@ -85,5 +91,15 @@ Installers:
   UnsupportedArguments:
   - log
   - location
+  NestedInstallerFiles:
+  - RelativeFilePath: RelativeFilePath
+    PortableCommandAlias: PortableCommandAlias  
+  InstallationMetadata:
+    DefaultInstallLocation: "%ProgramFiles%\\TestApp"
+    Files:
+    - RelativeFilePath: "main.exe"
+      FileSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82
+      FileType: launch
+      InvocationParameter: "/arg"
 ManifestType: singleton
-ManifestVersion: 1.2.0
+ManifestVersion: 1.5.0
