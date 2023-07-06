@@ -435,6 +435,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Files, WingetCreateCore.Models.Installer.Files>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallationMetadata, WingetCreateCore.Models.Installer.InstallationMetadata>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Icon, WingetCreateCore.Models.DefaultLocale.Icon>();
             });
             var mapper = config.CreateMapper();
 
