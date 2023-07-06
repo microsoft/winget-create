@@ -1,5 +1,6 @@
 name: "Bug report 🐛"
 description: Report errors or unexpected behavior
+labels: ["Issue-Bug"]
 body:
   - type: markdown
     attributes:
@@ -42,8 +43,12 @@ body:
     attributes:
       label: Environment
       placeholder: |
+        [wingetcreate --help]
+        Windows Package Manager Manifest Creator version
+
         [winget --info]
         Windows Package Manager version
+        System Architecture: CPU architecture
         Windows: Windows.Desktop version
         Package: Microsoft.DesktopAppInstaller version
 
