@@ -280,32 +280,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     // Obtain all possible relative file paths and check if there is a match.
                     List<string> relativeFilePaths = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles.Select(x => x.RelativeFilePath)).Distinct().ToList();
-                    string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFile));
-
-                    if (Directory.Exists(extractDirectory))
-                    {
-                        Directory.Delete(extractDirectory, true);
-                    }
-
-                    try
-                    {
-                        ZipFile.ExtractToDirectory(packageFile, extractDirectory, true);
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex is InvalidDataException || ex is IOException || ex is NotSupportedException)
-                        {
-                            Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), ex);
-                            return null;
-                        }
-                        else if (ex is PathTooLongException)
-                        {
-                            Logger.ErrorLocalized(nameof(Resources.ZipPathExceedsMaxLength_ErrorMessage), ex);
-                            return null;
-                        }
-
-                        throw;
-                    }
+                    string extractDirectory = ExtractArchiveAndRetrieveDirectoryPath(packageFile);
 
                     installerUpdate.RelativeFilePaths = new List<string>();
 
@@ -408,6 +383,37 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             return manifests;
+        }
+
+        private static string ExtractArchiveAndRetrieveDirectoryPath(string packageFilePath)
+        {
+            string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(packageFilePath));
+
+            if (Directory.Exists(extractDirectory))
+            {
+                Directory.Delete(extractDirectory, true);
+            }
+
+            try
+            {
+                ZipFile.ExtractToDirectory(packageFilePath, extractDirectory, true);
+                return extractDirectory;
+            }
+            catch (Exception ex)
+            {
+                if (ex is InvalidDataException || ex is IOException || ex is NotSupportedException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.InvalidZipFile_ErrorMessage), ex);
+                    return null;
+                }
+                else if (ex is PathTooLongException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.ZipPathExceedsMaxLength_ErrorMessage), ex);
+                    return null;
+                }
+
+                throw;
+            }
         }
 
         private static Manifests ConvertSingletonToMultifileManifest(WingetCreateCore.Models.Singleton.SingletonManifest singletonManifest)
@@ -660,6 +666,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             // Clone the list of installers in order to preserve initial values.
             Manifests originalManifest = new Manifests { InstallerManifest = new InstallerManifest() };
+            ShiftFieldsFromRootToInstallerLevel(manifests.InstallerManifest);
             originalManifest.InstallerManifest.Installers = manifests.CloneInstallers();
 
             do
@@ -722,7 +729,24 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     continue;
                 }
-                else if (!PackageParser.ParsePackageAndUpdateInstallerNode(installer, packageFile, url))
+
+                if (packageFile.IsZipFile())
+                {
+                    string extractDirectory = ExtractArchiveAndRetrieveDirectoryPath(packageFile);
+                    string relativeFilePath = installer.NestedInstallerFiles.First().RelativeFilePath;
+                    string pathToNestedInstaller = Path.Combine(extractDirectory, relativeFilePath);
+                    if (File.Exists(pathToNestedInstaller))
+                    {
+                        packageFile = pathToNestedInstaller;
+                    }
+                    else
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.UnmatchedNestedInstaller_Error), relativeFilePath, url);
+                        continue;
+                    }
+                }
+
+                if (!PackageParser.ParsePackageAndUpdateInstallerNode(installer, packageFile, url))
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), url);
                     Console.WriteLine();

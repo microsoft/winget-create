@@ -2419,6 +2419,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No matches found for &quot;{0}&quot; from {1}.
+        /// </summary>
+        public static string UnmatchedNestedInstaller_Error {
+            get {
+                return ResourceManager.GetString("UnmatchedNestedInstaller_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of winget arguments the installer does not support.
         /// </summary>
         public static string UnsupportedArguments_KeywordDescription {

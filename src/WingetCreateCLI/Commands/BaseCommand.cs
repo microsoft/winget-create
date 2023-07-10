@@ -419,6 +419,35 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
+        /// Shifts common installer fields from root to installer level.
+        /// </summary>
+        /// <param name="installerManifest">Wrapper object containing the installer manifest object models.</param>
+        protected static void ShiftFieldsFromRootToInstallerLevel(InstallerManifest installerManifest)
+        {
+            var rootProperties = installerManifest.GetType().GetProperties();
+            var installerProperties = installerManifest.Installers.First().GetType().GetProperties();
+
+            // Get common properties between root and installer level
+            var commonProperties = rootProperties.Where(p => installerProperties.Any(ip => ip.Name == p.Name));
+
+            foreach (var property in commonProperties)
+            {
+                var rootValue = property.GetValue(installerManifest);
+                if (rootValue != null)
+                {
+                    foreach (var installer in installerManifest.Installers)
+                    {
+                        // Copy the value to installer level
+                        installer.GetType().GetProperty(property.Name).SetValue(installer, rootValue);
+                    }
+
+                    // Set root value to null
+                    property.SetValue(installerManifest, null);
+                }
+            }
+        }
+
+        /// <summary>
         /// Launches the GitHub OAuth flow and obtains a GitHub token.
         /// </summary>
         /// <returns>A boolean value indicating whether the OAuth login flow was successful.</returns>
