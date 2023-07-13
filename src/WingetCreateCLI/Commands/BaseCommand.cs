@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -419,16 +420,16 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Shifts common installer fields from root to installer level.
+        /// Shifts common installer fields from manifest root to installer level.
         /// </summary>
         /// <param name="installerManifest">Wrapper object containing the installer manifest object models.</param>
-        protected static void ShiftFieldsFromRootToInstallerLevel(InstallerManifest installerManifest)
+        protected static void ShiftRootFieldsToInstallerLevel(InstallerManifest installerManifest)
         {
             var rootProperties = installerManifest.GetType().GetProperties();
             var installerProperties = installerManifest.Installers.First().GetType().GetProperties();
 
             // Get common properties between root and installer level
-            var commonProperties = rootProperties.Where(p => installerProperties.Any(ip => ip.Name == p.Name));
+            var commonProperties = rootProperties.Where(rp => installerProperties.Any(ip => ip.Name == rp.Name));
 
             foreach (var property in commonProperties)
             {
@@ -443,6 +444,57 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     // Set root value to null
                     property.SetValue(installerManifest, null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shifts common installer fields from installer level to manifest root.
+        /// </summary>
+        /// <param name="installerManifest">Wrapper object containing the installer manifest object models.</param>
+        protected static void ShiftInstallerFieldsToRootLevel(InstallerManifest installerManifest)
+        {
+            var rootProperties = installerManifest.GetType().GetProperties();
+            var installerProperties = installerManifest.Installers.First().GetType().GetProperties();
+
+            // Get common properties between root and installer level
+            var commonProperties = rootProperties.Where(rp => installerProperties.Any(ip => ip.Name == rp.Name));
+
+            foreach (var property in commonProperties)
+            {
+                var firstInstallerValue = installerManifest.Installers.First().GetType().GetProperty(property.Name).GetValue(installerManifest.Installers.First());
+                if (firstInstallerValue != null)
+                {
+                    // Check if all installers have the same value
+                    bool allInstallersHaveSameValue = installerManifest.Installers.All(i =>
+                    {
+                        var propertyValue = i.GetType().GetProperty(property.Name).GetValue(i);
+                        return propertyValue != null &&
+                        propertyValue.Equals(firstInstallerValue);
+                    });
+
+                    // If value is false, it can be becuase we don't have .Equals() override implemented for the type of the property.
+                    // For that, we check further if the property is of type list and check if the lists are equal
+                    if (!allInstallersHaveSameValue)
+                    {
+                        if (firstInstallerValue is IList installerValueList)
+                        {
+                            allInstallersHaveSameValue = installerManifest.Installers.All(i =>
+                            i.GetType().GetProperty(property.Name).GetValue(i) is IList otherList &&
+                            installerValueList.Cast<object>().SequenceEqual(otherList.Cast<object>()));
+                        }
+                    }
+
+                    if (allInstallersHaveSameValue)
+                    {
+                        // Copy the value to root level
+                        property.SetValue(installerManifest, firstInstallerValue);
+                        foreach (var installer in installerManifest.Installers)
+                        {
+                            // Set installer value to null
+                            installer.GetType().GetProperty(property.Name).SetValue(installer, null);
+                        }
+                    }
                 }
             }
         }

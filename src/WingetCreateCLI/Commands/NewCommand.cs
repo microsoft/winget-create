@@ -233,8 +233,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                         }
                     }
 
-                    PromptPropertiesAndDisplayManifests(manifests);
+                    PromptManifestProperties(manifests);
+                    MergeNestedInstallerFilesIfApplicable(manifests.InstallerManifest);
+                    ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
                     RemoveEmptyStringFieldsInManifests(manifests);
+                    DisplayManifestPreview(manifests);
                     isManifestValid = ValidateManifestsInTempDir(manifests);
                 }
                 while (Prompt.Confirm(Resources.ConfirmManifestCreation_Message));
@@ -270,12 +273,11 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void PromptPropertiesAndDisplayManifests(Manifests manifests)
+        private static void PromptManifestProperties(Manifests manifests)
         {
             PromptRequiredProperties(manifests.VersionManifest);
             PromptRequiredProperties(manifests.InstallerManifest, manifests.VersionManifest);
             PromptRequiredProperties(manifests.DefaultLocaleManifest, manifests.VersionManifest);
-            MergeNestedInstallerFilesIfApplicable(manifests.InstallerManifest);
 
             Console.WriteLine();
             if (Prompt.Confirm(Resources.ModifyOptionalDefaultLocaleFields_Message))
@@ -289,7 +291,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             Console.WriteLine();
-            DisplayManifestPreview(manifests);
         }
 
         private static void PromptRequiredProperties<T>(T manifest, VersionManifest versionManifest = null)

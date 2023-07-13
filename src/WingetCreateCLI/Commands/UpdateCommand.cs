@@ -175,6 +175,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             Manifests originalManifests = Serialization.DeserializeManifestContents(latestManifestContent);
             Manifests initialManifests = this.DeserializeManifestContentAndApplyInitialUpdate(latestManifestContent);
+            ShiftRootFieldsToInstallerLevel(initialManifests.InstallerManifest);
             Manifests updatedManifests = this.Interactive ?
                 await this.UpdateManifestsInteractively(initialManifests) :
                 await this.UpdateManifestsAutonomously(initialManifests);
@@ -185,6 +186,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             RemoveEmptyStringFieldsInManifests(updatedManifests);
+            ShiftInstallerFieldsToRootLevel(updatedManifests.InstallerManifest);
             DisplayManifestPreview(updatedManifests);
 
             if (string.IsNullOrEmpty(this.OutputDir))
@@ -666,7 +668,6 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             // Clone the list of installers in order to preserve initial values.
             Manifests originalManifest = new Manifests { InstallerManifest = new InstallerManifest() };
-            ShiftFieldsFromRootToInstallerLevel(manifests.InstallerManifest);
             originalManifest.InstallerManifest.Installers = manifests.CloneInstallers();
 
             do
@@ -674,6 +675,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Console.Clear();
                 manifests.InstallerManifest.Installers = originalManifest.CloneInstallers();
                 await this.UpdateInstallersInteractively(manifests.InstallerManifest.Installers);
+                ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
                 DisplayManifestPreview(manifests);
                 ValidateManifestsInTempDir(manifests);
             }
