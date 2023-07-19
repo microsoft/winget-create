@@ -830,6 +830,49 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies that moving common installer fields to the root of the manifest works as expected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task MoveCommonInstallerFieldsToRoot()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MoveInstallerFieldsToRoot", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86" });
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
+
+            Assert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType at the root level should be ZIP");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType at the root level should be EXE");
+            Assert.IsTrue(updatedInstallerManifest.Scope == Scope.Machine, "Scope at the root level should be machine");
+            Assert.IsTrue(updatedInstallerManifest.MinimumOSVersion == "10.0.22000.0", "MinimumOSVersion at the root level should be 10.0.22000.0");
+            Assert.IsTrue(updatedInstallerManifest.PackageFamilyName == "TestPackageFamilyName", "PackageFamilyName at the root level should be TestPackageFamilyName");
+            Assert.IsNotNull(updatedInstallerManifest.NestedInstallerFiles, "NestedInstallerFiles at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.InstallerSwitches, "InstallerSwitches at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.Dependencies, "Dependencies at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.AppsAndFeaturesEntries, "AppsAndFeaturesEntries at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.Platform, "Platform at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.ExpectedReturnCodes, "ExpectedReturnCodes at the root level should not be null");
+
+            foreach (var installer in updatedInstallerManifest.Installers)
+            {
+                Assert.IsNull(installer.InstallerType, "InstallerType at the installer level should be null");
+                Assert.IsNull(installer.NestedInstallerType, "NestedInstallerType at the installer level should be null");
+                Assert.IsNull(installer.Scope, "Scope at the installer level should be null");
+                Assert.IsNull(installer.MinimumOSVersion, "MinimumOSVersion at the installer level should be null");
+                Assert.IsNull(installer.PackageFamilyName, "PackageFamilyName at the installer level should be null");
+                Assert.IsNull(installer.NestedInstallerFiles, "NestedInstallerFiles at the installer level should be null");
+                Assert.IsNull(installer.InstallerSwitches, "InstallerSwitches at the installer level should be null");
+                Assert.IsNull(installer.Dependencies, "Dependencies at the installer level should be null");
+                Assert.IsNull(installer.AppsAndFeaturesEntries, "AppsAndFeaturesEntries at the installer level should be null");
+                Assert.IsNull(installer.Platform, "Platform at the installer level should be null");
+                Assert.IsNull(installer.ExpectedReturnCodes, "ExpectedReturnCodes at the installer level should be null");
+            }
+        }
+
+        /// <summary>
         /// Verifies that the appropriate error message is displayed if the nested installer is not found.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>

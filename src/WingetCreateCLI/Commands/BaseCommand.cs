@@ -473,15 +473,24 @@ namespace Microsoft.WingetCreateCLI.Commands
                         propertyValue.Equals(firstInstallerValue);
                     });
 
-                    // If value is false, it can be becuase we don't have .Equals() override implemented for the type of the property.
+                    // If value is false, it can be because we don't have .Equals() override implemented for the type of the property.
                     // For that, we check further if the property is of type list and check if the lists are equal
                     if (!allInstallersHaveSameValue)
                     {
                         if (firstInstallerValue is IList installerValueList)
                         {
                             allInstallersHaveSameValue = installerManifest.Installers.All(i =>
-                            i.GetType().GetProperty(property.Name).GetValue(i) is IList otherList &&
-                            installerValueList.Cast<object>().SequenceEqual(otherList.Cast<object>()));
+                            {
+                                var propertyValue = i.GetType().GetProperty(property.Name).GetValue(i);
+                                if (propertyValue is IList otherList)
+                                {
+                                    return installerValueList.Cast<object>().SequenceEqual(otherList.Cast<object>());
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            });
                         }
                     }
 

@@ -175,7 +175,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             Manifests originalManifests = Serialization.DeserializeManifestContents(latestManifestContent);
             Manifests initialManifests = this.DeserializeManifestContentAndApplyInitialUpdate(latestManifestContent);
-            ShiftRootFieldsToInstallerLevel(initialManifests.InstallerManifest);
             Manifests updatedManifests = this.Interactive ?
                 await this.UpdateManifestsInteractively(initialManifests) :
                 await this.UpdateManifestsAutonomously(initialManifests);
@@ -229,6 +228,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Manifests object representing the updates manifest content, or null if the update failed.</returns>
         public async Task<Manifests> UpdateManifestsAutonomously(Manifests manifests)
         {
+            ShiftRootFieldsToInstallerLevel(manifests.InstallerManifest);
             InstallerManifest installerManifest = manifests.InstallerManifest;
 
             if (!this.InstallerUrls.Any())
@@ -308,6 +308,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 PackageParser.UpdateInstallerNodesAsync(installerMetadataList, installerManifest);
                 DisplayArchitectureWarnings(installerMetadataList);
                 ResetVersionSpecificFields(manifests);
+                ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
             }
             catch (InvalidOperationException)
             {
@@ -663,6 +664,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>The updated manifest.</returns>
         private async Task<Manifests> UpdateManifestsInteractively(Manifests manifests)
         {
+            ShiftRootFieldsToInstallerLevel(manifests.InstallerManifest);
             Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
             Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
 

@@ -108,6 +108,9 @@
     <None Update="Resources\TestPublisher.MismatchedMsixInExistingBundle.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Update="Resources\TestPublisher.MoveInstallerFieldsToRoot.yaml">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Update="Resources\TestPublisher.SingleMsixInExistingBundle.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
