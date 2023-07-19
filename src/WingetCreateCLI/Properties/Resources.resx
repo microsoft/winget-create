@@ -1009,4 +1009,25 @@
   <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
     <value>Override the scope of an installer</value>
   </data>
+  <data name="UnmatchedNestedInstaller_Error" xml:space="preserve">
+    <value>No matches found for "{0}" from {1}</value>
+  </data>
+  <data name="IconFileType_KeywordDescription" xml:space="preserve">
+    <value>The icon file type</value>
+  </data>
+  <data name="IconResolution_KeywordDescription" xml:space="preserve">
+    <value>The icon resolution</value>
+  </data>
+  <data name="IconSha256_KeywordDescription" xml:space="preserve">
+    <value>The SHA256 hash of the icon file</value>
+  </data>
+  <data name="Icons_KeywordDescription" xml:space="preserve">
+    <value>List of icons</value>
+  </data>
+  <data name="IconTheme_KeywordDescription" xml:space="preserve">
+    <value>The icon theme</value>
+  </data>
+  <data name="IconUrl_KeywordDescription" xml:space="preserve">
+    <value>The url of the hosted icon file</value>
+  </data>
 </root>

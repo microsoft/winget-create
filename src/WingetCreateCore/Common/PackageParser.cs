@@ -52,6 +52,9 @@ namespace Microsoft.WingetCreateCore
         {
             X86 = 0x014c,
             X64 = 0x8664,
+            Arm = 0x01c0,
+            Armv7 = 0x01c4,
+            Arm64 = 0xaa64,
         }
 
         private enum CompatibilitySet
@@ -628,12 +631,23 @@ namespace Microsoft.WingetCreateCore
                     {
                         MachineType machineType = (MachineType)bw.ReadUInt16();
 
-                        return machineType;
+                        return GetCompatibleMachineType(machineType);
                     }
                 }
             }
 
             return null;
+        }
+
+        private static MachineType GetCompatibleMachineType(MachineType type)
+        {
+            switch (type)
+            {
+                case MachineType.Armv7:
+                    return MachineType.Arm;
+                default:
+                    return type;
+            }
         }
 
         /// <summary>
@@ -721,7 +735,9 @@ namespace Microsoft.WingetCreateCore
                     }
                     else
                     {
-                        installerTypeEnum = InstallerType.Exe;
+                        installerTypeEnum = (baseInstaller.InstallerType == InstallerType.Portable ||
+                                baseInstaller.NestedInstallerType == NestedInstallerType.Portable) ?
+                                InstallerType.Portable : InstallerType.Exe;
                     }
                 }
                 catch (Win32Exception err)
@@ -731,7 +747,9 @@ namespace Microsoft.WingetCreateCore
                         (err.Message == "The specified image file did not contain a resource section."
                         && err.NativeErrorCode == 1812))
                     {
-                        installerTypeEnum = InstallerType.Exe;
+                        installerTypeEnum = (baseInstaller.InstallerType == InstallerType.Portable ||
+                                baseInstaller.NestedInstallerType == NestedInstallerType.Portable) ?
+                                InstallerType.Portable : InstallerType.Exe;
                     }
                     else
                     {
