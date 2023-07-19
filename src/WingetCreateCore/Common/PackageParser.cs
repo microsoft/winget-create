@@ -921,6 +921,13 @@ namespace Microsoft.WingetCreateCore
                     foreach (var childPackage in bundle.ChildAppxPackages.Where(p => p.PackageType == PackageType.Application))
                     {
                         var appxFile = bundle.AppxBundleReader.GetPayloadPackage(childPackage.RelativeFilePath);
+
+                        // Ignore stub packages.
+                        if (childPackage.RelativeFilePath.StartsWith("AppxMetadata\\Stub", StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
                         appxMetadatas.Add(new AppxMetadata(appxFile.GetStream()));
                     }
                 }
