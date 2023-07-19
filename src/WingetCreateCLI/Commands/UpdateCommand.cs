@@ -279,7 +279,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     installerUpdate.IsZipFile = true;
 
                     // Obtain all possible relative file paths and check if there is a match.
-                    List<string> relativeFilePaths = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles.Select(x => x.RelativeFilePath)).Distinct().ToList();
+                    List<string> relativeFilePaths = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles?.Select(x => x.RelativeFilePath) ?? Enumerable.Empty<string>()).Distinct().ToList();
                     string extractDirectory = ExtractArchiveAndRetrieveDirectoryPath(packageFile);
 
                     installerUpdate.RelativeFilePaths = new List<string>();
