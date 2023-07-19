@@ -291,13 +291,13 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-        
+
+        /// <summary>Gives the criteria for determining whether two instances of AppsAndFeaturesEntry objects are equal</summary>
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-            /// <summary>Gives the criteria for determining whether two instances of AppsAndFeaturesEntry objects are equal</summary>
             AppsAndFeaturesEntry other = (AppsAndFeaturesEntry)obj;
             return DisplayName == other.DisplayName &&
                 Publisher == other.Publisher &&
