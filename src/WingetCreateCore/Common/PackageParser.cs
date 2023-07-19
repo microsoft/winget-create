@@ -938,6 +938,12 @@ namespace Microsoft.WingetCreateCore
                     // Only create installer nodes for non-resource packages
                     foreach (var childPackage in bundle.ChildAppxPackages.Where(p => p.PackageType == PackageType.Application))
                     {
+                        // Ignore stub packages.
+                        if (childPackage.RelativeFilePath.StartsWith("AppxMetadata\\Stub", StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
                         var appxFile = bundle.AppxBundleReader.GetPayloadPackage(childPackage.RelativeFilePath);
                         appxMetadatas.Add(new AppxMetadata(appxFile.GetStream()));
                     }
