@@ -675,8 +675,6 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-        
-
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
