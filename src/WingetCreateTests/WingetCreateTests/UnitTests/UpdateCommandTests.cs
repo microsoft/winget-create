@@ -95,7 +95,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
             var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
             Assert.AreEqual(version, updatedManifests.VersionManifest.PackageVersion, "Version should be updated");
-            Assert.AreNotEqual(initialInstaller.ProductCode, updatedInstaller.ProductCode, "ProductCode should be updated");
+            Assert.AreNotEqual(initialInstaller.ProductCode, updatedManifests.InstallerManifest.ProductCode, "ProductCode should be updated");
             Assert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
         }
 
@@ -530,10 +530,10 @@ namespace Microsoft.WingetCreateUnitTests
                 GetUpdateCommandAndManifestData("TestPublisher.SingleExe", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}" });
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
-            var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
-            Assert.AreEqual("FakeProductCode", updatedInstaller.ProductCode, "Existing value for ProductCode was overwritten.");
-            Assert.AreEqual("FakePackageFamilyName", updatedInstaller.PackageFamilyName, "Existing value for PackageFamilyName was overwritten.");
-            Assert.IsNotNull(updatedInstaller.Platform, "Existing value for Platform was overwritten.;");
+            var updatedInstallerManifest = updatedManifests.InstallerManifest;
+            Assert.AreEqual("FakeProductCode", updatedInstallerManifest.ProductCode, "Existing value for ProductCode was overwritten.");
+            Assert.AreEqual("FakePackageFamilyName", updatedInstallerManifest.PackageFamilyName, "Existing value for PackageFamilyName was overwritten.");
+            Assert.IsNotNull(updatedInstallerManifest.Platform, "Existing value for Platform was overwritten.;");
         }
 
         /// <summary>
@@ -549,10 +549,7 @@ namespace Microsoft.WingetCreateUnitTests
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
-            foreach (var updatedInstaller in updatedManifests.InstallerManifest.Installers)
-            {
-                Assert.AreEqual(InstallerType.Appx, updatedInstaller.InstallerType, "Msix installerType should be matched with Appx");
-            }
+            Assert.AreEqual(InstallerType.Appx, updatedManifests.InstallerManifest.InstallerType, "Msix installerType should be matched with Appx");
         }
 
         /// <summary>
@@ -708,8 +705,8 @@ namespace Microsoft.WingetCreateUnitTests
             InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
             var updatedInstaller = updatedInstallerManifest.Installers.First();
 
-            Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Portable, "InstallerType should be portable");
-            Assert.IsTrue(updatedInstaller.Commands[0] == "portableCommand", "Command value should be preserved.");
+            Assert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Portable, "InstallerType should be portable");
+            Assert.IsTrue(updatedInstallerManifest.Commands[0] == "portableCommand", "Command value should be preserved.");
         }
 
         /// <summary>
@@ -727,14 +724,14 @@ namespace Microsoft.WingetCreateUnitTests
             InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
             var updatedInstaller = updatedInstallerManifest.Installers.First();
 
-            Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
-            Assert.IsTrue(updatedInstaller.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType should be EXE");
+            Assert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType should be EXE");
 
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
             var initialNestedInstallerFile = initialInstaller.NestedInstallerFiles.First();
 
-            var updatedNestedInstallerFile = updatedInstaller.NestedInstallerFiles.First();
+            var updatedNestedInstallerFile = updatedInstallerManifest.NestedInstallerFiles.First();
             Assert.IsTrue(initialNestedInstallerFile.RelativeFilePath == updatedNestedInstallerFile.RelativeFilePath, "RelativeFilePath should be preserved.");
             Assert.IsTrue(initialInstaller.InstallerSha256 != updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
         }
@@ -754,14 +751,14 @@ namespace Microsoft.WingetCreateUnitTests
             InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
             var updatedInstaller = updatedInstallerManifest.Installers.First();
 
-            Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
-            Assert.IsTrue(updatedInstaller.NestedInstallerType == NestedInstallerType.Portable, "NestedInstallerType should be PORTABLE");
+            Assert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Portable, "NestedInstallerType should be PORTABLE");
 
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
             var initialNestedInstallerFile = initialInstaller.NestedInstallerFiles.First();
 
-            var updatedNestedInstallerFile = updatedInstaller.NestedInstallerFiles.First();
+            var updatedNestedInstallerFile = updatedInstallerManifest.NestedInstallerFiles.First();
             Assert.IsTrue(initialNestedInstallerFile.RelativeFilePath == updatedNestedInstallerFile.RelativeFilePath, "RelativeFilePath should be preserved.");
             Assert.IsTrue(initialNestedInstallerFile.PortableCommandAlias == updatedNestedInstallerFile.PortableCommandAlias, "PortableCommandAlias should be preserved.");
             Assert.IsTrue(initialInstaller.InstallerSha256 != updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
@@ -782,15 +779,15 @@ namespace Microsoft.WingetCreateUnitTests
             InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
             var updatedInstaller = updatedInstallerManifest.Installers.First();
 
-            Assert.IsTrue(updatedInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
-            Assert.IsTrue(updatedInstaller.NestedInstallerType == NestedInstallerType.Msi, "NestedInstallerType should be MSI");
+            Assert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Msi, "NestedInstallerType should be MSI");
 
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
 
-            Assert.IsTrue(initialInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            Assert.IsTrue(initialInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedInstallerManifest.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
             Assert.IsTrue(initialInstaller.InstallerSha256 != updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
-            Assert.IsNotNull(updatedInstaller.ProductCode, "ProductCode should be updated.");
+            Assert.IsNotNull(updatedInstallerManifest.ProductCode, "ProductCode should be updated.");
         }
 
         /// <summary>
@@ -809,18 +806,15 @@ namespace Microsoft.WingetCreateUnitTests
             var updatedFirstInstaller = updatedInstallerManifest.Installers[0];
             var updatedSecondInstaller = updatedInstallerManifest.Installers[1];
 
-            Assert.IsTrue(updatedFirstInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
-            Assert.IsTrue(updatedFirstInstaller.NestedInstallerType == NestedInstallerType.Msix, "NestedInstallerType should be MSIX");
-            Assert.IsTrue(updatedSecondInstaller.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
-            Assert.IsTrue(updatedSecondInstaller.NestedInstallerType == NestedInstallerType.Msix, "NestedInstallerType should be MSIX");
+            Assert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Msix, "NestedInstallerType should be MSIX");
 
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstallers = initialManifests.SingletonManifest.Installers;
             var initialFirstInstaller = initialInstallers[0];
             var initialSecondInstaller = initialInstallers[1];
 
-            Assert.IsTrue(initialFirstInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedFirstInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
-            Assert.IsTrue(initialSecondInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedSecondInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            Assert.IsTrue(initialFirstInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedInstallerManifest.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
 
             Assert.IsNotNull(updatedFirstInstaller.SignatureSha256, "SignatureSha256 should be updated.");
             Assert.IsNotNull(updatedSecondInstaller.SignatureSha256, "SignatureSha256 should be updated.");
