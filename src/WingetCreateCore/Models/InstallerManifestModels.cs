@@ -248,8 +248,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-    
-    
+
+        // TO DO: Add Equals() Method when the model gets updated.
+
     }
     
     /// <summary>Various key values under installer's ARP entry</summary>

@@ -828,11 +828,11 @@ namespace Microsoft.WingetCreateUnitTests
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task MoveCommonInstallerFieldsToRoot()
+        public async Task MoveInstallerFieldsToRoot()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
             string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MoveInstallerFieldsToRoot", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86" });
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MoveInstallerFieldsToRoot", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86", $"{installerUrl}|arm" });
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
 
@@ -843,13 +843,27 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsTrue(updatedInstallerManifest.Scope == Scope.Machine, "Scope at the root level should be machine");
             Assert.IsTrue(updatedInstallerManifest.MinimumOSVersion == "10.0.22000.0", "MinimumOSVersion at the root level should be 10.0.22000.0");
             Assert.IsTrue(updatedInstallerManifest.PackageFamilyName == "TestPackageFamilyName", "PackageFamilyName at the root level should be TestPackageFamilyName");
+            Assert.IsTrue(updatedInstallerManifest.UpgradeBehavior == UpgradeBehavior.Install, "UpgradeBehavior at the root level should be install");
+            Assert.IsTrue(updatedInstallerManifest.ElevationRequirement == ElevationRequirement.ElevationRequired, "ElevationRequirement at the root level should be elevationRequired");
+            Assert.IsTrue(updatedInstallerManifest.InstallerAbortsTerminal == true, "InstallerAbortsTerminal at the root level should be true");
+            Assert.IsTrue(updatedInstallerManifest.InstallLocationRequired == true, "InstallLocation at the root level should be true");
+            Assert.IsTrue(updatedInstallerManifest.RequireExplicitUpgrade == true, "RequireExplicitUpgrade at the root level should be true");
+            Assert.IsTrue(updatedInstallerManifest.DisplayInstallWarnings == true, "DisplayInstallWarnings at the root level should be true");
             Assert.IsNotNull(updatedInstallerManifest.NestedInstallerFiles, "NestedInstallerFiles at the root level should not be null");
             Assert.IsNotNull(updatedInstallerManifest.InstallerSwitches, "InstallerSwitches at the root level should not be null");
             Assert.IsNotNull(updatedInstallerManifest.Dependencies, "Dependencies at the root level should not be null");
             Assert.IsNotNull(updatedInstallerManifest.AppsAndFeaturesEntries, "AppsAndFeaturesEntries at the root level should not be null");
             Assert.IsNotNull(updatedInstallerManifest.Platform, "Platform at the root level should not be null");
             Assert.IsNotNull(updatedInstallerManifest.ExpectedReturnCodes, "ExpectedReturnCodes at the root level should not be null");
-
+            Assert.IsNotNull(updatedInstallerManifest.Commands, "Commands at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.Protocols, "Protocols at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.FileExtensions, "FileExtensions at the root level should not be null");
+            // TODO: Uncomment when installer model gets updated to support markets field.
+            // Assert.IsNotNull(updatedInstallerManifest.Markets, "Markets at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.UnsupportedOSArchitectures, "UnsupportedOSArchitectures at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.InstallerSuccessCodes, "InstallerSuccessCodes at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.UnsupportedArguments, "UnsupportedArguments at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.InstallationMetadata, "InstallationMetadata at the root level should not be null");
             foreach (var installer in updatedInstallerManifest.Installers)
             {
                 Assert.IsNull(installer.InstallerType, "InstallerType at the installer level should be null");
@@ -857,12 +871,27 @@ namespace Microsoft.WingetCreateUnitTests
                 Assert.IsNull(installer.Scope, "Scope at the installer level should be null");
                 Assert.IsNull(installer.MinimumOSVersion, "MinimumOSVersion at the installer level should be null");
                 Assert.IsNull(installer.PackageFamilyName, "PackageFamilyName at the installer level should be null");
+                Assert.IsNull(installer.UpgradeBehavior, "UpgradeBehavior at the installer level should be null");
+                Assert.IsNull(installer.ElevationRequirement, "ElevationRequirement at the installer level should be null");
+                Assert.IsNull(installer.InstallerAbortsTerminal, "InstallerAbortsTerminal at the installer level should be null");
+                Assert.IsNull(installer.InstallLocationRequired, "InstallLocation at the installer level should be null");
+                Assert.IsNull(installer.RequireExplicitUpgrade, "RequireExplicitUpgrade at the installer level should be null");
+                Assert.IsNull(installer.DisplayInstallWarnings, "DisplayInstallWarnings at the installer level should be null");
                 Assert.IsNull(installer.NestedInstallerFiles, "NestedInstallerFiles at the installer level should be null");
                 Assert.IsNull(installer.InstallerSwitches, "InstallerSwitches at the installer level should be null");
                 Assert.IsNull(installer.Dependencies, "Dependencies at the installer level should be null");
                 Assert.IsNull(installer.AppsAndFeaturesEntries, "AppsAndFeaturesEntries at the installer level should be null");
                 Assert.IsNull(installer.Platform, "Platform at the installer level should be null");
                 Assert.IsNull(installer.ExpectedReturnCodes, "ExpectedReturnCodes at the installer level should be null");
+                Assert.IsNull(installer.Commands, "Commands at the installer level should be null");
+                Assert.IsNull(installer.Protocols, "Protocols at the installer level should be null");
+                Assert.IsNull(installer.FileExtensions, "FileExtensions at the installer level should be null");
+                // TODO: Uncomment when installer model gets updated to support markets field.
+                // Assert.IsNull(installer.Markets, "Markets at the installer level should be null");
+                Assert.IsNull(installer.UnsupportedOSArchitectures, "UnsupportedOSArchitectures at the installer level should be null");
+                Assert.IsNull(installer.InstallerSuccessCodes, "InstallerSuccessCodes at the installer level should be null");
+                Assert.IsNull(installer.UnsupportedArguments, "UnsupportedArguments at the installer level should be null");
+                Assert.IsNull(installer.InstallationMetadata, "InstallationMetadata at the installer level should be null");
             }
         }
 
