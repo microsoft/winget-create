@@ -1,9 +1,9 @@
 PackageIdentifier: TestPublisher.DontMoveInstallerFieldsToRoot
 PackageVersion: 0.1.2
-PackageName: Retains fields at the installer level
+PackageName: Retain properties at the installer level
 Publisher: Test publisher
 License: MIT
-ShortDescription: A manifest that fields that are not common to all installers are retained at the installer level.
+ShortDescription: A manifest that verifies properties that are not common to all installers are retained at the installer level.
 InstallerLocale: en-US
 Installers:
   - Architecture: x64
