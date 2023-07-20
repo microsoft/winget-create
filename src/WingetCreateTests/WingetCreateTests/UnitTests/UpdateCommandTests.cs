@@ -858,6 +858,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsNotNull(updatedInstallerManifest.Commands, "Commands at the root level should not be null");
             Assert.IsNotNull(updatedInstallerManifest.Protocols, "Protocols at the root level should not be null");
             Assert.IsNotNull(updatedInstallerManifest.FileExtensions, "FileExtensions at the root level should not be null");
+
             // TODO: Uncomment when installer model gets updated to support markets field.
             // Assert.IsNotNull(updatedInstallerManifest.Markets, "Markets at the root level should not be null");
             Assert.IsNotNull(updatedInstallerManifest.UnsupportedOSArchitectures, "UnsupportedOSArchitectures at the root level should not be null");
@@ -886,6 +887,7 @@ namespace Microsoft.WingetCreateUnitTests
                 Assert.IsNull(installer.Commands, "Commands at the installer level should be null");
                 Assert.IsNull(installer.Protocols, "Protocols at the installer level should be null");
                 Assert.IsNull(installer.FileExtensions, "FileExtensions at the installer level should be null");
+
                 // TODO: Uncomment when installer model gets updated to support markets field.
                 // Assert.IsNull(installer.Markets, "Markets at the installer level should be null");
                 Assert.IsNull(installer.UnsupportedOSArchitectures, "UnsupportedOSArchitectures at the installer level should be null");
@@ -931,6 +933,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsNull(updatedInstallerManifest.Commands, "Commands at the root level should be null");
             Assert.IsNull(updatedInstallerManifest.Protocols, "Protocols at the root level should be null");
             Assert.IsNull(updatedInstallerManifest.FileExtensions, "FileExtensions at the root level should be null");
+
             // TODO: Uncomment when installer model gets updated to support markets field.
             // Assert.IsNull(updatedInstallerManifest.Markets, "Markets at the root level should be null");
             Assert.IsNull(updatedInstallerManifest.UnsupportedOSArchitectures, "UnsupportedOSArchitectures at the root level should be null");
@@ -960,6 +963,7 @@ namespace Microsoft.WingetCreateUnitTests
                 Assert.IsNotNull(installer.Commands, "Commands at the installer level should not be null");
                 Assert.IsNotNull(installer.Protocols, "Protocols at the installer level should not be null");
                 Assert.IsNotNull(installer.FileExtensions, "FileExtensions at the installer level should not be null");
+
                 // TODO: Uncomment when installer model gets updated to support markets field.
                 // Assert.IsNotNull(installer.Markets, "Markets at the installer level should not be null");
                 Assert.IsNotNull(installer.UnsupportedOSArchitectures, "UnsupportedOSArchitectures at the installer level should not be null");

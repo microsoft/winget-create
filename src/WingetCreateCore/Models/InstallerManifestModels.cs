@@ -6,7 +6,6 @@
 
 namespace Microsoft.WingetCreateCore.Models.Installer
 {
-    using System.Linq;
     #pragma warning disable // Disable all warnings
 
     /// <summary>Enumeration of supported installer types. InstallerType is required in either root level or individual Installer level</summary>
@@ -160,22 +159,8 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-
-        /// <summary>Gives the criteria for determining whether two instances of InstallerSwitches objects are equal</summary>
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            InstallerSwitches other = (InstallerSwitches)obj;
-            return Silent == other.Silent &&
-                SilentWithProgress == other.SilentWithProgress &&
-                Interactive == other.Interactive &&
-                InstallLocation == other.InstallLocation &&
-                Log == other.Log &&
-                Upgrade == other.Upgrade &&
-                Custom == other.Custom;
-        }
+    
+    
     }
     
     /// <summary>The upgrade method</summary>
@@ -221,19 +206,8 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-        
-        /// <summary>Gives the criteria for determining whether two instances of Dependencies objects are equal</summary>
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            Dependencies other = (Dependencies)obj;
-            return WindowsFeatures.ToList().SequenceEqual(other.WindowsFeatures) &&
-                WindowsLibraries.ToList().SequenceEqual(WindowsLibraries) &&
-                PackageDependencies.ToList().SequenceEqual(other.PackageDependencies) &&
-                ExternalDependencies.ToList().SequenceEqual(other.ExternalDependencies);
-        }
+    
+    
     }
     
     /// <summary>The installer markets</summary>
@@ -248,9 +222,8 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-
-        // TO DO: Implement Equals() override when the model is updated to include the schema properties. Update MoveInstallerFieldsToRoot and DontMoveInstallerFieldsToRoot test cases to verify the equality.
-
+    
+    
     }
     
     /// <summary>Various key values under installer's ARP entry</summary>
@@ -292,21 +265,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-
-        /// <summary>Gives the criteria for determining whether two instances of AppsAndFeaturesEntry objects are equal</summary>
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            AppsAndFeaturesEntry other = (AppsAndFeaturesEntry)obj;
-            return DisplayName == other.DisplayName &&
-                Publisher == other.Publisher &&
-                DisplayVersion == other.DisplayVersion &&
-                ProductCode == other.ProductCode &&
-                UpgradeCode == other.UpgradeCode &&
-                InstallerType == other.InstallerType;
-        }
+    
     
     }
     
@@ -347,17 +306,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-
-        /// <summary>Gives the criteria for determining whether two instances of InstallationMetadata objects are equal</summary>
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            InstallationMetadata other = (InstallationMetadata)obj;
-            return DefaultInstallLocation == other.DefaultInstallLocation &&
-                Files.ToList().SequenceEqual(other.Files);
-        }
+    
     
     }
     
@@ -515,7 +464,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     
     }
     
-    /// <summary>A representation of a single-file manifest representing an app installers in the OWC. v1.5.0</summary>
+    /// <summary>A representation of a single-file manifest representing an app installers in the OWC. v1.4.0</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class InstallerManifest 
     {
@@ -666,7 +615,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.5.0";
+        public string ManifestVersion { get; set; } = "1.4.0";
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
@@ -676,6 +625,8 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
+    
+    
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
@@ -700,17 +651,8 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-
-        /// <summary>Gives the criteria for determining whether two instances of PackageDependencies objects are equal</summary>
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            PackageDependencies other = (PackageDependencies) obj;
-            return PackageIdentifier == other.PackageIdentifier && 
-                MinimumVersion == other.MinimumVersion;
-        }
+    
+    
     }
     
     /// <summary>Represents an installed file.</summary>
@@ -751,20 +693,8 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-
-        /// <summary>Gives the criteria for determining whether two instances of Files objects are equal</summary>
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            Files other = (Files)obj;
-            return RelativeFilePath == other.RelativeFilePath &&
-                FileSha256 == other.FileSha256 &&
-                FileType == other.FileType &&
-                InvocationParameter == other.InvocationParameter &&
-                DisplayName == other.DisplayName;
-        }
+    
+    
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
@@ -801,17 +731,8 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-
-        /// <summary>Gives the criteria for determining whether two instances of NestedInstallerFile objects are equal</summary>
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            NestedInstallerFile other = (NestedInstallerFile) obj;
-            return RelativeFilePath == other.RelativeFilePath && 
-                PortableCommandAlias == other.PortableCommandAlias;
-        }
+    
+    
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
@@ -853,18 +774,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             get { return _additionalProperties; }
             set { _additionalProperties = value; }
         }
-
-        /// <summary>Gives the criteria for determining whether two instances of ExpectedReturnCode objects are equal</summary>
-        public override bool Equals(object obj)
-        {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-
-            ExpectedReturnCode other = (ExpectedReturnCode)obj;
-            return InstallerReturnCode == other.InstallerReturnCode &&
-                ReturnResponse == other.ReturnResponse &&
-                ReturnResponseUrl == other.ReturnResponseUrl;
-        }
+    
     
     }
     
