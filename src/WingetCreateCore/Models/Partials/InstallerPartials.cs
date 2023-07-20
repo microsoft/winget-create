@@ -46,7 +46,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     /// <summary>
     /// Partial class that implements helper methods for the InstallerSwitches class.
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class InstallerSwitches
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
         /// Gives the criteria for determining whether two instances of InstallerSwitches objects are equal.
@@ -74,7 +76,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     /// <summary>
     /// Partial class that implements helper methods for the Dependencies class.
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class Dependencies
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
         /// Gives the criteria for determining whether two instances of Dependencies objects are equal.
@@ -99,7 +103,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     /// <summary>
     /// Partial class that implements helper methods for the AppsAndFeaturesEntry class.
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class AppsAndFeaturesEntry
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
         /// Gives the criteria for determining whether two instances of AppsAndFeaturesEntry objects are equal.
@@ -126,7 +132,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     /// <summary>
     /// Partial class that implements helper methods for the InstallationMetadata class.
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class InstallationMetadata
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
         /// Gives the criteria for determining whether two instances of InstallationMetadata objects are equal.
@@ -149,7 +157,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     /// <summary>
     /// Partial class that implements helper methods for the Files class.
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class Files
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
         /// Gives the criteria for determining whether two instances of Files objects are equal.
@@ -175,7 +185,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     /// <summary>
     /// Partial class that implements helper methods for the NestedInstallerFile class.
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class NestedInstallerFile
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
         /// Gives the criteria for determining whether two instances of NestedInstallerFile objects are equal.
@@ -198,10 +210,12 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     /// <summary>
     /// Partial class that implements helper methods for the ExpectedReturnCode class.
     /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
     public partial class ExpectedReturnCode
+#pragma warning restore SA1402 // File may only contain a single type
     {
         /// <summary>
-        /// Gives the criteria for determining whether two instances of ExpectedReturnCode objects are equal
+        /// Gives the criteria for determining whether two instances of ExpectedReturnCode objects are equal.
         /// </summary>
         /// <returns>A boolean value indicating whether the two objects are equal.</returns>
         /// <param name="obj" type="object">The object to compare with the current object.</param>
