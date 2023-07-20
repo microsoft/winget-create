@@ -249,7 +249,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             set { _additionalProperties = value; }
         }
 
-        // TO DO: Add Equals() Method when the model gets updated.
+        // TO DO: Implement Equals() override when the model is updated to include the schema properties. Update MoveInstallerFieldsToRoot and DontMoveInstallerFieldsToRoot test cases to verify the equality.
 
     }
     
