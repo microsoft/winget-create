@@ -185,6 +185,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             RemoveEmptyStringFieldsInManifests(updatedManifests);
+            ShiftInstallerFieldsToRootLevel(updatedManifests.InstallerManifest);
             DisplayManifestPreview(updatedManifests);
 
             if (string.IsNullOrEmpty(this.OutputDir))
@@ -227,6 +228,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Manifests object representing the updates manifest content, or null if the update failed.</returns>
         public async Task<Manifests> UpdateManifestsAutonomously(Manifests manifests)
         {
+            ShiftRootFieldsToInstallerLevel(manifests.InstallerManifest);
             InstallerManifest installerManifest = manifests.InstallerManifest;
 
             if (!this.InstallerUrls.Any())
@@ -306,6 +308,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 PackageParser.UpdateInstallerNodesAsync(installerMetadataList, installerManifest);
                 DisplayArchitectureWarnings(installerMetadataList);
                 ResetVersionSpecificFields(manifests);
+                ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
             }
             catch (InvalidOperationException)
             {
@@ -661,12 +664,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>The updated manifest.</returns>
         private async Task<Manifests> UpdateManifestsInteractively(Manifests manifests)
         {
+            ShiftRootFieldsToInstallerLevel(manifests.InstallerManifest);
             Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
             Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
 
             // Clone the list of installers in order to preserve initial values.
             Manifests originalManifest = new Manifests { InstallerManifest = new InstallerManifest() };
-            ShiftFieldsFromRootToInstallerLevel(manifests.InstallerManifest);
             originalManifest.InstallerManifest.Installers = manifests.CloneInstallers();
 
             do
@@ -674,6 +677,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Console.Clear();
                 manifests.InstallerManifest.Installers = originalManifest.CloneInstallers();
                 await this.UpdateInstallersInteractively(manifests.InstallerManifest.Installers);
+                ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
                 DisplayManifestPreview(manifests);
                 ValidateManifestsInTempDir(manifests);
             }

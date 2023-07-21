@@ -1,0 +1,212 @@
+PackageIdentifier: TestPublisher.MoveInstallerFieldsToRoot
+PackageVersion: 0.1.2
+PackageName: Shift common installer fields to root
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest that tests that common installer fields are correctly moved to the root of the manifest.
+InstallerLocale: en-US
+Installers:
+  - Architecture: x64
+    InstallerType: zip
+    InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
+    InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+    NestedInstallerType: exe
+    NestedInstallerFiles:
+      - RelativeFilePath: WingetCreateTestExeInstaller.exe
+    AppsAndFeaturesEntries:
+      - DisplayName: TestDisplayName
+        Publisher: TestPublisher
+        DisplayVersion: 1.0.0
+        ProductCode: TestProductCode
+        UpgradeCode: TestUpgradeCode
+        InstallerType: msi
+    InstallerSwitches:
+      Silent: /silent
+      SilentWithProgress: /silentwithprogress
+    Dependencies:
+      PackageDependencies:
+      - PackageIdentifier: TestPackageDependency
+        MinimumVersion: 1.0.0
+      WindowsFeatures:
+        - TestWindowsFeature
+      ExternalDependencies:
+        - TestExternalDependency
+      WindowsLibraries:
+        - TestWindowsLibrary
+    ExpectedReturnCodes:
+    - InstallerReturnCode: 1000
+      ReturnResponse: installInProgress
+    MinimumOSVersion: 10.0.22000.0
+    PackageFamilyName: TestPackageFamilyName
+    Platform:
+    - Windows.Desktop
+    Scope: machine
+    UpgradeBehavior: install
+    ElevationRequirement: elevationRequired
+    Commands:
+      - fakeCommand
+    Protocols:
+      - fakeProtocol
+    FileExtensions:
+      - .exe
+    # Uncomment when installer model gets updated to support these fields
+    #Markets:
+    #  AllowedMarkets:
+    #   - fakeAllowedMarket
+    #  ExcludedMarkets:
+    #    - fakeExcludedMarket
+    InstallerAbortsTerminal: true
+    InstallLocationRequired: true
+    RequireExplicitUpgrade: true
+    UnsupportedOSArchitectures:
+      - arm64
+    DisplayInstallWarnings: true
+    InstallerSuccessCodes:
+      - 1
+    UnsupportedArguments:
+      - log
+      - location
+    InstallationMetadata:
+      DefaultInstallLocation: "%ProgramFiles%\\TestApp"
+      Files:
+        - RelativeFilePath: "main.exe"
+          FileSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82
+          FileType: launch
+          InvocationParameter: "/arg"
+  - Architecture: x86
+    InstallerType: zip
+    InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
+    InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+    NestedInstallerType: exe
+    NestedInstallerFiles:
+      - RelativeFilePath: WingetCreateTestExeInstaller.exe
+    AppsAndFeaturesEntries:
+      - DisplayName: TestDisplayName
+        Publisher: TestPublisher
+        DisplayVersion: 1.0.0
+        ProductCode: TestProductCode
+        UpgradeCode: TestUpgradeCode
+        InstallerType: msi
+    InstallerSwitches:
+      Silent: /silent
+      SilentWithProgress: /silentwithprogress
+    Dependencies:
+      PackageDependencies:
+      - PackageIdentifier: TestPackageDependency
+        MinimumVersion: 1.0.0
+      WindowsFeatures:
+        - TestWindowsFeature
+      ExternalDependencies:
+        - TestExternalDependency
+      WindowsLibraries:
+        - TestWindowsLibrary
+    ExpectedReturnCodes:
+    - InstallerReturnCode: 1000
+      ReturnResponse: installInProgress
+    MinimumOSVersion: 10.0.22000.0
+    PackageFamilyName: TestPackageFamilyName
+    Platform:
+    - Windows.Desktop
+    Scope: machine
+    UpgradeBehavior: install
+    ElevationRequirement: elevationRequired
+    Commands:
+      - fakeCommand
+    Protocols:
+      - fakeProtocol
+    FileExtensions:
+      - .exe
+    # Uncomment when installer model gets updated to support these fields
+    #Markets:
+    #  AllowedMarkets:
+    #   - fakeAllowedMarket
+    #  ExcludedMarkets:
+    #    - fakeExcludedMarket
+    InstallerAbortsTerminal: true
+    InstallLocationRequired: true
+    RequireExplicitUpgrade: true
+    UnsupportedOSArchitectures:
+      - arm64
+    DisplayInstallWarnings: true
+    InstallerSuccessCodes:
+      - 1
+    UnsupportedArguments:
+      - log
+      - location
+    InstallationMetadata:
+      DefaultInstallLocation: "%ProgramFiles%\\TestApp"
+      Files:
+        - RelativeFilePath: "main.exe"
+          FileSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82
+          FileType: launch
+          InvocationParameter: "/arg"
+  - Architecture: arm
+    InstallerType: zip
+    InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
+    InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+    NestedInstallerType: exe
+    NestedInstallerFiles:
+      - RelativeFilePath: WingetCreateTestExeInstaller.exe
+    AppsAndFeaturesEntries:
+      - DisplayName: TestDisplayName
+        Publisher: TestPublisher
+        DisplayVersion: 1.0.0
+        ProductCode: TestProductCode
+        UpgradeCode: TestUpgradeCode
+        InstallerType: msi
+    InstallerSwitches:
+      Silent: /silent
+      SilentWithProgress: /silentwithprogress
+    Dependencies:
+      PackageDependencies:
+      - PackageIdentifier: TestPackageDependency
+        MinimumVersion: 1.0.0
+      WindowsFeatures:
+        - TestWindowsFeature
+      ExternalDependencies:
+        - TestExternalDependency
+      WindowsLibraries:
+        - TestWindowsLibrary
+    ExpectedReturnCodes:
+    - InstallerReturnCode: 1000
+      ReturnResponse: installInProgress
+    MinimumOSVersion: 10.0.22000.0
+    PackageFamilyName: TestPackageFamilyName
+    Platform:
+    - Windows.Desktop
+    Scope: machine
+    UpgradeBehavior: install
+    ElevationRequirement: elevationRequired
+    Commands:
+      - fakeCommand
+    Protocols:
+      - fakeProtocol
+    FileExtensions:
+      - .exe
+    # Uncomment when installer model gets updated to support these fields
+    #Markets:
+    #  AllowedMarkets:
+    #   - fakeAllowedMarket
+    #  ExcludedMarkets:
+    #    - fakeExcludedMarket
+    InstallerAbortsTerminal: true
+    InstallLocationRequired: true
+    RequireExplicitUpgrade: true
+    UnsupportedOSArchitectures:
+      - arm64
+    DisplayInstallWarnings: true
+    InstallerSuccessCodes:
+      - 1
+    UnsupportedArguments:
+      - log
+      - location
+    InstallationMetadata:
+      DefaultInstallLocation: "%ProgramFiles%\\TestApp"
+      Files:
+        - RelativeFilePath: "main.exe"
+          FileSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82
+          FileType: launch
+          InvocationParameter: "/arg"
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.4.0

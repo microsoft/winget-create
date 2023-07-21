@@ -36,6 +36,12 @@
     <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.locale.en-US.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\TestPublisher.MoveInstallerFieldsToRoot.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TestPublisher.DontMoveInstallerFieldsToRoot.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\TestPublisher.FullSingleton1_5.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
