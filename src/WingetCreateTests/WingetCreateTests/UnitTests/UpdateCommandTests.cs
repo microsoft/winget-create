@@ -974,6 +974,93 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies that installer fields are overridden by root fields in update scenario.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateOverridesInstallerFields()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.OverrideInstallerFields", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86" });
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
+
+            Assert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType at the root level should be ZIP");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType at the root level should be EXE");
+            Assert.IsTrue(updatedInstallerManifest.Scope == Scope.Machine, "Scope at the root level should be machine");
+            Assert.IsTrue(updatedInstallerManifest.MinimumOSVersion == "10.0.22000.0", "MinimumOSVersion at the root level should be 10.0.22000.0");
+            Assert.IsTrue(updatedInstallerManifest.PackageFamilyName == "TestPackageFamilyName1", "PackageFamilyName at the root level should be TestPackageFamilyName");
+            Assert.IsTrue(updatedInstallerManifest.UpgradeBehavior == UpgradeBehavior.Install, "UpgradeBehavior at the root level should be install");
+            Assert.IsTrue(updatedInstallerManifest.ElevationRequirement == ElevationRequirement.ElevationRequired, "ElevationRequirement at the root level should be elevationRequired");
+            Assert.IsTrue(updatedInstallerManifest.InstallerAbortsTerminal == true, "InstallerAbortsTerminal at the root level should be true");
+            Assert.IsTrue(updatedInstallerManifest.InstallLocationRequired == true, "InstallLocation at the root level should be true");
+            Assert.IsTrue(updatedInstallerManifest.RequireExplicitUpgrade == true, "RequireExplicitUpgrade at the root level should be true");
+            Assert.IsTrue(updatedInstallerManifest.DisplayInstallWarnings == true, "DisplayInstallWarnings at the root level should be true");
+            Assert.IsNotNull(updatedInstallerManifest.NestedInstallerFiles, "NestedInstallerFiles at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerFiles[0].PortableCommandAlias == "PortableCommandAlias1", "PortableCommandAlias at the root level should be PortableCommandAlias1");
+            Assert.IsNotNull(updatedInstallerManifest.InstallerSwitches, "InstallerSwitches at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.InstallerSwitches.Silent == "/silent1", "Silent installer switch at the root level should be /silent1");
+            Assert.IsNotNull(updatedInstallerManifest.Dependencies, "Dependencies at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.Dependencies.PackageDependencies[0].PackageIdentifier == "TestPackageDependency1", "PackageDependencies PackageIdentifier at the root level should be TestPackageDependency1");
+            Assert.IsNotNull(updatedInstallerManifest.AppsAndFeaturesEntries, "AppsAndFeaturesEntries at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.AppsAndFeaturesEntries[0].ProductCode == "TestProductCode1", "AppsAndFeaturesEntries ProductCode at the root level should be TestProduct1");
+            Assert.IsNotNull(updatedInstallerManifest.Platform, "Platform at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.Platform[0] == Platform.Windows_Desktop, "Platform at the root level should contain Windows.Desktop");
+            Assert.IsNotNull(updatedInstallerManifest.ExpectedReturnCodes, "ExpectedReturnCodes at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.ExpectedReturnCodes[0].InstallerReturnCode == 1001, "ExpectedReturnCodes InstallerReturnCode at the root level should be 1001");
+            Assert.IsNotNull(updatedInstallerManifest.Commands, "Commands at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.Commands[0] == "fakeCommand1", "Commands at the root level should contain fakeCommand1");
+            Assert.IsNotNull(updatedInstallerManifest.Protocols, "Protocols at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.Protocols[0] == "fakeProtocol1", "Protocols at the root level should contain fakeProtocol1");
+            Assert.IsNotNull(updatedInstallerManifest.FileExtensions, "FileExtensions at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.FileExtensions[0] == ".exe", "FileExtensions at the root level should contain .exe");
+
+            // TODO: Uncomment when installer model gets updated to support markets field.
+            // Assert.IsNotNull(updatedInstallerManifest.Markets, "Markets at the root level should not be null");
+            Assert.IsNotNull(updatedInstallerManifest.UnsupportedOSArchitectures, "UnsupportedOSArchitectures at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.UnsupportedOSArchitectures[0] == UnsupportedOSArchitecture.Arm64, "UnsupportedOSArchitectures at the root level should contain arm64");
+            Assert.IsNotNull(updatedInstallerManifest.InstallerSuccessCodes, "InstallerSuccessCodes at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.InstallerSuccessCodes[0] == 1, "InstallerSuccessCodes at the root level should contain 1");
+            Assert.IsNotNull(updatedInstallerManifest.UnsupportedArguments, "UnsupportedArguments at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.UnsupportedArguments[1] == UnsupportedArgument.Location, "UnsupportedArguments at the root level should contain location");
+            Assert.IsNotNull(updatedInstallerManifest.InstallationMetadata, "InstallationMetadata at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.InstallationMetadata.DefaultInstallLocation == "%ProgramFiles%\\TestApp1", "DefaultInstallLocation at the root level should be ProgramFiles/TestApp1");
+            foreach (var installer in updatedInstallerManifest.Installers)
+            {
+                Assert.IsNull(installer.InstallerType, "InstallerType at the installer level should be null");
+                Assert.IsNull(installer.NestedInstallerType, "NestedInstallerType at the installer level should be null");
+                Assert.IsNull(installer.Scope, "Scope at the installer level should be null");
+                Assert.IsNull(installer.MinimumOSVersion, "MinimumOSVersion at the installer level should be null");
+                Assert.IsNull(installer.PackageFamilyName, "PackageFamilyName at the installer level should be null");
+                Assert.IsNull(installer.UpgradeBehavior, "UpgradeBehavior at the installer level should be null");
+                Assert.IsNull(installer.ElevationRequirement, "ElevationRequirement at the installer level should be null");
+                Assert.IsNull(installer.InstallerAbortsTerminal, "InstallerAbortsTerminal at the installer level should be null");
+                Assert.IsNull(installer.InstallLocationRequired, "InstallLocation at the installer level should be null");
+                Assert.IsNull(installer.RequireExplicitUpgrade, "RequireExplicitUpgrade at the installer level should be null");
+                Assert.IsNull(installer.DisplayInstallWarnings, "DisplayInstallWarnings at the installer level should be null");
+                Assert.IsNull(installer.NestedInstallerFiles, "NestedInstallerFiles at the installer level should be null");
+                Assert.IsNull(installer.InstallerSwitches, "InstallerSwitches at the installer level should be null");
+                Assert.IsNull(installer.Dependencies, "Dependencies at the installer level should be null");
+                Assert.IsNull(installer.AppsAndFeaturesEntries, "AppsAndFeaturesEntries at the installer level should be null");
+                Assert.IsNull(installer.Platform, "Platform at the installer level should be null");
+                Assert.IsNull(installer.ExpectedReturnCodes, "ExpectedReturnCodes at the installer level should be null");
+                Assert.IsNull(installer.Commands, "Commands at the installer level should be null");
+                Assert.IsNull(installer.Protocols, "Protocols at the installer level should be null");
+                Assert.IsNull(installer.FileExtensions, "FileExtensions at the installer level should be null");
+
+                // TODO: Uncomment when installer model gets updated to support markets field.
+                // Assert.IsNull(installer.Markets, "Markets at the installer level should be null");
+                Assert.IsNull(installer.UnsupportedOSArchitectures, "UnsupportedOSArchitectures at the installer level should be null");
+                Assert.IsNull(installer.InstallerSuccessCodes, "InstallerSuccessCodes at the installer level should be null");
+                Assert.IsNull(installer.UnsupportedArguments, "UnsupportedArguments at the installer level should be null");
+                Assert.IsNull(installer.InstallationMetadata, "InstallationMetadata at the installer level should be null");
+            }
+        }
+
+        /// <summary>
         /// Verifies that the appropriate error message is displayed if the nested installer is not found.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
