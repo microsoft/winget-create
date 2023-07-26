@@ -1030,4 +1030,7 @@
   <data name="IconUrl_KeywordDescription" xml:space="preserve">
     <value>The url of the hosted icon file</value>
   </data>
+  <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
+    <value>Multiple matches found for "{0}" from {1}</value>
+  </data>
 </root>

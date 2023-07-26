@@ -280,21 +280,54 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     installerUpdate.IsZipFile = true;
 
-                    // Obtain all possible relative file paths and check if there is a match.
-                    List<string> relativeFilePaths = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles?.Select(x => x.RelativeFilePath) ?? Enumerable.Empty<string>()).Distinct().ToList();
+                    // Obtain all nested installer files from the previous manifest.
+                    List<NestedInstallerFile> nestedInstallerFiles = installerManifest.Installers.SelectMany(i => i.NestedInstallerFiles ?? Enumerable.Empty<NestedInstallerFile>()).ToList();
                     string extractDirectory = ExtractArchiveAndRetrieveDirectoryPath(packageFile);
+                    installerUpdate.NestedInstallerFiles = new List<NestedInstallerFile>();
 
-                    installerUpdate.RelativeFilePaths = new List<string>();
-
-                    foreach (string relativeFilePath in relativeFilePaths)
+                    foreach (NestedInstallerFile nestedInstallerFile in nestedInstallerFiles)
                     {
-                        if (!File.Exists(Path.Combine(extractDirectory, relativeFilePath)))
+                        // If the previous RelativeFilePath is not an exact match, check if there is a new suitable match in the archive.
+                        if (!File.Exists(Path.Combine(extractDirectory, nestedInstallerFile.RelativeFilePath)))
                         {
-                            Logger.ErrorLocalized(nameof(Resources.NestedInstallerFileNotFound_Error), relativeFilePath);
-                            return null;
-                        }
+                            string fileName = Path.GetFileName(nestedInstallerFile.RelativeFilePath);
+                            string[] matchingFiles = Directory.GetFiles(extractDirectory, fileName, SearchOption.AllDirectories);
 
-                        installerUpdate.RelativeFilePaths.Add(relativeFilePath);
+                            // If there is only one match in the archive, use that as the new relative file path.
+                            if (matchingFiles.Length == 1)
+                            {
+                                string relativePath = matchingFiles.First().Replace(extractDirectory, string.Empty).TrimStart('\\');
+                                List<string> relativeFilePathsInsideList = installerUpdate.NestedInstallerFiles.Select(x => x.RelativeFilePath).ToList();
+
+                                // Skip if the relative path is already in the list.
+                                if (!relativeFilePathsInsideList.Contains(relativePath))
+                                {
+                                    installerUpdate.NestedInstallerFiles.Add(new NestedInstallerFile
+                                    {
+                                        RelativeFilePath = relativePath,
+                                        PortableCommandAlias = nestedInstallerFile.PortableCommandAlias,
+                                    });
+                                }
+                            }
+                            else if (matchingFiles.Length > 1)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.MultipleMatchingNestedInstallersFound_Error), fileName, Path.GetFileName(packageFile));
+                                return null;
+                            }
+                            else
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.NestedInstallerFileNotFound_Error), nestedInstallerFile.RelativeFilePath);
+                                return null;
+                            }
+                        }
+                        else
+                        {
+                            installerUpdate.NestedInstallerFiles.Add(new NestedInstallerFile
+                            {
+                                RelativeFilePath = nestedInstallerFile.RelativeFilePath,
+                                PortableCommandAlias = nestedInstallerFile.PortableCommandAlias,
+                            });
+                        }
                     }
 
                     installerUpdate.ExtractedDirectory = extractDirectory;
