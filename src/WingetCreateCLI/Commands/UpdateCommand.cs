@@ -290,34 +290,22 @@ namespace Microsoft.WingetCreateCLI.Commands
                         // If the previous RelativeFilePath is not an exact match, check if there is a new suitable match in the archive.
                         if (!File.Exists(Path.Combine(extractDirectory, nestedInstallerFile.RelativeFilePath)))
                         {
-                            string fileName = Path.GetFileName(nestedInstallerFile.RelativeFilePath);
-                            string[] matchingFiles = Directory.GetFiles(extractDirectory, fileName, SearchOption.AllDirectories);
-
-                            // If there is only one match in the archive, use that as the new relative file path.
-                            if (matchingFiles.Length == 1)
+                            string relativeFilePath = ObtainMatchingRelativeFilePath(nestedInstallerFile.RelativeFilePath, extractDirectory, packageFile);
+                            if (relativeFilePath == null)
                             {
-                                string relativePath = matchingFiles.First().Replace(extractDirectory, string.Empty).TrimStart('\\');
-                                List<string> relativeFilePathsInsideList = installerUpdate.NestedInstallerFiles.Select(x => x.RelativeFilePath).ToList();
+                                return null;
+                            }
 
-                                // Skip if the relative path is already in the list.
-                                if (!relativeFilePathsInsideList.Contains(relativePath))
+                            List<string> relativeFilePathsInsideList = installerUpdate.NestedInstallerFiles.Select(x => x.RelativeFilePath).ToList();
+
+                            // Skip if the relative path is already in the list.
+                            if (!relativeFilePathsInsideList.Contains(relativeFilePath))
+                            {
+                                installerUpdate.NestedInstallerFiles.Add(new NestedInstallerFile
                                 {
-                                    installerUpdate.NestedInstallerFiles.Add(new NestedInstallerFile
-                                    {
-                                        RelativeFilePath = relativePath,
-                                        PortableCommandAlias = nestedInstallerFile.PortableCommandAlias,
-                                    });
-                                }
-                            }
-                            else if (matchingFiles.Length > 1)
-                            {
-                                Logger.ErrorLocalized(nameof(Resources.MultipleMatchingNestedInstallersFound_Error), fileName, Path.GetFileName(packageFile));
-                                return null;
-                            }
-                            else
-                            {
-                                Logger.ErrorLocalized(nameof(Resources.NestedInstallerFileNotFound_Error), nestedInstallerFile.RelativeFilePath);
-                                return null;
+                                    RelativeFilePath = relativeFilePath,
+                                    PortableCommandAlias = nestedInstallerFile.PortableCommandAlias,
+                                });
                             }
                         }
                         else
@@ -449,6 +437,29 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 throw;
+            }
+        }
+
+        private static string ObtainMatchingRelativeFilePath(string oldRelativeFilePath, string directory, string archiveName)
+        {
+            string fileName = Path.GetFileName(oldRelativeFilePath);
+            string[] matchingFiles = Directory.GetFiles(directory, fileName, SearchOption.AllDirectories);
+
+            // If there is only one match in the archive, use that as the new relative file path.
+            if (matchingFiles.Length == 1)
+            {
+                string relativePath = matchingFiles.First().Replace(directory, string.Empty).TrimStart('\\');
+                return relativePath;
+            }
+            else if (matchingFiles.Length > 1)
+            {
+                Logger.ErrorLocalized(nameof(Resources.MultipleMatchingNestedInstallersFound_Error), fileName, Path.GetFileName(archiveName));
+                return null;
+            }
+            else
+            {
+                Logger.ErrorLocalized(nameof(Resources.NestedInstallerFileNotFound_Error), oldRelativeFilePath);
+                return null;
             }
         }
 
@@ -778,8 +789,24 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                     else
                     {
-                        Logger.ErrorLocalized(nameof(Resources.UnmatchedNestedInstaller_Error), relativeFilePath, url);
-                        continue;
+                        relativeFilePath = ObtainMatchingRelativeFilePath(relativeFilePath, extractDirectory, packageFile);
+                        if (relativeFilePath == null)
+                        {
+                            continue;
+                        }
+
+                        pathToNestedInstaller = Path.Combine(extractDirectory, relativeFilePath);
+                        packageFile = pathToNestedInstaller;
+
+                        // Update the relative file path for all nested installers.
+                        foreach (NestedInstallerFile nestedInstaller in installer.NestedInstallerFiles)
+                        {
+                            nestedInstaller.RelativeFilePath = ObtainMatchingRelativeFilePath(nestedInstaller.RelativeFilePath, extractDirectory, packageFile);
+                            if (nestedInstaller.RelativeFilePath == null)
+                            {
+                                continue;
+                            }
+                        }
                     }
                 }
 
