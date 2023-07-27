@@ -128,7 +128,19 @@ When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.
 
 ### Prerequisites
 
+You can install the prerequisites in one of two ways:
+
+#### Using the configuration file
+
+1. Clone the repository.
+2. Configure the system using the [configuration file](.configurations/configuration.dsc.yaml). This can be applied by either:
+    - [Dev Home](https://github.com/microsoft/devhome)'s machine configuration tool
+    - [WinGet configuration](https://learn.microsoft.com/windows/package-manager/configuration/). If you have the [experimental feature](https://aka.ms/winget-settings#configuration) enabled, run `winget configure -f .configurations/configuration.dsc.yaml` from an elevated shell.
+
+#### Manual set up
+
 * Windows 10 1709 (16299) or later
+* [Developer mode enabled](https://docs.microsoft.com/windows/uwp/get-started/enable-your-device-for-development) (optional)
 * [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)
    * Or use winget to install it ;) (although you may need to adjust the workloads via Tools->Get Tools and Features...)
 * [Git Large File Storage (LFS)](https://git-lfs.github.com/)
