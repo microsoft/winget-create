@@ -291,15 +291,15 @@ namespace Microsoft.WingetCreateCLI.Commands
                         if (!File.Exists(Path.Combine(extractDirectory, nestedInstallerFile.RelativeFilePath)))
                         {
                             string relativeFilePath = ObtainMatchingRelativeFilePath(nestedInstallerFile.RelativeFilePath, extractDirectory, packageFile);
-                            if (relativeFilePath == null)
+                            if (string.IsNullOrEmpty(relativeFilePath))
                             {
                                 return null;
                             }
 
-                            List<string> relativeFilePathsInsideList = installerUpdate.NestedInstallerFiles.Select(x => x.RelativeFilePath).ToList();
+                            List<string> installerUpdateRelativeFilePathList = installerUpdate.NestedInstallerFiles.Select(x => x.RelativeFilePath).ToList();
 
-                            // Skip if the relative path is already in the list.
-                            if (!relativeFilePathsInsideList.Contains(relativeFilePath))
+                            // Skip if the relative path is already in the installer update list.
+                            if (!installerUpdateRelativeFilePathList.Contains(relativeFilePath))
                             {
                                 installerUpdate.NestedInstallerFiles.Add(new NestedInstallerFile
                                 {
@@ -448,7 +448,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             // If there is only one match in the archive, use that as the new relative file path.
             if (matchingFiles.Length == 1)
             {
-                string relativePath = matchingFiles.First().Replace(directory, string.Empty).TrimStart('\\');
+                string relativePath = matchingFiles.First().Replace(directory, string.Empty).TrimStart(Path.DirectorySeparatorChar);
                 return relativePath;
             }
             else if (matchingFiles.Length > 1)
@@ -802,7 +802,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         foreach (NestedInstallerFile nestedInstaller in installer.NestedInstallerFiles)
                         {
                             nestedInstaller.RelativeFilePath = ObtainMatchingRelativeFilePath(nestedInstaller.RelativeFilePath, extractDirectory, packageFile);
-                            if (nestedInstaller.RelativeFilePath == null)
+                            if (string.IsNullOrEmpty(nestedInstaller.RelativeFilePath))
                             {
                                 continue;
                             }
