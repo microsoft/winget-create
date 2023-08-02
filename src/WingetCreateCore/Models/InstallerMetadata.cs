@@ -52,9 +52,14 @@ namespace Microsoft.WingetCreateCore.Models
         public bool IsZipFile { get; set; } = false;
 
         /// <summary>
-        /// Gets or sets the nested installer files contained inside a zip.
+        /// Gets or sets the relative paths contained inside a zip.
         /// </summary>
         public List<string> RelativeFilePaths { get; set; }
+
+        /// <summary>
+        /// Gets or sets the nested installer files coming from previous installer.
+        /// </summary>
+        public List<NestedInstallerFile> NestedInstallerFiles { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the nested installers in a zip have multiple architectures.

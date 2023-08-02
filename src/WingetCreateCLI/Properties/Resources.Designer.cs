@@ -1501,6 +1501,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multiple matches found for &quot;{0}&quot; from {1}.
+        /// </summary>
+        public static string MultipleMatchingNestedInstallersFound_Error {
+            get {
+                return ResourceManager.GetString("MultipleMatchingNestedInstallersFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Multiple nested installer architectures were detected for following archive packages:.
         /// </summary>
         public static string MultipleNestedArchitectures_Message {

@@ -430,6 +430,7 @@ namespace Microsoft.WingetCreateCore
             existingInstaller.ProductCode = newInstaller.ProductCode ?? existingInstaller.ProductCode;
             existingInstaller.MinimumOSVersion = newInstaller.MinimumOSVersion ?? existingInstaller.MinimumOSVersion;
             existingInstaller.PackageFamilyName = newInstaller.PackageFamilyName ?? existingInstaller.PackageFamilyName;
+            existingInstaller.NestedInstallerFiles = newInstaller.NestedInstallerFiles ?? existingInstaller.NestedInstallerFiles;
             existingInstaller.Platform = newInstaller.Platform ?? existingInstaller.Platform;
         }
 
@@ -495,16 +496,23 @@ namespace Microsoft.WingetCreateCore
             if (installerMetadata.IsZipFile)
             {
                 baseInstaller.InstallerType = InstallerType.Zip;
-                List<string> relativeFilePaths = installerMetadata.RelativeFilePaths;
+                baseInstaller.NestedInstallerFiles = new List<NestedInstallerFile>();
+                List<string> relativeFilePaths = installerMetadata.NestedInstallerFiles.Select(i => i.RelativeFilePath).Distinct().ToList();
 
-                List<NestedInstallerFile> nestedInstallerFiles = new List<NestedInstallerFile>();
-                foreach (string relativeFilePath in relativeFilePaths)
+                foreach (NestedInstallerFile nestedInstallerFile in installerMetadata.NestedInstallerFiles)
                 {
-                    nestedInstallerFiles.Add(new NestedInstallerFile { RelativeFilePath = relativeFilePath });
-                    installerPaths.Add(Path.Combine(installerMetadata.ExtractedDirectory, relativeFilePath));
+                    baseInstaller.NestedInstallerFiles.Add(new NestedInstallerFile
+                    {
+                        RelativeFilePath = nestedInstallerFile.RelativeFilePath,
+                        PortableCommandAlias = nestedInstallerFile.PortableCommandAlias,
+                    });
                 }
 
-                baseInstaller.NestedInstallerFiles = nestedInstallerFiles;
+                // Number of installer paths should be equal to the distinct relative file paths.
+                foreach (var relativeFilePath in relativeFilePaths)
+                {
+                    installerPaths.Add(Path.Combine(installerMetadata.ExtractedDirectory, relativeFilePath));
+                }
             }
             else
             {
