@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace WingetCreateTestExeInstaller
+﻿namespace WingetCreateTestExeInstaller
 {
+    using System;
+
     class Program
     {
         static void Main(string[] args)
