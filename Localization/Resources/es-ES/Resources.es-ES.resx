@@ -1009,4 +1009,28 @@
   <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
     <value>Invalidar el ámbito de un instalador</value>
   </data>
+  <data name="UnmatchedNestedInstaller_Error" xml:space="preserve">
+    <value>No se encontraron coincidencias para "{0}" de {1}</value>
+  </data>
+  <data name="IconFileType_KeywordDescription" xml:space="preserve">
+    <value>Tipo de archivo del icono</value>
+  </data>
+  <data name="IconResolution_KeywordDescription" xml:space="preserve">
+    <value>Resolución del icono</value>
+  </data>
+  <data name="IconSha256_KeywordDescription" xml:space="preserve">
+    <value>Hash SHA256 del archivo de icono</value>
+  </data>
+  <data name="Icons_KeywordDescription" xml:space="preserve">
+    <value>Lista de iconos</value>
+  </data>
+  <data name="IconTheme_KeywordDescription" xml:space="preserve">
+    <value>Tema del icono</value>
+  </data>
+  <data name="IconUrl_KeywordDescription" xml:space="preserve">
+    <value>Dirección URL del archivo de icono hospedado</value>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
+    <value>Se encontraron varias coincidencias para "{0}" en {1}</value>
+  </data>
 </root>

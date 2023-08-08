@@ -1009,4 +1009,28 @@
   <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
     <value>Remplacer le champ d'application d'un installateur</value>
   </data>
+  <data name="UnmatchedNestedInstaller_Error" xml:space="preserve">
+    <value>Aucune correspondance trouvée pour «{0}» à partir de {1}</value>
+  </data>
+  <data name="IconFileType_KeywordDescription" xml:space="preserve">
+    <value>Type de fichier d’icône</value>
+  </data>
+  <data name="IconResolution_KeywordDescription" xml:space="preserve">
+    <value>Résolution d’icône</value>
+  </data>
+  <data name="IconSha256_KeywordDescription" xml:space="preserve">
+    <value>Hachage SHA256 du fichier d’icône</value>
+  </data>
+  <data name="Icons_KeywordDescription" xml:space="preserve">
+    <value>Liste d’icônes</value>
+  </data>
+  <data name="IconTheme_KeywordDescription" xml:space="preserve">
+    <value>Le thème d’icône</value>
+  </data>
+  <data name="IconUrl_KeywordDescription" xml:space="preserve">
+    <value>URL du fichier d’icône hébergé</value>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
+    <value>Plusieurs correspondances trouvées pour « {0} » à partir de {1}</value>
+  </data>
 </root>

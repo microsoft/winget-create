@@ -1009,4 +1009,28 @@
   <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
     <value>覆寫安裝程式的範圍</value>
   </data>
+  <data name="UnmatchedNestedInstaller_Error" xml:space="preserve">
+    <value>自 {1} 找不到與 "{0}" 相符的項目</value>
+  </data>
+  <data name="IconFileType_KeywordDescription" xml:space="preserve">
+    <value>圖示檔案類型</value>
+  </data>
+  <data name="IconResolution_KeywordDescription" xml:space="preserve">
+    <value>圖示解析度</value>
+  </data>
+  <data name="IconSha256_KeywordDescription" xml:space="preserve">
+    <value>圖示檔案的 SHA256 雜湊</value>
+  </data>
+  <data name="Icons_KeywordDescription" xml:space="preserve">
+    <value>圖示清單</value>
+  </data>
+  <data name="IconTheme_KeywordDescription" xml:space="preserve">
+    <value>圖示佈景主題</value>
+  </data>
+  <data name="IconUrl_KeywordDescription" xml:space="preserve">
+    <value>裝載圖示檔案的 URL</value>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
+    <value>在 {1} 中找到多個符合 [{0}] 的項目</value>
+  </data>
 </root>

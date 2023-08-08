@@ -1009,4 +1009,28 @@
   <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
     <value>설치 프로그램의 범위 재정의</value>
   </data>
+  <data name="UnmatchedNestedInstaller_Error" xml:space="preserve">
+    <value>{1}에 {0}과(와) 일치하는 항목이 없습니다.</value>
+  </data>
+  <data name="IconFileType_KeywordDescription" xml:space="preserve">
+    <value>아이콘 파일 형식</value>
+  </data>
+  <data name="IconResolution_KeywordDescription" xml:space="preserve">
+    <value>아이콘 해상도</value>
+  </data>
+  <data name="IconSha256_KeywordDescription" xml:space="preserve">
+    <value>아이콘 파일의 SHA256 해시입니다.</value>
+  </data>
+  <data name="Icons_KeywordDescription" xml:space="preserve">
+    <value>아이콘 목록</value>
+  </data>
+  <data name="IconTheme_KeywordDescription" xml:space="preserve">
+    <value>아이콘 테마</value>
+  </data>
+  <data name="IconUrl_KeywordDescription" xml:space="preserve">
+    <value>호스트된 아이콘 파일의 URL</value>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
+    <value>{1}의 ‘{0}’에 대해 일치하는 항목이 여러 개 있습니다.</value>
+  </data>
 </root>

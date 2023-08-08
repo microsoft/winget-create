@@ -1009,4 +1009,28 @@
   <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
     <value>インストーラーのスコープをオーバーライドする</value>
   </data>
+  <data name="UnmatchedNestedInstaller_Error" xml:space="preserve">
+    <value>{1}から "{0}" に一致する名前は見つかりませんでした。</value>
+  </data>
+  <data name="IconFileType_KeywordDescription" xml:space="preserve">
+    <value>アイコン ファイルの種類</value>
+  </data>
+  <data name="IconResolution_KeywordDescription" xml:space="preserve">
+    <value>アイコンの解像度</value>
+  </data>
+  <data name="IconSha256_KeywordDescription" xml:space="preserve">
+    <value>アイコン ファイルの SHA256 ハッシュ</value>
+  </data>
+  <data name="Icons_KeywordDescription" xml:space="preserve">
+    <value>アイコンの一覧</value>
+  </data>
+  <data name="IconTheme_KeywordDescription" xml:space="preserve">
+    <value>アイコンのテーマ</value>
+  </data>
+  <data name="IconUrl_KeywordDescription" xml:space="preserve">
+    <value>ホストされるアイコン ファイルの URL</value>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
+    <value>{1} から "{0}" に一致するものが複数あります</value>
+  </data>
 </root>
