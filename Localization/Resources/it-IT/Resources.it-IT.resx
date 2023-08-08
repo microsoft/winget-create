@@ -1009,4 +1009,28 @@
   <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
     <value>Sostituisci l'ambito di un programma di installazione</value>
   </data>
+  <data name="UnmatchedNestedInstaller_Error" xml:space="preserve">
+    <value>Non è stato trovato alcun risultato per "{0}" da {1}</value>
+  </data>
+  <data name="IconFileType_KeywordDescription" xml:space="preserve">
+    <value>Tipo di file dell'icona</value>
+  </data>
+  <data name="IconResolution_KeywordDescription" xml:space="preserve">
+    <value>Risoluzione dell'icona</value>
+  </data>
+  <data name="IconSha256_KeywordDescription" xml:space="preserve">
+    <value>Hash SHA256 del file dell'icona</value>
+  </data>
+  <data name="Icons_KeywordDescription" xml:space="preserve">
+    <value>Elenco di icone</value>
+  </data>
+  <data name="IconTheme_KeywordDescription" xml:space="preserve">
+    <value>Tema dell'icona</value>
+  </data>
+  <data name="IconUrl_KeywordDescription" xml:space="preserve">
+    <value>URL del file dell'icona ospitato</value>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
+    <value>Trovate più corrispondenze per "{0}" da {1}</value>
+  </data>
 </root>

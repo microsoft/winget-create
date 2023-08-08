@@ -1009,4 +1009,28 @@
   <data name="Example_UpdateCommand_OverrideScope" xml:space="preserve">
     <value>Überschreiben des Bereichs eines Installationsprogramms</value>
   </data>
+  <data name="UnmatchedNestedInstaller_Error" xml:space="preserve">
+    <value>Für „{0}“ von {1} wurden keine Übereinstimmungen gefunden</value>
+  </data>
+  <data name="IconFileType_KeywordDescription" xml:space="preserve">
+    <value>Der Symboldateityp</value>
+  </data>
+  <data name="IconResolution_KeywordDescription" xml:space="preserve">
+    <value>Die Symbolauflösung</value>
+  </data>
+  <data name="IconSha256_KeywordDescription" xml:space="preserve">
+    <value>Der SHA256-Hash der Symboldatei</value>
+  </data>
+  <data name="Icons_KeywordDescription" xml:space="preserve">
+    <value>Liste der Symbole</value>
+  </data>
+  <data name="IconTheme_KeywordDescription" xml:space="preserve">
+    <value>Das Symboldesign</value>
+  </data>
+  <data name="IconUrl_KeywordDescription" xml:space="preserve">
+    <value>Die URL der gehosteten Symboldatei</value>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
+    <value>Es wurden mehrere Übereinstimmungen für „{0}“ aus {1} gefunden.</value>
+  </data>
 </root>
