@@ -501,6 +501,14 @@ namespace Microsoft.WingetCreateCore
 
                 foreach (NestedInstallerFile nestedInstallerFile in installerMetadata.NestedInstallerFiles)
                 {
+                    // Skip adding duplicate NestedInstallerFile object.
+                    if (baseInstaller.NestedInstallerFiles.Any(i =>
+                        i.RelativeFilePath == nestedInstallerFile.RelativeFilePath &&
+                        i.PortableCommandAlias == nestedInstallerFile.PortableCommandAlias))
+                    {
+                        continue;
+                    }
+
                     baseInstaller.NestedInstallerFiles.Add(new NestedInstallerFile
                     {
                         RelativeFilePath = nestedInstallerFile.RelativeFilePath,

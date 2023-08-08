@@ -824,6 +824,44 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies that updating a zip package with multiple zip installers works as expected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateMultipleZipInstallers()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.ZipMultipleInstallers", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86", $"{installerUrl}|arm64" });
+
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstallers = initialManifests.SingletonManifest.Installers;
+            var initialFirstInstaller = initialInstallers[0];
+            var initialSecondInstaller = initialInstallers[1];
+            var initialThirdInstaller = initialInstallers[2];
+
+            var updatedInstallerManifest = updatedManifests.InstallerManifest;
+            var updatedFirstInstaller = updatedInstallerManifest.Installers[0];
+            var updatedSecondInstaller = updatedInstallerManifest.Installers[1];
+            var updatedThirdInstaller = updatedInstallerManifest.Installers[2];
+
+            Assert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType should be ZIP");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType should be EXE");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerFiles.Count == 1, "NestedInstallerFiles list should contain only one member");
+
+            Assert.IsTrue(initialFirstInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedInstallerManifest.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            Assert.IsTrue(initialFirstInstaller.NestedInstallerFiles[0].PortableCommandAlias == updatedInstallerManifest.NestedInstallerFiles[0].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+
+            Assert.IsTrue(initialFirstInstaller.InstallerSha256 != updatedFirstInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            Assert.IsTrue(initialSecondInstaller.InstallerSha256 != updatedSecondInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            Assert.IsTrue(initialThirdInstaller.InstallerSha256 != updatedThirdInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
+        /// <summary>
         /// Verifies that moving common installer fields to the root of the manifest works as expected.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
