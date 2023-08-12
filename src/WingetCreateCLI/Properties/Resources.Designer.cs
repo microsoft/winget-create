@@ -1501,11 +1501,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple matches found for &quot;{0}&quot; from {1}.
+        ///   Looks up a localized string similar to Multiple matches found for &quot;{0}&quot; from {1}. Please use the interactive mode to update this package..
         /// </summary>
         public static string MultipleMatchingNestedInstallersFound_Error {
             get {
                 return ResourceManager.GetString("MultipleMatchingNestedInstallersFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple matches found for &quot;{0}&quot; from {1}..
+        /// </summary>
+        public static string MultipleMatchingNestedInstallersFound_Warning {
+            get {
+                return ResourceManager.GetString("MultipleMatchingNestedInstallersFound_Warning", resourceCulture);
             }
         }
         
@@ -1537,11 +1546,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nested installer not found in zip archive: {0}.
+        ///   Looks up a localized string similar to Nested installer not found in zip archive: {0}. Please use the interactive mode to update this package..
         /// </summary>
         public static string NestedInstallerFileNotFound_Error {
             get {
                 return ResourceManager.GetString("NestedInstallerFileNotFound_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nested installer not found in zip archive: {0}.
+        /// </summary>
+        public static string NestedInstallerFileNotFound_Warning {
+            get {
+                return ResourceManager.GetString("NestedInstallerFileNotFound_Warning", resourceCulture);
             }
         }
         
@@ -1569,6 +1587,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NestedInstallerType_KeywordDescription {
             get {
                 return ResourceManager.GetString("NestedInstallerType_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The zip archive does not contain a matching installer type with the old relative path..
+        /// </summary>
+        public static string NestedInstallerTypeNotFound_Error {
+            get {
+                return ResourceManager.GetString("NestedInstallerTypeNotFound_Error", resourceCulture);
             }
         }
         
@@ -2190,6 +2217,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SelectPropertyToEdit_Message {
             get {
                 return ResourceManager.GetString("SelectPropertyToEdit_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the new relative file path.
+        /// </summary>
+        public static string SelectRelativeFilePath_Message {
+            get {
+                return ResourceManager.GetString("SelectRelativeFilePath_Message", resourceCulture);
             }
         }
         
