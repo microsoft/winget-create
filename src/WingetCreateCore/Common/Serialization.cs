@@ -42,6 +42,7 @@ namespace Microsoft.WingetCreateCore
         {
             var serializer = new SerializerBuilder()
                 .WithNamingConvention(PascalCaseNamingConvention.Instance)
+                .WithDefaultScalarStyle(ScalarStyle.DoubleQuoted)
                 .WithTypeConverter(new YamlStringEnumConverter())
                 .WithEmissionPhaseObjectGraphVisitor(args => new YamlSkipPropertyVisitor(args.InnerVisitor))
                 .WithEventEmitter(nextEmitter => new MultilineScalarFlowStyleEmitter(nextEmitter))
