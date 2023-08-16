@@ -179,7 +179,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                             {
                                 InstallerUrl = installerUrl,
                                 PackageFile = packageFile,
-                                RelativeFilePaths = new List<string> { installer },
+                                NestedInstallerFiles = new List<NestedInstallerFile> { new NestedInstallerFile { RelativeFilePath = installer } },
                                 IsZipFile = true,
                                 ExtractedDirectory = extractDirectory,
                             });
