@@ -92,14 +92,19 @@ namespace Microsoft.WingetCreateCore
         /// </summary>
         /// <param name="value">Object to serialize to YAML.</param>
         /// <typeparam name="T">Type of object to serialize.</typeparam>
+        /// <param name="omitCreatedByHeader">Value to indicate whether to omit the created by header.</param>
         /// <returns>Manifest in string value.</returns>
-        public static string ToYaml<T>(this T value)
+        public static string ToYaml<T>(this T value, bool omitCreatedByHeader = false)
             where T : new()
         {
             var serializer = CreateSerializer();
             string manifestYaml = serializer.Serialize(value);
             StringBuilder serialized = new StringBuilder();
-            serialized.AppendLine($"# Created using {ProducedBy}");
+
+            if (!omitCreatedByHeader)
+            {
+                serialized.AppendLine($"# Created using {ProducedBy}");
+            }
 
             string schemaTemplate = "# yaml-language-server: $schema=https://aka.ms/winget-manifest.{0}.{1}.schema.json";
 

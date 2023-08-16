@@ -394,6 +394,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display the default locale manifest of the package..
+        /// </summary>
+        public static string DefaultLocaleManifest_HelpText {
+            get {
+                return ResourceManager.GetString("DefaultLocaleManifest_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default Locale ({0}) Manifest:.
+        /// </summary>
+        public static string DefaultLocaleManifest_Message {
+            get {
+                return ResourceManager.GetString("DefaultLocaleManifest_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default locale manifest preview:.
         /// </summary>
         public static string DefaultLocaleManifestPreview_Message {
@@ -696,6 +714,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Example_NewCommand_StartFromScratch {
             get {
                 return ResourceManager.GetString("Example_NewCommand_StartFromScratch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show the latest manifest of an existing package from the Windows Package Manager repo.
+        /// </summary>
+        public static string Example_ShowCommand_DisplayLatestManifest {
+            get {
+                return ResourceManager.GetString("Example_ShowCommand_DisplayLatestManifest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show manifest of a specified version of the package.
+        /// </summary>
+        public static string Example_ShowCommand_DisplaySpecifiedVersion {
+            get {
+                return ResourceManager.GetString("Example_ShowCommand_DisplaySpecifiedVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show only the installer and default locale manifest.
+        /// </summary>
+        public static string Example_ShowCommand_ShowInstallerAndDefaultLocale {
+            get {
+                return ResourceManager.GetString("Example_ShowCommand_ShowInstallerAndDefaultLocale", resourceCulture);
             }
         }
         
@@ -1069,6 +1114,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display the installer manifest of the package..
+        /// </summary>
+        public static string InstallerManifest_HelpText {
+            get {
+                return ResourceManager.GetString("InstallerManifest_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installer Manifest:.
+        /// </summary>
+        public static string InstallerManifest_Message {
+            get {
+                return ResourceManager.GetString("InstallerManifest_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Installer manifest preview:.
         /// </summary>
         public static string InstallerManifestPreview_Message {
@@ -1335,6 +1398,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string LoadSettingsFromDefault_Message {
             get {
                 return ResourceManager.GetString("LoadSettingsFromDefault_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locale ({0}) Manifest:.
+        /// </summary>
+        public static string LocaleManifest_Message {
+            get {
+                return ResourceManager.GetString("LocaleManifest_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display all locale manifests of the package..
+        /// </summary>
+        public static string LocaleManifests_HelpText {
+            get {
+                return ResourceManager.GetString("LocaleManifests_HelpText", resourceCulture);
             }
         }
         
@@ -1672,7 +1753,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please check the spelling and casing of the package identifier.
+        ///   Looks up a localized string similar to Please check if the provided package arguments are correct..
         /// </summary>
         public static string OctokitNotFound_Error {
             get {
@@ -2230,6 +2311,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GitHub Personal Access Token used for authenticated access to GitHub API. It is recommended to provide a token to get a higher API rate limit..
+        /// </summary>
+        public static string ShowCommand_GitHubToken_HelpText {
+            get {
+                return ResourceManager.GetString("ShowCommand_GitHubToken_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display a manifest from the packages repository.
+        /// </summary>
+        public static string ShowCommand_HelpText {
+            get {
+                return ResourceManager.GetString("ShowCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The version of the package to retrieve the manifest for..
+        /// </summary>
+        public static string ShowCommand_Version_HelpText {
+            get {
+                return ResourceManager.GetString("ShowCommand_Version_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The MSIX SHA256 signature hash.
         /// </summary>
         public static string SignatureSha256_KeywordDescription {
@@ -2253,6 +2361,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SilentWithProgress_KeywordDescription {
             get {
                 return ResourceManager.GetString("SilentWithProgress_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Singleton Manifest:.
+        /// </summary>
+        public static string SingletonManifest_Message {
+            get {
+                return ResourceManager.GetString("SingletonManifest_Message", resourceCulture);
             }
         }
         
@@ -2550,6 +2667,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Version_HelpText {
             get {
                 return ResourceManager.GetString("Version_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display the version manifest of the package..
+        /// </summary>
+        public static string VersionManifest_HelpText {
+            get {
+                return ResourceManager.GetString("VersionManifest_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version Manifest:.
+        /// </summary>
+        public static string VersionManifest_Message {
+            get {
+                return ResourceManager.GetString("VersionManifest_Message", resourceCulture);
             }
         }
         

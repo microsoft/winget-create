@@ -35,7 +35,12 @@ namespace Microsoft.WingetCreateCLI
                 config.CaseSensitive = false;
             });
 
-            var types = new Type[] { typeof(NewCommand), typeof(UpdateCommand), typeof(SubmitCommand), typeof(SettingsCommand), typeof(TokenCommand), typeof(CacheCommand) };
+            var types = new Type[]
+            {
+                typeof(NewCommand), typeof(UpdateCommand), typeof(SubmitCommand),
+                typeof(SettingsCommand), typeof(TokenCommand), typeof(CacheCommand),
+                typeof(ShowCommand),
+            };
             var parserResult = myParser.ParseArguments(args, types);
 
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);

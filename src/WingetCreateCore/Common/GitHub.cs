@@ -93,19 +93,36 @@ namespace Microsoft.WingetCreateCore.Common
         /// Obtains the latest manifest using the specified packageId.
         /// </summary>
         /// <param name="packageId">PackageId of the manifest to be retrieved.</param>
+        /// <param name="version">Version of the manifest to be retrieved. Pass in null to retrieve the latest version.</param>
         /// <returns>Manifest as a string.</returns>
-        public async Task<List<string>> GetLatestManifestContentAsync(string packageId)
+        public async Task<List<string>> GetManifestContentAsync(string packageId, string version = null)
         {
             string appPath = Utils.GetAppManifestDirPath(packageId, string.Empty, '/');
             var contents = await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, appPath);
+            string versionDirectory;
 
-            string version = contents
-                .Where(c => c.Type == ContentType.Dir)
-                .OrderByDescending(c => c.Name, new VersionComparer())
-                .Select(c => c.Path)
-                .FirstOrDefault();
+            if (string.IsNullOrEmpty(version))
+            {
+                versionDirectory = contents
+                    .Where(c => c.Type == ContentType.Dir)
+                    .OrderByDescending(c => c.Name, new VersionComparer())
+                    .Select(c => c.Path)
+                    .FirstOrDefault();
+            }
+            else
+            {
+                versionDirectory = contents
+                    .Where(c => c.Type == ContentType.Dir && c.Name.EqualsIC(version))
+                    .Select(c => c.Path)
+                    .FirstOrDefault();
+            }
 
-            var packageContents = (await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, version))
+            if (string.IsNullOrEmpty(versionDirectory))
+            {
+                throw new NotFoundException(nameof(version), System.Net.HttpStatusCode.NotFound);
+            }
+
+            var packageContents = (await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, versionDirectory))
                 .Where(c => c.Type != ContentType.Dir && Path.GetExtension(c.Name).EqualsIC(".yaml"));
 
             // If all contents of version directory are directories themselves, user must've provided an invalid packageId.
