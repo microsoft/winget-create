@@ -233,6 +233,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         }
                     }
 
+                    ShiftRootFieldsToInstallerLevel(manifests.InstallerManifest);
                     PromptManifestProperties(manifests);
                     MergeNestedInstallerFilesIfApplicable(manifests.InstallerManifest);
                     ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
