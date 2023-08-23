@@ -613,7 +613,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
             else if (matchingFiles.Count > 1)
             {
-                if (this.Interactive == true)
+                if (this.Interactive)
                 {
                     Console.WriteLine();
                     Logger.WarnLocalized(nameof(Resources.MultipleMatchingNestedInstallersFound_Warning), fileName, Path.GetFileName(archiveName));
@@ -625,7 +625,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
             else
             {
-                if (this.Interactive == true)
+                if (this.Interactive)
                 {
                     List<string> sameExtensionFiles = Directory.GetFiles(directory, $"*{Path.GetExtension(oldRelativeFilePath)}", SearchOption.AllDirectories)
                         .Select(filePath => filePath = Path.GetRelativePath(directory, filePath))
@@ -824,8 +824,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         continue;
                     }
 
-                    string pathToNestedInstaller = Path.Combine(extractDirectory, installer.NestedInstallerFiles.First().RelativeFilePath);
-                    packageFile = pathToNestedInstaller;
+                    packageFile = Path.Combine(extractDirectory, installer.NestedInstallerFiles.First().RelativeFilePath);
                 }
 
                 if (!PackageParser.ParsePackageAndUpdateInstallerNode(installer, packageFile, url))
