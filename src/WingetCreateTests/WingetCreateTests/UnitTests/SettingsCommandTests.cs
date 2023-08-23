@@ -39,7 +39,7 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// TearDown method that resets the winget-pkts repo owner and name to their default settings.
+        /// TearDown method that resets the winget-pkgs repo owner and name to their default settings.
         /// </summary>
         [TearDown]
         public void TearDown()
@@ -94,14 +94,20 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void VerifySavingTelemetrySettings()
         {
-            bool isDisabled = UserSettings.TelemetryDisabled;
+            bool isTelemetryDisabled = UserSettings.TelemetryDisabled;
+            bool isCleanUpDisabled = UserSettings.CleanUpDisabled;
+            int cleanUpDays = 30;
             string testRepoOwner = "testRepoOwner";
             string testRepoName = "testRepoName";
-            UserSettings.TelemetryDisabled = !isDisabled;
+            UserSettings.TelemetryDisabled = !isTelemetryDisabled;
+            UserSettings.CleanUpDisabled = !isCleanUpDisabled;
+            UserSettings.CleanUpDays = cleanUpDays;
             UserSettings.WindowsPackageManagerRepositoryOwner = testRepoOwner;
             UserSettings.WindowsPackageManagerRepositoryName = testRepoName;
             UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest);
-            Assert.IsTrue(manifest.Telemetry.Disable == !isDisabled, "Changed Telemetry setting was not reflected in the settings file.");
+            Assert.IsTrue(manifest.Telemetry.Disable == !isTelemetryDisabled, "Changed Telemetry setting was not reflected in the settings file.");
+            Assert.IsTrue(manifest.CleanUp.Disable == !isCleanUpDisabled, "Changed CleanUp.Disable setting was not reflected in the settings file.");
+            Assert.IsTrue(manifest.CleanUp.IntervalInDays == cleanUpDays, "Changed CleanUp.IntervalInDays setting was not reflected in the settings file.");
             Assert.IsTrue(manifest.WindowsPackageManagerRepository.Owner == testRepoOwner, "Changed WindowsPackageManagerRepository.Owner setting was not reflected in the settings file.");
             Assert.IsTrue(manifest.WindowsPackageManagerRepository.Name == testRepoName, "Changed WindowsPackageManagerRepository.Name setting was not reflected in the settings file.");
         }

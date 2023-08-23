@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCLI
 {
     using System;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using CommandLine;
@@ -13,6 +14,7 @@ namespace Microsoft.WingetCreateCLI
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
+    using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
 
     /// <summary>
@@ -104,6 +106,14 @@ namespace Microsoft.WingetCreateCLI
 
                 Logger.Error(ex.ToString());
                 return 1;
+            }
+            finally
+            {
+                if (!UserSettings.CleanUpDisabled)
+                {
+                    Common.CleanUpFilesOlderThan(PackageParser.InstallerDownloadPath, UserSettings.CleanUpDays);
+                    Common.CleanUpFilesOlderThan(Path.Combine(Common.LocalAppStatePath, "DiagOutputDir"), UserSettings.CleanUpDays);
+                }
             }
         }
 
