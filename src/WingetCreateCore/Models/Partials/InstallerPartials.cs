@@ -93,10 +93,10 @@ namespace Microsoft.WingetCreateCore.Models.Installer
             }
 
             Dependencies other = (Dependencies)obj;
-            return this.WindowsFeatures.ToList().SequenceEqual(other.WindowsFeatures) &&
-                this.WindowsLibraries.ToList().SequenceEqual(this.WindowsLibraries) &&
-                this.PackageDependencies.ToList().SequenceEqual(other.PackageDependencies) &&
-                this.ExternalDependencies.ToList().SequenceEqual(other.ExternalDependencies);
+            return (this.PackageDependencies != null ? this.PackageDependencies.SequenceEqual(other.PackageDependencies) : true) &&
+                (this.WindowsLibraries != null ? this.WindowsLibraries.SequenceEqual(other.WindowsLibraries) : true) &&
+                (this.WindowsFeatures != null ? this.WindowsFeatures.SequenceEqual(other.WindowsFeatures) : true) &&
+                (this.ExternalDependencies != null ? this.ExternalDependencies.SequenceEqual(other.ExternalDependencies) : true);
         }
     }
 
@@ -150,7 +150,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
 
             InstallationMetadata other = (InstallationMetadata)obj;
             return this.DefaultInstallLocation == other.DefaultInstallLocation &&
-                this.Files.ToList().SequenceEqual(other.Files);
+                (this.Files != null ? this.Files.SequenceEqual(other.Files) : true);
         }
     }
 

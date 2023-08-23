@@ -148,7 +148,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 try
                 {
-                    latestManifestContent = await this.GitHubClient.GetLatestManifestContentAsync(this.Id);
+                    latestManifestContent = await this.GitHubClient.GetManifestContentAsync(this.Id);
                 }
                 catch (Octokit.NotFoundException e)
                 {
