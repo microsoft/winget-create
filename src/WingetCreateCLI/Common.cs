@@ -29,21 +29,17 @@ namespace Microsoft.WingetCreateCLI
         public static string LocalAppStatePath => AppStatePathLazy.Value;
 
         /// <summary>
-        /// Initiates the clean up process for the given directory.
+        /// Cleans up files and folders in a specified directory that are older than the specified number of days.
         /// </summary>
         /// <param name="cleanUpDirectory">Directory to clean up.</param>
-        public static void BeginCleanUp(string cleanUpDirectory)
+        /// <param name="cleanUpDays">Number of days to keep files.</param>
+        public static void CleanUpFilesOlderThan(string cleanUpDirectory, int cleanUpDays)
         {
-            if (UserSettings.CleanUpDisabled)
-            {
-                return;
-            }
-
             var logDirectory = new DirectoryInfo(cleanUpDirectory);
             var files = logDirectory.GetFiles();
             foreach (var file in files)
             {
-                if (file.CreationTime < DateTime.Now.AddDays(-UserSettings.CleanUpDays))
+                if (file.CreationTime < DateTime.Now.AddDays(-cleanUpDays))
                 {
                     file.Delete();
                 }
@@ -52,7 +48,7 @@ namespace Microsoft.WingetCreateCLI
             var directories = logDirectory.GetDirectories();
             foreach (var directory in directories)
             {
-                if (directory.CreationTime < DateTime.Now.AddDays(-UserSettings.CleanUpDays))
+                if (directory.CreationTime < DateTime.Now.AddDays(-cleanUpDays))
                 {
                     directory.Delete(true);
                 }

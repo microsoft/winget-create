@@ -100,8 +100,11 @@ namespace Microsoft.WingetCreateCLI
             }
             finally
             {
-                Common.BeginCleanUp(PackageParser.InstallerDownloadPath);
-                Common.BeginCleanUp(Path.Combine(Common.LocalAppStatePath, "DiagOutputDir"));
+                if (!UserSettings.CleanUpDisabled)
+                {
+                    Common.CleanUpFilesOlderThan(PackageParser.InstallerDownloadPath, UserSettings.CleanUpDays);
+                    Common.CleanUpFilesOlderThan(Path.Combine(Common.LocalAppStatePath, "DiagOutputDir"), UserSettings.CleanUpDays);
+                }
             }
         }
 
