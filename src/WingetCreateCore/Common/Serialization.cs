@@ -41,6 +41,7 @@ namespace Microsoft.WingetCreateCore
         public static ISerializer CreateSerializer()
         {
             var serializer = new SerializerBuilder()
+                .WithQuotingNecessaryStrings()
                 .WithNamingConvention(PascalCaseNamingConvention.Instance)
                 .WithTypeConverter(new YamlStringEnumConverter())
                 .WithEmissionPhaseObjectGraphVisitor(args => new YamlSkipPropertyVisitor(args.InnerVisitor))

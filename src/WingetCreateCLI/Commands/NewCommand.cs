@@ -179,7 +179,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                             {
                                 InstallerUrl = installerUrl,
                                 PackageFile = packageFile,
-                                RelativeFilePaths = new List<string> { installer },
+                                NestedInstallerFiles = new List<NestedInstallerFile> { new NestedInstallerFile { RelativeFilePath = installer } },
                                 IsZipFile = true,
                                 ExtractedDirectory = extractDirectory,
                             });
@@ -233,6 +233,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         }
                     }
 
+                    ShiftRootFieldsToInstallerLevel(manifests.InstallerManifest);
                     PromptManifestProperties(manifests);
                     MergeNestedInstallerFilesIfApplicable(manifests.InstallerManifest);
                     ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
