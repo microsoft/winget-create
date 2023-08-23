@@ -964,7 +964,7 @@
     {1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
-    <value>Nested installer not found in zip archive: {0}</value>
+    <value>Nested installer not found in zip archive: {0}. Please use the interactive mode to update this package.</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
   </data>
   <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
@@ -1031,7 +1031,26 @@
     <value>The url of the hosted icon file</value>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
-    <value>Multiple matches found for "{0}" from {1}</value>
+    <value>Multiple matches found for "{0}" from {1}. Please use the interactive mode to update this package.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
+    <value>Multiple matches found for "{0}" from {1}.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
+    <value>Nested installer not found in zip archive: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerTypeNotFound_Error" xml:space="preserve">
+    <value>The zip archive does not contain a matching installer type with the old relative path.</value>
+  </data>
+  <data name="SelectRelativeFilePath_Message" xml:space="preserve">
+    <value>Select the new relative file path</value>
   </data>
   <data name="ShowCommand_HelpText" xml:space="preserve">
     <value>Display a manifest from the Windows Package Manager repository</value>
