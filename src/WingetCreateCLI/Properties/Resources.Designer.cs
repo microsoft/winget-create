@@ -727,7 +727,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show manifest of a specified version of the package.
+        ///   Looks up a localized string similar to Show the manifests of a specified version of the package.
         /// </summary>
         public static string Example_ShowCommand_DisplaySpecifiedVersion {
             get {
@@ -736,7 +736,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show only the installer and default locale manifest.
+        ///   Looks up a localized string similar to Show only the installer and default locale manifests.
         /// </summary>
         public static string Example_ShowCommand_ShowInstallerAndDefaultLocale {
             get {
@@ -2320,7 +2320,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Display a manifest from the packages repository.
+        ///   Looks up a localized string similar to Display a manifest from the Windows Package Manager repository.
         /// </summary>
         public static string ShowCommand_HelpText {
             get {
@@ -2329,7 +2329,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The version of the package to retrieve the manifest for..
+        ///   Looks up a localized string similar to The version of the package to show the manifest for..
         /// </summary>
         public static string ShowCommand_Version_HelpText {
             get {

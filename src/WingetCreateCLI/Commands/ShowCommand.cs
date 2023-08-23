@@ -55,19 +55,19 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets or sets a value indicating whether to show the installer manifest.
         /// </summary>
-        [Option("installer-manifest", Required = false, HelpText = "InstallerManifest_HelpText", ResourceType = typeof(Resources))]
+        [Option('i', "installer-manifest", Required = false, HelpText = "InstallerManifest_HelpText", ResourceType = typeof(Resources))]
         public bool ShowInstallerManifest { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the default locale manifest.
         /// </summary>
-        [Option("defaultlocale-manifest", Required = false, HelpText = "DefaultLocaleManifest_HelpText", ResourceType = typeof(Resources))]
+        [Option('d', "defaultlocale-manifest", Required = false, HelpText = "DefaultLocaleManifest_HelpText", ResourceType = typeof(Resources))]
         public bool ShowDefaultLocaleManifest { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show the locale manifests.
         /// </summary>
-        [Option("locale-manifests", Required = false, HelpText = "LocaleManifests_HelpText", ResourceType = typeof(Resources))]
+        [Option('l', "locale-manifests", Required = false, HelpText = "LocaleManifests_HelpText", ResourceType = typeof(Resources))]
         public bool ShowLocaleManifests { get; set; }
 
         /// <summary>
@@ -112,12 +112,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.Id = exactId;
             }
 
-            List<string> latestManifestContent;
+            List<string> manifestContent;
 
             try
             {
-                latestManifestContent = await this.GitHubClient.GetManifestContentAsync(this.Id, this.Version);
-                Manifests originalManifests = Serialization.DeserializeManifestContents(latestManifestContent);
+                manifestContent = await this.GitHubClient.GetManifestContentAsync(this.Id, this.Version);
+                Manifests originalManifests = Serialization.DeserializeManifestContents(manifestContent);
                 this.ParseArgumentsAndShowManifest(originalManifests);
                 return await Task.FromResult(commandEvent.IsSuccessful = true);
             }
@@ -176,13 +176,20 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         private void ParseArgumentsAndShowManifest(Manifests manifests)
         {
+            bool showAll = !this.ShowInstallerManifest && !this.ShowDefaultLocaleManifest && !this.ShowLocaleManifests && !this.ShowVersionManifest;
+
+            if (showAll)
+            {
+                ShowAllManifests(manifests);
+                return;
+            }
+
             if (manifests.SingletonManifest != null)
             {
                 DisplaySingletonManifest(manifests.SingletonManifest);
                 return;
             }
 
-            bool showAll = !this.ShowInstallerManifest && !this.ShowDefaultLocaleManifest && !this.ShowLocaleManifests && !this.ShowVersionManifest;
             if (this.ShowInstallerManifest)
             {
                 DisplayInstallerManifest(manifests.InstallerManifest);
@@ -201,11 +208,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             if (this.ShowVersionManifest)
             {
                 DisplayVersionManifest(manifests.VersionManifest);
-            }
-
-            if (showAll)
-            {
-                ShowAllManifests(manifests);
             }
         }
     }

@@ -23,10 +23,10 @@ The following arguments are available:
 | Argument  | Description |
 |--------------|-------------|
 | **-v, --version** |  The version of the existing package manifest from the Windows Package Manager Repo to retrieve the manifest for. Default is the latest version.
-| **--installer-manifest** |  Switch to display the installer manifest.
-| **--defaultlocale-manifest** |  Switch to display the default locale manifest.
-| **--locale-manifests** |  Switch to display all locale manifests.
-| **--version-manifests** |  Switch to display the version manifest.
+| **-i, --installer-manifest** |  Switch to display the installer manifest.
+| **-d, --defaultlocale-manifest** |  Switch to display the default locale manifest.
+| **-l, --locale-manifests** |  Switch to display all locale manifests.
+| **--version-manifest** |  Switch to display the version manifest.
 | **-t, --token** |  GitHub personal access token used for authenticated access to the GitHub API. It is recommended to provide a token to get a higher [API rate limit](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
 
 Instructions on setting up GitHub Token for Winget-Create can be found [here](../README.md#github-personal-access-token-classic-permissions).
