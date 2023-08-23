@@ -50,6 +50,34 @@ namespace Microsoft.WingetCreateCLI
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to disable clean up.
+        /// </summary>
+        public static bool CleanUpDisabled
+        {
+            get => Settings.CleanUp.Disable;
+
+            set
+            {
+                Settings.CleanUp.Disable = value;
+                SaveSettings();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the interval in days to clean up old files and directories.
+        /// </summary>
+        public static int CleanUpDays
+        {
+            get => Settings.CleanUp.IntervalInDays;
+
+            set
+            {
+                Settings.CleanUp.IntervalInDays = value;
+                SaveSettings();
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the owner of the winget-pkgs repository.
         /// </summary>
         public static string WindowsPackageManagerRepositoryOwner
@@ -168,6 +196,7 @@ namespace Microsoft.WingetCreateCLI
                 Settings = new SettingsManifest
                 {
                     Telemetry = new Models.Settings.Telemetry(),
+                    CleanUp = new CleanUp(),
                     WindowsPackageManagerRepository = new WindowsPackageManagerRepository(),
                 };
             }

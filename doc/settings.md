@@ -19,6 +19,30 @@ See [details on telemetry](https://github.com/microsoft/winget-create#datateleme
 
 If set to true, the `telemetry.disable` setting will prevent any event from being written by the program.
 
+## CleanUp
+
+The `CleanUp` settings determine whether Winget-Create will handle the removal of temporary files (installer cache and logs) generated during the manifest creation process. These settings provide control over the decision to remove files or not and the frequency at which this clean up occurs.
+
+### disable
+
+```json
+    "CleanUp": {
+        "disable": true
+    },
+```
+
+If set to true, the `CleanUp.disable` setting will prevent any temporary files from being removed by the program.
+
+### intervalInDays
+
+```json
+    "CleanUp": {
+        "intervalInDays": 7
+    },
+```
+
+The `intervalInDays` setting specifies how often Winget-Create will remove temporary files. By default, this is set to 7 days.
+
 ## WindowsPackageManagerRepository
 
 The `WindowsPackageManagerRepository` setting specifies which repository Winget-Create targets. By default, this setting targets the main [`microsoft/winget-pkgs`](https://github.com/microsoft/winget-pkgs) repository but can be changed to target a forked copy of the main repository like a [test](https://github.com/microsoft/winget-pkgs-submission-test) or private production repository. 
@@ -36,4 +60,3 @@ The `name` setting specifies the name of the targeted GitHub repository. By defa
     "name": "winget-pkgs"
   }
 ```
-

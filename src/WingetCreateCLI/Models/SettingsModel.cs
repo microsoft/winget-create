@@ -19,6 +19,22 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
     
     }
     
+    /// <summary>Controls the clean up interval of installer cache and logs</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class CleanUp 
+    {
+        /// <summary>Controls the interval in days for clean up of old files and folders</summary>
+        [Newtonsoft.Json.JsonProperty("intervalInDays", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+        public int IntervalInDays { get; set; } = 7;
+    
+        /// <summary>Controls whether clean up is disabled</summary>
+        [Newtonsoft.Json.JsonProperty("disable", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool Disable { get; set; } = false;
+    
+    
+    }
+    
     /// <summary>Windows Package Manager Repository settings</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class WindowsPackageManagerRepository 
@@ -44,6 +60,10 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
         [Newtonsoft.Json.JsonProperty("Telemetry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public Telemetry Telemetry { get; set; } = new Telemetry();
+    
+        [Newtonsoft.Json.JsonProperty("CleanUp", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public CleanUp CleanUp { get; set; } = new CleanUp();
     
         [Newtonsoft.Json.JsonProperty("WindowsPackageManagerRepository", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]

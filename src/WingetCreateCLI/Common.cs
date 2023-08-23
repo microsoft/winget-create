@@ -28,6 +28,33 @@ namespace Microsoft.WingetCreateCLI
         /// </summary>
         public static string LocalAppStatePath => AppStatePathLazy.Value;
 
+        /// <summary>
+        /// Cleans up files and folders in a specified directory that are older than the specified number of days.
+        /// </summary>
+        /// <param name="cleanUpDirectory">Directory to clean up.</param>
+        /// <param name="cleanUpDays">The number of days that determine the age of files to be considered for cleanup.</param>
+        public static void CleanUpFilesOlderThan(string cleanUpDirectory, int cleanUpDays)
+        {
+            var logDirectory = new DirectoryInfo(cleanUpDirectory);
+            var files = logDirectory.GetFiles();
+            foreach (var file in files)
+            {
+                if (file.CreationTime < DateTime.Now.AddDays(-cleanUpDays))
+                {
+                    file.Delete();
+                }
+            }
+
+            var directories = logDirectory.GetDirectories();
+            foreach (var directory in directories)
+            {
+                if (directory.CreationTime < DateTime.Now.AddDays(-cleanUpDays))
+                {
+                    directory.Delete(true);
+                }
+            }
+        }
+
         private static bool IsRunningAsUwp()
         {
             DesktopBridge.Helpers helpers = new DesktopBridge.Helpers();

@@ -15,6 +15,24 @@
       },
       "additionalProperties": false
     },
+    "CleanUp": {
+      "description": "Controls the clean up interval of installer cache and logs",
+      "type": "object",
+      "properties": {
+        "intervalInDays": {
+          "description": "Controls the interval in days for clean up of old files and folders",
+          "type": "integer",
+          "default": 7,
+          "minimum": 1
+        },
+        "disable" : {
+          "description": "Controls whether clean up is disabled",
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
     "WindowsPackageManagerRepository": {
       "description": "Windows Package Manager Repository settings",
       "type": "object",
@@ -41,10 +59,12 @@
       "default": "https://aka.ms/wingetcreate-settings.schema.0.1.json"
     },
     "Telemetry": { "$ref": "#/definitions/Telemetry" },
+    "CleanUp": { "$ref": "#/definitions/CleanUp" },
     "WindowsPackageManagerRepository": { "$ref": "#/definitions/WindowsPackageManagerRepository" }
   },
   "required": [
     "Telemetry",
+    "CleanUp",
     "WindowsPackageManagerRepository"
   ],
   "additionalProperties": false
