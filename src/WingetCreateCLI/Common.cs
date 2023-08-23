@@ -32,7 +32,7 @@ namespace Microsoft.WingetCreateCLI
         /// Cleans up files and folders in a specified directory that are older than the specified number of days.
         /// </summary>
         /// <param name="cleanUpDirectory">Directory to clean up.</param>
-        /// <param name="cleanUpDays">Number of days to keep files.</param>
+        /// <param name="cleanUpDays">The number of days that determine the age of files to be considered for cleanup.</param>
         public static void CleanUpFilesOlderThan(string cleanUpDirectory, int cleanUpDays)
         {
             var logDirectory = new DirectoryInfo(cleanUpDirectory);
