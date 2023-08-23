@@ -46,7 +46,7 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void InvalidPackageIdentifier()
         {
-            Assert.ThrowsAsync<NotFoundException>(async () => await this.gitHub.GetLatestManifestContentAsync(TestConstants.TestInvalidPackageIdentifier), "Octokit.NotFoundException should be thrown");
+            Assert.ThrowsAsync<NotFoundException>(async () => await this.gitHub.GetManifestContentAsync(TestConstants.TestInvalidPackageIdentifier), "Octokit.NotFoundException should be thrown");
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task GetLatestManifestAndSubmitPR()
         {
             Manifests manifests = new Manifests();
-            List<string> latestManifest = await this.gitHub.GetLatestManifestContentAsync(TestConstants.TestPackageIdentifier);
+            List<string> latestManifest = await this.gitHub.GetManifestContentAsync(TestConstants.TestPackageIdentifier);
             manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(latestManifest.First());
             Assert.That(manifests.SingletonManifest.PackageIdentifier, Is.EqualTo(TestConstants.TestPackageIdentifier), FailedToRetrieveManifestFromId);
 
