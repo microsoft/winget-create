@@ -97,32 +97,14 @@ namespace Microsoft.WingetCreateCore.Common
         /// <returns>Manifest as a string.</returns>
         public async Task<List<string>> GetManifestContentAsync(string packageId, string version = null)
         {
-            string appPath = Utils.GetAppManifestDirPath(packageId, string.Empty, '/');
-            var contents = await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, appPath);
-            string versionDirectory;
+            string versionDirectoryPath = await this.GetVersionDirectoryPath(packageId, version);
 
-            if (string.IsNullOrEmpty(version))
-            {
-                versionDirectory = contents
-                    .Where(c => c.Type == ContentType.Dir)
-                    .OrderByDescending(c => c.Name, new VersionComparer())
-                    .Select(c => c.Path)
-                    .FirstOrDefault();
-            }
-            else
-            {
-                versionDirectory = contents
-                    .Where(c => c.Type == ContentType.Dir && c.Name.EqualsIC(version))
-                    .Select(c => c.Path)
-                    .FirstOrDefault();
-            }
-
-            if (string.IsNullOrEmpty(versionDirectory))
+            if (string.IsNullOrEmpty(versionDirectoryPath))
             {
                 throw new NotFoundException(nameof(version), System.Net.HttpStatusCode.NotFound);
             }
 
-            var packageContents = (await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, versionDirectory))
+            var packageContents = (await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, versionDirectoryPath))
                 .Where(c => c.Type != ContentType.Dir && Path.GetExtension(c.Name).EqualsIC(".yaml"));
 
             // If all contents of version directory are directories themselves, user must've provided an invalid packageId.
@@ -148,8 +130,10 @@ namespace Microsoft.WingetCreateCore.Common
         /// <param name="manifests">Wrapper object for manifest object models to be submitted in the PR.</param>
         /// <param name="submitToFork">Bool indicating whether or not to submit the PR via a fork.</param>
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
+        /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
+        /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
         /// <returns>Pull request object.</returns>
-        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork, string prTitle = null)
+        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
         {
             Dictionary<string, string> contents = new Dictionary<string, string>();
             string id;
@@ -173,7 +157,7 @@ namespace Microsoft.WingetCreateCore.Common
                 contents.Add($"{id}.locale.{manifests.DefaultLocaleManifest.PackageLocale}", manifests.DefaultLocaleManifest.ToYaml());
             }
 
-            return this.SubmitPRAsync(id, version, contents, submitToFork, prTitle);
+            return this.SubmitPRAsync(id, version, contents, submitToFork, prTitle, shouldReplace, replaceVersion);
         }
 
         /// <summary>
@@ -293,7 +277,7 @@ namespace Microsoft.WingetCreateCore.Common
             return null;
         }
 
-        private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork, string prTitle = null)
+        private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
         {
             bool createdRepo = false;
             Repository repo;
@@ -374,6 +358,12 @@ namespace Microsoft.WingetCreateCore.Common
 
                 await this.github.Git.Reference.Update(repo.Id, newBranchNameHeads, new ReferenceUpdate(commit.Sha));
 
+                // Remove a previous manifest
+                if (shouldReplace)
+                {
+                    await this.DeletePackageManifest(repo.Id, packageId, replaceVersion, newBranchName);
+                }
+
                 // Get latest description template from repo
                 string description = await this.GetFileContentsAsync(PRDescriptionRepoPath);
 
@@ -403,6 +393,53 @@ namespace Microsoft.WingetCreateCore.Common
                 }
 
                 throw;
+            }
+        }
+
+        private async Task<string> GetVersionDirectoryPath(string packageId, string version = null)
+        {
+            string appPath = Utils.GetAppManifestDirPath(packageId, string.Empty, '/');
+            var contents = await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, appPath);
+            string directory;
+
+            if (string.IsNullOrEmpty(version))
+            {
+                // Get the latest version directory
+                directory = contents
+                    .Where(c => c.Type == ContentType.Dir)
+                    .OrderByDescending(c => c.Name, new VersionComparer())
+                    .Select(c => c.Path)
+                    .FirstOrDefault();
+            }
+            else
+            {
+                // Get the specified version directory
+                directory = contents
+                    .Where(c => c.Type == ContentType.Dir && c.Name.EqualsIC(version))
+                    .Select(c => c.Path)
+                    .FirstOrDefault();
+            }
+
+            return directory;
+        }
+
+        private async Task DeletePackageManifest(long forkRepoId, string packageId, string version, string branchName)
+        {
+            string versionDirectoryPath = await this.GetVersionDirectoryPath(packageId, version);
+
+            if (string.IsNullOrEmpty(versionDirectoryPath))
+            {
+                throw new NotFoundException(nameof(version), System.Net.HttpStatusCode.NotFound);
+            }
+
+            // Get all files in the version directory
+            var versionDirectoryContents = await this.github.Repository.Content.GetAllContents(forkRepoId, versionDirectoryPath);
+
+            // Delete files from the new branch in the forked repository
+            foreach (var file in versionDirectoryContents)
+            {
+                var fileContent = await this.github.Repository.Content.GetAllContentsByRef(forkRepoId, file.Path, branchName);
+                await this.github.Repository.Content.DeleteFile(forkRepoId, file.Path, new DeleteFileRequest($"Delete {file.Path}", fileContent[0].Sha, branchName));
             }
         }
 

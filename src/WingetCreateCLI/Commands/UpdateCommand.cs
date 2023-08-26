@@ -55,6 +55,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string Id { get; set; }
 
         /// <summary>
+        /// Gets or sets the previous version to remove from the Windows Package Manager repository.
+        /// </summary>
+        [Value(1, MetaName = "ReplaceVersion", Required = false, HelpText = "ReplaceVersion_HelpText", ResourceType = typeof(Resources))]
+        public string ReplaceVersion { get; set; }
+
+        /// <summary>
         /// Gets or sets the new value used to update the manifest version element.
         /// </summary>
         [Option('v', "version", Required = false, HelpText = "Version_HelpText", ResourceType = typeof(Resources))]
@@ -79,6 +85,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public bool SubmitToGitHub { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether or not to remove a previous version of the manifest with the update.
+        /// </summary>
+        [Option('r', "replace", Required = false, HelpText = "ReplacePrevious_HelpText", ResourceType = typeof(Resources))]
+        public bool Replace { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to launch an interactive mode for users to manually select which installers to update.
         /// </summary>
         [Option('i', "interactive", Required = false, HelpText = "InteractiveUpdate_HelpText", ResourceType = typeof(Resources))]
@@ -97,9 +109,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         public IEnumerable<string> InstallerUrls { get; set; } = new List<string>();
 
         /// <summary>
-        /// Gets or sets the unbound arguments that exist after the first positional parameter.
+        /// Gets or sets the unbound arguments that exist after the positional parameters.
         /// </summary>
-        [Value(1, Hidden = true)]
+        [Value(2, Hidden = true)]
         public IList<string> UnboundArgs { get; set; } = new List<string>();
 
         /// <summary>
@@ -142,6 +154,26 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (!string.IsNullOrEmpty(exactId))
                 {
                     this.Id = exactId;
+                }
+
+                if (!string.IsNullOrEmpty(this.ReplaceVersion))
+                {
+                    // If update version is same as replace version, it's a regular update.
+                    if (this.Version == this.ReplaceVersion)
+                    {
+                        this.Replace = false;
+                    }
+
+                    // Check if the replace version exists in the repository.
+                    try
+                    {
+                        await this.GitHubClient.GetManifestContentAsync(this.Id, this.ReplaceVersion);
+                    }
+                    catch (Octokit.NotFoundException)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.VersionDoesNotExist_Error), this.Version, this.Id);
+                        return false;
+                    }
                 }
 
                 List<string> latestManifestContent;
@@ -209,7 +241,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return await this.LoadGitHubClient(true)
                         ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                             updatedManifests,
-                            this.GetPRTitle(updatedManifests, originalManifests)))
+                            this.GetPRTitle(updatedManifests, originalManifests),
+                            this.Replace,
+                            this.ReplaceVersion))
                         : false;
                 }
 
