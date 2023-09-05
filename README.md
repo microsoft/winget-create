@@ -48,6 +48,7 @@ choco install wingetcreate
 | [New](doc/new.md)      | Command for creating a new manifest from scratch |
 | [Update](doc/update.md)  | Command for updating an existing manifest |
 | [Submit](doc/submit.md)  | Command for submitting an existing PR  |
+| [Show](doc/show.md)      | Command for displaying existing manifests  |
 | [Token](doc/token.md)   | Command for managing cached GitHub personal access tokens |
 | [Settings](doc/settings.md) | Command for editing the settings file configurations |
 | [Cache](doc/cache.md) | Command for managing downloaded installers stored in cache
