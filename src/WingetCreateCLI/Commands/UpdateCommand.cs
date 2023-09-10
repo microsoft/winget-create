@@ -351,6 +351,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.NewInstallerUrlMustMatchExisting_Message));
                 installerMatchException.MultipleMatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.UnmatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
                 installerMatchException.UnmatchedInstallers.ForEach(i => Logger.ErrorLocalized(nameof(Resources.MultipleMatchedInstaller_Error), i.Architecture, i.InstallerType, i.InstallerUrl));
+                Console.WriteLine();
+                Logger.ErrorLocalized(nameof(Resources.UseOverrides_ErrorMessage));
 
                 if (installerMatchException.IsArchitectureOverride)
                 {
