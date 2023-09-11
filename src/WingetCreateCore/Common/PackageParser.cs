@@ -555,7 +555,6 @@ namespace Microsoft.WingetCreateCore
             if (!parseMsixResult)
             {
                 var urlArchitecture = installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
-                installerMetadata.UrlArchitecture = GetArchFromUrl(baseInstaller.InstallerUrl);
                 installerMetadata.BinaryArchitecture = baseInstaller.Architecture;
 
                 var overrideArch = installerMetadata.OverrideArchitecture;
@@ -587,17 +586,17 @@ namespace Microsoft.WingetCreateCore
             {
                 archMatches.Add(Architecture.Arm64);
             }
-            else if (Regex.Match(url, @"\barm\b", RegexOptions.IgnoreCase).Success)
+            else if (Regex.Match(url, @"\barm\b|armv[567]", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.Arm);
             }
 
-            if (Regex.Match(url, "x64|win64|_64|64-bit", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, "x64|win64|_64|64-bit|amd64", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.X64);
             }
 
-            if (Regex.Match(url, "x86|win32|ia32|_86|32-bit", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, @"x86|win32|ia32|_86|32-bit|i386|\b386\b", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.X86);
             }
