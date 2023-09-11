@@ -176,17 +176,17 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         private void ParseArgumentsAndShowManifest(Manifests manifests)
         {
+            if (manifests.SingletonManifest != null)
+            {
+                DisplaySingletonManifest(manifests.SingletonManifest);
+                return;
+            }
+
             bool showAll = !this.ShowInstallerManifest && !this.ShowDefaultLocaleManifest && !this.ShowLocaleManifests && !this.ShowVersionManifest;
 
             if (showAll)
             {
                 ShowAllManifests(manifests);
-                return;
-            }
-
-            if (manifests.SingletonManifest != null)
-            {
-                DisplaySingletonManifest(manifests.SingletonManifest);
                 return;
             }
 
