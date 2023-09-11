@@ -607,7 +607,7 @@
     <value>Would you like to modify the optional default locale fields?</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>Each new installer URL must have a single match to an existing installer based on installer type and architecture. The following installers failed to match an existing installer:</value>
+    <value>Each new installer URL must have a single match to an existing installer based on architecture, installer type and scope. The following installers failed to match an existing installer:</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>The architecture detected from the binary might be different than what is specified in the installer URL for the following installer(s):</value>
@@ -1098,5 +1098,8 @@
   </data>
   <data name="VersionManifest_Message" xml:space="preserve">
     <value>Version Manifest:</value>
+  </data>
+  <data name="UseOverrides_ErrorMessage" xml:space="preserve">
+    <value>Try using the architecture and/or scope overrides to uniquely match new URLs to existing installer nodes in the manifest.</value>
   </data>
 </root>

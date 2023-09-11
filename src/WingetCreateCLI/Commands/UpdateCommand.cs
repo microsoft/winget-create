@@ -356,6 +356,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     Logger.WarnLocalized(nameof(Resources.ArchitectureOverride_Warning));
                 }
+                else
+                {
+                    Logger.WarnLocalized(nameof(Resources.UseOverrides_ErrorMessage));
+                }
 
                 return null;
             }
