@@ -2689,7 +2689,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please try using the architecture and/or scope overrides to uniquely match new URLs to existing installer nodes in the manifest..
+        ///   Looks up a localized string similar to Try using the architecture and/or scope overrides to uniquely match new URLs to existing installer nodes in the manifest..
         /// </summary>
         public static string UseOverrides_ErrorMessage {
             get {

@@ -1100,6 +1100,6 @@
     <value>Version Manifest:</value>
   </data>
   <data name="UseOverrides_ErrorMessage" xml:space="preserve">
-    <value>Please try using the architecture and/or scope overrides to uniquely match new URLs to existing installer nodes in the manifest.</value>
+    <value>Try using the architecture and/or scope overrides to uniquely match new URLs to existing installer nodes in the manifest.</value>
   </data>
 </root>
