@@ -223,6 +223,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Vanity URL detected. The submission will automatically replace the previous version..
+        /// </summary>
+        public static string AutoReplacingPreviousVersion_Message {
+            get {
+                return ResourceManager.GetString("AutoReplacingPreviousVersion_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BACK.
         /// </summary>
         public static string Back_MenuItem {

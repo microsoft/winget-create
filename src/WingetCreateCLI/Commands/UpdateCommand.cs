@@ -239,6 +239,19 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return false;
                     }
 
+                    if (!this.Replace)
+                    {
+                        string updatedVersion = updatedManifests.VersionManifest.PackageVersion;
+                        string originalVersion = originalManifests.VersionManifest != null ? originalManifests.VersionManifest.PackageVersion : originalManifests.SingletonManifest.PackageVersion;
+
+                        if (WinGetUtil.CompareVersions(updatedVersion, originalVersion) != 0 && AreInstallerUrlsVanityUrls(originalManifests, updatedManifests))
+                        {
+                            Logger.InfoLocalized(nameof(Resources.AutoReplacingPreviousVersion_Message));
+                            Console.WriteLine();
+                            this.Replace = true;
+                        }
+                    }
+
                     return await this.LoadGitHubClient(true)
                         ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                             updatedManifests,
@@ -636,6 +649,27 @@ namespace Microsoft.WingetCreateCLI.Commands
                     PromptHelper.PromptPropertiesWithMenu(selectedLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(selectedLocaleManifest));
                 }
             }
+        }
+
+        private static bool AreInstallerUrlsVanityUrls(Manifests baseManifest, Manifests newManifest)
+        {
+            List<Installer> newInstallers = newManifest.InstallerManifest.Installers;
+
+            // All installer URLs in the new manifest must match the base manifest.
+            foreach (Installer installer in newInstallers)
+            {
+                if (baseManifest.InstallerManifest != null && !baseManifest.InstallerManifest.Installers.Any(i => i.InstallerUrl == installer.InstallerUrl))
+                {
+                    return false;
+                }
+
+                if (baseManifest.SingletonManifest != null && !baseManifest.SingletonManifest.Installers.Any(i => i.InstallerUrl == installer.InstallerUrl))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private string ObtainMatchingRelativeFilePath(string oldRelativeFilePath, string directory, string archiveName)
