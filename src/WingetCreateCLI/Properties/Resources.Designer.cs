@@ -2158,6 +2158,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false..
+        /// </summary>
+        public static string ReplacePrevious_HelpText {
+            get {
+                return ResourceManager.GetString("ReplacePrevious_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optional. Package version used in conjunction with the replace argument to replace an older version of the manifest from the Windows Package Manager repo..
+        /// </summary>
+        public static string ReplaceVersion_HelpText {
+            get {
+                return ResourceManager.GetString("ReplaceVersion_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The replace version cannot be equal to the update version..
+        /// </summary>
+        public static string ReplaceVersionEqualsUpdateVersion_ErrorMessage {
+            get {
+                return ResourceManager.GetString("ReplaceVersionEqualsUpdateVersion_ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repository &quot;{0}/{1}&quot; not found. Please verify the Windows Package Manager repository owner and name in your settings file..
         /// </summary>
         public static string RepositoryNotFound_Error {
@@ -2712,6 +2739,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Version_HelpText {
             get {
                 return ResourceManager.GetString("Version_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version {0} does not exist for {1} in the Windows Package Manager repository..
+        /// </summary>
+        public static string VersionDoesNotExist_Error {
+            get {
+                return ResourceManager.GetString("VersionDoesNotExist_Error", resourceCulture);
             }
         }
         

@@ -611,8 +611,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be submitted.</param>
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
+        /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
+        /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
-        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null)
+        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
         {
             if (string.IsNullOrEmpty(this.GitHubToken))
             {
@@ -625,7 +627,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle);
+                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion);
                 this.PullRequestNumber = pullRequest.Number;
                 PullRequestEvent pullRequestEvent = new PullRequestEvent { IsSuccessful = true, PullRequestNumber = pullRequest.Number };
                 TelemetryManager.Log.WriteEvent(pullRequestEvent);

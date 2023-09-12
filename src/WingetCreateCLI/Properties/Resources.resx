@@ -1099,6 +1099,22 @@
   <data name="VersionManifest_Message" xml:space="preserve">
     <value>Version Manifest:</value>
   </data>
+  <data name="ReplacePrevious_HelpText" xml:space="preserve">
+    <value>Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false.</value>
+  </data>
+  <data name="VersionDoesNotExist_Error" xml:space="preserve">
+    <value>Version {0} does not exist for {1} in the Windows Package Manager repository.</value>
+    <comment>{0} - will be replaced with the package version
+
+{1} - will be replaced with the package ID
+</comment>
+  </data>
+  <data name="ReplaceVersion_HelpText" xml:space="preserve">
+    <value>Optional. Package version used in conjunction with the replace argument to replace an older version of the manifest from the Windows Package Manager repo.</value>
+  </data>
+  <data name="ReplaceVersionEqualsUpdateVersion_ErrorMessage" xml:space="preserve">
+    <value>The replace version cannot be equal to the update version.</value>
+  </data>
   <data name="UseOverrides_ErrorMessage" xml:space="preserve">
     <value>Try using the architecture and/or scope overrides to uniquely match new URLs to existing installer nodes in the manifest.</value>
   </data>
