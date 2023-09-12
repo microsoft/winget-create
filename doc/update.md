@@ -54,7 +54,7 @@ The following arguments are available:
 | **-v, --version** |  Version to be used when updating the package version field.
 | **-o, --out** |  The output directory where the newly created manifests will be saved locally
 | **-s, --submit** |  Boolean value for submitting to the Windows Package Manager repo. If true, updated manifest will be submitted directly using the provided GitHub Token
-| **-r, --replace** |  Boolean value for removing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be removed. Default is false.
+| **-r, --replace** |  Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false.
 | **-p, --prtitle** |  The title of the pull request submitted to GitHub.
 | **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
 | **-?, --help** |  Gets additional help on this command. |

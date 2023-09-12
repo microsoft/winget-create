@@ -55,7 +55,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the previous version to remove from the Windows Package Manager repository.
+        /// Gets or sets the previous version to replace from the Windows Package Manager repository.
         /// </summary>
         [Value(1, MetaName = "ReplaceVersion", Required = false, HelpText = "ReplaceVersion_HelpText", ResourceType = typeof(Resources))]
         public string ReplaceVersion { get; set; }
@@ -85,7 +85,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         public bool SubmitToGitHub { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not to remove a previous version of the manifest with the update.
+        /// Gets or sets a value indicating whether or not to replace a previous version of the manifest with the update.
         /// </summary>
         [Option('r', "replace", Required = false, HelpText = "ReplacePrevious_HelpText", ResourceType = typeof(Resources))]
         public bool Replace { get; set; }
@@ -161,7 +161,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                     // If update version is same as replace version, it's a regular update.
                     if (this.Version == this.ReplaceVersion)
                     {
-                        this.Replace = false;
+                        Logger.ErrorLocalized(nameof(Resources.ReplaceVersionEqualsUpdateVersion_ErrorMessage));
+                        return false;
                     }
 
                     // Check if the replace version exists in the repository.

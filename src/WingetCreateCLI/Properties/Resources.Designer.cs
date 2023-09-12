@@ -2158,7 +2158,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Boolean value for removing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be removed. Default is false..
+        ///   Looks up a localized string similar to Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false..
         /// </summary>
         public static string ReplacePrevious_HelpText {
             get {
@@ -2167,11 +2167,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Optional. Package version used in conjunction with the replace argument to remove an older version of the manifest from the Windows Package Manager repo..
+        ///   Looks up a localized string similar to Optional. Package version used in conjunction with the replace argument to replace an older version of the manifest from the Windows Package Manager repo..
         /// </summary>
         public static string ReplaceVersion_HelpText {
             get {
                 return ResourceManager.GetString("ReplaceVersion_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The replace version cannot be equal to the update version..
+        /// </summary>
+        public static string ReplaceVersionEqualsUpdateVersion_ErrorMessage {
+            get {
+                return ResourceManager.GetString("ReplaceVersionEqualsUpdateVersion_ErrorMessage", resourceCulture);
             }
         }
         
