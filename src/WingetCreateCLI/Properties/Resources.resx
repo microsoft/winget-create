@@ -1114,6 +1114,7 @@
   </data>
   <data name="ReplaceVersionEqualsUpdateVersion_ErrorMessage" xml:space="preserve">
     <value>The replace version cannot be equal to the update version.</value>
+  </data>
   <data name="UseOverrides_ErrorMessage" xml:space="preserve">
     <value>Try using the architecture and/or scope overrides to uniquely match new URLs to existing installer nodes in the manifest.</value>
   </data>
