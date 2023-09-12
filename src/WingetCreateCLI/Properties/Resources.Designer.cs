@@ -1726,7 +1726,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Each new installer URL must have a single match to an existing installer based on installer type and architecture. The following installers failed to match an existing installer:.
+        ///   Looks up a localized string similar to Each new installer URL must have a single match to an existing installer based on architecture, installer type and scope. The following installers failed to match an existing installer:.
         /// </summary>
         public static string NewInstallerUrlMustMatchExisting_Message {
             get {
@@ -2712,6 +2712,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Url_KeywordDescription {
             get {
                 return ResourceManager.GetString("Url_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Try using the architecture and/or scope overrides to uniquely match new URLs to existing installer nodes in the manifest..
+        /// </summary>
+        public static string UseOverrides_ErrorMessage {
+            get {
+                return ResourceManager.GetString("UseOverrides_ErrorMessage", resourceCulture);
             }
         }
         

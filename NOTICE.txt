@@ -20,7 +20,6 @@ required to debug changes to any libraries licensed under the GNU Lesser General
 Newtonsoft.Json.Schema 3.0.14 - AGPL-3.0-only OR OTHER
 
 
-(c) 2008 VeriSign, Inc.
 Copyright Newtonsoft 2014
 Copyright (c) 2014 Newtonsoft
 Copyright (c) Newtonsoft 2014
@@ -51,7 +50,6 @@ In addition to this license, Json.NET Schema is offered under a commercial licen
 Castle.Core 4.4.0 - Apache-2.0
 
 
-(c) 2008 VeriSign, Inc.
 Copyright 2004-2016 Castle Project
 Copyright (c) 2004-2019 Castle Project
 GCopyright (c) 2004-2019 Castle Project
@@ -77,7 +75,6 @@ limitations under the License.
 NuGet.Frameworks 5.0.0 - Apache-2.0
 
 
-(c) 2008 VeriSign, Inc.
 (c) Microsoft Corporation.
 
 Apache License
@@ -291,6 +288,7 @@ limitations under the License.
 Moq 4.16.1 - BSD-3-Clause
 
 
+Copyright (c) 2007, Clarius Consulting, Manas Technology Solutions, InSTEDD, and Contributors
 
 Copyright (c) <year> <owner> . All rights reserved.
 
@@ -331,7 +329,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 Polly 7.2.2 - BSD-3-Clause
 
 
-(c) 2008 VeriSign, Inc.
 
 Copyright (c) <year> <owner> . All rights reserved.
 
@@ -352,7 +349,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 AutoMapper 10.1.1 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 Copyright (c) 2014-2018 Axel Heer.
 
 MIT License
@@ -372,7 +368,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 CommandLineParser 2.8.0 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 copyright Excepting NotParsed
 copyright symbol. name author' The company
 Copyright (c) 2005 - 2020 Giacomo Stelluti Scala Contributors
@@ -410,7 +405,6 @@ THE SOFTWARE.
 DesktopBridge.Helpers 1.2.2 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 
 MIT License
 
@@ -429,7 +423,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 jose-jwt 3.1.1 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 
 MIT License
 
@@ -448,7 +441,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Microsoft.CorrelationVector 1.0.42 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 (c) Microsoft Corporation.
 
 MIT License
@@ -465,13 +457,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---------------------------------------------------------
 
-Microsoft.Msix.Utils 2.1.0 - MIT
+Microsoft.Msix.Utils 2.1.1 - MIT
 
 
-(c) 2008 VeriSign, Inc.
-Copyright (c) Microsoft.
-(c) Microsoft Corporation.
-copyrightYear Clear AltDirectorySeparatorChar
 
 MIT License
 
@@ -487,46 +475,23 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---------------------------------------------------------
 
-Microsoft.Win32.SystemEvents 5.0.0 - MIT
+Microsoft.Win32.SystemEvents 4.5.0 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 (c) Microsoft Corporation.
-Copyright (c) Andrew Arnott
-Copyright 2018 Daniel Lemire
-Copyright 2012 the V8 project
-Copyright (c) .NET Foundation.
 Copyright (c) 2011, Google Inc.
-Copyright (c) 1998 Microsoft. To
 (c) 1997-2005 Sean Eron Anderson.
-Copyright (c) 2017 Yoshifumi Kawai
-Copyright (c) Microsoft Corporation
-Copyright (c) 2007 James Newton-King
-Copyright (c) 2012-2014, Yann Collet
-Copyright (c) 2013-2017, Alfred Klomp
-Copyright (c) 2015-2017, Wojciech Mula
-Copyright (c) 2005-2007, Nick Galbreath
-Copyright (c) 2018 Alexander Chermyanin
+Copyright (c) 1991-2017 Unicode, Inc.
 Portions (c) International Organization
 Copyright (c) 2015 The Chromium Authors.
-Copyright (c) The Internet Society 1997.
 Copyright (c) 2004-2006 Intel Corporation
-Copyright (c) 2013-2017, Milosz Krajewski
-Copyright (c) 2016-2017, Matthieu Darbois
 Copyright (c) .NET Foundation Contributors
-Copyright (c) The Internet Society (2003).
 Copyright (c) .NET Foundation and Contributors
 Copyright (c) 2011 Novell, Inc (http://www.novell.com)
 Copyright (c) 1995-2017 Jean-loup Gailly and Mark Adler
 Copyright (c) 2015 Xamarin, Inc (http://www.xamarin.com)
 Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.
-Copyright (c) 2014 Ryan Juckett http://www.ryanjuckett.com
-Copyright (c) 1990- 1993, 1996 Open Software Foundation, Inc.
-Copyright (c) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 Copyright (c) YEAR W3C(r) (MIT, ERCIM, Keio, Beihang). Disclaimers THIS WORK IS PROVIDED AS
-Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 The Regents of the University of California.
-Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. & Digital Equipment Corporation, Maynard, Mass.
-Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. & Digital Equipment Corporation, Maynard, Mass. To
 
 The MIT License (MIT)
 
@@ -557,16 +522,13 @@ SOFTWARE.
 
 ---------------------------------------------------------
 
-Microsoft.WindowsPackageManager.Utils 1.1.6 - MIT
+Microsoft.WindowsPackageManager.Utils 1.5.2 - MIT
 
 
-(c) 2008 VeriSign, Inc.
-(c) Microsoft Corporation.
+(c) Microsoft Corporation
 CopyrightUrl ShortDescription
 Copyright (c) Microsoft Corporation
-CopyrightUrl ShortDescription Agreements
-CopyrightUrl Copyright Agreements ShortDescription
-CopyrightInfo AbstractInfo FormattingImplementationInfo
+Copyright PackageUrl ShortDescription CopyrightUrl
 
 MIT License
 
@@ -585,7 +547,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Newtonsoft.Json 12.0.3 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 Copyright James Newton-King 2008
 Copyright (c) 2007 James Newton-King
 Copyright (c) James Newton-King 2008
@@ -620,7 +581,6 @@ NSwag.MSBuild 13.11.1 - MIT
 
 
 Copyright Rico Suter
-(c) 2008 VeriSign, Inc.
 Copyright (c) Rico Suter
 Copyright Rico Suter, 2016
 Copyright (c) by P.J. Plauger
@@ -648,7 +608,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 NUnit 3.13.1 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 copyright in NUnit Console
 Copyright (c) 2002-2014 Charlie Poole
 Copyright (c) 2000-2002 Philip A. Craig
@@ -683,7 +642,6 @@ THE SOFTWARE.
 NUnit3TestAdapter 3.17.0 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 Copyright 2008 - 2015 Jb Evain
 Copyright 2008 - 2018 Jb Evain
 
@@ -717,7 +675,6 @@ Octokit 0.50.0 - MIT
 
 
 Copyright GitHub 2017
-(c) 2008 VeriSign, Inc.
 
 MIT License
 
@@ -736,7 +693,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 Sharprompt 2.3.1 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 
 MIT License
 
@@ -755,7 +711,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 StyleCop.Analyzers 1.2.0-beta.261 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 Copyright (c) 2015 Dennis Fischer
 Copyright (c) 2017 Marcos Lopez C.
 Copyright 2014 Giovanni Bassi and Elemar Jr.
@@ -821,46 +776,23 @@ SOFTWARE.
 
 ---------------------------------------------------------
 
-System.Drawing.Common 5.0.2 - MIT
+System.Drawing.Common 4.5.0 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 (c) Microsoft Corporation.
-Copyright (c) Andrew Arnott
-Copyright 2018 Daniel Lemire
-Copyright 2012 the V8 project
-Copyright (c) .NET Foundation.
 Copyright (c) 2011, Google Inc.
-Copyright (c) 1998 Microsoft. To
 (c) 1997-2005 Sean Eron Anderson.
-Copyright (c) 2017 Yoshifumi Kawai
-Copyright (c) Microsoft Corporation
-Copyright (c) 2007 James Newton-King
-Copyright (c) 2012-2014, Yann Collet
-Copyright (c) 2013-2017, Alfred Klomp
-Copyright (c) 2015-2017, Wojciech Mula
-Copyright (c) 2005-2007, Nick Galbreath
-Copyright (c) 2018 Alexander Chermyanin
+Copyright (c) 1991-2017 Unicode, Inc.
 Portions (c) International Organization
 Copyright (c) 2015 The Chromium Authors.
-Copyright (c) The Internet Society 1997.
 Copyright (c) 2004-2006 Intel Corporation
-Copyright (c) 2013-2017, Milosz Krajewski
-Copyright (c) 2016-2017, Matthieu Darbois
 Copyright (c) .NET Foundation Contributors
-Copyright (c) The Internet Society (2003).
 Copyright (c) .NET Foundation and Contributors
 Copyright (c) 2011 Novell, Inc (http://www.novell.com)
 Copyright (c) 1995-2017 Jean-loup Gailly and Mark Adler
 Copyright (c) 2015 Xamarin, Inc (http://www.xamarin.com)
 Copyright (c) 2009, 2010, 2013-2016 by the Brotli Authors.
-Copyright (c) 2014 Ryan Juckett http://www.ryanjuckett.com
-Copyright (c) 1990- 1993, 1996 Open Software Foundation, Inc.
-Copyright (c) 2015 THL A29 Limited, a Tencent company, and Milo Yip.
 Copyright (c) YEAR W3C(r) (MIT, ERCIM, Keio, Beihang). Disclaimers THIS WORK IS PROVIDED AS
-Copyright 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 The Regents of the University of California.
-Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. & Digital Equipment Corporation, Maynard, Mass.
-Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. & Digital Equipment Corporation, Maynard, Mass. To
 
 The MIT License (MIT)
 
@@ -894,7 +826,6 @@ SOFTWARE.
 System.Security.Cryptography.ProtectedData 5.0.0 - MIT
 
 
-(c) 2008 VeriSign, Inc.
 (c) Microsoft Corporation.
 Copyright (c) Andrew Arnott
 Copyright 2018 Daniel Lemire
@@ -966,7 +897,6 @@ Vestris.ResourceLib 2.1.0 - MIT
 
 Copyright 2016-2017
 Copyright 2016-2017 C
-(c) 2008 VeriSign, Inc.
 Copyright 2016-2017 Resource
 
 MIT License
@@ -983,39 +913,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ---------------------------------------------------------
 
-YamlDotNet 11.1.1 - MIT
-
-
-(c) 2008 VeriSign, Inc.
-Copyright (c) Antoine Aubry and contributors 2008 - 2019
-8Copyright (c) Antoine Aubry and contributors 2008 - 2019
-Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014 Antoine Aubry and contributors
-
-Copyright (c) 2008, 2009, 2010, 2011, 2012, 2013, 2014 Antoine Aubry and contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-
----------------------------------------------------------
-
----------------------------------------------------------
-
 WiX 3.11.2 - MS-RL
 
 
@@ -1023,7 +920,6 @@ WiX 3.11.2 - MS-RL
 (c) Ape R9
 UeaK (c) IthOY
 OthU (c) IyA9OoePa4
-(c) 2008 VeriSign, Inc.
 (c) A,eUFsa aeAE (c) A
 Copyright (c) .NET Foundation.
 Copyright DisableRepair HelpUrl
