@@ -241,6 +241,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     if (!this.Replace)
                     {
+                        // Updated manifests will always be in multi-manifest format so no need to check for singleton manifest.
                         string updatedVersion = updatedManifests.VersionManifest.PackageVersion;
                         string originalVersion = originalManifests.VersionManifest != null ? originalManifests.VersionManifest.PackageVersion : originalManifests.SingletonManifest.PackageVersion;
 
@@ -655,7 +656,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             List<Installer> newInstallers = newManifest.InstallerManifest.Installers;
 
-            // All installer URLs in the new manifest must match the base manifest.
+            // All installer URLs in the new manifest must have a matching installer URL in the base manifest.
             foreach (Installer installer in newInstallers)
             {
                 if (baseManifest.InstallerManifest != null && !baseManifest.InstallerManifest.Installers.Any(i => i.InstallerUrl == installer.InstallerUrl))
