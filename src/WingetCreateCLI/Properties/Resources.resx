@@ -1118,4 +1118,7 @@
   <data name="UseOverrides_ErrorMessage" xml:space="preserve">
     <value>Try using the architecture and/or scope overrides to uniquely match new URLs to existing installer nodes in the manifest.</value>
   </data>
+  <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
+    <value>Vanity URL detected. The submission will automatically replace the previous version.</value>
+  </data>
 </root>
