@@ -322,7 +322,7 @@
     <value>Startet eine Reihe von Fragen, die bei der Erstellung eines neuen Manifests helfen</value>
   </data>
   <data name="OctokitNotFound_Error" xml:space="preserve">
-    <value>Überprüfen Sie Schreibweise und Groß-/Kleinschreibung der Paketkennung.</value>
+    <value>Überprüfen Sie, ob die angegebenen Paketargumente korrekt sind.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
     <value>Ausgabeverzeichnis, in dem die neu erstellten Manifeste lokal gespeichert werden</value>
@@ -607,7 +607,7 @@
     <value>Möchten Sie die optionalen Standard-Gebietsschemafelder ändern?</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>Jede neue Installer-URL muss eine einzelne Übereinstimmung mit einem vorhandenen Installationsprogramm aufweisen, die auf dem Installertyp und der Installerarchitektur basiert. Die folgenden Installationsprogramme stimmen nicht mit einem vorhandenen Installationsprogramm überein:</value>
+    <value>Jede neue Installer-URL muss eine einzelne Übereinstimmung mit einem vorhandenen Installationsprogramm aufweisen, die auf der Installerarchitektur, dem Installertyp und dem Bereich basiert. Die folgenden Installationsprogramme stimmen nicht mit einem vorhandenen Installationsprogramm überein:</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>Die von der Binärdatei erkannte Architektur unterscheidet sich möglicherweise von der in der Installer-URL für die folgenden Installationsprogramme angegebenen Architektur:</value>
@@ -964,7 +964,7 @@
     {1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
-    <value>Geschachtelter Installer nicht im ZIP-Archiv gefunden: {0}</value>
+    <value>Geschachtelter Installer nicht im ZIP-Archiv gefunden: {0}. Verwenden Sie den interaktiven Modus, um dieses Paket zu aktualisieren.</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
   </data>
   <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
@@ -1031,6 +1031,94 @@
     <value>Die URL der gehosteten Symboldatei</value>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
+    <value>Es wurden mehrere Übereinstimmungen für "{0}" aus {1} gefunden. Verwenden Sie den interaktiven Modus, um dieses Paket zu aktualisieren.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
     <value>Es wurden mehrere Übereinstimmungen für „{0}“ aus {1} gefunden.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
+    <value>Geschachtelter Installer nicht im ZIP-Archiv gefunden: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerTypeNotFound_Error" xml:space="preserve">
+    <value>Das ZIP-Archiv enthält keinen übereinstimmenden Installertyp mit dem alten relativen Pfad.</value>
+  </data>
+  <data name="SelectRelativeFilePath_Message" xml:space="preserve">
+    <value>Neuen relativen Dateipfad auswählen</value>
+  </data>
+  <data name="ShowCommand_HelpText" xml:space="preserve">
+    <value>Anzeigen eines Manifests aus dem Windows-Paket-Manager-Repository</value>
+  </data>
+  <data name="DefaultLocaleManifest_HelpText" xml:space="preserve">
+    <value>Zeigt das Standardgebietsschemamanifest des Pakets an.</value>
+  </data>
+  <data name="DefaultLocaleManifest_Message" xml:space="preserve">
+    <value>Standardmanifest des Gebietsschemas ({0}):</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="Example_ShowCommand_DisplayLatestManifest" xml:space="preserve">
+    <value>Anzeigen des neuesten Manifests eines vorhandenen Pakets aus dem Windows-Paket-Manager Repository</value>
+  </data>
+  <data name="Example_ShowCommand_DisplaySpecifiedVersion" xml:space="preserve">
+    <value>Manifeste einer angegebenen Version des Pakets anzeigen</value>
+  </data>
+  <data name="Example_ShowCommand_ShowInstallerAndDefaultLocale" xml:space="preserve">
+    <value>Nur die Manifeste für das Installationsprogramm und das Standardgebietsschema anzeigen</value>
+  </data>
+  <data name="InstallerManifest_HelpText" xml:space="preserve">
+    <value>Zeigt das Manifest des Installationsprogramms des Pakets an.</value>
+  </data>
+  <data name="InstallerManifest_Message" xml:space="preserve">
+    <value>Manifest des Installationsprogramms:</value>
+  </data>
+  <data name="LocaleManifests_HelpText" xml:space="preserve">
+    <value>Alle Gebietsschemamanifeste des Pakets anzeigen.</value>
+  </data>
+  <data name="LocaleManifest_Message" xml:space="preserve">
+    <value>Gebietsschemamanifest ({0}):</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="ShowCommand_GitHubToken_HelpText" xml:space="preserve">
+    <value>Persönliches GitHub-Zugriffstoken, das für den authentifizierten Zugriff auf die GitHub-API verwendet wird. Es wird empfohlen, ein Token bereitzustellen, um ein höheres API-Ratenlimit zu erhalten.</value>
+  </data>
+  <data name="ShowCommand_Version_HelpText" xml:space="preserve">
+    <value>Die Version des Pakets, für das das Manifest angezeigt werden soll.</value>
+  </data>
+  <data name="SingletonManifest_Message" xml:space="preserve">
+    <value>Singletonmanifest:</value>
+  </data>
+  <data name="VersionManifest_HelpText" xml:space="preserve">
+    <value>Zeigt das Versionsmanifest des Pakets an.</value>
+  </data>
+  <data name="VersionManifest_Message" xml:space="preserve">
+    <value>Versionsmanifest:</value>
+  </data>
+  <data name="ReplacePrevious_HelpText" xml:space="preserve">
+    <value>Boolescher Wert zum Ersetzen eines vorhandenen Manifests aus dem Windows-Paket-Manager Repository. Geben Sie optional eine Version an, andernfalls wird die neueste Version ersetzt. Der Standardwert ist falsch.</value>
+  </data>
+  <data name="VersionDoesNotExist_Error" xml:space="preserve">
+    <value>Die Version {0} ist für {1} im Windows-Paket-Manager Repository nicht vorhanden.</value>
+    <comment>{0} - will be replaced with the package version
+
+{1} - will be replaced with the package ID
+</comment>
+  </data>
+  <data name="ReplaceVersion_HelpText" xml:space="preserve">
+    <value>Optional. Paketversion, die zusammen mit dem replace-Argument verwendet wird, um eine ältere Version des Manifests aus dem Windows-Paket-Manager Repository zu ersetzen.</value>
+  </data>
+  <data name="ReplaceVersionEqualsUpdateVersion_ErrorMessage" xml:space="preserve">
+    <value>Die Ersetzungsversion darf nicht mit der Update-Version identisch sein.</value>
+  </data>
+  <data name="UseOverrides_ErrorMessage" xml:space="preserve">
+    <value>Verwenden Sie die Architektur- und/oder Bereichsüberschreibungen, um neue URLs eindeutig vorhandenen Installerknoten im Manifest zuzuordnen.</value>
+  </data>
+  <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
+    <value>Vanity-URL erkannt. Durch die Übermittlung wird die vorherige Version automatisch ersetzt.</value>
   </data>
 </root>

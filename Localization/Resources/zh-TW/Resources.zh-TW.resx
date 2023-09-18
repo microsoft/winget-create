@@ -322,7 +322,7 @@
     <value>啟動一系列問題，協助產生新的資訊清單</value>
   </data>
   <data name="OctokitNotFound_Error" xml:space="preserve">
-    <value>請檢查封裝識別碼的拼寫及大小寫</value>
+    <value>請檢查提供的套件引數是否正確。</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
     <value>將在本機儲存新建立的資訊清單的輸出目錄</value>
@@ -607,7 +607,7 @@
     <value>您要修改選擇性預設地區設定欄位嗎?</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>每個新的安裝程式 URL 都必須有一個符合根據安裝程式類型和架構的現有安裝程式。下列安裝程式不符合現有的安裝程式：</value>
+    <value>每個新的安裝程式 URL 都必須有一個符合根據架構、安裝程式類型和範圍的現有安裝程式。下列安裝程式不符合現有的安裝程式:</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>從二進位檔偵測到的架構可能與下列安裝程式的安裝程式 URL 中指定的架構不同：</value>
@@ -964,7 +964,7 @@
     {1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
-    <value>在壓縮封存中找不到巢狀安裝程式: {0}</value>
+    <value>在 zip 封存中找不到巢狀安裝程式： {0}。請使用互動式模式來更新此套件。</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
   </data>
   <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
@@ -1031,6 +1031,94 @@
     <value>裝載圖示檔案的 URL</value>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
-    <value>在 {1} 中找到多個符合 [{0}] 的項目</value>
+    <value>從 {1} 找到多個符合 "{0}" 的專案。請使用互動式模式來更新此套件。</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
+    <value>在 {1} 中找到多個符合 [{0}] 的項目。</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
+    <value>在壓縮封存中找不到巢狀安裝程式: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerTypeNotFound_Error" xml:space="preserve">
+    <value>zip 封存未包含與舊相對路徑相符的安裝程式類型。</value>
+  </data>
+  <data name="SelectRelativeFilePath_Message" xml:space="preserve">
+    <value>選取新的相對檔案路徑</value>
+  </data>
+  <data name="ShowCommand_HelpText" xml:space="preserve">
+    <value>顯示來自 Windows 封裝管理員存放庫的資訊清單</value>
+  </data>
+  <data name="DefaultLocaleManifest_HelpText" xml:space="preserve">
+    <value>顯示封裝的預設地區設定資訊清單。</value>
+  </data>
+  <data name="DefaultLocaleManifest_Message" xml:space="preserve">
+    <value>預設地區設定 ({0})資訊清單:</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="Example_ShowCommand_DisplayLatestManifest" xml:space="preserve">
+    <value>顯示來自 Windows 封裝管理員存放庫之現有封裝的最新資訊清單</value>
+  </data>
+  <data name="Example_ShowCommand_DisplaySpecifiedVersion" xml:space="preserve">
+    <value>顯示指定封裝版本的資訊清單</value>
+  </data>
+  <data name="Example_ShowCommand_ShowInstallerAndDefaultLocale" xml:space="preserve">
+    <value>只顯示安裝程式和預設地區設定資訊清單</value>
+  </data>
+  <data name="InstallerManifest_HelpText" xml:space="preserve">
+    <value>顯示封裝的安裝程式資訊清單。</value>
+  </data>
+  <data name="InstallerManifest_Message" xml:space="preserve">
+    <value>安裝程式資訊清單:</value>
+  </data>
+  <data name="LocaleManifests_HelpText" xml:space="preserve">
+    <value>顯示封裝的所有地區設定資訊清單。</value>
+  </data>
+  <data name="LocaleManifest_Message" xml:space="preserve">
+    <value>地區設定 ({0}) 資訊清單:</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="ShowCommand_GitHubToken_HelpText" xml:space="preserve">
+    <value>用於驗證 GitHub API 存取的 GitHub 個人存取權杖。建議您提供權杖以取得較高的 API 速率限制。</value>
+  </data>
+  <data name="ShowCommand_Version_HelpText" xml:space="preserve">
+    <value>顯示資訊清單的套件版本。</value>
+  </data>
+  <data name="SingletonManifest_Message" xml:space="preserve">
+    <value>單一資訊清單:</value>
+  </data>
+  <data name="VersionManifest_HelpText" xml:space="preserve">
+    <value>顯示封裝的版本資訊清單。</value>
+  </data>
+  <data name="VersionManifest_Message" xml:space="preserve">
+    <value>版本資訊清單:</value>
+  </data>
+  <data name="ReplacePrevious_HelpText" xml:space="preserve">
+    <value>用於取代Windows 封裝管理員存放庫中現有資訊清單的布林值。選擇性地提供版本，否則會取代最新的版本。預設值為 false。</value>
+  </data>
+  <data name="VersionDoesNotExist_Error" xml:space="preserve">
+    <value>Windows 封裝管理員存放庫中沒有 {1} 版本 {0}。</value>
+    <comment>{0} - will be replaced with the package version
+
+{1} - will be replaced with the package ID
+</comment>
+  </data>
+  <data name="ReplaceVersion_HelpText" xml:space="preserve">
+    <value>選。封裝版本與取代引數搭配使用，以從Windows 封裝管理員存放庫取代舊版的資訊清單。</value>
+  </data>
+  <data name="ReplaceVersionEqualsUpdateVersion_ErrorMessage" xml:space="preserve">
+    <value>取代版本不能等於更新版本。</value>
+  </data>
+  <data name="UseOverrides_ErrorMessage" xml:space="preserve">
+    <value>嘗試使用架構和/或範圍覆寫，將新 URL 與清單中的限有安裝程式結點進行唯一比對。</value>
+  </data>
+  <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
+    <value>偵測到虛名 URL。提交項會自動取代先前的版本。</value>
   </data>
 </root>

@@ -322,7 +322,7 @@
     <value>Задает ряд вопросов, помогающих создать новый манифест</value>
   </data>
   <data name="OctokitNotFound_Error" xml:space="preserve">
-    <value>Проверьте правильность написания и регистр идентификатора пакета</value>
+    <value>Проверьте правильность предоставленных аргументов пакета.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
     <value>Выходной каталог, в котором недавно созданные манифесты будут сохранены локально</value>
@@ -607,7 +607,7 @@
     <value>Изменить необязательные поля языкового стандарта по умолчанию?</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>Каждый новый URL-адрес установщика должен совпадать с одним существующим установщиков в соответствии с его типом и архитектурой. Для следующих установщиков отсутствуют совпадения с существующими:</value>
+    <value>Каждый новый URL-адрес установщика должен совпадать с одним существующим установщиком в соответствии с его архитектурой, типом установщика и областью. Для следующих установщиков отсутствуют совпадения с существующими:</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>Архитектура, обнаруженная в двоичном файле, может отличаться от той, которая указана в URL-адресе установщика, для следующих установщиков:</value>
@@ -964,7 +964,7 @@
     {1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
-    <value>Вложенный установщик не найден в ZIP-архиве: {0}</value>
+    <value>Вложенный установщик не найден в ZIP-архиве: {0}. Используйте интерактивный режим для обновления этого пакета.</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
   </data>
   <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
@@ -1031,6 +1031,94 @@
     <value>URL-адрес размещенного файла значка</value>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
-    <value>Найдено несколько совпадений для "{0}" из {1}</value>
+    <value>Найдено несколько соответствий для "{0}" из {1}. Используйте интерактивный режим для обновления этого пакета.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
+    <value>Найдено несколько совпадений для "{0}" из {1}.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
+    <value>Вложенный установщик не найден в ZIP-архиве: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerTypeNotFound_Error" xml:space="preserve">
+    <value>ZIP-архив не содержит соответствующий тип установщика со старым относительным путем.</value>
+  </data>
+  <data name="SelectRelativeFilePath_Message" xml:space="preserve">
+    <value>Выберите новый относительный путь к файлу</value>
+  </data>
+  <data name="ShowCommand_HelpText" xml:space="preserve">
+    <value>Отобразить манифест из репозитория диспетчера пакетов Windows.</value>
+  </data>
+  <data name="DefaultLocaleManifest_HelpText" xml:space="preserve">
+    <value>Отображение манифеста языкового стандарта по умолчанию для пакета.</value>
+  </data>
+  <data name="DefaultLocaleManifest_Message" xml:space="preserve">
+    <value>Манифест языкового стандарта по умолчанию ({0}):</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="Example_ShowCommand_DisplayLatestManifest" xml:space="preserve">
+    <value>Показать последний манифест существующего пакета из репозитория диспетчера пакетов Windows.</value>
+  </data>
+  <data name="Example_ShowCommand_DisplaySpecifiedVersion" xml:space="preserve">
+    <value>Показать манифесты указанной версии пакета</value>
+  </data>
+  <data name="Example_ShowCommand_ShowInstallerAndDefaultLocale" xml:space="preserve">
+    <value>Показывать только манифесты установщика и языкового стандарта по умолчанию.</value>
+  </data>
+  <data name="InstallerManifest_HelpText" xml:space="preserve">
+    <value>Отобразить манифест установщика пакета.</value>
+  </data>
+  <data name="InstallerManifest_Message" xml:space="preserve">
+    <value>Манифест установщика:</value>
+  </data>
+  <data name="LocaleManifests_HelpText" xml:space="preserve">
+    <value>Отобразить все манифесты языкового стандарта пакета.</value>
+  </data>
+  <data name="LocaleManifest_Message" xml:space="preserve">
+    <value>Манифест языкового стандарта ({0}):</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="ShowCommand_GitHubToken_HelpText" xml:space="preserve">
+    <value>Маркер личного доступа GitHub, используемый для авторизованного доступа к API GitHub. Рекомендуется предоставить маркер для получения более высокого предела скорости API.</value>
+  </data>
+  <data name="ShowCommand_Version_HelpText" xml:space="preserve">
+    <value>Версия пакета для отображения манифеста.</value>
+  </data>
+  <data name="SingletonManifest_Message" xml:space="preserve">
+    <value>Отдельный манифест:</value>
+  </data>
+  <data name="VersionManifest_HelpText" xml:space="preserve">
+    <value>Отобразить манифест версии пакета.</value>
+  </data>
+  <data name="VersionManifest_Message" xml:space="preserve">
+    <value>Манифест версии:</value>
+  </data>
+  <data name="ReplacePrevious_HelpText" xml:space="preserve">
+    <value>Логическое значение для замены существующего манифеста из репозитория диспетчера пакетов Windows. При необходимости укажите версию, иначе последняя версия будет заменена. Значение по умолчанию — ЛОЖЬ.</value>
+  </data>
+  <data name="VersionDoesNotExist_Error" xml:space="preserve">
+    <value>Версия {0} не существует для {1} в Диспетчер пакетов Windows репозитории.</value>
+    <comment>{0} - will be replaced with the package version
+
+{1} - will be replaced with the package ID
+</comment>
+  </data>
+  <data name="ReplaceVersion_HelpText" xml:space="preserve">
+    <value>Необязательно Версия пакета, используемая вместе с аргументом replace для замены более старой версии манифеста из репозитория диспетчера пакетов Windows.</value>
+  </data>
+  <data name="ReplaceVersionEqualsUpdateVersion_ErrorMessage" xml:space="preserve">
+    <value>Версия замены не может совпадать с версией обновления.</value>
+  </data>
+  <data name="UseOverrides_ErrorMessage" xml:space="preserve">
+    <value>Попробуйте использовать переопределения архитектуры и/или области, чтобы уникально сопоставить новые URL-адреса с существующими узлами установщика в манифесте.</value>
+  </data>
+  <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
+    <value>Обнаружен запоминающийся URL-адрес. Отправка автоматически заменит предыдущую версию.</value>
   </data>
 </root>

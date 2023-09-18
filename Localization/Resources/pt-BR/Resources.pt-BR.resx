@@ -322,7 +322,7 @@
     <value>Inicia uma série de perguntas para ajudar a gerar um novo manifesto</value>
   </data>
   <data name="OctokitNotFound_Error" xml:space="preserve">
-    <value>Verifique a ortografia e a capitalização do identificador do pacote</value>
+    <value>Verifique marcar se os argumentos de pacote fornecidos estão corretos.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
     <value>Diretório de saída onde os manifestos recém-criados serão salvos localmente</value>
@@ -607,7 +607,7 @@
     <value>Deseja modificar os campos de localidade padrão opcionais?</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>Cada NOVA URL do instalador deve ter uma única correspondência com um instalador existente com base no tipo e na arquitetura do instalador. Os seguintes instaladores não corresponderam a um instalador existente:</value>
+    <value>Cada NOVA URL do instalador deve ter uma única correspondência com um instalador existente com base na arquitetura, no tipo de instalador e no escopo. Os seguintes instaladores não corresponderam a um instalador existente:</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>A arquitetura detectada do binário pode ser diferente da especificada no URL do instalador para o(s) seguinte(s) instalador(es):</value>
@@ -964,7 +964,7 @@
     {1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
-    <value>Instalador aninhado não encontrado no arquivo zip: {0}</value>
+    <value>Instalador aninhado não encontrado no arquivo zip: {0}. Use o modo interativo para atualizar este pacote.</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
   </data>
   <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
@@ -1031,6 +1031,94 @@
     <value>A URL do arquivo do ícone hospedado</value>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
-    <value>Várias correspondências encontradas para "{0}" de {1}</value>
+    <value>Várias correspondências encontradas para "{0}" de {1}. Use o modo interativo para atualizar este pacote.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
+    <value>Várias correspondências encontradas para "{0}" de {1}.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
+    <value>Instalador aninhado não encontrado no arquivo zip: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerTypeNotFound_Error" xml:space="preserve">
+    <value>O arquivo zip não contém um tipo de instalador correspondente ao caminho relativo antigo.</value>
+  </data>
+  <data name="SelectRelativeFilePath_Message" xml:space="preserve">
+    <value>Selecione o novo caminho relativo do arquivo</value>
+  </data>
+  <data name="ShowCommand_HelpText" xml:space="preserve">
+    <value>Exibir um manifesto do repositório Gerenciador de Pacotes do Windows dados</value>
+  </data>
+  <data name="DefaultLocaleManifest_HelpText" xml:space="preserve">
+    <value>Exibir o manifesto de localidade padrão do pacote.</value>
+  </data>
+  <data name="DefaultLocaleManifest_Message" xml:space="preserve">
+    <value>Manifesto de Localidade Padrão ({0}):</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="Example_ShowCommand_DisplayLatestManifest" xml:space="preserve">
+    <value>Mostrar o manifesto mais recente de um pacote existente do Gerenciador de Pacotes do Windows repositório</value>
+  </data>
+  <data name="Example_ShowCommand_DisplaySpecifiedVersion" xml:space="preserve">
+    <value>Mostrar os manifestos de uma versão especificada do pacote</value>
+  </data>
+  <data name="Example_ShowCommand_ShowInstallerAndDefaultLocale" xml:space="preserve">
+    <value>Mostrar somente os manifestos de localidade padrão e do instalador</value>
+  </data>
+  <data name="InstallerManifest_HelpText" xml:space="preserve">
+    <value>Exiba o manifesto do instalador do pacote.</value>
+  </data>
+  <data name="InstallerManifest_Message" xml:space="preserve">
+    <value>Manifesto do Instalador:</value>
+  </data>
+  <data name="LocaleManifests_HelpText" xml:space="preserve">
+    <value>Exibir todos os manifestos de localidade do pacote.</value>
+  </data>
+  <data name="LocaleManifest_Message" xml:space="preserve">
+    <value>Localidade ({0}) Manifesto:</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="ShowCommand_GitHubToken_HelpText" xml:space="preserve">
+    <value>Token de Acesso Pessoal do GitHub usado para acesso autenticado à API do GitHub. É recomendável fornecer um token para obter um limite de taxa de API mais alto.</value>
+  </data>
+  <data name="ShowCommand_Version_HelpText" xml:space="preserve">
+    <value>A versão do pacote para a qual mostrar o manifesto.</value>
+  </data>
+  <data name="SingletonManifest_Message" xml:space="preserve">
+    <value>Manifesto Singleton:</value>
+  </data>
+  <data name="VersionManifest_HelpText" xml:space="preserve">
+    <value>Exiba o manifesto de versão do pacote.</value>
+  </data>
+  <data name="VersionManifest_Message" xml:space="preserve">
+    <value>Manifesto da Versão:</value>
+  </data>
+  <data name="ReplacePrevious_HelpText" xml:space="preserve">
+    <value>Valor booliano para substituir um manifesto existente do Gerenciador de Pacotes do Windows repositório. Opcionalmente, forneça uma versão ou a versão mais recente será substituída. O padrão é false.</value>
+  </data>
+  <data name="VersionDoesNotExist_Error" xml:space="preserve">
+    <value>O {0} versão não existe para {1} no repositório Gerenciador de Pacotes do Windows.</value>
+    <comment>{0} - will be replaced with the package version
+
+{1} - will be replaced with the package ID
+</comment>
+  </data>
+  <data name="ReplaceVersion_HelpText" xml:space="preserve">
+    <value>Opcional. Versão do pacote usada em conjunto com o argumento replace para substituir uma versão mais antiga do manifesto do Gerenciador de Pacotes do Windows repositório.</value>
+  </data>
+  <data name="ReplaceVersionEqualsUpdateVersion_ErrorMessage" xml:space="preserve">
+    <value>A versão de substituição não pode ser igual à versão de atualização.</value>
+  </data>
+  <data name="UseOverrides_ErrorMessage" xml:space="preserve">
+    <value>Tente usar as substituições de arquitetura e/ou escopo para corresponder exclusivamente novas URLs aos nós de instalador existentes no manifesto.</value>
+  </data>
+  <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
+    <value>URL personalizada detectada. O envio substituirá automaticamente a versão anterior.</value>
   </data>
 </root>
