@@ -322,7 +322,7 @@
     <value>Inicia una serie de preguntas para ayudar a generar un nuevo manifiesto</value>
   </data>
   <data name="OctokitNotFound_Error" xml:space="preserve">
-    <value>Compruebe la ortografía y el uso de mayúsculas y minúsculas del identificador del paquete.</value>
+    <value>Compruebe si los argumentos del paquete proporcionados son correctos.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
     <value>Directorio de salida donde los manifiestos recién creados se guardarán localmente</value>
@@ -607,7 +607,7 @@
     <value>¿Desea modificar los campos de configuración regional predeterminados opcionales?</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>Cada nueva dirección URL del instalador debe tener una sola coincidencia con un instalador existente en función del tipo y la arquitectura del instalador. Los siguientes instaladores no coinciden con un instalador existente:</value>
+    <value>Cada nueva dirección URL del instalador debe tener una sola coincidencia con un instalador existente en función de la arquitectura, el tipo de instalador y el ámbito. Los siguientes instaladores no coinciden con un instalador existente:</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>Es posible que la arquitectura detectada en el binario sea diferente de la especificada en la dirección URL del instalador para los siguientes instaladores:</value>
@@ -964,7 +964,7 @@
     {1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
-    <value>No se encontró el instalador anidado en el archivo zip: {0}</value>
+    <value>No se encontró el instalador anidado en el archivo zip: {0}. Use el modo interactivo para actualizar este paquete.</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
   </data>
   <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
@@ -1031,6 +1031,94 @@
     <value>Dirección URL del archivo de icono hospedado</value>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
-    <value>Se encontraron varias coincidencias para "{0}" en {1}</value>
+    <value>Se encontraron varias coincidencias para "{0}" de {1}. Use el modo interactivo para actualizar este paquete.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
+    <value>Se encontraron varias coincidencias para "{0}" en {1}.</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
+    <value>No se encontró el instalador anidado en el archivo zip: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerTypeNotFound_Error" xml:space="preserve">
+    <value>El archivo ZIP no contiene un tipo de instalador coincidente con la ruta de acceso relativa anterior.</value>
+  </data>
+  <data name="SelectRelativeFilePath_Message" xml:space="preserve">
+    <value>Seleccionar la nueva ruta de acceso relativa del archivo</value>
+  </data>
+  <data name="ShowCommand_HelpText" xml:space="preserve">
+    <value>Mostrar un manifiesto del repositorio Administrador de paquetes de Windows</value>
+  </data>
+  <data name="DefaultLocaleManifest_HelpText" xml:space="preserve">
+    <value>Muestra el manifiesto de configuración regional predeterminado del paquete.</value>
+  </data>
+  <data name="DefaultLocaleManifest_Message" xml:space="preserve">
+    <value>Manifiesto de configuración regional predeterminada ({0}):</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="Example_ShowCommand_DisplayLatestManifest" xml:space="preserve">
+    <value>Mostrar el manifiesto más reciente de un paquete existente del repositorio Administrador de paquetes de Windows</value>
+  </data>
+  <data name="Example_ShowCommand_DisplaySpecifiedVersion" xml:space="preserve">
+    <value>Mostrar los manifiestos de una versión especificada del paquete</value>
+  </data>
+  <data name="Example_ShowCommand_ShowInstallerAndDefaultLocale" xml:space="preserve">
+    <value>Mostrar solo el instalador y los manifiestos de configuración regional predeterminados</value>
+  </data>
+  <data name="InstallerManifest_HelpText" xml:space="preserve">
+    <value>Muestra el manifiesto del instalador del paquete.</value>
+  </data>
+  <data name="InstallerManifest_Message" xml:space="preserve">
+    <value>Manifiesto del instalador:</value>
+  </data>
+  <data name="LocaleManifests_HelpText" xml:space="preserve">
+    <value>Mostrar todos los manifiestos de configuración regional del paquete.</value>
+  </data>
+  <data name="LocaleManifest_Message" xml:space="preserve">
+    <value>Manifiesto de configuración regional ({0}):</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="ShowCommand_GitHubToken_HelpText" xml:space="preserve">
+    <value>Token de acceso personal de GitHub usado para el acceso autenticado a la API de GitHub. Se recomienda proporcionar un token para obtener un límite de velocidad de API superior.</value>
+  </data>
+  <data name="ShowCommand_Version_HelpText" xml:space="preserve">
+    <value>Versión del paquete para la que se mostrará el manifiesto.</value>
+  </data>
+  <data name="SingletonManifest_Message" xml:space="preserve">
+    <value>Manifiesto singleton:</value>
+  </data>
+  <data name="VersionManifest_HelpText" xml:space="preserve">
+    <value>Mostrar el manifiesto de versión del paquete.</value>
+  </data>
+  <data name="VersionManifest_Message" xml:space="preserve">
+    <value>Manifiesto de versión:</value>
+  </data>
+  <data name="ReplacePrevious_HelpText" xml:space="preserve">
+    <value>Valor booleano para reemplazar un manifiesto existente del repositorio Administrador de paquetes de Windows. Opcionalmente, proporcione una versión o, de lo contrario, se reemplazará la versión más reciente. El valor predeterminado es false.</value>
+  </data>
+  <data name="VersionDoesNotExist_Error" xml:space="preserve">
+    <value>La versión {0} no existe para {1} en el repositorio Administrador de paquetes de Windows.</value>
+    <comment>{0} - will be replaced with the package version
+
+{1} - will be replaced with the package ID
+</comment>
+  </data>
+  <data name="ReplaceVersion_HelpText" xml:space="preserve">
+    <value>Opcional. Versión del paquete usada junto con el argumento de reemplazo para reemplazar una versión anterior del manifiesto del repositorio de Administrador de paquetes de Windows.</value>
+  </data>
+  <data name="ReplaceVersionEqualsUpdateVersion_ErrorMessage" xml:space="preserve">
+    <value>La versión de reemplazo no puede ser igual a la versión de actualización.</value>
+  </data>
+  <data name="UseOverrides_ErrorMessage" xml:space="preserve">
+    <value>Pruebe a usar la arquitectura o los reemplazos de ámbito para hacer coincidir de forma única las nuevas direcciones URL con los nodos de instalador existentes en el manifiesto.</value>
+  </data>
+  <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
+    <value>Dirección URL de vanidad detectada. El envío reemplazará automáticamente la versión anterior.</value>
   </data>
 </root>

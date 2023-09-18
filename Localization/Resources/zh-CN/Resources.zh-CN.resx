@@ -322,7 +322,7 @@
     <value>启动一系列问题以帮助生成新清单</value>
   </data>
   <data name="OctokitNotFound_Error" xml:space="preserve">
-    <value>请检查程序包标识符的拼写和大小写</value>
+    <value>请检查提供的包参数是否正确。</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
     <value>将新创建的清单保存到本地的输出目录</value>
@@ -607,7 +607,7 @@
     <value>是否要修改可选的默认区域设置字段？</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>每个新的安装程序 URL 必须具有一个基于安装程序类型和体系结构的现有安装程序的匹配项。以下安装程序无法匹配现有安装程序：</value>
+    <value>每个新的安装程序 URL 必须具有一个基于体系结构、安装程序类型和范围的现有安装程序的匹配项。以下安装程序无法匹配现有安装程序:</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>从二进制文件中检测到的架构可能与下列安装程序的安装程序 URL 中指定的不同:</value>
@@ -964,7 +964,7 @@
     {1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
-    <value>在 zip 存档中找不到嵌套安装程序： {0}</value>
+    <value>在 zip 存档中找不到嵌套安装程序： {0}。请使用交互模式更新此包。</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
   </data>
   <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
@@ -1031,6 +1031,94 @@
     <value>托管图标文件的 URL</value>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
-    <value>在 {1} 中找到了多个 "{0}" 的匹配项</value>
+    <value>为来自 {1} 的 "{0}" 找到多个匹配项。请使用交互模式更新此包。</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
+    <value>在 {1} 中找到了多个“{0}”的匹配项</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
+    <value>在 zip 存档中找不到嵌套安装程序： {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerTypeNotFound_Error" xml:space="preserve">
+    <value>zip 存档不包含与旧相对路径匹配的安装程序类型。</value>
+  </data>
+  <data name="SelectRelativeFilePath_Message" xml:space="preserve">
+    <value>选择新的相对文件路径</value>
+  </data>
+  <data name="ShowCommand_HelpText" xml:space="preserve">
+    <value>显示 Windows 程序包管理器存储库中的清单</value>
+  </data>
+  <data name="DefaultLocaleManifest_HelpText" xml:space="preserve">
+    <value>显示包的默认区域设置清单。</value>
+  </data>
+  <data name="DefaultLocaleManifest_Message" xml:space="preserve">
+    <value>默认区域设置 ({0}) 清单:</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="Example_ShowCommand_DisplayLatestManifest" xml:space="preserve">
+    <value>显示 Windows 程序包管理器存储库中现有包的最新清单</value>
+  </data>
+  <data name="Example_ShowCommand_DisplaySpecifiedVersion" xml:space="preserve">
+    <value>显示包的指定版本的清单</value>
+  </data>
+  <data name="Example_ShowCommand_ShowInstallerAndDefaultLocale" xml:space="preserve">
+    <value>仅显示安装程序和默认区域设置清单</value>
+  </data>
+  <data name="InstallerManifest_HelpText" xml:space="preserve">
+    <value>显示包的安装程序清单。</value>
+  </data>
+  <data name="InstallerManifest_Message" xml:space="preserve">
+    <value>安装程序清单:</value>
+  </data>
+  <data name="LocaleManifests_HelpText" xml:space="preserve">
+    <value>显示包的所有区域设置清单。</value>
+  </data>
+  <data name="LocaleManifest_Message" xml:space="preserve">
+    <value>区域设置 ({0}) 清单:</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="ShowCommand_GitHubToken_HelpText" xml:space="preserve">
+    <value>用于对 GitHub API 进行身份验证访问的 GitHub 个人访问令牌。建议提供令牌以获得更高的 API 速率限制。</value>
+  </data>
+  <data name="ShowCommand_Version_HelpText" xml:space="preserve">
+    <value>要显示其清单的包的版本。</value>
+  </data>
+  <data name="SingletonManifest_Message" xml:space="preserve">
+    <value>单一实例清单:</value>
+  </data>
+  <data name="VersionManifest_HelpText" xml:space="preserve">
+    <value>显示包的版本清单。</value>
+  </data>
+  <data name="VersionManifest_Message" xml:space="preserve">
+    <value>版本清单:</value>
+  </data>
+  <data name="ReplacePrevious_HelpText" xml:space="preserve">
+    <value>用于替换 Windows 程序包管理器存储库中的现有清单的布尔值。可以选择提供版本，否则将替换最新版本。默认值为 false。</value>
+  </data>
+  <data name="VersionDoesNotExist_Error" xml:space="preserve">
+    <value>Windows 程序包管理器存储库中不存在 {1} 的版本 {0}。</value>
+    <comment>{0} - will be replaced with the package version
+
+{1} - will be replaced with the package ID
+</comment>
+  </data>
+  <data name="ReplaceVersion_HelpText" xml:space="preserve">
+    <value>可选。与 replace 参数一起使用的程序包版本，用于替换 Windows 程序包管理器存储库中旧版本的清单。</value>
+  </data>
+  <data name="ReplaceVersionEqualsUpdateVersion_ErrorMessage" xml:space="preserve">
+    <value>替换版本不能等于更新版本。</value>
+  </data>
+  <data name="UseOverrides_ErrorMessage" xml:space="preserve">
+    <value>请尝试使用体系结构和/或范围替代将新 URL 与清单中的现有安装程序节点唯一匹配。</value>
+  </data>
+  <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
+    <value>检测到虚数 URL。提交将自动替换以前的版本。</value>
   </data>
 </root>

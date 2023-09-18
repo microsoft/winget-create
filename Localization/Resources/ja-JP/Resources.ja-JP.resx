@@ -322,7 +322,7 @@
     <value>新しいマニフェストの生成に役立つ一連の質問を開始します</value>
   </data>
   <data name="OctokitNotFound_Error" xml:space="preserve">
-    <value>パッケージ ID のスペルと大文字小文字の区別を確認してください</value>
+    <value>指定されたパッケージ引数が正しいかどうかをチェックしてください。</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
     <value>新しく作成されたマニフェストがローカルに保存される出力ディレクトリ</value>
@@ -607,7 +607,7 @@
     <value>オプションの既定のロケール フィールドを変更しますか?</value>
   </data>
   <data name="NewInstallerUrlMustMatchExisting_Message" xml:space="preserve">
-    <value>新しいインストーラーの各 URL は、インストーラーの種類とアーキテクチャに基づいて、既存のインストーラーと 1 つ一致する必要があります。次のインストーラーは、既存のインストーラーと一致しませんでした。</value>
+    <value>新しいインストーラーの各 URL は、アーキテクチャ、インストーラーの種類、スコープに基づいて、既存のインストーラーと 1 つ一致する必要があります。次のインストーラーは、既存のインストーラーと一致しませんでした。</value>
   </data>
   <data name="DetectedArchMismatch_Message" xml:space="preserve">
     <value>バイナリから検出されたアーキテクチャは、次のインストーラーのインストーラー URL で指定されたアーキテクチャと異なる場合があります。</value>
@@ -964,7 +964,7 @@
     {1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
-    <value>入れ子になったインストーラーが次の zip アーカイブ内で見つかりませんでした: {0}</value>
+    <value>入れ子になったインストーラーが zip アーカイブに見つかりません: {0}。対話型モードを使用して、このパッケージを更新してください。</value>
     <comment>{0} - represents the relative file path of the nested installer file.</comment>
   </data>
   <data name="NestedInstallerFiles_KeywordDescription" xml:space="preserve">
@@ -1031,6 +1031,94 @@
     <value>ホストされるアイコン ファイルの URL</value>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
-    <value>{1} から "{0}" に一致するものが複数あります</value>
+    <value>{1} からの "{0}" に対して複数の一致が見つかりました。対話型モードを使用して、このパッケージを更新してください。</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
+    <value>{1} から "{0}" に一致するものが複数あります。</value>
+    <comment>{0} - will be replaced by the name of the nested installer file
+
+{1} - will be replaced by the name of the zip archive.</comment>
+  </data>
+  <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
+    <value>入れ子になったインストーラーが次の zip アーカイブ内で見つかりませんでした: {0}</value>
+    <comment>{0} - represents the relative file path of the nested installer file.</comment>
+  </data>
+  <data name="NestedInstallerTypeNotFound_Error" xml:space="preserve">
+    <value>zip アーカイブには、古い相対パスと一致するインストーラーの種類が含まれていません。</value>
+  </data>
+  <data name="SelectRelativeFilePath_Message" xml:space="preserve">
+    <value>新しい相対ファイル パスを選択する</value>
+  </data>
+  <data name="ShowCommand_HelpText" xml:space="preserve">
+    <value>Windows パッケージ マネージャーのリポジトリからマニフェストを表示する</value>
+  </data>
+  <data name="DefaultLocaleManifest_HelpText" xml:space="preserve">
+    <value>パッケージの既定のロケール マニフェストを表示します。</value>
+  </data>
+  <data name="DefaultLocaleManifest_Message" xml:space="preserve">
+    <value>既定のロケール ({0}) マニフェスト:</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="Example_ShowCommand_DisplayLatestManifest" xml:space="preserve">
+    <value>Windows パッケージ マネージャーのリポジトリから既存のパッケージの最新のマニフェストを表示する</value>
+  </data>
+  <data name="Example_ShowCommand_DisplaySpecifiedVersion" xml:space="preserve">
+    <value>指定されたバージョンのパッケージのマニフェストを表示します</value>
+  </data>
+  <data name="Example_ShowCommand_ShowInstallerAndDefaultLocale" xml:space="preserve">
+    <value>インストーラーと既定のロケール マニフェストのみを表示する</value>
+  </data>
+  <data name="InstallerManifest_HelpText" xml:space="preserve">
+    <value>パッケージのインストーラー マニフェストを表示します。</value>
+  </data>
+  <data name="InstallerManifest_Message" xml:space="preserve">
+    <value>インストーラー マニフェスト:</value>
+  </data>
+  <data name="LocaleManifests_HelpText" xml:space="preserve">
+    <value>パッケージのすべてのロケール マニフェストを表示します。</value>
+  </data>
+  <data name="LocaleManifest_Message" xml:space="preserve">
+    <value>ロケール ({0}) マニフェスト:</value>
+    <comment>{0} - will be replaced by the PackageLocale from the manifest</comment>
+  </data>
+  <data name="ShowCommand_GitHubToken_HelpText" xml:space="preserve">
+    <value>GitHub API への認証済みアクセスに使用される GitHub 個人用アクセス トークン。API レートの上限を高くするには、トークンを指定することをお勧めします。</value>
+  </data>
+  <data name="ShowCommand_Version_HelpText" xml:space="preserve">
+    <value>マニフェストを表示するパッケージのバージョン。</value>
+  </data>
+  <data name="SingletonManifest_Message" xml:space="preserve">
+    <value>シングルトン マニフェスト:</value>
+  </data>
+  <data name="VersionManifest_HelpText" xml:space="preserve">
+    <value>パッケージのバージョン マニフェストを表示します。</value>
+  </data>
+  <data name="VersionManifest_Message" xml:space="preserve">
+    <value>バージョン マニフェスト:</value>
+  </data>
+  <data name="ReplacePrevious_HelpText" xml:space="preserve">
+    <value>Windows パッケージ マネージャー リポジトリから既存のマニフェストを置き換えるブール値。必要に応じて、バージョンを指定するか、最新バージョンが置き換えられます。既定値は false です。</value>
+  </data>
+  <data name="VersionDoesNotExist_Error" xml:space="preserve">
+    <value>Windows パッケージ マネージャー リポジトリに {1} のバージョン {0} が存在しません。</value>
+    <comment>{0} - will be replaced with the package version
+
+{1} - will be replaced with the package ID
+</comment>
+  </data>
+  <data name="ReplaceVersion_HelpText" xml:space="preserve">
+    <value>オプション。replace 引数と組み合わせて使用されるパッケージのバージョン。Windows パッケージ マネージャー リポジトリの古いバージョンのマニフェストを置き換えます。</value>
+  </data>
+  <data name="ReplaceVersionEqualsUpdateVersion_ErrorMessage" xml:space="preserve">
+    <value>置換バージョンを更新バージョンと同じにすることはできません。</value>
+  </data>
+  <data name="UseOverrides_ErrorMessage" xml:space="preserve">
+    <value>新しい URL をマニフェスト内の既存のインストーラー ノードと一意で一致させるために、アーキテクチャまたはスコープのオーバーライドを使用してみてください。</value>
+  </data>
+  <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
+    <value>Vanity URL が検出されました。申請では、以前のバージョンが自動的に置き換えられます。</value>
   </data>
 </root>
