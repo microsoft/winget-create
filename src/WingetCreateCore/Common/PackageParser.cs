@@ -181,7 +181,7 @@ namespace Microsoft.WingetCreateCore
             string fileExt = Path.GetExtension(desiredPath);
             string fileDir = Path.GetDirectoryName(desiredPath);
             DirectoryInfo dir = new DirectoryInfo(fileDir);
-            FileInfo[] existingFiles = dir.GetFiles(Path.ChangeExtension(fileName + "*", fileExt));
+            FileInfo[] existingFiles = dir.GetFiles(fileName + "*" + fileExt);
             return existingFiles.Length == 0 ? Path.Combine(fileDir, fileName + fileExt) : Path.Combine(fileDir, fileName + " (" + existingFiles.Length.ToString() + ")" + fileExt);
         }
 
