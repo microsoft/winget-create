@@ -7,24 +7,24 @@ ShortDescription: A manifest used for testing.
 Installers:
 - Architecture: x86
   InstallerType: msix
-  InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v1.0.11692/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
-  SignatureSha256: 685F390F7DCCBB89B27E42063AFBEA2B4A3DFA31C4E84483D5B56C99F15C2F5F
+  InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v1.3.2691/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+  InstallerSha256: 02D5F4B5B74189BE631827FE201908F86ABCCAD788225D862F8E3388D9568645
+  SignatureSha256: BB7EBF738006124F59709E33530DAF2E2005C45E8D45B6ED800FD5ACE1F2BD5A
 - Architecture: x64
   InstallerType: msix
-  InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v1.0.11692/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
-  SignatureSha256: 685F390F7DCCBB89B27E42063AFBEA2B4A3DFA31C4E84483D5B56C99F15C2F5F
+  InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v1.3.2691/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+  InstallerSha256: 02D5F4B5B74189BE631827FE201908F86ABCCAD788225D862F8E3388D9568645
+  SignatureSha256: BB7EBF738006124F59709E33530DAF2E2005C45E8D45B6ED800FD5ACE1F2BD5A
 - Architecture: arm
   InstallerType: msix
-  InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v1.0.11692/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
-  SignatureSha256: 685F390F7DCCBB89B27E42063AFBEA2B4A3DFA31C4E84483D5B56C99F15C2F5F
+  InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v1.3.2691/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+  InstallerSha256: 02D5F4B5B74189BE631827FE201908F86ABCCAD788225D862F8E3388D9568645
+  SignatureSha256: BB7EBF738006124F59709E33530DAF2E2005C45E8D45B6ED800FD5ACE1F2BD5A
 - Architecture: arm64
   InstallerType: msix
-  InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v1.0.11692/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
-  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
-  SignatureSha256: 685F390F7DCCBB89B27E42063AFBEA2B4A3DFA31C4E84483D5B56C99F15C2F5F
+  InstallerUrl: https://github.com/microsoft/winget-cli/releases/download/v1.3.2691/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle
+  InstallerSha256: 02D5F4B5B74189BE631827FE201908F86ABCCAD788225D862F8E3388D9568645
+  SignatureSha256: BB7EBF738006124F59709E33530DAF2E2005C45E8D45B6ED800FD5ACE1F2BD5A
 PackageLocale: en-US
 ManifestType: singleton
 ManifestVersion: 1.0.0
