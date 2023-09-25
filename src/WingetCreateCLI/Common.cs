@@ -35,8 +35,14 @@ namespace Microsoft.WingetCreateCLI
         /// <param name="cleanUpDays">The number of days that determine the age of files to be considered for cleanup.</param>
         public static void CleanUpFilesOlderThan(string cleanUpDirectory, int cleanUpDays)
         {
-            var logDirectory = new DirectoryInfo(cleanUpDirectory);
-            var files = logDirectory.GetFiles();
+            var directory = new DirectoryInfo(cleanUpDirectory);
+
+            if (!directory.Exists)
+            {
+                return;
+            }
+
+            var files = directory.GetFiles();
             foreach (var file in files)
             {
                 if (file.CreationTime < DateTime.Now.AddDays(-cleanUpDays))
@@ -45,12 +51,12 @@ namespace Microsoft.WingetCreateCLI
                 }
             }
 
-            var directories = logDirectory.GetDirectories();
-            foreach (var directory in directories)
+            var directories = directory.GetDirectories();
+            foreach (var subDirectory in directories)
             {
-                if (directory.CreationTime < DateTime.Now.AddDays(-cleanUpDays))
+                if (subDirectory.CreationTime < DateTime.Now.AddDays(-cleanUpDays))
                 {
-                    directory.Delete(true);
+                    subDirectory.Delete(true);
                 }
             }
         }
