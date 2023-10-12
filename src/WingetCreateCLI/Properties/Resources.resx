@@ -1123,15 +1123,18 @@
   </data>
   <data name="SentenceBadFormatConversionErrorOption" xml:space="preserve">
     <value>Option '{0}' is defined with a bad format.</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
   </data>
   <data name="SentenceBadFormatConversionErrorValue" xml:space="preserve">
     <value>A value not bound to option name is defined with a bad format.</value>
   </data>
   <data name="SentenceBadFormatTokenError" xml:space="preserve">
     <value>Token '{0}' is not recognized.</value>
+    <comment>{0} - will be replaced with the unrecognized command-line token</comment>
   </data>
   <data name="SentenceBadVerbSelectedError" xml:space="preserve">
     <value>Verb '{0}' is not recognized.</value>
+    <comment>{0} - will be replaced with the unrecognized command-line verb</comment>
   </data>
   <data name="SentenceErrorsHeadingText" xml:space="preserve">
     <value>ERROR(S):</value>
@@ -1144,12 +1147,17 @@
   </data>
   <data name="SentenceMissingRequiredOptionError" xml:space="preserve">
     <value>Required option '{0}' is missing.</value>
+    <comment>{0} - will be replaced with the required command-line option</comment>
   </data>
   <data name="SentenceMissingValueOptionError" xml:space="preserve">
     <value>Option '{0}' has no value.</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
   </data>
   <data name="SentenceMutuallyExclusiveSetErrors" xml:space="preserve">
     <value>Options: {0} are not compatible with {1}.</value>
+    <comment>{0} - will be replaced with the provided command-line option
+
+{1} - will be replaced with the provided command-line option</comment>
   </data>
   <data name="SentenceNoVerbSelectedError" xml:space="preserve">
     <value>No verb selected.</value>
@@ -1159,21 +1167,27 @@
   </data>
   <data name="SentenceRepeatedOptionError" xml:space="preserve">
     <value>Option '{0}' is defined multiple times.</value>
+    <comment>{0} - will be replaced with the repeated command-line option</comment>
   </data>
   <data name="SentenceRequiredWord" xml:space="preserve">
     <value>Required.</value>
   </data>
   <data name="SentenceSequenceOutOfRangeErrorOption" xml:space="preserve">
     <value>A sequence option '{0}' is defined with fewer or more items than required.</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
   </data>
   <data name="SentenceSequenceOutOfRangeErrorValue" xml:space="preserve">
     <value>A sequence value not bound to option name is defined with fewer items than required.</value>
   </data>
   <data name="SentenceSetValueExceptionError" xml:space="preserve">
     <value>Error setting value to option '{0}': {1}</value>
+    <comment>{0} - will be replaced with the provided command-line option
+
+{1} - will be replaced with the provided value in the command-line</comment>
   </data>
   <data name="SentenceUnknownOptionError" xml:space="preserve">
     <value>Option '{0}' is unknown.</value>
+    <comment>{0} - will be replaced with the unrecognized command-line option</comment>
   </data>
   <data name="SentenceUsageHeadingText" xml:space="preserve">
     <value>USAGE:</value>
