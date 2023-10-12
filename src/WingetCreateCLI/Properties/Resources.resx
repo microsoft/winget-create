@@ -1155,9 +1155,9 @@
   </data>
   <data name="SentenceMutuallyExclusiveSetErrors" xml:space="preserve">
     <value>Options: {0} are not compatible with {1}.</value>
-    <comment>{0} - will be replaced with the provided command-line option
+    <comment>{0} - will be replaced with one or more provided command-line option(s)
 
-{1} - will be replaced with the provided command-line option</comment>
+{1} - will be replaced with one or more provided command-line option(s)</comment>
   </data>
   <data name="SentenceNoVerbSelectedError" xml:space="preserve">
     <value>No verb selected.</value>
@@ -1183,7 +1183,7 @@
     <value>Error setting value to option '{0}': {1}</value>
     <comment>{0} - will be replaced with the provided command-line option
 
-{1} - will be replaced with the provided value in the command-line</comment>
+{1} - will be replaced with the provided value for the command-line option</comment>
   </data>
   <data name="SentenceUnknownOptionError" xml:space="preserve">
     <value>Option '{0}' is unknown.</value>
