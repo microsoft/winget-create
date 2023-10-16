@@ -2347,6 +2347,195 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; is defined with a bad format..
+        /// </summary>
+        public static string SentenceBadFormatConversionErrorOption {
+            get {
+                return ResourceManager.GetString("SentenceBadFormatConversionErrorOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A value not bound to option name is defined with a bad format..
+        /// </summary>
+        public static string SentenceBadFormatConversionErrorValue {
+            get {
+                return ResourceManager.GetString("SentenceBadFormatConversionErrorValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Token &apos;{0}&apos; is not recognized..
+        /// </summary>
+        public static string SentenceBadFormatTokenError {
+            get {
+                return ResourceManager.GetString("SentenceBadFormatTokenError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verb &apos;{0}&apos; is not recognized..
+        /// </summary>
+        public static string SentenceBadVerbSelectedError {
+            get {
+                return ResourceManager.GetString("SentenceBadVerbSelectedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR(S):.
+        /// </summary>
+        public static string SentenceErrorsHeadingText {
+            get {
+                return ResourceManager.GetString("SentenceErrorsHeadingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display this help screen..
+        /// </summary>
+        public static string SentenceHelpCommandTextOption {
+            get {
+                return ResourceManager.GetString("SentenceHelpCommandTextOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display more information on a specific command..
+        /// </summary>
+        public static string SentenceHelpCommandTextVerb {
+            get {
+                return ResourceManager.GetString("SentenceHelpCommandTextVerb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required option &apos;{0}&apos; is missing..
+        /// </summary>
+        public static string SentenceMissingRequiredOptionError {
+            get {
+                return ResourceManager.GetString("SentenceMissingRequiredOptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A required value not bound to option name is missing..
+        /// </summary>
+        public static string SentenceMissingRequiredValueError {
+            get {
+                return ResourceManager.GetString("SentenceMissingRequiredValueError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; has no value..
+        /// </summary>
+        public static string SentenceMissingValueOptionError {
+            get {
+                return ResourceManager.GetString("SentenceMissingValueOptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options: {0} are not compatible with {1}..
+        /// </summary>
+        public static string SentenceMutuallyExclusiveSetErrors {
+            get {
+                return ResourceManager.GetString("SentenceMutuallyExclusiveSetErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No verb selected..
+        /// </summary>
+        public static string SentenceNoVerbSelectedError {
+            get {
+                return ResourceManager.GetString("SentenceNoVerbSelectedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group.
+        /// </summary>
+        public static string SentenceOptionGroupWord {
+            get {
+                return ResourceManager.GetString("SentenceOptionGroupWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; is defined multiple times..
+        /// </summary>
+        public static string SentenceRepeatedOptionError {
+            get {
+                return ResourceManager.GetString("SentenceRepeatedOptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required..
+        /// </summary>
+        public static string SentenceRequiredWord {
+            get {
+                return ResourceManager.GetString("SentenceRequiredWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A sequence option &apos;{0}&apos; is defined with fewer or more items than required..
+        /// </summary>
+        public static string SentenceSequenceOutOfRangeErrorOption {
+            get {
+                return ResourceManager.GetString("SentenceSequenceOutOfRangeErrorOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A sequence value not bound to option name is defined with fewer items than required..
+        /// </summary>
+        public static string SentenceSequenceOutOfRangeErrorValue {
+            get {
+                return ResourceManager.GetString("SentenceSequenceOutOfRangeErrorValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error setting value to option &apos;{0}&apos;: {1}.
+        /// </summary>
+        public static string SentenceSetValueExceptionError {
+            get {
+                return ResourceManager.GetString("SentenceSetValueExceptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; is unknown..
+        /// </summary>
+        public static string SentenceUnknownOptionError {
+            get {
+                return ResourceManager.GetString("SentenceUnknownOptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to USAGE:.
+        /// </summary>
+        public static string SentenceUsageHeadingText {
+            get {
+                return ResourceManager.GetString("SentenceUsageHeadingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display version information..
+        /// </summary>
+        public static string SentenceVersionCommandText {
+            get {
+                return ResourceManager.GetString("SentenceVersionCommandText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open settings.
         /// </summary>
         public static string SettingsCommand_HelpText {

@@ -27,6 +27,7 @@ namespace Microsoft.WingetCreateCLI
             Logger.Initialize();
             UserSettings.FirstRunTelemetryConsent();
             TelemetryEventListener.EventListener.IsTelemetryEnabled();
+            SentenceBuilder.Factory = () => new LocalizableSentenceBuilder();
 
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
             Logger.Trace($"Command line args: {arguments}");
