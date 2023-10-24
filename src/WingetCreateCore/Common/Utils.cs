@@ -3,7 +3,9 @@
 namespace Microsoft.WingetCreateCore.Common
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using Windows.Storage;
 
     /// <summary>
     /// Helper class for common utility functions.

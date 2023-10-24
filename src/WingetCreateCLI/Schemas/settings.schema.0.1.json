@@ -25,7 +25,7 @@
           "default": 7,
           "minimum": 1
         },
-        "disable" : {
+        "disable": {
           "description": "Controls whether clean up is disabled",
           "type": "boolean",
           "default": false
@@ -49,6 +49,18 @@
         }
       },
       "additionalProperties": false
+    },
+    "Visual": {
+      "description": "Visual settings",
+      "type": "object",
+      "properties": {
+        "anonymizePaths": {
+          "description": "Controls whether paths displayed on the console are substituted with environment variables",
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "additionalProperties": false
     }
   },
   "type": "object",
@@ -60,12 +72,14 @@
     },
     "Telemetry": { "$ref": "#/definitions/Telemetry" },
     "CleanUp": { "$ref": "#/definitions/CleanUp" },
-    "WindowsPackageManagerRepository": { "$ref": "#/definitions/WindowsPackageManagerRepository" }
+    "WindowsPackageManagerRepository": { "$ref": "#/definitions/WindowsPackageManagerRepository" },
+    "Visual": { "$ref": "#/definitions/Visual" }
   },
   "required": [
     "Telemetry",
     "CleanUp",
-    "WindowsPackageManagerRepository"
+    "WindowsPackageManagerRepository",
+    "Visual"
   ],
   "additionalProperties": false
 }

@@ -105,6 +105,20 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether paths displayed on the console are substituted with environment variables.
+        /// </summary>
+        public static bool AnonymizePaths
+        {
+            get => Settings.Visual.AnonymizePaths;
+
+            set
+            {
+                Settings.Visual.AnonymizePaths = value;
+                SaveSettings();
+            }
+        }
+
         private static SettingsManifest Settings { get; set; }
 
         /// <summary>
@@ -198,6 +212,7 @@ namespace Microsoft.WingetCreateCLI
                     Telemetry = new Models.Settings.Telemetry(),
                     CleanUp = new CleanUp(),
                     WindowsPackageManagerRepository = new WindowsPackageManagerRepository(),
+                    Visual = new Visual(),
                 };
             }
         }

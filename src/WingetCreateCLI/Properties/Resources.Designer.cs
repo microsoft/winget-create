@@ -322,6 +322,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following commands are available:.
+        /// </summary>
+        public static string CommandsAvailable_Message {
+            get {
+                return ResourceManager.GetString("CommandsAvailable_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please ensure that the updated manifest you are submitting is different from the existing package..
         /// </summary>
         public static string CompareUpdatedManifestWithExisting_Message {
@@ -970,6 +979,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shows help about the selected command.
+        /// </summary>
+        public static string HelpRootOption_HelpText {
+            get {
+                return ResourceManager.GetString("HelpRootOption_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Homepage.
+        /// </summary>
+        public static string Homepage_Heading {
+            get {
+                return ResourceManager.GetString("Homepage_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The home page for the package.
         /// </summary>
         public static string Homepage_KeywordDescription {
@@ -1042,6 +1069,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Displays general info of the tool.
+        /// </summary>
+        public static string InfoRootOption_HelpText {
+            get {
+                return ResourceManager.GetString("InfoRootOption_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initiating GitHub login....
         /// </summary>
         public static string InitiatingGitHubLogin_Message {
@@ -1092,6 +1128,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InstallerBinaryMismatch_Message {
             get {
                 return ResourceManager.GetString("InstallerBinaryMismatch_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installer cache.
+        /// </summary>
+        public static string InstallerCache_Heading {
+            get {
+                return ResourceManager.GetString("InstallerCache_Heading", resourceCulture);
             }
         }
         
@@ -1375,11 +1420,29 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to License Agreement.
+        /// </summary>
+        public static string LicenseAgreement_Heading {
+            get {
+                return ResourceManager.GetString("LicenseAgreement_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The license page.
         /// </summary>
         public static string LicenseUrl_KeywordDescription {
             get {
                 return ResourceManager.GetString("LicenseUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Links.
+        /// </summary>
+        public static string Links_Heading {
+            get {
+                return ResourceManager.GetString("Links_Heading", resourceCulture);
             }
         }
         
@@ -1443,6 +1506,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Log_KeywordDescription {
             get {
                 return ResourceManager.GetString("Log_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logs.
+        /// </summary>
+        public static string Logs_Heading {
+            get {
+                return ResourceManager.GetString("Logs_Heading", resourceCulture);
             }
         }
         
@@ -1807,6 +1879,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operating System: {0}.
+        /// </summary>
+        public static string OperatingSystem_Info {
+            get {
+                return ResourceManager.GetString("OperatingSystem_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following options are available:.
+        /// </summary>
+        public static string OptionsAvailable_Message {
+            get {
+                return ResourceManager.GetString("OptionsAvailable_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is an older version of Winget-Create and may be missing some critical features..
         /// </summary>
         public static string OutdatedVersionNotice_Message {
@@ -1942,6 +2032,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string Path_Heading {
+            get {
+                return ResourceManager.GetString("Path_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Path to a manifest file or directory containing the manifests that you want to submit to the Windows Package Manager repo.
         /// </summary>
         public static string Path_HelpText {
@@ -1996,7 +2095,16 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Privacy statement: https://aka.ms/privacy.
+        ///   Looks up a localized string similar to Privacy Statement.
+        /// </summary>
+        public static string PrivacyStatement_Heading {
+            get {
+                return ResourceManager.GetString("PrivacyStatement_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy statement: https://aka.ms/winget-create-privacy.
         /// </summary>
         public static string PrivacyStatement_HelpText {
             get {
@@ -2262,6 +2370,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ReturnResponseUrl_KeywordDescription {
             get {
                 return ResourceManager.GetString("ReturnResponseUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display general info of the tool.
+        /// </summary>
+        public static string RootOption_Info_HelpText {
+            get {
+                return ResourceManager.GetString("RootOption_Info_HelpText", resourceCulture);
             }
         }
         
@@ -2707,6 +2824,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to System Architecture: {0}.
+        /// </summary>
+        public static string SystemArchitecture_Info {
+            get {
+                return ResourceManager.GetString("SystemArchitecture_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of additional package search terms.
         /// </summary>
         public static string Tags_KeywordDescription {
@@ -2748,6 +2874,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string TelemetrySettings_Message {
             get {
                 return ResourceManager.GetString("TelemetrySettings_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Third Party Notices.
+        /// </summary>
+        public static string ThirdPartyNotices_Heading {
+            get {
+                return ResourceManager.GetString("ThirdPartyNotices_Heading", resourceCulture);
             }
         }
         
@@ -2923,6 +3058,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User settings.
+        /// </summary>
+        public static string UserSettings_Heading {
+            get {
+                return ResourceManager.GetString("UserSettings_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please check and verify the usage of this command by passing in the --help flag..
         /// </summary>
         public static string VerifyCommandUsage_Message {
@@ -2991,6 +3135,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string WindowsLibraries_KeywordDescription {
             get {
                 return ResourceManager.GetString("WindowsLibraries_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Winget-Create Directories.
+        /// </summary>
+        public static string WingetCreateDirectories_Heading {
+            get {
+                return ResourceManager.GetString("WingetCreateDirectories_Heading", resourceCulture);
             }
         }
         
