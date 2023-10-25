@@ -1,121 +1,63 @@
 # This script is a prototype for quickly creating DSC files.
-# 
 
-param($inputfile)
-# Bugbug this only seems to run in powershell 7, or the winget modules fail. It would be good to detect that.
-
-Try
+if ($null -eq (Get-InstalledModule -Name Microsoft.Winget.Client))
 {
-   find-wingetpackage Microsoft.VisualStudioCode
-} 
-catch 
-{
-# Missing the powershell module
-  Write-host Downloading winget module
-  # Bugbug make the path dynamic
-  $source = 'https://github.com/microsoft/winget-cli/releases/download/v1.5.441-preview/Microsoft.WinGet.Client-PSModule.zip'
-  
-  $destination = '.\Microsoft.WinGet.Client-PSModule.zip'
-
-  if (-not(test-path $destination  )) {
-  Invoke-RestMethod -Uri $source -OutFile $destination
-  }
-  $wingetmodule=".\Modules\Microsoft.WinGet.Client.psd1"
-  Write-host Extracting winget module to 
-    if (-not(test-path $wingetmodule  )) {
-      Expand-Archive -Path $destination -DestinationPath ".\modules"
-    } 
-  
-  Import-Module .\Modules\Microsoft.WinGet.Client.psd1
-  pause
-
+  Install-Module Microsoft.Winget.Client
 }
 
- 
+if ($null -eq (Get-InstalledModule -Name powershell-yaml))
+{
+  Install-Module powershell-yaml
+}
 
-$complete="n"
-$filename = read-host "Enter the path and filename to the DSC file you want to edit or create"
-while ($complete -eq "n") {
-  $badapp="false"
-  if (-not(test-Path ($filename))) {out-file $filename} else {write-host Updating file $filename}
-  $oldfile = get-content $filename
+[System.Collections.ArrayList]$finalPackages = @()
+$configurationVersion = "0.2.0" 
 
-  $TempAppName = Read-host "Which app would you like to search for?"
-
-#Search  for package
-  $wingetsearch=find-wingetpackage  $TempAppName
-
-# Bugbug this method does not always work and may have an issue with the count.
-
-  if ($wingetsearch.count -eq 1) {
-    write-host Number of Apps: $wingetsearch.count -foregroundcolor green
-    write-host Found $wingetsearch.name     $wingetsearch.ID -foregroundcolor blue
-	$yn= Read-Host "Is that the you want?  [y/n]"
-
- 
-
-	if($yn -eq "n") {
-		$badapp="true"
-	}
-	else {
-	  $appname=$wingetsearch.ID
-	}
+$continue = $true
+while ($continue)
+{
+  $appId = Read-Host "What is the id of your app?"
+  $findResult = Find-WinGetPackage $appId
   
-  } else {
-    $i=0
-    Foreach ($row in  $wingetsearch){
-        $i++
-        $string =  "[" + $i + "]" +"|"+   $row.name +"|"+    $row.id
-        write-host $string
+  if ($findResult.count -ne 0)
+  {
+    $index=0
+    foreach ($package in $findResult)
+    {
+        $packageDetails = "[$($index)] $($package.Name) | $($package.Id) | $($package.Version)"
+        Write-Host $packageDetails
+        $index++
     }
 
-	write-host "Looks like you have too many choices. Choose the correct ID and we will start over." -foregroundcolor red
-    $number=read-host "Or type in the number of the item"
-
-    If ($number -gt 0 -and $number -lt $wingetsearch.count) {
-        $appname=$wingetsearch[$number-1].id
-    } else {
-        $badapp="true"
-    }
-  }
-
-  if ($badapp -eq "false" ){
- 
-#Define Variables
-    $resource = "    - resource: Microsoft.WinGet.DSC/WinGetPackage"
-    
-    $id = "      id: " + $appname
-    $directives= "      directives:"
-    $description = "        description: " + $wingetsearch.name
-    $allowPrerelease = "        allowPrerelease: true"
-    $settings= "      settings:"
-    $settingsid ="        id: " + $appname
-    $source ="        source: winget"
-    $suffix= "  configurationVersion: 0.2.0"
-    Set-Content -Path $filename -Value "properties:"
-    add-Content -Path $filename -Value "  resources:"
-    if ($oldfile.length -gt 1 ){
-    #need to restore content but not add properties and suffix
-      foreach ($line in $oldfile) {
-          if ($line -ne "properties:" -and (-not($line -like "*configurationVersion*")) -and (-not($line -like "*resources:*"))){
-              add-Content -Path $filename -Value $line  
-          }
+    $selection = -1
+    $packageSelected = $false
+    while (-not($packageSelected))
+    {
+      $selection = [int](Read-Host "Input the number of the package you want to select")
+      if (($selection -gt $findResult.count) -or ($selection -lt 0))
+      {
+        Write-Host "Selection is out of range, try again."
+      }
+      else
+      {
+        $packageSelected = $true 
       }
     }
 
-    add-Content -Path $filename -Value $resource 
-    add-Content -Path $filename -Value $id 
-    add-Content -Path $filename -Value $directives 
-    add-Content -Path $filename -Value $description 
-    add-Content -Path $filename -Value $allowPrerelease 
-    add-Content -Path $filename -Value $settings 
-    add-Content -Path $filename -Value $settingsid  
-    add-Content -Path $filename -Value $source 
-    add-Content -Path $filename -Value $suffix  
+    $selectedPackage = $findResult[$selection]
 
-    type $filename
-    $complete = Read-host "All done? y/n"  
-    }
+    $unit = @{"resource" = "Microsoft.WinGet.DSC/WinGetPackage"; "directives" = @{"description" = $selectedPackage.Name; "allowPrerelease" = $true; }; "settings" = @{"id" = $selectedPackage.Id; "source"="winget" }}
+    $finalPackages.Add($unit)
+
+    $continue = (Read-Host "Would you like to add another package? [y/n]") -eq 'y'
+  }
+  else
+  {
+    Write-Host "No package found matching input criteria." -ForegroundColor DarkYellow
+  }
 }
 
-Write-host Congratulations! You created $filename -foregroundcolor blue
+$fileName = Read-Host "Name of the configuration file (without extension)"
+$filePath = Join-Path -Path (Get-Location) -ChildPath "$($fileName).yaml"
+ConvertTo-Yaml @{"properties"= @{"resources"=$finalPackages; "configurationVersion"= $configurationVersion}} -OutFile $filePath -Force
+Write-Host "Configuration file created at: $($filePath)" -ForegroundColor Green
