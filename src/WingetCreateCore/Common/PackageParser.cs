@@ -219,15 +219,15 @@ namespace Microsoft.WingetCreateCore
 
             int numOfNewInstallers = installerMetadataList.Sum(x => x.NewInstallers.Count);
 
+            if (parseFailedInstallerUrls.Any())
+            {
+                throw new ParsePackageException(parseFailedInstallerUrls);
+            }
+
             // We only allow updating manifests with the same package count
             if (numOfNewInstallers != existingInstallers.Count)
             {
                 throw new InvalidOperationException();
-            }
-
-            if (parseFailedInstallerUrls.Any())
-            {
-                throw new ParsePackageException(parseFailedInstallerUrls);
             }
 
             Dictionary<Installer, Installer> installerMatchDict = new Dictionary<Installer, Installer>();
