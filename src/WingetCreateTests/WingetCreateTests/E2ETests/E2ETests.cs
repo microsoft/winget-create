@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateE2ETests
 {
+    using System;
     using System.IO;
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Commands;
@@ -11,6 +12,8 @@ namespace Microsoft.WingetCreateE2ETests
     using Microsoft.WingetCreateTests;
     using Microsoft.WingetCreateUnitTests;
     using NUnit.Framework;
+    using Octokit;
+    using Polly;
 
     /// <summary>
     /// This class tests the entire end-to-end flow of the tool, from submitting a PR, retrieving the package from the repo
@@ -68,7 +71,16 @@ namespace Microsoft.WingetCreateE2ETests
             };
             Assert.IsTrue(await submitCommand.Execute(), "Command should have succeeded");
 
-            await this.gitHub.MergePullRequest(submitCommand.PullRequestNumber);
+            var mergeRetryPolicy = Policy
+                .Handle<PullRequestNotMergeableException>()
+                .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
+
+            await mergeRetryPolicy.ExecuteAsync(async () =>
+            {
+                // Attempting to merge immediately after creating the PR can throw an exception if the branch
+                // has not completed verification if it can be merged. Wait and retry.
+                await this.gitHub.MergePullRequest(submitCommand.PullRequestNumber);
+            });
 
             TestUtils.SetMockHttpResponseContent(installerName);
             UpdateCommand updateCommand = new UpdateCommand
