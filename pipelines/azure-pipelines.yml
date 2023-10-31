@@ -39,7 +39,7 @@ resources:
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
-    
+
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
@@ -123,6 +123,11 @@ extends:
                     /p:UapAppxPackageBuildMode=SideloadOnly
                     /p:AppxPackageSigningEnabled=false'
 
+              - task: 1ES.PublishPipelineArtifact@1
+                inputs:
+                  targetPath: $(appxBundlePath)
+                  artifactName: msixbundle
+                  displayName: Publish msix bundle
 
               - task: ComponentGovernanceComponentDetection@0
                 displayName: Component Governance
@@ -162,10 +167,3 @@ extends:
                   testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\$(targetFramework)\WingetCreateTests.dll'
                   runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
                   overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'
-
-            templateContext:
-              outputs:
-              - output: buildArtifacts
-                displayName: 'Publish msix bundle'
-                PathtoPublish: $(appxBundlePath)
-                ArtifactName: msixbundle
