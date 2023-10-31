@@ -21,6 +21,9 @@ variables:
   # Appx Package Directory
   appxPackageDir: '$(Build.ArtifactStagingDirectory)\AppxPackages'
 
+  # WingetCreate Msix Bundle Directory
+  wingetCreatePackageDir: '$(appxPackageDir)\WingetCreateMsixBundle'
+
   # Working Directory
   workingDirectory: "src"
 
@@ -81,7 +84,7 @@ extends:
                 buildVersion: $[counter(variables['majorMinorVersion'], 1)]
 
               version: "$(majorMinorVersion).$(buildVersion).0"
-              appxBundlePath: '$(appxPackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle'
+              appxBundlePath: '$(wingetCreatePackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle'
 
             steps:
               - checkout: self
@@ -125,7 +128,7 @@ extends:
 
               - task: 1ES.PublishPipelineArtifact@1
                 inputs:
-                  targetPath: $(appxPackageDir)
+                  targetPath: $(wingetCreatePackageDir)
                   artifactName: wingetcreate_msixbundle
                   displayName: Publish WingetCreate msix bundle
 
