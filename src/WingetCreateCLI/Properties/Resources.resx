@@ -1191,12 +1191,14 @@
   </data>
   <data name="OperatingSystem_Info" xml:space="preserve">
     <value>Operating System: {0}</value>
+    <comment>{0} - represents the version of the operating system installed on the user's machine</comment>
   </data>
   <data name="Path_Heading" xml:space="preserve">
     <value>Path</value>
   </data>
   <data name="SystemArchitecture_Info" xml:space="preserve">
     <value>System Architecture: {0}</value>
+    <comment>{0} - represents the CPU architecture of the user's machine</comment>
   </data>
   <data name="WingetCreateDirectories_Heading" xml:space="preserve">
     <value>Winget-Create Directories</value>

@@ -72,5 +72,5 @@ The `anonymizePaths` setting controls whether the paths of files and directories
 ```json
     "Visual": {
         "anonymizePaths": true
-    },
+    }
 ```
