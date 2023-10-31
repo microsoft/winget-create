@@ -125,9 +125,9 @@ extends:
 
               - task: 1ES.PublishPipelineArtifact@1
                 inputs:
-                  targetPath: $(appxBundlePath)
-                  artifactName: msixbundle
-                  displayName: Publish msix bundle
+                  targetPath: $(appxPackageDir)
+                  artifactName: wingetcreate_msixbundle
+                  displayName: Publish WingetCreate msix bundle
 
               - task: ComponentGovernanceComponentDetection@0
                 displayName: Component Governance
