@@ -14,7 +14,6 @@ namespace Microsoft.WingetCreateCLI
     {
         private readonly List<string> columns = new();
         private readonly List<List<string>> rows = new();
-        private readonly int padding = 2;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableOutput"/> class.
