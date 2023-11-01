@@ -22,18 +22,6 @@ namespace Microsoft.WingetCreateCLI
     /// </summary>
     internal class Program
     {
-        /// <summary>
-        /// Displays the application header and the copyright.
-        /// </summary>
-        public static void DisplayApplicationHeaderAndCopyright()
-        {
-            Console.WriteLine(string.Format(
-                Resources.Heading,
-                Utils.GetEntryAssemblyVersion()) +
-                Environment.NewLine +
-                Constants.MicrosoftCopyright);
-        }
-
         private static async Task<int> Main(string[] args)
         {
             Logger.Initialize();
@@ -59,47 +47,27 @@ namespace Microsoft.WingetCreateCLI
                 typeof(TokenCommand),
                 typeof(CacheCommand),
                 typeof(ShowCommand),
+                typeof(InfoCommand),
             };
+            var parserResult = myParser.ParseArguments(args, types);
 
-            var baseCommandsParserResult = myParser.ParseArguments(args, types);
-            BaseCommand parsedCommand = baseCommandsParserResult.MapResult(c => c as BaseCommand, err => null);
+            BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
 
-            if (parsedCommand == null)
+            if (command == null)
             {
-                // In case of unsuccessful parsing, check if user tried to run a valid command.
-                bool isBaseCommand = baseCommandsParserResult.TypeInfo.Current.BaseType.Equals(typeof(BaseCommand));
-
-                /* Parse root options.
-                 * Adding '--help' is a workaround to force parser to display the options help text when no arguments are passed.
-                 * This makes rootOptionsParserResult to be a NotParsed object which makes HelpText.AutoBuild print the correct help text.
-                 * This is done since the parser does not print the correct help text on a successful parse.
-                  */
-                ParserResult<RootOptions> rootOptionsParserResult = myParser.ParseArguments<RootOptions>(
-                    args.Length == 0 ? new string[] { "--help" } : args);
-
-                if (!isBaseCommand)
-                {
-                    rootOptionsParserResult.WithParsed(RootOptions.ParseRootOptions);
-
-                    if (rootOptionsParserResult.Tag == ParserResultType.Parsed)
-                    {
-                        return 0;
-                    }
-                }
-
-                DisplayHelp(baseCommandsParserResult as NotParsed<object>, isBaseCommand ? null : rootOptionsParserResult as NotParsed<RootOptions>);
-                DisplayParsingErrors(baseCommandsParserResult as NotParsed<object>);
+                DisplayHelp(parserResult as NotParsed<object>);
+                DisplayParsingErrors(parserResult as NotParsed<object>);
                 return args.Any() ? 1 : 0;
             }
 
-            if (parsedCommand is not SettingsCommand && parsedCommand is not CacheCommand)
+            if (command is not SettingsCommand && command is not CacheCommand)
             {
                 // Do not load github client for settings or cache command.
-                if (await parsedCommand.LoadGitHubClient())
+                if (await command.LoadGitHubClient())
                 {
                     try
                     {
-                        string latestVersion = await parsedCommand.GitHubClient.GetLatestRelease();
+                        string latestVersion = await command.GitHubClient.GetLatestRelease();
                         string trimmedVersion = latestVersion.TrimStart('v').Split('-').First();
                         if (trimmedVersion != Utils.GetEntryAssemblyVersion())
                         {
@@ -117,7 +85,7 @@ namespace Microsoft.WingetCreateCLI
                 else
                 {
                     // Do not block creating a new manifest if loading the GitHub client fails. InstallerURL could point to a local network.
-                    if (parsedCommand is not NewCommand)
+                    if (command is not NewCommand)
                     {
                         return 1;
                     }
@@ -127,7 +95,7 @@ namespace Microsoft.WingetCreateCLI
             try
             {
                 WingetCreateCore.Serialization.ProducedBy = string.Join(" ", Constants.ProgramName, Utils.GetEntryAssemblyVersion());
-                return await parsedCommand.Execute() ? 0 : 1;
+                return await command.Execute() ? 0 : 1;
             }
             catch (Exception ex)
             {
@@ -151,66 +119,28 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
-        private static void DisplayHelp(NotParsed<object> baseCommandsParserResult, ParserResult<RootOptions> rootOptionsParserResult)
-        {
-            DisplayApplicationHeaderAndCopyright();
-            DisplayCommandsHelpText(baseCommandsParserResult);
-            if (rootOptionsParserResult != null)
-            {
-                DisplayRootOptionsHelpText(rootOptionsParserResult);
-            }
-
-            DisplayFooter();
-        }
-
-        private static void DisplayCommandsHelpText(NotParsed<object> result)
+        private static void DisplayHelp(NotParsed<object> result)
         {
             var helpText = HelpText.AutoBuild(
-            result,
-            h =>
-            {
-                h.AddDashesToOption = true;
-                h.AdditionalNewLineAfterOption = false;
-                h.Heading = string.Empty;
-                h.Copyright = string.Empty;
-                h.AddNewLineBetweenHelpSections = true;
-                h.AddPreOptionsLine(Resources.AppDescription_HelpText);
-                h.AddPreOptionsLine(Environment.NewLine);
-                h.AddPreOptionsLine(Resources.CommandsAvailable_Message);
-                h.MaximumDisplayWidth = 100;
-                h.AutoHelp = false;
-                h.AutoVersion = false;
-                return h;
-            },
-            e => e,
-            verbsIndex: true);
+                result,
+                h =>
+                {
+                    h.AddDashesToOption = true;
+                    h.AdditionalNewLineAfterOption = false;
+                    h.Heading = string.Format(Resources.Heading, Utils.GetEntryAssemblyVersion()) + Environment.NewLine;
+                    h.Copyright = Constants.MicrosoftCopyright;
+                    h.AddNewLineBetweenHelpSections = true;
+                    h.AddPreOptionsLine(Resources.AppDescription_HelpText);
+                    h.AddPostOptionsLines(new string[] { Resources.MoreHelp_HelpText, Resources.PrivacyStatement_HelpText });
+                    h.MaximumDisplayWidth = 100;
+                    h.AutoHelp = false;
+                    h.AutoVersion = false;
+                    return h;
+                },
+                e => e,
+                verbsIndex: true);
             Console.WriteLine(helpText);
-        }
-
-        private static void DisplayRootOptionsHelpText(ParserResult<RootOptions> result)
-        {
-            var helpText = HelpText.AutoBuild(
-            result,
-            h =>
-            {
-                h.AddDashesToOption = true;
-                h.AdditionalNewLineAfterOption = false;
-                h.Heading = Resources.OptionsAvailable_Message;
-                h.Copyright = string.Empty;
-                h.AddNewLineBetweenHelpSections = false;
-                h.MaximumDisplayWidth = 100;
-                h.AutoHelp = false;
-                h.AutoVersion = false;
-                return h;
-            },
-            e => e);
-            Console.WriteLine(helpText);
-        }
-
-        private static void DisplayFooter()
-        {
-            Console.WriteLine(Resources.MoreHelp_HelpText);
-            Console.WriteLine(Resources.PrivacyStatement_HelpText);
+            Console.WriteLine();
         }
 
         private static void DisplayParsingErrors<T>(NotParsed<T> result)

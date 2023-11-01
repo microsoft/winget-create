@@ -1,46 +1,50 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 
-namespace Microsoft.WingetCreateCLI
+namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using CommandLine;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
+    using Microsoft.WingetCreateCLI.Telemetry;
+    using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common;
 
     /// <summary>
-    /// Command line options for the root command.
+    /// Info command to display general information regarding the tool.
     /// </summary>
-    internal class RootOptions
+    [Verb("info", HelpText = "InfoCommand_HelpText", ResourceType = typeof(Resources))]
+    public class InfoCommand : BaseCommand
     {
         /// <summary>
-        /// Gets or sets a value indicating whether or not to display the general info text.
+        /// Executes the info command flow.
         /// </summary>
-        [Option("info", Required = false, HelpText = "InfoRootOption_HelpText", ResourceType = typeof(Resources))]
-        public bool Info { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether or not to display the help text.
-        /// </summary>
-        [Option("help", Required = false, HelpText = "HelpRootOption_HelpText", ResourceType = typeof(Resources))]
-        public bool Help { get; set; }
-
-        /// <summary>
-        /// Parses the root options and displays the appropriate output.
-        /// </summary>
-        /// <param name="rootOptions">Root options to execute.</param>
-        public static void ParseRootOptions(RootOptions rootOptions)
+        /// <returns>Boolean representing success or fail of the command.</returns>
+        public override async Task<bool> Execute()
         {
-            if (rootOptions.Info)
-            {
-                Program.DisplayApplicationHeaderAndCopyright();
-                Console.WriteLine();
-                DisplaySystemInformation();
-                Console.WriteLine();
-                DisplayInfoTable();
-            }
+            CommandExecutedEvent commandEvent = new CommandExecutedEvent();
+
+            DisplayApplicationHeaderAndCopyright();
+            Console.WriteLine();
+            DisplaySystemInformation();
+            Console.WriteLine();
+            DisplayInfoTable();
+
+            TelemetryManager.Log.WriteEvent(commandEvent);
+            return await Task.FromResult(commandEvent.IsSuccessful = true);
+        }
+
+        private static void DisplayApplicationHeaderAndCopyright()
+        {
+            Console.WriteLine(string.Format(
+                Resources.Heading,
+                Utils.GetEntryAssemblyVersion()) +
+                Environment.NewLine +
+                Constants.MicrosoftCopyright);
         }
 
         private static void DisplaySystemInformation()

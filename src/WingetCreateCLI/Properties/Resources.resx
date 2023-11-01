@@ -1203,9 +1203,6 @@
   <data name="WingetCreateDirectories_Heading" xml:space="preserve">
     <value>Winget-Create Directories</value>
   </data>
-  <data name="RootOption_Info_HelpText" xml:space="preserve">
-    <value>Display general info of the tool</value>
-  </data>
   <data name="InstallerCache_Heading" xml:space="preserve">
     <value>Installer cache</value>
   </data>
@@ -1218,7 +1215,7 @@
   <data name="Homepage_Heading" xml:space="preserve">
     <value>Homepage</value>
   </data>
-  <data name="InfoRootOption_HelpText" xml:space="preserve">
+  <data name="InfoCommand_HelpText" xml:space="preserve">
     <value>Displays general info of the tool</value>
   </data>
   <data name="LicenseAgreement_Heading" xml:space="preserve">
@@ -1235,11 +1232,5 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>The following commands are available:</value>
-  </data>
-  <data name="OptionsAvailable_Message" xml:space="preserve">
-    <value>The following options are available:</value>
-  </data>
-  <data name="HelpRootOption_HelpText" xml:space="preserve">
-    <value>Shows help about the selected command</value>
   </data>
 </root>

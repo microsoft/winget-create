@@ -979,15 +979,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shows help about the selected command.
-        /// </summary>
-        public static string HelpRootOption_HelpText {
-            get {
-                return ResourceManager.GetString("HelpRootOption_HelpText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Homepage.
         /// </summary>
         public static string Homepage_Heading {
@@ -1071,9 +1062,9 @@ namespace Microsoft.WingetCreateCLI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Displays general info of the tool.
         /// </summary>
-        public static string InfoRootOption_HelpText {
+        public static string InfoCommand_HelpText {
             get {
-                return ResourceManager.GetString("InfoRootOption_HelpText", resourceCulture);
+                return ResourceManager.GetString("InfoCommand_HelpText", resourceCulture);
             }
         }
         
@@ -1888,15 +1879,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following options are available:.
-        /// </summary>
-        public static string OptionsAvailable_Message {
-            get {
-                return ResourceManager.GetString("OptionsAvailable_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to This is an older version of Winget-Create and may be missing some critical features..
         /// </summary>
         public static string OutdatedVersionNotice_Message {
@@ -2370,15 +2352,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ReturnResponseUrl_KeywordDescription {
             get {
                 return ResourceManager.GetString("ReturnResponseUrl_KeywordDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Display general info of the tool.
-        /// </summary>
-        public static string RootOption_Info_HelpText {
-            get {
-                return ResourceManager.GetString("RootOption_Info_HelpText", resourceCulture);
             }
         }
         

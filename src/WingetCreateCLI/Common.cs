@@ -68,22 +68,22 @@ namespace Microsoft.WingetCreateCLI
         /// Gets the path for display. This will anonymize the path if caller provides the appropriate flag.
         /// </summary>
         /// <param name="path">Path to be displayed.</param>
-        /// <param name="substitueEnvironmentVariables">Whether or not to substitute environment variables.</param>
+        /// <param name="substituteEnvironmentVariables">Whether or not to substitute environment variables.</param>
         /// <returns>Anonymized path or original path.</returns>
-        public static string GetPathForDisplay(string path, bool substitueEnvironmentVariables = true)
+        public static string GetPathForDisplay(string path, bool substituteEnvironmentVariables = true)
         {
-            if (string.IsNullOrEmpty(path) || !substitueEnvironmentVariables)
+            if (string.IsNullOrEmpty(path) || !substituteEnvironmentVariables)
             {
                 return path;
             }
 
             string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string tempPath = Path.GetTempPath();
+            string tempPath = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar);
 
             if (path.StartsWith(tempPath, StringComparison.OrdinalIgnoreCase))
             {
-                return path.Replace(tempPath, TempEnvironmentVariable + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+                return path.Replace(tempPath, TempEnvironmentVariable, StringComparison.OrdinalIgnoreCase);
             }
             else if (path.StartsWith(localAppDataPath, StringComparison.OrdinalIgnoreCase))
             {
