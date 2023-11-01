@@ -1,6 +1,6 @@
 # info command (Winget-Create)
 
-The **info** command of the [Winget-Create](../README.md) tool is used to show useful information about the client. This information includes the location of the settings file, the local installer repository, logs directory, and it also offers links to external resources like the GitHub repository and privacy statement.
+The **info** command of the [Winget-Create](../README.md) tool is used to show useful information about the client. This information includes the location of the settings file, the local installer cache (download directory), logs directory, and it also offers links to external resources like the GitHub repository and privacy statement.
 
 ## Usage
 
