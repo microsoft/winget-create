@@ -127,10 +127,12 @@ namespace Microsoft.WingetCreateCLI
                 {
                     h.AddDashesToOption = true;
                     h.AdditionalNewLineAfterOption = false;
-                    h.Heading = string.Format(Resources.Heading, Utils.GetEntryAssemblyVersion()) + Environment.NewLine;
+                    h.Heading = string.Format(Resources.Heading, Utils.GetEntryAssemblyVersion());
                     h.Copyright = Constants.MicrosoftCopyright;
                     h.AddNewLineBetweenHelpSections = true;
                     h.AddPreOptionsLine(Resources.AppDescription_HelpText);
+                    h.AddPreOptionsLine(Environment.NewLine);
+                    h.AddPreOptionsLine(Resources.CommandsAvailable_Message);
                     h.AddPostOptionsLines(new string[] { Resources.MoreHelp_HelpText, Resources.PrivacyStatement_HelpText });
                     h.MaximumDisplayWidth = 100;
                     h.AutoHelp = false;
