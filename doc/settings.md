@@ -21,7 +21,7 @@ If set to true, the `telemetry.disable` setting will prevent any event from bein
 
 ## CleanUp
 
-The `CleanUp` settings determine whether Winget-Create will handle the removal of temporary files i.e., installers downloaded and logs generated during the manifest creation process. You can view the location of these files using `wingetcreate --info` command. These settings provide control over the decision to remove files or not and the frequency at which this clean up occurs.
+The `CleanUp` settings determine whether Winget-Create will handle the removal of temporary files i.e., installers downloaded and logs generated during the manifest creation process. You can view the location of these files using the [info](./info.md) command. These settings provide control over the decision to remove files or not and the frequency at which this clean up occurs.
 
 ### disable
 
