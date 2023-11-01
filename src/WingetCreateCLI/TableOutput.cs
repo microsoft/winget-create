@@ -40,7 +40,8 @@ namespace Microsoft.WingetCreateCLI
         /// <summary>
         /// Write the table to the standard output.
         /// </summary>
-        public void Print()
+        /// <param name="padding">Number of spaces to pad each column. Default is set to 2.</param>
+        public void Print(int padding = 2)
         {
             // Calculate the maximum width of each column.
             List<int> columnWidths = this.CalculateColumnWidths();
@@ -48,20 +49,20 @@ namespace Microsoft.WingetCreateCLI
             // Print the column names.
             for (int i = 0; i < this.columns.Count; i++)
             {
-                Console.Write("{0, -" + (columnWidths[i] + this.padding) + "}", this.columns[i]);
+                Console.Write("{0, -" + (columnWidths[i] + padding) + "}", this.columns[i]);
             }
 
             Console.WriteLine();
 
             // Print a line of dashes to separate the column names from the rows.
-            Console.WriteLine(new string('-', columnWidths.Sum() + columnWidths.Count + this.padding));
+            Console.WriteLine(new string('-', columnWidths.Sum() + columnWidths.Count + padding));
 
             // Print the rows.
             foreach (var row in this.rows)
             {
                 for (int i = 0; i < this.columns.Count; i++)
                 {
-                    Console.Write("{0, -" + (columnWidths[i] + this.padding) + "}", row[i]);
+                    Console.Write("{0, -" + (columnWidths[i] + padding) + "}", row[i]);
                 }
 
                 Console.WriteLine();
