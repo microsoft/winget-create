@@ -29,8 +29,38 @@ namespace Microsoft.WingetCreateCore.Common
         public const int GitHubAppId = 100205;
 
         /// <summary>
+        /// Link to the GitHub releases page for the winget-create tool.
+        /// </summary>
+        public const string GitHubReleasesUrl = "https://github.com/microsoft/winget-create/releases";
+
+        /// <summary>
         /// Program name of the app.
         /// </summary>
         public const string ProgramName = "wingetcreate";
+
+        /// <summary>
+        /// Link to the privacy statement for the winget-create tool.
+        /// </summary>
+        public const string PrivacyStatementUrl = "https://aka.ms/winget-create-privacy";
+
+        /// <summary>
+        /// Link to the license for the winget-create tool.
+        /// </summary>
+        public const string LicenseUrl = "https://aka.ms/winget-create-license";
+
+        /// <summary>
+        /// Link to the notices file containing third party attributions for the winget-create tool.
+        /// </summary>
+        public const string ThirdPartyNoticesUrl = "https://aka.ms/winget-create-3rdPartyNotices";
+
+        /// <summary>
+        /// Link to the GitHub repository for the winget-create tool.
+        /// </summary>
+        public const string HomePageUrl = "https://aka.ms/winget-create";
+
+        /// <summary>
+        /// Represents the subdirectory name of the user's local app data folder where the tool stores its debug data.
+        /// </summary>
+        public const string DiagnosticOutputDirectoryFolderName = "DiagOutputDir";
     }
 }

@@ -2086,7 +2086,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Privacy statement: https://aka.ms/winget-create-privacy.
+        ///   Looks up a localized string similar to Privacy statement: {0}.
         /// </summary>
         public static string PrivacyStatement_HelpText {
             get {

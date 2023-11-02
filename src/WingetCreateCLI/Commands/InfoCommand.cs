@@ -26,7 +26,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Boolean representing success or fail of the command.</returns>
         public override async Task<bool> Execute()
         {
-            CommandExecutedEvent commandEvent = new CommandExecutedEvent();
+            CommandExecutedEvent commandEvent = new CommandExecutedEvent
+            {
+                Command = nameof(InfoCommand),
+            };
 
             DisplayApplicationHeaderAndCopyright();
             Console.WriteLine();
@@ -55,7 +58,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         private static void DisplayInfoTable()
         {
-            string logsdirectory = Common.GetPathForDisplay(Path.Combine(Common.LocalAppStatePath, "DiagOutputDir"), UserSettings.AnonymizePaths);
+            string logsdirectory = Common.GetPathForDisplay(Path.Combine(Common.LocalAppStatePath, Constants.DiagnosticOutputDirectoryFolderName), UserSettings.AnonymizePaths);
             string settingsDirectory = Common.GetPathForDisplay(UserSettings.SettingsJsonPath, UserSettings.AnonymizePaths);
             string installerCacheDirectory = Common.GetPathForDisplay(PackageParser.InstallerDownloadPath, UserSettings.AnonymizePaths);
 
@@ -68,10 +71,10 @@ namespace Microsoft.WingetCreateCLI.Commands
             Console.WriteLine();
 
             new TableOutput(Resources.Links_Heading, string.Empty)
-                            .AddRow(Resources.PrivacyStatement_Heading, "https://aka.ms/winget-create-privacy")
-                            .AddRow(Resources.LicenseAgreement_Heading, "https://aka.ms/winget-create-license")
-                            .AddRow(Resources.ThirdPartyNotices_Heading, "https://aka.ms/winget-create-3rdPartyNotices")
-                            .AddRow(Resources.Homepage_Heading, "https://aka.ms/winget-create")
+                            .AddRow(Resources.PrivacyStatement_Heading, Constants.PrivacyStatementUrl)
+                            .AddRow(Resources.LicenseAgreement_Heading, Constants.LicenseUrl)
+                            .AddRow(Resources.ThirdPartyNotices_Heading, Constants.ThirdPartyNoticesUrl)
+                            .AddRow(Resources.Homepage_Heading, Constants.HomePageUrl)
                             .Print();
         }
     }

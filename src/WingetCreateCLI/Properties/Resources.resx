@@ -540,7 +540,8 @@
     <value>More help can be found at: https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>Privacy statement: https://aka.ms/winget-create-privacy</value>
+    <value>Privacy statement: {0}</value>
+    <comment>{0} - represents the privacy statement url</comment>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>HTTP response was unsuccessful. Status code: {0}</value>
