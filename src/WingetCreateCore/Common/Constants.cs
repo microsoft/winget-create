@@ -49,9 +49,9 @@ namespace Microsoft.WingetCreateCore.Common
         public const string LicenseUrl = "https://aka.ms/winget-create-license";
 
         /// <summary>
-        /// Link to the notices file containing third party attributions for the winget-create tool.
+        /// Link to the notice file containing third party attributions for the winget-create tool.
         /// </summary>
-        public const string ThirdPartyNoticesUrl = "https://aka.ms/winget-create-3rdPartyNotices";
+        public const string ThirdPartyNoticeUrl = "https://aka.ms/winget-create-3rdPartyNotice";
 
         /// <summary>
         /// Link to the GitHub repository for the winget-create tool.

@@ -73,7 +73,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             new TableOutput(Resources.Links_Heading, string.Empty)
                             .AddRow(Resources.PrivacyStatement_Heading, Constants.PrivacyStatementUrl)
                             .AddRow(Resources.LicenseAgreement_Heading, Constants.LicenseUrl)
-                            .AddRow(Resources.ThirdPartyNotices_Heading, Constants.ThirdPartyNoticesUrl)
+                            .AddRow(Resources.ThirdPartyNotices_Heading, Constants.ThirdPartyNoticeUrl)
                             .AddRow(Resources.Homepage_Heading, Constants.HomePageUrl)
                             .Print();
         }
