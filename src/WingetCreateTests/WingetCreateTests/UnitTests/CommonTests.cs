@@ -23,17 +23,17 @@ namespace Microsoft.WingetCreateUnitTests
             string path2 = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\foo\\bar\\baz";
             string path3 = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar) + "\\foo\\bar\\baz";
 
-            string expectedPath1 = "%USERPROFILE%\\foo\\bar\\baz";
-            string expectedPath2 = "%LOCALAPPDATA%\\foo\\bar\\baz";
-            string expectedPath3 = "%TEMP%\\foo\\bar\\baz";
+            string substitutedPath1 = "%USERPROFILE%\\foo\\bar\\baz";
+            string substitutedPath2 = "%LOCALAPPDATA%\\foo\\bar\\baz";
+            string substitutedPath3 = "%TEMP%\\foo\\bar\\baz";
 
-            Assert.AreEqual(expectedPath1, Common.GetPathForDisplay(path1, true), "The path does not contain the expected substitutions.");
+            Assert.AreEqual(substitutedPath1, Common.GetPathForDisplay(path1, true), "The path does not contain the expected substitutions.");
             Assert.AreEqual(path1, Common.GetPathForDisplay(path1, false), "The path should not contain any substitutions.");
 
-            Assert.AreEqual(expectedPath2, Common.GetPathForDisplay(path2, true), "The path does not contain the expected substitutions.");
+            Assert.AreEqual(substitutedPath2, Common.GetPathForDisplay(path2, true), "The path does not contain the expected substitutions.");
             Assert.AreEqual(path2, Common.GetPathForDisplay(path2, false), "The path should not contain any substitutions.");
 
-            Assert.AreEqual(expectedPath3, Common.GetPathForDisplay(path3, true), "The path does not contain the expected substitutions.");
+            Assert.AreEqual(substitutedPath3, Common.GetPathForDisplay(path3, true), "The path does not contain the expected substitutions.");
             Assert.AreEqual(path3, Common.GetPathForDisplay(path3, false), "The path should not contain any substitutions.");
         }
     }
