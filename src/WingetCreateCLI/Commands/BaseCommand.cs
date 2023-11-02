@@ -194,7 +194,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
 
             Console.WriteLine();
-            Logger.InfoLocalized(nameof(Resources.ManifestSaved_Message), fullDirPath);
+            Logger.InfoLocalized(nameof(Resources.ManifestSaved_Message), Common.GetPathForDisplay(fullDirPath, UserSettings.AnonymizePaths));
             Console.WriteLine();
 
             return fullDirPath;

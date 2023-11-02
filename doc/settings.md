@@ -21,7 +21,7 @@ If set to true, the `telemetry.disable` setting will prevent any event from bein
 
 ## CleanUp
 
-The `CleanUp` settings determine whether Winget-Create will handle the removal of temporary files (installer cache and logs) generated during the manifest creation process. These settings provide control over the decision to remove files or not and the frequency at which this clean up occurs.
+The `CleanUp` settings determine whether Winget-Create will handle the removal of temporary files i.e., installers downloaded and logs generated during the manifest creation process. You can view the location of these files using the [info](./info.md) command. These settings provide control over the decision to remove files or not and the frequency at which this clean up occurs.
 
 ### disable
 
@@ -59,4 +59,18 @@ The `name` setting specifies the name of the targeted GitHub repository. By defa
     "owner": "microsoft",
     "name": "winget-pkgs"
   }
+```
+
+## Visual
+
+The `Visual` settings control the appearance of the Winget-Create CLI output.
+
+### anonymizePaths
+
+The `anonymizePaths` setting controls whether the paths of files and directories are anonymized in the Winget-Create CLI output. This means that a path such as `C:\Users\user\Documents\manifests\` will be displayed as `%USERPROFILE%\Documents\manifests` (i.e., substitute environment variables where possible). By default, this is set to `true`.
+
+```json
+    "Visual": {
+        "anonymizePaths": true
+    }
 ```

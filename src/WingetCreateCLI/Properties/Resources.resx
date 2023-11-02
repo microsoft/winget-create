@@ -540,7 +540,8 @@
     <value>More help can be found at: https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>Privacy statement: https://aka.ms/privacy</value>
+    <value>Privacy statement: {0}</value>
+    <comment>{0} - represents the privacy statement url</comment>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>HTTP response was unsuccessful. Status code: {0}</value>
@@ -1188,5 +1189,49 @@
   </data>
   <data name="SentenceMissingRequiredValueError" xml:space="preserve">
     <value>A required value not bound to option name is missing.</value>
+  </data>
+  <data name="OperatingSystem_Info" xml:space="preserve">
+    <value>Operating System: {0}</value>
+    <comment>{0} - represents the version of the operating system installed on the user's machine</comment>
+  </data>
+  <data name="Path_Heading" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="SystemArchitecture_Info" xml:space="preserve">
+    <value>System Architecture: {0}</value>
+    <comment>{0} - represents the CPU architecture of the user's machine</comment>
+  </data>
+  <data name="WingetCreateDirectories_Heading" xml:space="preserve">
+    <value>Winget-Create Directories</value>
+  </data>
+  <data name="InstallerCache_Heading" xml:space="preserve">
+    <value>Installer cache</value>
+  </data>
+  <data name="Logs_Heading" xml:space="preserve">
+    <value>Logs</value>
+  </data>
+  <data name="UserSettings_Heading" xml:space="preserve">
+    <value>User settings</value>
+  </data>
+  <data name="Homepage_Heading" xml:space="preserve">
+    <value>Homepage</value>
+  </data>
+  <data name="InfoCommand_HelpText" xml:space="preserve">
+    <value>Displays general info of the tool</value>
+  </data>
+  <data name="LicenseAgreement_Heading" xml:space="preserve">
+    <value>License Agreement</value>
+  </data>
+  <data name="Links_Heading" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="PrivacyStatement_Heading" xml:space="preserve">
+    <value>Privacy Statement</value>
+  </data>
+  <data name="ThirdPartyNotices_Heading" xml:space="preserve">
+    <value>Third Party Notices</value>
+  </data>
+  <data name="CommandsAvailable_Message" xml:space="preserve">
+    <value>The following commands are available:</value>
   </data>
 </root>
