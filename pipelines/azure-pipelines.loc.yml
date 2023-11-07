@@ -43,31 +43,31 @@ extends:
           variables:
             skipComponentGovernanceDetection: true
           steps:
-            - task: MicrosoftTDBuild.tdbuild-task.tdbuild-task.TouchdownBuildTask@1
-              displayName: Send resources to Touchdown Build
-              inputs:
-                teamId: 25160
-                authId: cd9fc0c7-0aaa-461f-a098-6c97c3b1cfb1
-                authKey: $(LocServiceKey)
-                isPreview: false
-                relativePathRoot: src\WingetCreateCLI\Properties
-                resourceFilePath: "*.resx"
-                outputDirectoryRoot: Localization\Resources
+          - task: MicrosoftTDBuild.tdbuild-task.tdbuild-task.TouchdownBuildTask@1
+            displayName: Send resources to Touchdown Build
+            inputs:
+              teamId: 25160
+              authId: cd9fc0c7-0aaa-461f-a098-6c97c3b1cfb1
+              authKey: $(LocServiceKey)
+              isPreview: false
+              relativePathRoot: src\WingetCreateCLI\Properties
+              resourceFilePath: "*.resx"
+              outputDirectoryRoot: Localization\Resources
 
-            - task: CmdLine@2
-              displayName: Check for changes and create patch file
-              inputs:
-                script: |
-                  cd $(Build.SourcesDirectory)
-                  git add -A
-                  git diff --cached --exit-code
-                  echo ##vso[task.setvariable variable=hasChanges]%errorlevel%
-                  git diff --cached > $(Build.ArtifactStagingDirectory)\LocalizedStrings.patch
+          - task: CmdLine@2
+            displayName: Check for changes and create patch file
+            inputs:
+              script: |
+                cd $(Build.SourcesDirectory)
+                git add -A
+                git diff --cached --exit-code
+                echo ##vso[task.setvariable variable=hasChanges]%errorlevel%
+                git diff --cached > $(Build.ArtifactStagingDirectory)\LocalizedStrings.patch
 
-            templateContext:
-              outputs:
-              - output: pipelineArtifact
-                displayName: 'Publish patch file as artifact'
-                condition: eq(variables['hasChanges'], '1')
-                artifactName: Patch
-                targetPath: $(Build.ArtifactStagingDirectory)
+          templateContext:
+            outputs:
+            - output: pipelineArtifact
+              displayName: 'Publish patch file as artifact'
+              condition: eq(variables['hasChanges'], '1')
+              artifactName: Patch
+              targetPath: $(Build.ArtifactStagingDirectory)
