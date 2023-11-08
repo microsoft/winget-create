@@ -540,7 +540,8 @@
     <value>Mais ajuda podem ser encontradas em: https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>Política de privacidade: https://aka.ms/privacy</value>
+    <value>Política de privacidade: {0}</value>
+    <comment>{0} - represents the privacy statement url</comment>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>A resposta HTTP não teve êxito. Código de status: {0}</value>
@@ -691,15 +692,12 @@
   <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
     <value>Várias correspondências encontradas para {0} {1} instalador detectado na URL: {2}</value>
     <comment>{0} - will be replaced with installer architecture
-
 {1} - will be replaced with the installer type
-
 {2} - will be replaced with the installer</comment>
   </data>
   <data name="UnmatchedInstaller_Error" xml:space="preserve">
     <value>Nenhuma correspondência encontrada para {0} {1} instalador detectado da URL: {2}</value>
     <comment>{0} - will be replaced with installer architecture
-
 {1} - will be replaced with the installer type 
 {2} - will be replaced with the installer</comment>
   </data>
@@ -961,7 +959,7 @@
   <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
     <value>Analisando o instalador aninhado '{0}' de {1}</value>
     <comment>{0} - will be replaced with RelativeFilePath of the nested installer
-    {1} - will be replaced by the InstallerUrl</comment>
+{1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>Instalador aninhado não encontrado no arquivo zip: {0}. Use o modo interativo para atualizar este pacote.</value>
@@ -1033,13 +1031,11 @@
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
     <value>Várias correspondências encontradas para "{0}" de {1}. Use o modo interativo para atualizar este pacote.</value>
     <comment>{0} - will be replaced by the name of the nested installer file
-
 {1} - will be replaced by the name of the zip archive.</comment>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
     <value>Várias correspondências encontradas para "{0}" de {1}.</value>
     <comment>{0} - will be replaced by the name of the nested installer file
-
 {1} - will be replaced by the name of the zip archive.</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
@@ -1105,9 +1101,7 @@
   <data name="VersionDoesNotExist_Error" xml:space="preserve">
     <value>O {0} versão não existe para {1} no repositório Gerenciador de Pacotes do Windows.</value>
     <comment>{0} - will be replaced with the package version
-
-{1} - will be replaced with the package ID
-</comment>
+{1} - will be replaced with the package ID</comment>
   </data>
   <data name="ReplaceVersion_HelpText" xml:space="preserve">
     <value>Opcional. Versão do pacote usada em conjunto com o argumento replace para substituir uma versão mais antiga do manifesto do Gerenciador de Pacotes do Windows repositório.</value>
@@ -1120,5 +1114,124 @@
   </data>
   <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
     <value>URL personalizada detectada. O envio substituirá automaticamente a versão anterior.</value>
+  </data>
+  <data name="SentenceBadFormatConversionErrorOption" xml:space="preserve">
+    <value>A opção '{0}' está definida com um formato incorreto.</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceBadFormatConversionErrorValue" xml:space="preserve">
+    <value>Um valor não associado ao nome da opção está definido com um formato incorreto.</value>
+  </data>
+  <data name="SentenceBadFormatTokenError" xml:space="preserve">
+    <value>O token '{0}' não é reconhecido.</value>
+    <comment>{0} - will be replaced with the unrecognized command-line token</comment>
+  </data>
+  <data name="SentenceBadVerbSelectedError" xml:space="preserve">
+    <value>O verbo '{0}' não é reconhecido.</value>
+    <comment>{0} - will be replaced with the unrecognized command-line verb</comment>
+  </data>
+  <data name="SentenceErrorsHeadingText" xml:space="preserve">
+    <value>ERRO(S):</value>
+  </data>
+  <data name="SentenceHelpCommandTextOption" xml:space="preserve">
+    <value>Exibir esta tela de ajuda.</value>
+  </data>
+  <data name="SentenceHelpCommandTextVerb" xml:space="preserve">
+    <value>Exibir mais informações sobre um comando específico.</value>
+  </data>
+  <data name="SentenceMissingRequiredOptionError" xml:space="preserve">
+    <value>A opção obrigatória '{0}' está faltando.</value>
+    <comment>{0} - will be replaced with the required command-line option</comment>
+  </data>
+  <data name="SentenceMissingValueOptionError" xml:space="preserve">
+    <value>A opção '{0}' não tem valor.</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceMutuallyExclusiveSetErrors" xml:space="preserve">
+    <value>Opções: {0} não são compatíveis com{1}.</value>
+    <comment>{0} - will be replaced with one or more provided command-line option(s)
+{1} - will be replaced with one or more provided command-line option(s)</comment>
+  </data>
+  <data name="SentenceNoVerbSelectedError" xml:space="preserve">
+    <value>Nenhum verbo selecionado.</value>
+  </data>
+  <data name="SentenceOptionGroupWord" xml:space="preserve">
+    <value>Grupo</value>
+  </data>
+  <data name="SentenceRepeatedOptionError" xml:space="preserve">
+    <value>A opção '{0}' é definida várias vezes.</value>
+    <comment>{0} - will be replaced with the repeated command-line option</comment>
+  </data>
+  <data name="SentenceRequiredWord" xml:space="preserve">
+    <value>Obrigatório.</value>
+  </data>
+  <data name="SentenceSequenceOutOfRangeErrorOption" xml:space="preserve">
+    <value>Uma opção de '{0}' é definida com menos ou mais itens do que o necessário.</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceSequenceOutOfRangeErrorValue" xml:space="preserve">
+    <value>Um valor de sequência não associado ao nome da opção é definido com menos itens do que o necessário.</value>
+  </data>
+  <data name="SentenceSetValueExceptionError" xml:space="preserve">
+    <value>Erro ao definir valor para opção '{0}': {1}</value>
+    <comment>{0} - will be replaced with the provided command-line option
+{1} - will be replaced with the provided value for the command-line option</comment>
+  </data>
+  <data name="SentenceUnknownOptionError" xml:space="preserve">
+    <value>A opção '{0}' é desconhecida.</value>
+    <comment>{0} - will be replaced with the unrecognized command-line option</comment>
+  </data>
+  <data name="SentenceUsageHeadingText" xml:space="preserve">
+    <value>USO:</value>
+  </data>
+  <data name="SentenceVersionCommandText" xml:space="preserve">
+    <value>Exibir informações da versão.</value>
+  </data>
+  <data name="SentenceMissingRequiredValueError" xml:space="preserve">
+    <value>Um valor necessário não associado ao nome da opção está ausente.</value>
+  </data>
+  <data name="OperatingSystem_Info" xml:space="preserve">
+    <value>Sistema Operacional: {0}</value>
+    <comment>{0} - represents the version of the operating system installed on the user's machine</comment>
+  </data>
+  <data name="Path_Heading" xml:space="preserve">
+    <value>Caminho</value>
+  </data>
+  <data name="SystemArchitecture_Info" xml:space="preserve">
+    <value>Arquitetura do Sistema: {0}</value>
+    <comment>{0} - represents the CPU architecture of the user's machine</comment>
+  </data>
+  <data name="WingetCreateDirectories_Heading" xml:space="preserve">
+    <value>Diretórios Winget-Create</value>
+  </data>
+  <data name="InstallerCache_Heading" xml:space="preserve">
+    <value>Cache do instalador</value>
+  </data>
+  <data name="Logs_Heading" xml:space="preserve">
+    <value>Logs</value>
+  </data>
+  <data name="UserSettings_Heading" xml:space="preserve">
+    <value>Configurações do usuário</value>
+  </data>
+  <data name="Homepage_Heading" xml:space="preserve">
+    <value>Home page</value>
+  </data>
+  <data name="InfoCommand_HelpText" xml:space="preserve">
+    <value>Exibir as informações gerais da ferramenta</value>
+  </data>
+  <data name="LicenseAgreement_Heading" xml:space="preserve">
+    <value>Contrato de Licença</value>
+  </data>
+  <data name="Links_Heading" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="PrivacyStatement_Heading" xml:space="preserve">
+    <value>Política de Privacidade</value>
+  </data>
+  <data name="ThirdPartyNotices_Heading" xml:space="preserve">
+    <value>Aviso de Terceiros</value>
+  </data>
+  <data name="CommandsAvailable_Message" xml:space="preserve">
+    <value>Os seguintes comandos estão disponíveis:</value>
   </data>
 </root>
