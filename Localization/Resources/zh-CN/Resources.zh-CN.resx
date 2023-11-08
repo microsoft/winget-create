@@ -540,7 +540,8 @@
     <value>可在以下位置找到更多帮助： https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>隐私声明: https://aka.ms/privacy</value>
+    <value>隐私声明: {0}</value>
+    <comment>{0} - represents the privacy statement url</comment>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>HTTP 响应失败。状态代码: {0}</value>
@@ -691,15 +692,12 @@
   <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
     <value>从 URL 中检测到 {0} {1} 安装程序的多个匹配项： {2}</value>
     <comment>{0} - will be replaced with installer architecture
-
 {1} - will be replaced with the installer type
-
 {2} - will be replaced with the installer</comment>
   </data>
   <data name="UnmatchedInstaller_Error" xml:space="preserve">
     <value>未从 URL 中找到与 {0} {1} 安装程序匹配： {2}</value>
     <comment>{0} - will be replaced with installer architecture
-
 {1} - will be replaced with the installer type 
 {2} - will be replaced with the installer</comment>
   </data>
@@ -961,7 +959,7 @@
   <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
     <value>正在从{1}分析嵌套安装程序“{0}”</value>
     <comment>{0} - will be replaced with RelativeFilePath of the nested installer
-    {1} - will be replaced by the InstallerUrl</comment>
+{1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>在 zip 存档中找不到嵌套安装程序： {0}。请使用交互模式更新此包。</value>
@@ -1033,13 +1031,11 @@
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
     <value>为来自 {1} 的 "{0}" 找到多个匹配项。请使用交互模式更新此包。</value>
     <comment>{0} - will be replaced by the name of the nested installer file
-
 {1} - will be replaced by the name of the zip archive.</comment>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
     <value>在 {1} 中找到了多个“{0}”的匹配项</value>
     <comment>{0} - will be replaced by the name of the nested installer file
-
 {1} - will be replaced by the name of the zip archive.</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
@@ -1105,9 +1101,7 @@
   <data name="VersionDoesNotExist_Error" xml:space="preserve">
     <value>Windows 程序包管理器存储库中不存在 {1} 的版本 {0}。</value>
     <comment>{0} - will be replaced with the package version
-
-{1} - will be replaced with the package ID
-</comment>
+{1} - will be replaced with the package ID</comment>
   </data>
   <data name="ReplaceVersion_HelpText" xml:space="preserve">
     <value>可选。与 replace 参数一起使用的程序包版本，用于替换 Windows 程序包管理器存储库中旧版本的清单。</value>
@@ -1120,5 +1114,124 @@
   </data>
   <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
     <value>检测到虚数 URL。提交将自动替换以前的版本。</value>
+  </data>
+  <data name="SentenceBadFormatConversionErrorOption" xml:space="preserve">
+    <value>选项“{0}”的定义格式不正确。</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceBadFormatConversionErrorValue" xml:space="preserve">
+    <value>未绑定到选项名称的值的定义格式不正确。</value>
+  </data>
+  <data name="SentenceBadFormatTokenError" xml:space="preserve">
+    <value>无法识别令牌“{0}”。</value>
+    <comment>{0} - will be replaced with the unrecognized command-line token</comment>
+  </data>
+  <data name="SentenceBadVerbSelectedError" xml:space="preserve">
+    <value>无法识别谓词“{0}”。</value>
+    <comment>{0} - will be replaced with the unrecognized command-line verb</comment>
+  </data>
+  <data name="SentenceErrorsHeadingText" xml:space="preserve">
+    <value>错误:</value>
+  </data>
+  <data name="SentenceHelpCommandTextOption" xml:space="preserve">
+    <value>显示此帮助屏幕。</value>
+  </data>
+  <data name="SentenceHelpCommandTextVerb" xml:space="preserve">
+    <value>显示有关特定命令的详细信息。</value>
+  </data>
+  <data name="SentenceMissingRequiredOptionError" xml:space="preserve">
+    <value>缺少必需的选项“{0}”。</value>
+    <comment>{0} - will be replaced with the required command-line option</comment>
+  </data>
+  <data name="SentenceMissingValueOptionError" xml:space="preserve">
+    <value>选项“{0}”没有值。</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceMutuallyExclusiveSetErrors" xml:space="preserve">
+    <value>选项: {0} 与 {1} 不兼容。</value>
+    <comment>{0} - will be replaced with one or more provided command-line option(s)
+{1} - will be replaced with one or more provided command-line option(s)</comment>
+  </data>
+  <data name="SentenceNoVerbSelectedError" xml:space="preserve">
+    <value>未选择谓词。</value>
+  </data>
+  <data name="SentenceOptionGroupWord" xml:space="preserve">
+    <value>小组</value>
+  </data>
+  <data name="SentenceRepeatedOptionError" xml:space="preserve">
+    <value>选项“{0}”定义多次。</value>
+    <comment>{0} - will be replaced with the repeated command-line option</comment>
+  </data>
+  <data name="SentenceRequiredWord" xml:space="preserve">
+    <value>必填。</value>
+  </data>
+  <data name="SentenceSequenceOutOfRangeErrorOption" xml:space="preserve">
+    <value>序列选项“{0}”的定义项数少于或多于所需项。</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceSequenceOutOfRangeErrorValue" xml:space="preserve">
+    <value>未绑定到选项名称的序列值定义的项少于所需项。</value>
+  </data>
+  <data name="SentenceSetValueExceptionError" xml:space="preserve">
+    <value>将值设置为选项“{0}”时出错: {1}</value>
+    <comment>{0} - will be replaced with the provided command-line option
+{1} - will be replaced with the provided value for the command-line option</comment>
+  </data>
+  <data name="SentenceUnknownOptionError" xml:space="preserve">
+    <value>选项“{0}”未知。</value>
+    <comment>{0} - will be replaced with the unrecognized command-line option</comment>
+  </data>
+  <data name="SentenceUsageHeadingText" xml:space="preserve">
+    <value>使用方法:</value>
+  </data>
+  <data name="SentenceVersionCommandText" xml:space="preserve">
+    <value>显示版本信息。</value>
+  </data>
+  <data name="SentenceMissingRequiredValueError" xml:space="preserve">
+    <value>缺少未绑定到选项名称的必需值。</value>
+  </data>
+  <data name="OperatingSystem_Info" xml:space="preserve">
+    <value>操作系统: {0}</value>
+    <comment>{0} - represents the version of the operating system installed on the user's machine</comment>
+  </data>
+  <data name="Path_Heading" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="SystemArchitecture_Info" xml:space="preserve">
+    <value>系统体系结构: {0}</value>
+    <comment>{0} - represents the CPU architecture of the user's machine</comment>
+  </data>
+  <data name="WingetCreateDirectories_Heading" xml:space="preserve">
+    <value>Winget-Create 目录</value>
+  </data>
+  <data name="InstallerCache_Heading" xml:space="preserve">
+    <value>安装程序缓存</value>
+  </data>
+  <data name="Logs_Heading" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="UserSettings_Heading" xml:space="preserve">
+    <value>用户设置</value>
+  </data>
+  <data name="Homepage_Heading" xml:space="preserve">
+    <value>主页</value>
+  </data>
+  <data name="InfoCommand_HelpText" xml:space="preserve">
+    <value>显示工具的常规信息</value>
+  </data>
+  <data name="LicenseAgreement_Heading" xml:space="preserve">
+    <value>许可协议</value>
+  </data>
+  <data name="Links_Heading" xml:space="preserve">
+    <value>链接</value>
+  </data>
+  <data name="PrivacyStatement_Heading" xml:space="preserve">
+    <value>隐私声明</value>
+  </data>
+  <data name="ThirdPartyNotices_Heading" xml:space="preserve">
+    <value>第三方声明</value>
+  </data>
+  <data name="CommandsAvailable_Message" xml:space="preserve">
+    <value>下列命令有效:</value>
   </data>
 </root>
