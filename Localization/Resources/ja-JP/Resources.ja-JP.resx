@@ -540,7 +540,8 @@
     <value>詳細については、次の場所を参照してください: https://aka.ms/winget-create</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>プライバシーに関する声明: https://aka.ms/privacy</value>
+    <value>プライバシーに関する声明: {0}</value>
+    <comment>{0} - represents the privacy statement url</comment>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>HTTP 応答が失敗しました。状態コード: {0}</value>
@@ -691,15 +692,12 @@
   <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
     <value>URL から検出された {0} {1} インストーラーに対して複数の一致が見つかりました: {2}</value>
     <comment>{0} - will be replaced with installer architecture
-
 {1} - will be replaced with the installer type
-
 {2} - will be replaced with the installer</comment>
   </data>
   <data name="UnmatchedInstaller_Error" xml:space="preserve">
     <value>URL から検出された {0} {1} インストーラーに一致するものが見つかりません: {2}</value>
     <comment>{0} - will be replaced with installer architecture
-
 {1} - will be replaced with the installer type 
 {2} - will be replaced with the installer</comment>
   </data>
@@ -961,7 +959,7 @@
   <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
     <value>入れ子になったインストーラー '{0}' を {1} から解析しています</value>
     <comment>{0} - will be replaced with RelativeFilePath of the nested installer
-    {1} - will be replaced by the InstallerUrl</comment>
+{1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>入れ子になったインストーラーが zip アーカイブに見つかりません: {0}。対話型モードを使用して、このパッケージを更新してください。</value>
@@ -1033,13 +1031,11 @@
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
     <value>{1} からの "{0}" に対して複数の一致が見つかりました。対話型モードを使用して、このパッケージを更新してください。</value>
     <comment>{0} - will be replaced by the name of the nested installer file
-
 {1} - will be replaced by the name of the zip archive.</comment>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
     <value>{1} から "{0}" に一致するものが複数あります。</value>
     <comment>{0} - will be replaced by the name of the nested installer file
-
 {1} - will be replaced by the name of the zip archive.</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
@@ -1105,9 +1101,7 @@
   <data name="VersionDoesNotExist_Error" xml:space="preserve">
     <value>Windows パッケージ マネージャー リポジトリに {1} のバージョン {0} が存在しません。</value>
     <comment>{0} - will be replaced with the package version
-
-{1} - will be replaced with the package ID
-</comment>
+{1} - will be replaced with the package ID</comment>
   </data>
   <data name="ReplaceVersion_HelpText" xml:space="preserve">
     <value>オプション。replace 引数と組み合わせて使用されるパッケージのバージョン。Windows パッケージ マネージャー リポジトリの古いバージョンのマニフェストを置き換えます。</value>
@@ -1120,5 +1114,124 @@
   </data>
   <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
     <value>Vanity URL が検出されました。申請では、以前のバージョンが自動的に置き換えられます。</value>
+  </data>
+  <data name="SentenceBadFormatConversionErrorOption" xml:space="preserve">
+    <value>オプション '{0}' が正しくない形式で定義されています。</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceBadFormatConversionErrorValue" xml:space="preserve">
+    <value>オプション名にバインドされていない値が正しくない形式で定義されています。</value>
+  </data>
+  <data name="SentenceBadFormatTokenError" xml:space="preserve">
+    <value>トークン '{0}' が認識されません。</value>
+    <comment>{0} - will be replaced with the unrecognized command-line token</comment>
+  </data>
+  <data name="SentenceBadVerbSelectedError" xml:space="preserve">
+    <value>動詞 '{0}' が認識されません。</value>
+    <comment>{0} - will be replaced with the unrecognized command-line verb</comment>
+  </data>
+  <data name="SentenceErrorsHeadingText" xml:space="preserve">
+    <value>エラー:</value>
+  </data>
+  <data name="SentenceHelpCommandTextOption" xml:space="preserve">
+    <value>このヘルプ画面を表示します。</value>
+  </data>
+  <data name="SentenceHelpCommandTextVerb" xml:space="preserve">
+    <value>特定のコマンドに関する詳細情報を表示します。</value>
+  </data>
+  <data name="SentenceMissingRequiredOptionError" xml:space="preserve">
+    <value>必要なオプション '{0}' が見つかりません。</value>
+    <comment>{0} - will be replaced with the required command-line option</comment>
+  </data>
+  <data name="SentenceMissingValueOptionError" xml:space="preserve">
+    <value>オプション '{0}' に値がありません。</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceMutuallyExclusiveSetErrors" xml:space="preserve">
+    <value>オプション: {0} は {1} と互換性がありません。</value>
+    <comment>{0} - will be replaced with one or more provided command-line option(s)
+{1} - will be replaced with one or more provided command-line option(s)</comment>
+  </data>
+  <data name="SentenceNoVerbSelectedError" xml:space="preserve">
+    <value>動詞が選択されていません。</value>
+  </data>
+  <data name="SentenceOptionGroupWord" xml:space="preserve">
+    <value>グループ</value>
+  </data>
+  <data name="SentenceRepeatedOptionError" xml:space="preserve">
+    <value>オプション '{0}' が複数回定義されています。</value>
+    <comment>{0} - will be replaced with the repeated command-line option</comment>
+  </data>
+  <data name="SentenceRequiredWord" xml:space="preserve">
+    <value>必須。</value>
+  </data>
+  <data name="SentenceSequenceOutOfRangeErrorOption" xml:space="preserve">
+    <value>シーケンス オプション '{0}' が、必要な数より少ないまたは多い項目で定義されています。</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceSequenceOutOfRangeErrorValue" xml:space="preserve">
+    <value>オプション名にバインドされていないシーケンス値が、必要な数より少ない項目で定義されています。</value>
+  </data>
+  <data name="SentenceSetValueExceptionError" xml:space="preserve">
+    <value>オプション '{0}' に値を設定中にエラーが発生しました: {1}</value>
+    <comment>{0} - will be replaced with the provided command-line option
+{1} - will be replaced with the provided value for the command-line option</comment>
+  </data>
+  <data name="SentenceUnknownOptionError" xml:space="preserve">
+    <value>オプション '{0}' が不明です。</value>
+    <comment>{0} - will be replaced with the unrecognized command-line option</comment>
+  </data>
+  <data name="SentenceUsageHeadingText" xml:space="preserve">
+    <value>使用法:</value>
+  </data>
+  <data name="SentenceVersionCommandText" xml:space="preserve">
+    <value>バージョン情報を表示します。</value>
+  </data>
+  <data name="SentenceMissingRequiredValueError" xml:space="preserve">
+    <value>オプション名にバインドされていない必要な値がありません。</value>
+  </data>
+  <data name="OperatingSystem_Info" xml:space="preserve">
+    <value>オペレーティング システム: {0}</value>
+    <comment>{0} - represents the version of the operating system installed on the user's machine</comment>
+  </data>
+  <data name="Path_Heading" xml:space="preserve">
+    <value>パス</value>
+  </data>
+  <data name="SystemArchitecture_Info" xml:space="preserve">
+    <value>システム アーキテクチャ: {0}</value>
+    <comment>{0} - represents the CPU architecture of the user's machine</comment>
+  </data>
+  <data name="WingetCreateDirectories_Heading" xml:space="preserve">
+    <value>Winget-ディレクトリの作成</value>
+  </data>
+  <data name="InstallerCache_Heading" xml:space="preserve">
+    <value>インストーラー キャッシュ</value>
+  </data>
+  <data name="Logs_Heading" xml:space="preserve">
+    <value>ログ</value>
+  </data>
+  <data name="UserSettings_Heading" xml:space="preserve">
+    <value>ユーザー設定</value>
+  </data>
+  <data name="Homepage_Heading" xml:space="preserve">
+    <value>ホーム ページ</value>
+  </data>
+  <data name="InfoCommand_HelpText" xml:space="preserve">
+    <value>ツールの一般情報を表示します</value>
+  </data>
+  <data name="LicenseAgreement_Heading" xml:space="preserve">
+    <value>使用許諾契約</value>
+  </data>
+  <data name="Links_Heading" xml:space="preserve">
+    <value>リンク</value>
+  </data>
+  <data name="PrivacyStatement_Heading" xml:space="preserve">
+    <value>プライバシーに関する声明</value>
+  </data>
+  <data name="ThirdPartyNotices_Heading" xml:space="preserve">
+    <value>サード パーティに関する通知</value>
+  </data>
+  <data name="CommandsAvailable_Message" xml:space="preserve">
+    <value>使用できるコマンドは次のとおりです:</value>
   </data>
 </root>
