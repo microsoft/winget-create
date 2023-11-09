@@ -208,7 +208,7 @@ extends:
             - task: CopyFiles@2
               displayName: Copy files to be published to staging directory
               inputs:
-                targetFolder: $(Build.ArtifactStagingDirectory)
+                targetFolder: $(Build.ArtifactStagingDirectory)/wingetcreate
                 flattenFolders: true
                 contents: |
                   $(exePathFrameworkDependent)
@@ -218,7 +218,7 @@ extends:
 
             - task: 1ES.PublishPipelineArtifact@1
               inputs:
-                targetPath: $(Build.ArtifactStagingDirectory)
+                targetPath: $(Build.ArtifactStagingDirectory)/wingetcreate
                 artifactName: wingetcreate
                 displayName: Publish appx, exe, and hash files
 
@@ -231,7 +231,7 @@ extends:
                 tag: v$(version)
                 isPreRelease: true
                 isDraft: true # After running this step, visit the new draft release, edit, and publish.
-                assets: $(Build.ArtifactStagingDirectory)/*
+                assets: $(Build.ArtifactStagingDirectory)/wingetcreate/*
 
         - job: Wait
           displayName: Wait for vanity URL to be manually updated
