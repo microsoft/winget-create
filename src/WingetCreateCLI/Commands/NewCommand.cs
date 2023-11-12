@@ -338,30 +338,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void PromptOptionalProperties<T>(T manifest)
-        {
-            var properties = manifest.GetType().GetProperties().ToList();
-            var optionalProperties = properties.Where(p =>
-                p.GetCustomAttribute<RequiredAttribute>() == null &&
-                p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
-
-            foreach (var property in optionalProperties)
-            {
-                Type type = property.PropertyType;
-                if (type.IsEnumerable())
-                {
-                    Type elementType = type.GetGenericArguments().SingleOrDefault();
-                    if (elementType.IsNonStringClassType() && !Prompt.Confirm(string.Format(Resources.EditObjectTypeField_Message, property.Name)))
-                    {
-                        continue;
-                    }
-                }
-
-                PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));
-                Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
-            }
-        }
-
         private static void PromptInstallerProperties<T>(T manifest, PropertyInfo property)
         {
             List<Installer> installers = new List<Installer>((ICollection<Installer>)property.GetValue(manifest));

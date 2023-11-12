@@ -325,7 +325,7 @@
     <value>Please check if the provided package arguments are correct.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
-    <value>Output directory where the newly created manifests will be saved locally</value>
+    <value>The output directory to store the generated manifests locally.</value>
   </data>
   <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
     <value>The MSIX installer package family name</value>
@@ -1233,5 +1233,93 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>The following commands are available:</value>
+  </data>
+  <data name="GenerateNewLocalePreview_Message" xml:space="preserve">
+    <value>Generating a preview of the created locale(s)....</value>
+  </data>
+  <data name="AddAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Would you like to add additional locale properties?</value>
+  </data>
+  <data name="CreateAnotherLocale_Message" xml:space="preserve">
+    <value>Would you like to create another locale?</value>
+  </data>
+  <data name="DefaultLocale_MenuItem" xml:space="preserve">
+    <value>Default locale</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForLatestVersion" xml:space="preserve">
+    <value>Add a new locale for the latest version of a package</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForSpecificVersion" xml:space="preserve">
+    <value>Add a new locale for a specific version of a package</value>
+  </data>
+  <data name="Example_NewLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Create a new locale and save the generated manifests to a specified directory</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Update existing locale and save the generated manifests to a specified directory</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForLatestVersion" xml:space="preserve">
+    <value>Update existing locale for the latest version of a package</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForSpecificVersion" xml:space="preserve">
+    <value>Update existing locale for a specific version of a package</value>
+  </data>
+  <data name="GenerateUpdatedLocalePreview_Message" xml:space="preserve">
+    <value>Generating a preview of the updated locale(s)....</value>
+  </data>
+  <data name="InvalidLocale_ErrorMessage" xml:space="preserve">
+    <value>Invalid locale. Enter a valid language tag.</value>
+  </data>
+  <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
+    <value>Locale manifest matching with input locale "{0}" already exists</value>
+    <comment>{0} - represents the input package locale string</comment>
+  </data>
+  <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>The version of the package to add a new locale for.</value>
+  </data>
+  <data name="SelectExistingLocale_Message" xml:space="preserve">
+    <value>Select an existing locale</value>
+  </data>
+  <data name="UpdateAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Would you like to modify additional locale properties?</value>
+  </data>
+  <data name="UpdateAnotherLocale_Message" xml:space="preserve">
+    <value>Would you like to update another locale?</value>
+  </data>
+  <data name="UpdateLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>The version of the package to update the locale for.</value>
+  </data>
+  <data name="NewLocaleCommand_HelpText" xml:space="preserve">
+    <value>Launches a series of questions to help generate a new locale manifest</value>
+  </data>
+  <data name="ReferenceLocale_HelpText" xml:space="preserve">
+    <value>Locale manifest to be used for offering auto-complete suggestions. If not provided, the default locale manifest will be used.</value>
+  </data>
+  <data name="UpdateLocaleCommand_HelpText" xml:space="preserve">
+    <value>Launches a series of questions to help update an existing locale manifest</value>
+  </data>
+  <data name="ReferenceLocaleNotFound_Error" xml:space="preserve">
+    <value>The reference locale does not exist in the manifest.</value>
+  </data>
+  <data name="FieldSetToValue_Message" xml:space="preserve">
+    <value>[{0}] value is: {1}</value>
+    <comment>{0} - represents the name of the manifest field
+{1} - represents the value of the manifest field</comment>
+  </data>
+  <data name="UpdateLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>The package locale to update the manifest for. If not provided, the tool will prompt you a list of existing locales to choose from.</value>
+  </data>
+  <data name="NewLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>The package locale to create a new manifest for. If not provided, the tool will prompt for this value.</value>
+  </data>
+  <data name="LocaleDoesNotExist_Message" xml:space="preserve">
+    <value>Manifest for input locale "{0}" does not exist. </value>
+    <comment>{0} - represents the package locale string</comment>
+  </data>
+  <data name="SwitchToNewLocaleFlow_Message" xml:space="preserve">
+    <value>Would you like to create the locale manifest instead?</value>
+  </data>
+  <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
+    <value>Would you like to update the locale manifest instead?</value>
   </data>
 </root>

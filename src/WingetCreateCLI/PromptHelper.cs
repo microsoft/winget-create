@@ -15,7 +15,6 @@ namespace Microsoft.WingetCreateCLI
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
-    using Newtonsoft.Json;
     using Sharprompt;
 
     /// <summary>
@@ -409,7 +408,9 @@ namespace Microsoft.WingetCreateCLI
 
                 if (!value.Any())
                 {
-                    value = null;
+                    // In update scenarios, if an older value exists then use that value instead of setting the property to null.
+                    var existingValue = model.GetType().GetProperty(property.Name).GetValue(model);
+                    value = existingValue != null ? (IEnumerable<T>)existingValue : null;
                 }
                 else
                 {

@@ -6,10 +6,13 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
@@ -23,8 +26,10 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Locale;
     using Microsoft.WingetCreateCore.Models.Version;
+    using Newtonsoft.Json;
     using Octokit;
     using RestSharp;
+    using Sharprompt;
 
     /// <summary>
     /// Abstract base command class that all commands inherit from.
@@ -509,6 +514,149 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
+        /// Prompts user to enter values for the optional properties of the manifest.
+        /// </summary>
+        /// <typeparam name="T">Type of the manifest.</typeparam>
+        /// <param name="manifest">Object model of the manifest.</param>
+        /// <param name="optionalPropertiesNames">Optional parameter to specify the list of property names to be prompted for.</param>
+        protected static void PromptOptionalProperties<T>(T manifest, List<string> optionalPropertiesNames = null)
+        {
+            List<PropertyInfo> optionalProperties;
+            if (optionalPropertiesNames == null)
+            {
+                optionalProperties = manifest.GetType().GetProperties().ToList().Where(p =>
+                    p.GetCustomAttribute<RequiredAttribute>() == null &&
+                    p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
+            }
+            else
+            {
+                optionalProperties = manifest.GetType().GetProperties().Where(p => optionalPropertiesNames.Contains(p.Name)).ToList();
+            }
+
+            foreach (var property in optionalProperties)
+            {
+                Type type = property.PropertyType;
+                if (type.IsEnumerable())
+                {
+                    Type elementType = type.GetGenericArguments().SingleOrDefault();
+                    if (elementType.IsNonStringClassType() && !Prompt.Confirm(string.Format(Resources.EditObjectTypeField_Message, property.Name)))
+                    {
+                        continue;
+                    }
+                }
+
+                PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));
+                Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
+            }
+        }
+
+        /// <summary>
+        /// Prompts user to enter values for the input locale or default locale manifest properties.
+        /// </summary>
+        /// <typeparam name="T">Type of the manifest. Expected to be either LocaleManifest or DefaultLocaleManifest.</typeparam>
+        /// <param name="localeManifest">Object model of the locale/defaultLocale manifest.</param>
+        /// <param name="properties">List of property names to be prompted for.</param>
+        /// <param name="originalManifests">Optional parameter to be used when validating the user-inputted locale. Check whether the locale already exists in the original manifests.</param>
+        protected static void PromptAndSetLocaleProperties<T>(T localeManifest, List<string> properties, Manifests originalManifests = null)
+        {
+            foreach (string propertyName in properties)
+            {
+                PropertyInfo property = typeof(T).GetProperty(propertyName);
+                PromptHelper.PromptPropertyAndSetValue(localeManifest, propertyName, property.GetValue(localeManifest));
+
+                if (propertyName == nameof(LocaleManifest.PackageLocale) && originalManifests != null)
+                {
+                    while (!ValidateLocale(property.GetValue(localeManifest).ToString(), originalManifests))
+                    {
+                        PromptHelper.PromptPropertyAndSetValue(localeManifest, propertyName, property.GetValue(localeManifest));
+                    }
+
+                    continue;
+                }
+
+                Logger.Trace($"Property [{propertyName}] set to the value [{property.GetValue(localeManifest)}]");
+            }
+        }
+
+        /// <summary>
+        /// Checks whether the provided locale is valid. A locale is valid if it is in the correct format and does not already exist in the manifest.
+        /// This function handles the exception gracefully to be used in a prompt.
+        /// </summary>
+        /// <param name="locale">The package locale string to check.</param>
+        /// <param name="manifests">The base manifests to check against.</param>
+        /// <returns>A boolean value indicating whether the locale is valid.</returns>
+        protected static bool ValidateLocale(string locale, Manifests manifests)
+        {
+            try
+            {
+                if (GetMatchingLocaleManifest(locale, manifests) != null)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.LocaleAlreadyExists_ErrorMessage), locale);
+                    Console.WriteLine();
+                    return false;
+                }
+
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                Logger.ErrorLocalized(nameof(Resources.InvalidLocale_ErrorMessage));
+                Console.WriteLine();
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks whether package locale already exists in the default locale manifest or one of the locale manifests and returns the matching manifest.
+        /// This function throws an exception if the locale string is in an invalid format.
+        /// </summary>
+        /// <param name="locale">The package locale string to check.</param>
+        /// <param name="originalManifests">The base manifests to check against.</param>
+        /// <returns>An object representing the matching locale manifest.</returns>
+        protected static object GetMatchingLocaleManifest(string locale, Manifests originalManifests)
+        {
+            RegionInfo localeInfo = new RegionInfo(locale);
+
+            if (localeInfo.Equals(new RegionInfo(originalManifests.DefaultLocaleManifest.PackageLocale)))
+            {
+                return originalManifests.DefaultLocaleManifest;
+            }
+
+            foreach (var localeManifest in originalManifests.LocaleManifests)
+            {
+                if (localeInfo.Equals(new RegionInfo(localeManifest.PackageLocale)))
+                {
+                    return localeManifest;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Displays the preview of the default locale manifest to the console.
+        /// </summary>
+        /// <param name="defaultLocaleManifest">Object model of the default locale manifest.</param>
+        protected static void DisplayDefaultLocaleManifest(DefaultLocaleManifest defaultLocaleManifest)
+        {
+            Logger.InfoLocalized(nameof(Resources.DefaultLocaleManifest_Message), defaultLocaleManifest.PackageLocale);
+            Console.WriteLine(defaultLocaleManifest.ToYaml(true));
+        }
+
+        /// <summary>
+        /// Displays the preview of all the locale manifests to the console.
+        /// </summary>
+        /// <param name="localeManifests">List of locale manifest object models.</param>
+        protected static void DisplayLocaleManifests(List<LocaleManifest> localeManifests)
+        {
+            foreach (var localeManifest in localeManifests)
+            {
+                Logger.InfoLocalized(nameof(Resources.LocaleManifest_Message), localeManifest.PackageLocale);
+                Console.WriteLine(localeManifest.ToYaml(true));
+            }
+        }
+
+        /// <summary>
         /// Launches the GitHub OAuth flow and obtains a GitHub token.
         /// </summary>
         /// <returns>A boolean value indicating whether the OAuth login flow was successful.</returns>
@@ -682,8 +830,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         /// <param name="currentManifest">Manifest object containing metadata of new manifest to be submitted.</param>
         /// <param name="repositoryManifest">Manifest object representing an already exisitng manifest in the repository.</param>
+        /// <param name="commandName">Name of the command calling this method.</param>
         /// <returns>A string representing the pull request title.</returns>
-        protected string GetPRTitle(Manifests currentManifest, Manifests repositoryManifest = null)
+        protected string GetPRTitle(Manifests currentManifest, Manifests repositoryManifest = null, string commandName = null)
         {
             // Use custom PR title if provided by the user.
             if (!string.IsNullOrEmpty(this.PRTitle))
@@ -693,6 +842,18 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             string packageId = currentManifest.VersionManifest != null ? currentManifest.VersionManifest.PackageIdentifier : currentManifest.SingletonManifest.PackageIdentifier;
             string currentVersion = currentManifest.VersionManifest != null ? currentManifest.VersionManifest.PackageVersion : currentManifest.SingletonManifest.PackageVersion;
+
+            if (!string.IsNullOrEmpty(commandName))
+            {
+                if (commandName.Equals(nameof(NewLocaleCommand)))
+                {
+                    return $"Add locale: {packageId} version {currentVersion}";
+                }
+                else if (commandName.Equals(nameof(UpdateLocaleCommand)))
+                {
+                    return $"Update locale: {packageId} version {currentVersion}";
+                }
+            }
 
             // If no manifest exists in the repository, this is a new package.
             if (repositoryManifest == null)

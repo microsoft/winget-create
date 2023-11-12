@@ -28,6 +28,7 @@ namespace Microsoft.WingetCreateCLI
             UserSettings.FirstRunTelemetryConsent();
             TelemetryEventListener.EventListener.IsTelemetryEnabled();
             SentenceBuilder.Factory = () => new LocalizableSentenceBuilder();
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
             Logger.Trace($"Command line args: {arguments}");
@@ -42,6 +43,8 @@ namespace Microsoft.WingetCreateCLI
             {
                 typeof(NewCommand),
                 typeof(UpdateCommand),
+                typeof(NewLocaleCommand),
+                typeof(UpdateLocaleCommand),
                 typeof(SubmitCommand),
                 typeof(SettingsCommand),
                 typeof(TokenCommand),

@@ -1,0 +1,39 @@
+﻿PackageIdentifier: TestPublisher.LocaleConversionTest.yaml
+PackageVersion: 7.4.0.0
+PackageLocale: en-US
+Publisher: fakePublisher
+PublisherUrl: https://fakePublisherUrl.com/
+PublisherSupportUrl: https://fakePublisherSupportUrl.com/
+PrivacyUrl: https://fakePrivacyUrl.com/
+Author: fakeAuthor
+PackageName: fakePackageName
+PackageUrl: https://fakePackageUrl.com/
+License: fakeLicense
+LicenseUrl: https://fakeLicenseUrl.com/
+Copyright: fakeCopyright
+CopyrightUrl: fakeCopyrightUrl
+Description: |-
+  fakeExtended description of a fake package.
+Moniker: fakeMoniker
+Tags:
+- fakeTag1
+- fakeTag2
+- fakeTag3
+Icons:
+  - IconUrl: https://fakeIconUrl.com/
+    IconFileType: png
+  - IconUrl: https://fakeIconUrl2.com/
+    IconFileType: jpeg
+ReleaseNotes: |-
+  fakeReleaseNotes of a fake package.
+ReleaseNotesUrl: https://fakeReleaseNotesUrl.com/
+PurchaseUrl: https://fakePurchaseUrl.com/
+InstallationNotes: |-
+  fakeInstallationNotes of a fake package.
+Documentations:
+- DocumentLabel: fakeDocumentation1
+  DocumentUrl: https://fakeDocumentationUrl1.com/
+- DocumentLabel: fakeDocumentation2
+  DocumentUrl: https://fakeDocumentationUrl2.com/
+ManifestType: defaultLocale
+ManifestVersion: 1.5.0
