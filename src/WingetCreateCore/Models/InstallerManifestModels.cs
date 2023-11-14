@@ -173,6 +173,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [System.Runtime.Serialization.EnumMember(Value = @"uninstallPrevious")]
         UninstallPrevious = 1,
     
+        [System.Runtime.Serialization.EnumMember(Value = @"deny")]
+        Deny = 2,
+    
     }
     
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
@@ -452,6 +455,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("InstallationMetadata", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public InstallationMetadata InstallationMetadata { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("DownloadCommandProhibited", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? DownloadCommandProhibited { get; set; }
+    
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
         [Newtonsoft.Json.JsonExtensionData]
@@ -464,7 +470,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     
     }
     
-    /// <summary>A representation of a single-file manifest representing an app installers in the OWC. v1.5.0</summary>
+    /// <summary>A representation of a single-file manifest representing an app installers in the OWC. v1.6.0</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class InstallerManifest 
     {
@@ -600,6 +606,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("InstallationMetadata", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public InstallationMetadata InstallationMetadata { get; set; }
     
+        [Newtonsoft.Json.JsonProperty("DownloadCommandProhibited", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool? DownloadCommandProhibited { get; set; }
+    
         [Newtonsoft.Json.JsonProperty("Installers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(1)]
@@ -615,7 +624,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.5.0";
+        public string ManifestVersion { get; set; } = "1.6.0";
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     
