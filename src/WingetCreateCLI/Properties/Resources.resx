@@ -312,8 +312,8 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>The package name |e.g. Visual Studio|</value>
   </data>
-  <data name="NewCommand_Description" xml:space="preserve">
-    <value>Press ENTER to submit the value for each question including accepting the (default) value.</value>
+  <data name="PrePromptInstructions_Header" xml:space="preserve">
+    <value>Press ENTER to submit the value for each question including accepting the (default/reference) value.</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
     <value>This tool will walk you through a series of questions to help you create your package manifest.</value>
@@ -331,7 +331,7 @@
     <value>The MSIX installer package family name</value>
   </data>
   <data name="PackageLocale_KeywordDescription" xml:space="preserve">
-    <value>The package meta-data locale</value>
+    <value>The package meta-data locale |e.g. en-US|</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
     <value>The package home page</value>
@@ -1324,5 +1324,8 @@
   </data>
   <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
     <value>Indicates whether the installer is prohibited from being downloaded for offline installation</value>
+  </data>
+  <data name="NewLocaleCommand_Header" xml:space="preserve">
+    <value>This command will walk you through a series of questions to help generate a new locale manifest.</value>
   </data>
 </root>

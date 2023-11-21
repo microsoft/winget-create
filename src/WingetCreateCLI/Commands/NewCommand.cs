@@ -34,11 +34,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     public class NewCommand : BaseCommand
     {
         /// <summary>
-        /// The url path to the manifest documentation site.
-        /// </summary>
-        private const string ManifestDocumentationUrl = "https://aka.ms/winget-manifest-schema";
-
-        /// <summary>
         /// Installer types for which we can trust that the detected architecture is correct, so don't need to prompt the user to confirm.
         /// </summary>
         private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msix, InstallerType.Appx };
@@ -210,9 +205,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Console.WriteLine();
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
-                Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
+                Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), Constants.ManifestDocumentationUrl);
                 Console.WriteLine();
-                Console.WriteLine(Resources.NewCommand_Description);
+                Console.WriteLine(Resources.PrePromptInstructions_Header);
                 Console.WriteLine();
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));

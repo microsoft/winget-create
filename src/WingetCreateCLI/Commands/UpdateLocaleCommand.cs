@@ -147,6 +147,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Manifests updatedLocales = this.PromptAndUpdateExistingLocales(originalManifests);
                 Console.WriteLine();
+                EnsureManifestVersionConsistency(originalManifests);
                 DisplayUpdatedLocales(updatedLocales);
 
                 if (string.IsNullOrEmpty(this.OutputDir))
@@ -276,6 +277,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     isDefaultLocale = true;
                 }
 
+                Console.WriteLine();
                 if (Prompt.Confirm(Resources.UpdateAdditionalLocaleProperties_Message))
                 {
                     if (isDefaultLocale)

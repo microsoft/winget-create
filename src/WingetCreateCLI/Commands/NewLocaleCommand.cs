@@ -17,6 +17,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.Locale;
     using Newtonsoft.Json;
@@ -151,6 +152,15 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                 }
 
+                Console.WriteLine(Resources.NewLocaleCommand_Header);
+                Console.WriteLine();
+                Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), Constants.ManifestDocumentationUrl);
+                Console.WriteLine();
+                Console.WriteLine(Resources.PrePromptInstructions_Header);
+                Console.WriteLine();
+
+                Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
+
                 List<LocaleManifest> newLocales = this.ParseArgumentsAndGenerateLocales(originalManifests);
 
                 if (newLocales == null)
@@ -159,6 +169,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 Console.WriteLine();
+                EnsureManifestVersionConsistency(originalManifests);
                 DisplayGeneratedLocales(newLocales);
 
                 if (string.IsNullOrEmpty(this.OutputDir))
@@ -296,6 +307,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     PromptAndSetLocaleProperties(newLocaleManifest, defaultPromptPropertiesForNewLocale, originalManifests);
                 }
 
+                Console.WriteLine();
                 if (Prompt.Confirm(Resources.AddAdditionalLocaleProperties_Message))
                 {
                     // Get optional properties that have not been prompted before.

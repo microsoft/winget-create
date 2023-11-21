@@ -657,6 +657,23 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
+        /// Ensures that the manifestVersion is consistent across all manifest object models.
+        /// </summary>
+        /// <param name="manifests">Manifests object model.</param>
+        protected static void EnsureManifestVersionConsistency(Manifests manifests)
+        {
+            string latestManifestVersion = new VersionManifest().ManifestVersion;
+            manifests.VersionManifest.ManifestVersion = latestManifestVersion;
+            manifests.DefaultLocaleManifest.ManifestVersion = latestManifestVersion;
+            manifests.InstallerManifest.ManifestVersion = latestManifestVersion;
+
+            foreach (var localeManifest in manifests.LocaleManifests)
+            {
+                localeManifest.ManifestVersion = latestManifestVersion;
+            }
+        }
+
+        /// <summary>
         /// Launches the GitHub OAuth flow and obtains a GitHub token.
         /// </summary>
         /// <returns>A boolean value indicating whether the OAuth login flow was successful.</returns>

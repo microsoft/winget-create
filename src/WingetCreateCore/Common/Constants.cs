@@ -62,5 +62,10 @@ namespace Microsoft.WingetCreateCore.Common
         /// Represents the subdirectory name of the user's local app data folder where the tool stores its debug data.
         /// </summary>
         public const string DiagnosticOutputDirectoryFolderName = "DiagOutputDir";
+
+        /// <summary>
+        /// The url path to the manifest documentation site.
+        /// </summary>
+        public const string ManifestDocumentationUrl = "https://aka.ms/winget-manifest-schema";
     }
 }
