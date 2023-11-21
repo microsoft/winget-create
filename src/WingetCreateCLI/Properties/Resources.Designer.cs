@@ -637,6 +637,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Indicates whether the installer is prohibited from being downloaded for offline installation.
+        /// </summary>
+        public static string DownloadCommandProhibited_KeywordDescription {
+            get {
+                return ResourceManager.GetString("DownloadCommandProhibited_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to complete the download request as the connection has timed out. Please verify your installer URL and try again..
         /// </summary>
         public static string DownloadConnectionTimeout_Error {

@@ -1322,4 +1322,7 @@
   <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
     <value>Would you like to update the locale manifest instead?</value>
   </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>Indicates whether the installer is prohibited from being downloaded for offline installation</value>
+  </data>
 </root>
