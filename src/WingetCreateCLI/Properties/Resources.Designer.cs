@@ -1906,7 +1906,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This tool will walk you through a series of questions to help you create your package manifest..
+        ///   Looks up a localized string similar to This command will walk you through a series of questions to help you create your package manifest..
         /// </summary>
         public static string NewCommand_Header {
             get {
@@ -1920,6 +1920,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NewCommand_HelpText {
             get {
                 return ResourceManager.GetString("NewCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press ENTER to submit the value for each question including accepting the (default) value..
+        /// </summary>
+        public static string NewCommand_PrePrompt_Header {
+            get {
+                return ResourceManager.GetString("NewCommand_PrePrompt_Header", resourceCulture);
             }
         }
         
@@ -1965,6 +1974,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NewLocaleCommand_Locale_HelpText {
             get {
                 return ResourceManager.GetString("NewLocaleCommand_Locale_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press ENTER to submit the value for each question including accepting the (reference) value from reference locale manifest..
+        /// </summary>
+        public static string NewLocaleCommand_PrePrompt_Header {
+            get {
+                return ResourceManager.GetString("NewLocaleCommand_PrePrompt_Header", resourceCulture);
             }
         }
         
@@ -2235,15 +2253,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string PortableCommandAlias_Message {
             get {
                 return ResourceManager.GetString("PortableCommandAlias_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Press ENTER to submit the value for each question including accepting the (default/reference) value..
-        /// </summary>
-        public static string PrePromptInstructions_Header {
-            get {
-                return ResourceManager.GetString("PrePromptInstructions_Header", resourceCulture);
             }
         }
         

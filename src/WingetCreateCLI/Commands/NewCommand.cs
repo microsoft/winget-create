@@ -207,7 +207,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Console.WriteLine();
                 Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), Constants.ManifestDocumentationUrl);
                 Console.WriteLine();
-                Console.WriteLine(Resources.PrePromptInstructions_Header);
+                Console.WriteLine(Resources.NewCommand_PrePrompt_Header);
                 Console.WriteLine();
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));

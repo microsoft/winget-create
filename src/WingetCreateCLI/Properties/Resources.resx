@@ -312,11 +312,11 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>The package name |e.g. Visual Studio|</value>
   </data>
-  <data name="PrePromptInstructions_Header" xml:space="preserve">
-    <value>Press ENTER to submit the value for each question including accepting the (default/reference) value.</value>
+  <data name="NewCommand_PrePrompt_Header" xml:space="preserve">
+    <value>Press ENTER to submit the value for each question including accepting the (default) value.</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
-    <value>This tool will walk you through a series of questions to help you create your package manifest.</value>
+    <value>This command will walk you through a series of questions to help you create your package manifest.</value>
   </data>
   <data name="NewCommand_HelpText" xml:space="preserve">
     <value>Launches a series of questions to help generate a new manifest</value>
@@ -1327,5 +1327,8 @@
   </data>
   <data name="NewLocaleCommand_Header" xml:space="preserve">
     <value>This command will walk you through a series of questions to help generate a new locale manifest.</value>
+  </data>
+  <data name="NewLocaleCommand_PrePrompt_Header" xml:space="preserve">
+    <value>Press ENTER to submit the value for each question including accepting the (reference) value from reference locale manifest.</value>
   </data>
 </root>
