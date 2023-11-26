@@ -540,7 +540,8 @@
     <value>자세한 도움말은 https://aka.ms/winget-create에서 찾을 수 있습니다.</value>
   </data>
   <data name="PrivacyStatement_HelpText" xml:space="preserve">
-    <value>개인정보처리방침: https://aka.ms/privacy</value>
+    <value>개인정보처리방침: {0}</value>
+    <comment>{0} - represents the privacy statement url</comment>
   </data>
   <data name="HttpResponseUnsuccessful_Error" xml:space="preserve">
     <value>HTTP 응답에 실패했습니다. 상태 코드: {0}</value>
@@ -691,15 +692,12 @@
   <data name="MultipleMatchedInstaller_Error" xml:space="preserve">
     <value>URL에서 검색된 {0} {1} 설치 관리자에 대해 일치하는 항목이 여러 개 있습니다. {2}</value>
     <comment>{0} - will be replaced with installer architecture
-
 {1} - will be replaced with the installer type
-
 {2} - will be replaced with the installer</comment>
   </data>
   <data name="UnmatchedInstaller_Error" xml:space="preserve">
     <value>URL에서 검색된 {0} {1} 설치 관리자와 일치하는 항목이 없습니다. {2}</value>
     <comment>{0} - will be replaced with installer architecture
-
 {1} - will be replaced with the installer type 
 {2} - will be replaced with the installer</comment>
   </data>
@@ -961,7 +959,7 @@
   <data name="NestedInstallerParsing_HelpText" xml:space="preserve">
     <value>{1}에서 중첩된 설치 관리자 '{0}'을(를) 구문 분석하는 중</value>
     <comment>{0} - will be replaced with RelativeFilePath of the nested installer
-    {1} - will be replaced by the InstallerUrl</comment>
+{1} - will be replaced by the InstallerUrl</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Error" xml:space="preserve">
     <value>zip 보관함에서 중첩 설치 관리자를 찾을 수 없습니다. {0}. 대화형 모드를 사용하여 이 패키지를 업데이트하세요.</value>
@@ -1033,13 +1031,11 @@
   <data name="MultipleMatchingNestedInstallersFound_Error" xml:space="preserve">
     <value>{1} "{0}" 일치하는 항목이 여러 대 있습니다. 대화형 모드를 사용하여 이 패키지를 업데이트하세요.</value>
     <comment>{0} - will be replaced by the name of the nested installer file
-
 {1} - will be replaced by the name of the zip archive.</comment>
   </data>
   <data name="MultipleMatchingNestedInstallersFound_Warning" xml:space="preserve">
     <value>{1}에 "{0}"에 일치하는 항목이 여러 개 있습니다.</value>
     <comment>{0} - will be replaced by the name of the nested installer file
-
 {1} - will be replaced by the name of the zip archive.</comment>
   </data>
   <data name="NestedInstallerFileNotFound_Warning" xml:space="preserve">
@@ -1105,9 +1101,7 @@
   <data name="VersionDoesNotExist_Error" xml:space="preserve">
     <value>Windows 패키지 관리자 리포지토리의 {1} 대한 버전 {0} 없습니다.</value>
     <comment>{0} - will be replaced with the package version
-
-{1} - will be replaced with the package ID
-</comment>
+{1} - will be replaced with the package ID</comment>
   </data>
   <data name="ReplaceVersion_HelpText" xml:space="preserve">
     <value>선택적. Windows 패키지 관리자 리포지토리에서 이전 버전의 매니페스트를 바꾸기 위해 바꾸기 인수와 함께 사용되는 패키지 버전입니다.</value>
@@ -1120,5 +1114,124 @@
   </data>
   <data name="AutoReplacingPreviousVersion_Message" xml:space="preserve">
     <value>사용자 지정 URL이 검색되었습니다. 제출이 자동으로 이전 버전을 대체합니다.</value>
+  </data>
+  <data name="SentenceBadFormatConversionErrorOption" xml:space="preserve">
+    <value>옵션 '{0}' 잘못된 형식으로 정의되었습니다.</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceBadFormatConversionErrorValue" xml:space="preserve">
+    <value>옵션 이름에 바인딩되지 않은 값이 잘못된 형식으로 정의되었습니다.</value>
+  </data>
+  <data name="SentenceBadFormatTokenError" xml:space="preserve">
+    <value>'{0}' 토큰을 인식할 수 없습니다.</value>
+    <comment>{0} - will be replaced with the unrecognized command-line token</comment>
+  </data>
+  <data name="SentenceBadVerbSelectedError" xml:space="preserve">
+    <value>'{0}' 동사를 인식할 수 없습니다.</value>
+    <comment>{0} - will be replaced with the unrecognized command-line verb</comment>
+  </data>
+  <data name="SentenceErrorsHeadingText" xml:space="preserve">
+    <value>오류:</value>
+  </data>
+  <data name="SentenceHelpCommandTextOption" xml:space="preserve">
+    <value>이 도움말 화면을 표시합니다.</value>
+  </data>
+  <data name="SentenceHelpCommandTextVerb" xml:space="preserve">
+    <value>특정 명령의 자세한 정보를 표시합니다.</value>
+  </data>
+  <data name="SentenceMissingRequiredOptionError" xml:space="preserve">
+    <value>필요한 '{0}' 옵션이 없습니다.</value>
+    <comment>{0} - will be replaced with the required command-line option</comment>
+  </data>
+  <data name="SentenceMissingValueOptionError" xml:space="preserve">
+    <value>'{0}' 옵션에 값이 없습니다.</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceMutuallyExclusiveSetErrors" xml:space="preserve">
+    <value>옵션: {0}은(는) {1}와(과) 호환되지 않습니다.</value>
+    <comment>{0} - will be replaced with one or more provided command-line option(s)
+{1} - will be replaced with one or more provided command-line option(s)</comment>
+  </data>
+  <data name="SentenceNoVerbSelectedError" xml:space="preserve">
+    <value>동사를 선택하지 않았습니다.</value>
+  </data>
+  <data name="SentenceOptionGroupWord" xml:space="preserve">
+    <value>그룹</value>
+  </data>
+  <data name="SentenceRepeatedOptionError" xml:space="preserve">
+    <value>'{0}' 옵션은 여러 번 정의되었습니다.</value>
+    <comment>{0} - will be replaced with the repeated command-line option</comment>
+  </data>
+  <data name="SentenceRequiredWord" xml:space="preserve">
+    <value>필수입니다.</value>
+  </data>
+  <data name="SentenceSequenceOutOfRangeErrorOption" xml:space="preserve">
+    <value>시퀀스 옵션 '{0}' 필요한 것보다 적은 수의 항목으로 정의되었습니다.</value>
+    <comment>{0} - will be replaced with the provided command-line option</comment>
+  </data>
+  <data name="SentenceSequenceOutOfRangeErrorValue" xml:space="preserve">
+    <value>옵션 이름에 바인딩되지 않은 시퀀스 값이 필요한 것보다 적은 수의 항목으로 정의됩니다.</value>
+  </data>
+  <data name="SentenceSetValueExceptionError" xml:space="preserve">
+    <value>오류 설정 값을 '{0}' 옵션으로 설정: {1}</value>
+    <comment>{0} - will be replaced with the provided command-line option
+{1} - will be replaced with the provided value for the command-line option</comment>
+  </data>
+  <data name="SentenceUnknownOptionError" xml:space="preserve">
+    <value>'{0}' 옵션을 알 수 없습니다.</value>
+    <comment>{0} - will be replaced with the unrecognized command-line option</comment>
+  </data>
+  <data name="SentenceUsageHeadingText" xml:space="preserve">
+    <value>사용법:</value>
+  </data>
+  <data name="SentenceVersionCommandText" xml:space="preserve">
+    <value>버전 정보를 표시합니다.</value>
+  </data>
+  <data name="SentenceMissingRequiredValueError" xml:space="preserve">
+    <value>옵션 이름에 바인딩되지 않은 필수 값이 없습니다.</value>
+  </data>
+  <data name="OperatingSystem_Info" xml:space="preserve">
+    <value>운영 체제: {0}</value>
+    <comment>{0} - represents the version of the operating system installed on the user's machine</comment>
+  </data>
+  <data name="Path_Heading" xml:space="preserve">
+    <value>경로</value>
+  </data>
+  <data name="SystemArchitecture_Info" xml:space="preserve">
+    <value>시스템 아키텍처: {0}</value>
+    <comment>{0} - represents the CPU architecture of the user's machine</comment>
+  </data>
+  <data name="WingetCreateDirectories_Heading" xml:space="preserve">
+    <value>Winget-Create 디렉터리</value>
+  </data>
+  <data name="InstallerCache_Heading" xml:space="preserve">
+    <value>설치 관리자 캐시</value>
+  </data>
+  <data name="Logs_Heading" xml:space="preserve">
+    <value>로그</value>
+  </data>
+  <data name="UserSettings_Heading" xml:space="preserve">
+    <value>사용자 설정</value>
+  </data>
+  <data name="Homepage_Heading" xml:space="preserve">
+    <value>홈페이지</value>
+  </data>
+  <data name="InfoCommand_HelpText" xml:space="preserve">
+    <value>도구의 일반 정보 표시</value>
+  </data>
+  <data name="LicenseAgreement_Heading" xml:space="preserve">
+    <value>라이선스 계약</value>
+  </data>
+  <data name="Links_Heading" xml:space="preserve">
+    <value>링크</value>
+  </data>
+  <data name="PrivacyStatement_Heading" xml:space="preserve">
+    <value>개인정보처리방침</value>
+  </data>
+  <data name="ThirdPartyNotices_Heading" xml:space="preserve">
+    <value>제3자 통지</value>
+  </data>
+  <data name="CommandsAvailable_Message" xml:space="preserve">
+    <value>다음 명령을 사용할 수 있음</value>
   </data>
 </root>
