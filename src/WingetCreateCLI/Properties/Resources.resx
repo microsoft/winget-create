@@ -1234,4 +1234,11 @@
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>The following commands are available:</value>
   </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>Indicates whether the installer is prohibited from being downloaded for offline installation</value>
+  </data>
+  <data name="SubmitFlagRequired_ErrorMessage" xml:space="preserve">
+    <value>Submission arguments used without submit flag. The following options require passing in '-s' / '--submit':</value>
+    <comment>'-s / --submit' refers to a command line switch argument</comment>
+  </data>
 </root>

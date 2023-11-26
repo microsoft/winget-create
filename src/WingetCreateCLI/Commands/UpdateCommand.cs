@@ -138,6 +138,22 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
+                var argumentsRequiringSubmit = new List<string> { nameof(this.PRTitle), nameof(this.Replace) };
+                bool submissionArguments = !string.IsNullOrEmpty(this.PRTitle) || this.Replace;
+
+                if (submissionArguments && !this.SubmitToGitHub)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.SubmitFlagRequired_ErrorMessage));
+                    Console.WriteLine();
+
+                    foreach (string argument in argumentsRequiringSubmit)
+                    {
+                        Logger.Error($"--{argument.ToLower()}");
+                    }
+
+                    return false;
+                }
+
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
                 string exactId;

@@ -2761,6 +2761,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Submission arguments used without submit flag. The following options require passing in &apos;-s&apos; / &apos;--submit&apos;:.
+        /// </summary>
+        public static string SubmitFlagRequired_ErrorMessage {
+            get {
+                return ResourceManager.GetString("SubmitFlagRequired_ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Submitting pull request for manifest....
         /// </summary>
         public static string SubmittingPullRequest_Message {

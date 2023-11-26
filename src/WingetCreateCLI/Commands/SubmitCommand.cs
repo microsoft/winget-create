@@ -44,16 +44,28 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string Path { get; set; }
 
         /// <summary>
-        /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
+        /// Gets or sets the previous version to replace from the Windows Package Manager repository.
         /// </summary>
-        [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
-        public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
+        [Value(1, MetaName = "ReplaceVersion", Required = false, HelpText = "ReplaceVersion_HelpText", ResourceType = typeof(Resources))]
+        public string ReplaceVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to replace a previous version of the manifest with the update.
+        /// </summary>
+        [Option('r', "replace", Required = false, HelpText = "ReplacePrevious_HelpText", ResourceType = typeof(Resources))]
+        public bool Replace { get; set; }
 
         /// <summary>
         /// Gets or sets the title for the pull request.
         /// </summary>
         [Option('p', "prtitle", Required = false, HelpText = "PullRequestTitle_HelpText", ResourceType = typeof(Resources))]
         public override string PRTitle { get => base.PRTitle; set => base.PRTitle = value; }
+
+        /// <summary>
+        /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
+        /// </summary>
+        [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
+        public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
 
         /// <summary>
         /// Gets or sets the unbound arguments that exist after the first positional parameter.
@@ -101,13 +113,13 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 Manifests manifests = new Manifests();
                 manifests.SingletonManifest = Serialization.DeserializeFromPath<SingletonManifest>(this.Path);
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle);
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
             }
             else if (Directory.Exists(this.Path) && ValidateManifest(this.Path))
             {
                 List<string> manifestContents = Directory.GetFiles(this.Path).Select(f => File.ReadAllText(f)).ToList();
                 Manifests manifests = Serialization.DeserializeManifestContents(manifestContents);
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle);
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
             }
             else
             {
