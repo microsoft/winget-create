@@ -139,9 +139,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 var argumentsRequiringSubmit = new List<string> { nameof(this.PRTitle), nameof(this.Replace) };
-                bool submissionArguments = !string.IsNullOrEmpty(this.PRTitle) || this.Replace;
+                bool submissionArgumentsUsed = !string.IsNullOrEmpty(this.PRTitle) || this.Replace;
 
-                if (submissionArguments && !this.SubmitToGitHub)
+                if (submissionArgumentsUsed && !this.SubmitToGitHub)
                 {
                     Logger.ErrorLocalized(nameof(Resources.SubmitFlagRequired_ErrorMessage));
                     Console.WriteLine();
