@@ -50,16 +50,16 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string ReplaceVersion { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not to replace a previous version of the manifest with the update.
-        /// </summary>
-        [Option('r', "replace", Required = false, HelpText = "ReplacePrevious_HelpText", ResourceType = typeof(Resources))]
-        public bool Replace { get; set; }
-
-        /// <summary>
         /// Gets or sets the title for the pull request.
         /// </summary>
         [Option('p', "prtitle", Required = false, HelpText = "PullRequestTitle_HelpText", ResourceType = typeof(Resources))]
         public override string PRTitle { get => base.PRTitle; set => base.PRTitle = value; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to replace a previous version of the manifest with the update.
+        /// </summary>
+        [Option('r', "replace", Required = false, HelpText = "ReplacePrevious_HelpText", ResourceType = typeof(Resources))]
+        public bool Replace { get; set; }
 
         /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
