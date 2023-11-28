@@ -36,7 +36,7 @@ namespace Microsoft.WingetCreateCLI
 
                 if (propertyName == nameof(LocaleManifest.PackageLocale) && originalManifests != null)
                 {
-                    while (!ValidateLocale(property.GetValue(localeManifest).ToString(), originalManifests))
+                    while (!ValidatePromptedLocale(property.GetValue(localeManifest).ToString(), originalManifests))
                     {
                         PromptHelper.PromptPropertyAndSetValue(localeManifest, propertyName, property.GetValue(localeManifest));
                     }
@@ -45,34 +45,6 @@ namespace Microsoft.WingetCreateCLI
                 }
 
                 Logger.Trace($"Property [{propertyName}] set to the value [{property.GetValue(localeManifest)}]");
-            }
-        }
-
-        /// <summary>
-        /// Checks whether the provided locale is valid. A locale is valid if it is in the correct format and does not already exist in the manifest.
-        /// This function handles the exception gracefully to be used in a prompt.
-        /// </summary>
-        /// <param name="locale">The package locale string to check.</param>
-        /// <param name="manifests">The base manifests to check against.</param>
-        /// <returns>A boolean value indicating whether the locale is valid.</returns>
-        public static bool ValidateLocale(string locale, Manifests manifests)
-        {
-            try
-            {
-                if (GetMatchingLocaleManifest(locale, manifests) != null)
-                {
-                    Logger.ErrorLocalized(nameof(Resources.LocaleAlreadyExists_ErrorMessage), locale);
-                    Console.WriteLine();
-                    return false;
-                }
-
-                return true;
-            }
-            catch (ArgumentException)
-            {
-                Logger.ErrorLocalized(nameof(Resources.InvalidLocale_ErrorMessage));
-                Console.WriteLine();
-                return false;
             }
         }
 
@@ -116,6 +88,34 @@ namespace Microsoft.WingetCreateCLI
                                 p.GetCustomAttribute<RequiredAttribute>() == null &&
                                 p.GetCustomAttribute<JsonPropertyAttribute>() != null &&
                                 !promptedProperties.Any(d => d == p.Name)).Select(p => p.Name).ToList();
+        }
+
+        /// <summary>
+        /// Checks whether the provided locale is valid. A locale is valid if it is in the correct format and does not already exist in the manifest.
+        /// This function handles the exception gracefully to be used in a prompt.
+        /// </summary>
+        /// <param name="locale">The package locale string to check.</param>
+        /// <param name="manifests">The base manifests to check against.</param>
+        /// <returns>A boolean value indicating whether the locale is valid.</returns>
+        private static bool ValidatePromptedLocale(string locale, Manifests manifests)
+        {
+            try
+            {
+                if (GetMatchingLocaleManifest(locale, manifests) != null)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.LocaleAlreadyExists_ErrorMessage), locale);
+                    Console.WriteLine();
+                    return false;
+                }
+
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                Logger.ErrorLocalized(nameof(Resources.InvalidLocale_ErrorMessage));
+                Console.WriteLine();
+                return false;
+            }
         }
     }
 }
