@@ -5,10 +5,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.IO;
-    using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -20,7 +17,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.Locale;
-    using Newtonsoft.Json;
     using Sharprompt;
 
     /// <summary>
@@ -124,7 +120,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     try
                     {
-                        if (GetMatchingLocaleManifest(this.Locale, originalManifests) != null)
+                        if (LocaleHelper.GetMatchingLocaleManifest(this.Locale, originalManifests) != null)
                         {
                             Logger.ErrorLocalized(nameof(Resources.LocaleAlreadyExists_ErrorMessage), this.Locale);
                             Console.WriteLine();
@@ -248,7 +244,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 try
                 {
-                    referenceLocaleManifest = (LocaleManifest)GetMatchingLocaleManifest(this.ReferenceLocale, originalManifests);
+                    referenceLocaleManifest = (LocaleManifest)LocaleHelper.GetMatchingLocaleManifest(this.ReferenceLocale, originalManifests);
                 }
                 catch (ArgumentException)
                 {
@@ -299,23 +295,19 @@ namespace Microsoft.WingetCreateCLI.Commands
                     properties.Remove(nameof(LocaleManifest.PackageLocale));
 
                     Logger.DebugLocalized(nameof(Resources.FieldSetToValue_Message), nameof(LocaleManifest.PackageLocale), this.Locale);
-                    PromptAndSetLocaleProperties(newLocaleManifest, properties, originalManifests);
+                    LocaleHelper.PromptAndSetLocaleProperties(newLocaleManifest, properties, originalManifests);
                     localeArgumentUsed = true;
                 }
                 else
                 {
-                    PromptAndSetLocaleProperties(newLocaleManifest, defaultPromptPropertiesForNewLocale, originalManifests);
+                    LocaleHelper.PromptAndSetLocaleProperties(newLocaleManifest, defaultPromptPropertiesForNewLocale, originalManifests);
                 }
 
                 Console.WriteLine();
                 if (Prompt.Confirm(Resources.AddAdditionalLocaleProperties_Message))
                 {
                     // Get optional properties that have not been prompted before.
-                    var optionalProperties = newLocaleManifest.GetType().GetProperties().ToList().Where(p =>
-                        p.GetCustomAttribute<RequiredAttribute>() == null &&
-                        p.GetCustomAttribute<JsonPropertyAttribute>() != null &&
-                        !defaultPromptPropertiesForNewLocale.Any(d => d == p.Name)).Select(p => p.Name).ToList();
-
+                    var optionalProperties = LocaleHelper.GetUnPromptedLocalePropertyNames(newLocaleManifest, defaultPromptPropertiesForNewLocale);
                     FillLocalePropertiesForUserCompletion(referenceLocaleManifest, newLocaleManifest, optionalProperties);
                     PromptOptionalProperties(newLocaleManifest, optionalProperties);
                 }

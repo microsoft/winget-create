@@ -7,7 +7,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -548,89 +547,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));
                 Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
             }
-        }
-
-        /// <summary>
-        /// Prompts user to enter values for the input locale or default locale manifest properties.
-        /// </summary>
-        /// <typeparam name="T">Type of the manifest. Expected to be either LocaleManifest or DefaultLocaleManifest.</typeparam>
-        /// <param name="localeManifest">Object model of the locale/defaultLocale manifest.</param>
-        /// <param name="properties">List of property names to be prompted for.</param>
-        /// <param name="originalManifests">Optional parameter to be used when validating the user-inputted locale. Check whether the locale already exists in the original manifests.</param>
-        protected static void PromptAndSetLocaleProperties<T>(T localeManifest, List<string> properties, Manifests originalManifests = null)
-        {
-            foreach (string propertyName in properties)
-            {
-                PropertyInfo property = typeof(T).GetProperty(propertyName);
-                PromptHelper.PromptPropertyAndSetValue(localeManifest, propertyName, property.GetValue(localeManifest));
-
-                if (propertyName == nameof(LocaleManifest.PackageLocale) && originalManifests != null)
-                {
-                    while (!ValidateLocale(property.GetValue(localeManifest).ToString(), originalManifests))
-                    {
-                        PromptHelper.PromptPropertyAndSetValue(localeManifest, propertyName, property.GetValue(localeManifest));
-                    }
-
-                    continue;
-                }
-
-                Logger.Trace($"Property [{propertyName}] set to the value [{property.GetValue(localeManifest)}]");
-            }
-        }
-
-        /// <summary>
-        /// Checks whether the provided locale is valid. A locale is valid if it is in the correct format and does not already exist in the manifest.
-        /// This function handles the exception gracefully to be used in a prompt.
-        /// </summary>
-        /// <param name="locale">The package locale string to check.</param>
-        /// <param name="manifests">The base manifests to check against.</param>
-        /// <returns>A boolean value indicating whether the locale is valid.</returns>
-        protected static bool ValidateLocale(string locale, Manifests manifests)
-        {
-            try
-            {
-                if (GetMatchingLocaleManifest(locale, manifests) != null)
-                {
-                    Logger.ErrorLocalized(nameof(Resources.LocaleAlreadyExists_ErrorMessage), locale);
-                    Console.WriteLine();
-                    return false;
-                }
-
-                return true;
-            }
-            catch (ArgumentException)
-            {
-                Logger.ErrorLocalized(nameof(Resources.InvalidLocale_ErrorMessage));
-                Console.WriteLine();
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Checks whether package locale already exists in the default locale manifest or one of the locale manifests and returns the matching manifest.
-        /// This function throws an exception if the locale string is in an invalid format.
-        /// </summary>
-        /// <param name="locale">The package locale string to check.</param>
-        /// <param name="originalManifests">The base manifests to check against.</param>
-        /// <returns>An object representing the matching locale manifest.</returns>
-        protected static object GetMatchingLocaleManifest(string locale, Manifests originalManifests)
-        {
-            RegionInfo localeInfo = new RegionInfo(locale);
-
-            if (localeInfo.Equals(new RegionInfo(originalManifests.DefaultLocaleManifest.PackageLocale)))
-            {
-                return originalManifests.DefaultLocaleManifest;
-            }
-
-            foreach (var localeManifest in originalManifests.LocaleManifests)
-            {
-                if (localeInfo.Equals(new RegionInfo(localeManifest.PackageLocale)))
-                {
-                    return localeManifest;
-                }
-            }
-
-            return null;
         }
 
         /// <summary>

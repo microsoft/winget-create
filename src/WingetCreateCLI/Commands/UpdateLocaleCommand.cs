@@ -5,10 +5,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -20,7 +18,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Locale;
-    using Newtonsoft.Json;
     using Sharprompt;
 
     /// <summary>
@@ -118,7 +115,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     try
                     {
-                        if (GetMatchingLocaleManifest(this.Locale, originalManifests) == null)
+                        if (LocaleHelper.GetMatchingLocaleManifest(this.Locale, originalManifests) == null)
                         {
                             Logger.ErrorLocalized(nameof(Resources.LocaleDoesNotExist_Message), this.Locale);
 
@@ -221,14 +218,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static List<string> GetOptionalLocalePropertyNames<T>(T genericLocaleManifest)
-        {
-            return genericLocaleManifest.GetType().GetProperties().ToList().Where(p =>
-                        p.GetCustomAttribute<RequiredAttribute>() == null &&
-                        p.GetCustomAttribute<JsonPropertyAttribute>() != null)
-                .Select(p => p.Name).ToList();
-        }
-
         private Manifests PromptAndUpdateExistingLocales(Manifests originalManifests)
         {
             Manifests updatedLocales = new Manifests()
@@ -253,7 +242,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 if (!string.IsNullOrEmpty(this.Locale) && !localeArgumentUsed)
                 {
-                    selectedLocale = GetMatchingLocaleManifest(this.Locale, originalManifests);
+                    selectedLocale = LocaleHelper.GetMatchingLocaleManifest(this.Locale, originalManifests);
                     localeArgumentUsed = true;
                 }
                 else
@@ -266,13 +255,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (selectedLocale is LocaleManifest localeManifest)
                 {
                     Logger.DebugLocalized(nameof(Resources.FieldSetToValue_Message), nameof(LocaleManifest.PackageLocale), localeManifest.PackageLocale);
-                    PromptAndSetLocaleProperties(localeManifest, defaultPromptPropertiesForUpdateLocale);
+                    LocaleHelper.PromptAndSetLocaleProperties(localeManifest, defaultPromptPropertiesForUpdateLocale);
                     updatedLocales.LocaleManifests.Add(localeManifest);
                 }
                 else if (selectedLocale is DefaultLocaleManifest defaultLocaleManifest)
                 {
                     Logger.DebugLocalized(nameof(Resources.FieldSetToValue_Message), nameof(LocaleManifest.PackageLocale), defaultLocaleManifest.PackageLocale);
-                    PromptAndSetLocaleProperties(defaultLocaleManifest, defaultPromptPropertiesForUpdateLocale);
+                    LocaleHelper.PromptAndSetLocaleProperties(defaultLocaleManifest, defaultPromptPropertiesForUpdateLocale);
                     updatedLocales.DefaultLocaleManifest = defaultLocaleManifest;
                     isDefaultLocale = true;
                 }
@@ -282,12 +271,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     if (isDefaultLocale)
                     {
-                        PromptOptionalProperties(updatedLocales.DefaultLocaleManifest, GetOptionalLocalePropertyNames(updatedLocales.DefaultLocaleManifest));
+                        PromptOptionalProperties(updatedLocales.DefaultLocaleManifest, LocaleHelper.GetUnPromptedLocalePropertyNames(updatedLocales.DefaultLocaleManifest, defaultPromptPropertiesForUpdateLocale));
                     }
                     else
                     {
                         LocaleManifest manifest = (LocaleManifest)selectedLocale;
-                        PromptOptionalProperties(manifest, GetOptionalLocalePropertyNames(manifest));
+                        PromptOptionalProperties(manifest, LocaleHelper.GetUnPromptedLocalePropertyNames(manifest, defaultPromptPropertiesForUpdateLocale));
                     }
                 }
 
