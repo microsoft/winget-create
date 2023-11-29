@@ -115,12 +115,24 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 Manifests manifests = new Manifests();
                 manifests.SingletonManifest = Serialization.DeserializeFromPath<SingletonManifest>(expandedPath);
+
+                if (this.Replace && !await this.ValidateReplaceArguments(manifests.SingletonManifest.PackageIdentifier, manifests.SingletonManifest.PackageVersion))
+                {
+                    return false;
+                }
+
                 return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
             }
             else if (Directory.Exists(expandedPath) && ValidateManifest(expandedPath))
             {
                 List<string> manifestContents = Directory.GetFiles(expandedPath).Select(f => File.ReadAllText(f)).ToList();
                 Manifests manifests = Serialization.DeserializeManifestContents(manifestContents);
+
+                if (this.Replace && !await this.ValidateReplaceArguments(manifests.VersionManifest.PackageIdentifier, manifests.VersionManifest.PackageVersion))
+                {
+                    return false;
+                }
+
                 return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
             }
             else
@@ -128,6 +140,49 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.Error_Prefix), Resources.PathDoesNotExist_Warning);
                 return false;
             }
+        }
+
+        private async Task<bool> ValidateReplaceArguments(string packageId, string submitVersion)
+        {
+            string exactId;
+            try
+            {
+                exactId = await this.GitHubClient.FindPackageId(packageId);
+            }
+            catch (Octokit.RateLimitExceededException)
+            {
+                Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(exactId))
+            {
+                Logger.ErrorLocalized(nameof(Resources.ReplacePackageIdDoesNotExist_Error), packageId);
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(this.ReplaceVersion))
+            {
+                // If submit version is same as replace version, it's a regular update.
+                if (submitVersion == this.ReplaceVersion)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.ReplaceVersionEqualsSubmitVersion_ErrorMessage));
+                    return false;
+                }
+
+                // Check if the replace version exists in the repository.
+                try
+                {
+                    await this.GitHubClient.GetManifestContentAsync(packageId, this.ReplaceVersion);
+                }
+                catch (Octokit.NotFoundException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.VersionDoesNotExist_Error), this.ReplaceVersion, packageId);
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

@@ -138,20 +138,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                var argumentsRequiringSubmit = new List<string> { nameof(this.PRTitle), nameof(this.Replace) };
-                bool submissionArgumentsUsed = !string.IsNullOrEmpty(this.PRTitle) || this.Replace;
+                bool submitFlagMissing = !this.SubmitToGitHub && (!string.IsNullOrEmpty(this.PRTitle) || this.Replace);
 
-                if (submissionArgumentsUsed && !this.SubmitToGitHub)
+                if (submitFlagMissing)
                 {
-                    Logger.ErrorLocalized(nameof(Resources.SubmitFlagRequired_ErrorMessage));
+                    Logger.WarnLocalized(nameof(Resources.SubmitFlagMissing_Warning));
                     Console.WriteLine();
-
-                    foreach (string argument in argumentsRequiringSubmit)
-                    {
-                        Logger.Error($"--{argument.ToLower()}");
-                    }
-
-                    return false;
                 }
 
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
@@ -188,7 +180,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                     catch (Octokit.NotFoundException)
                     {
-                        Logger.ErrorLocalized(nameof(Resources.VersionDoesNotExist_Error), this.Version, this.Id);
+                        Logger.ErrorLocalized(nameof(Resources.VersionDoesNotExist_Error), this.ReplaceVersion, this.Id);
                         return false;
                     }
                 }

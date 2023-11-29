@@ -361,15 +361,7 @@ namespace Microsoft.WingetCreateCore.Common
                 // Remove a previous manifest
                 if (shouldReplace)
                 {
-                    try
-                    {
-                        await this.DeletePackageManifest(repo.Id, packageId, replaceVersion, newBranchName);
-                    }
-                    catch (NotFoundException)
-                    {
-                        // If the path to the manifest folder being replaced does not exist, do nothing.
-                        // This can happen with submit command when user submits a new package and path to its version directory does not exist yet.
-                    }
+                    await this.DeletePackageManifest(repo.Id, packageId, replaceVersion, newBranchName);
                 }
 
                 // Get latest description template from repo
