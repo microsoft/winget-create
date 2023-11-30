@@ -8,7 +8,7 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
     using YamlDotNet.Serialization;
 
     /// <summary>
-    /// Partial class that extends the property definitions of LocaleManifest.
+    /// Partial class that extends the property definitions of DefaultLocaleManifest.
     /// </summary>
     public partial class DefaultLocaleManifest
     {
