@@ -217,12 +217,12 @@ namespace Microsoft.WingetCreateUnitTests
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task UpdateChecksMissingSubmitFlag()
+        public async Task UpdateChecksMissingSubmitFlagWithReplace()
         {
             string packageId = "TestPublisher.TestPackageId";
             string version = "1.2.3.4";
 
-            UpdateCommand command1 = new UpdateCommand
+            UpdateCommand command = new UpdateCommand
             {
                 Id = packageId,
                 Version = version,
@@ -231,7 +231,30 @@ namespace Microsoft.WingetCreateUnitTests
                 Replace = true,
             };
 
-            UpdateCommand command2 = new UpdateCommand
+            try
+            {
+                await command.Execute();
+            }
+            catch (Exception)
+            {
+                // Expected exception
+            }
+
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.SubmitFlagMissing_Warning), "Submit flag missing warning should be shown");
+        }
+
+        /// <summary>
+        /// Verify that update command warns if submit arguments are provided without submit flag being set.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateChecksMissingSubmitFlagWithPRTitle()
+        {
+            string packageId = "TestPublisher.TestPackageId";
+            string version = "1.2.3.4";
+
+            UpdateCommand command = new UpdateCommand
             {
                 Id = packageId,
                 Version = version,
@@ -242,7 +265,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             try
             {
-                await command1.Execute();
+                await command.Execute();
             }
             catch (Exception)
             {
@@ -250,22 +273,7 @@ namespace Microsoft.WingetCreateUnitTests
             }
 
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.SubmitFlagMissing_Warning), "Submit arguments provided without submit flag warning should be thrown");
-
-            // Clear the string writer
-            this.sw.GetStringBuilder().Clear();
-
-            try
-            {
-                await command2.Execute();
-            }
-            catch (Exception)
-            {
-                // Expected exception
-            }
-
-            result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.SubmitFlagMissing_Warning), "Submit arguments provided without submit flag warning should be thrown");
+            Assert.That(result, Does.Contain(Resources.SubmitFlagMissing_Warning), "Submit flag missing warning should be shown");
         }
 
         /// <summary>

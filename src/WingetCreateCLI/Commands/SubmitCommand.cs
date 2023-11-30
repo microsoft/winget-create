@@ -111,6 +111,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             string expandedPath = System.Environment.ExpandEnvironmentVariables(this.Path);
 
+            // TODO: Remove singleton support.
             if (File.Exists(expandedPath) && ValidateManifest(expandedPath))
             {
                 Manifests manifests = new Manifests();

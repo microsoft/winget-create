@@ -2266,7 +2266,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace operation cannot be performed. PackageId &apos;{0}&apos; does not exist in the Windows Package Manager repo. .
+        ///   Looks up a localized string similar to Replace operation cannot be performed. Package identifier &apos;{0}&apos; does not exist in the Windows Package Manager repo..
         /// </summary>
         public static string ReplacePackageIdDoesNotExist_Error {
             get {
