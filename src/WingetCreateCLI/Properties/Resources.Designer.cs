@@ -2464,6 +2464,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replace operation cannot be performed. Package identifier &apos;{0}&apos; does not exist in the Windows Package Manager repo..
+        /// </summary>
+        public static string ReplacePackageIdDoesNotExist_Error {
+            get {
+                return ResourceManager.GetString("ReplacePackageIdDoesNotExist_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false..
         /// </summary>
         public static string ReplacePrevious_HelpText {
@@ -2478,6 +2487,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ReplaceVersion_HelpText {
             get {
                 return ResourceManager.GetString("ReplaceVersion_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The replace version cannot be equal to the submit version..
+        /// </summary>
+        public static string ReplaceVersionEqualsSubmitVersion_ErrorMessage {
+            get {
+                return ResourceManager.GetString("ReplaceVersionEqualsSubmitVersion_ErrorMessage", resourceCulture);
             }
         }
         
@@ -2973,6 +2991,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SubmitCommand_HelpText {
             get {
                 return ResourceManager.GetString("SubmitCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Submit arguments were provided. Did you forget to include the --submit, -s flag?.
+        /// </summary>
+        public static string SubmitFlagMissing_Warning {
+            get {
+                return ResourceManager.GetString("SubmitFlagMissing_Warning", resourceCulture);
             }
         }
         

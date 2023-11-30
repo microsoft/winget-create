@@ -165,10 +165,11 @@ namespace Microsoft.WingetCreateCLI.Commands
             DefaultLocaleManifest defaultLocaleManifest = manifests.DefaultLocaleManifest;
             List<LocaleManifest> localeManifests = manifests.LocaleManifests;
 
+            outputDir = Environment.ExpandEnvironmentVariables(outputDir);
             string version = versionManifest.PackageVersion;
             string packageId = versionManifest.PackageIdentifier;
             string manifestDir = Utils.GetAppManifestDirPath(packageId, version);
-            string fullDirPath = Path.Combine(outputDir, manifestDir);
+            string fullDirPath = Path.GetFullPath(Path.Combine(outputDir, manifestDir));
 
             try
             {
