@@ -1237,4 +1237,15 @@
   <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
     <value>Indicates whether the installer is prohibited from being downloaded for offline installation</value>
   </data>
+  <data name="SubmitFlagMissing_Warning" xml:space="preserve">
+    <value>Submit arguments were provided. Did you forget to include the --submit, -s flag?</value>
+    <comment>'--submit, -s' refers to a command line switch argument</comment>
+  </data>
+  <data name="ReplacePackageIdDoesNotExist_Error" xml:space="preserve">
+    <value>Replace operation cannot be performed. Package identifier '{0}' does not exist in the Windows Package Manager repo.</value>
+    <comment>{0} - will be replaced with the ID of the package</comment>
+  </data>
+  <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
+    <value>The replace version cannot be equal to the submit version.</value>
+  </data>
 </root>

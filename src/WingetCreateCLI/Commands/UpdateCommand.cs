@@ -138,6 +138,14 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
+                bool submitFlagMissing = !this.SubmitToGitHub && (!string.IsNullOrEmpty(this.PRTitle) || this.Replace);
+
+                if (submitFlagMissing)
+                {
+                    Logger.WarnLocalized(nameof(Resources.SubmitFlagMissing_Warning));
+                    Console.WriteLine();
+                }
+
                 Logger.DebugLocalized(nameof(Resources.RetrievingManifest_Message), this.Id);
 
                 string exactId;
@@ -172,7 +180,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                     catch (Octokit.NotFoundException)
                     {
-                        Logger.ErrorLocalized(nameof(Resources.VersionDoesNotExist_Error), this.Version, this.Id);
+                        Logger.ErrorLocalized(nameof(Resources.VersionDoesNotExist_Error), this.ReplaceVersion, this.Id);
                         return false;
                     }
                 }
