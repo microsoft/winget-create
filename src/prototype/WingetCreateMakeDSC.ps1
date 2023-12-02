@@ -6,26 +6,41 @@ if ($(Get-host).version.major -lt 7) {
   Exit(1)
 }
 
+# Create a custom exception type for our dependency management
+class UnmetDependencyException : Exception {
+  UnmetDependencyException([string] $message) : base($message) {}
+  UnmetDependencyException([string] $message, [Exception] $exception) : base($message, $exception) {}
+}
+
 #Set output encoding to UTF-8
 $OutputEncoding = [ System.Text.Encoding]::UTF8   
 
-if ($null -eq (Get-InstalledModule -Name Microsoft.Winget.Client -ErrorAction 'SilentlyContinue')) {
+if (-not(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
   try {
     Install-Module Microsoft.Winget.Client
   } catch {
-    #Pass the exception 
-    throw [System.Net.WebException]::new('Error retrieving powershell module: Microsoft.Winget.Client. Check that you have installed the Windows Package Manager modules correctly.', $_.Exception)
-    #bugbug is this good enough?
+    # If there was an exception while installing, pass it as an InternalException for further debugging
+    throw [UnmetDependencyException]::new("'Microsoft.Winget.Client' was not installed successfully", $_.Exception)
+  } finally {
+    # Check to be sure it acutally installed
+    if (-not(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
+      throw [UnmetDependencyException]::new("`Microsoft.Winget.Client` was not found. Check that you have installed the Windows Package Manager modules correctly.")
+    }
   }
 }
 
-if ($null -eq (Get-InstalledModule -Name powershell-yaml -ErrorAction 'SilentlyContinue')) {
+if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
   try {
-    Install-Module powershell-yaml
+    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+    Install-Module -Name powershell-yaml -Force -Repository PSGallery -Scope CurrentUser
   } catch {
-    #Pass the exception 
-    throw [System.Net.WebException]::new('Error retrieving powershell module: powershell-yaml. Check that you have installed the Windows Package Manager modules correctly.', $_.Exception)
-    #bugbug is this good enough?
+    # If there was an exception while installing, pass it as an InternalException for further debugging
+    throw [UnmetDependencyException]::new("'powershell-yaml' was not installed successfully", $_.Exception)
+  } finally {
+    # Check to be sure it acutally installed
+    if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
+      throw [UnmetDependencyException]::new("`powershell-yaml` was not found. Check that you have installed the Windows Package Manager modules correctly.")
+    }
   }
 }
 
