@@ -112,7 +112,7 @@ $rawYaml = ConvertTo-Yaml @{'properties' = @{'resources' = $finalPackages; 'conf
 [System.IO.File]::WriteAllLines($filePath, @($DSCHeader, '', $rawYaml.trim()), $Utf8NoBomEncoding)
 
 Write-Host
-Write-Host Testing resulting file. -ForegroundColor yellow
+Write-Host 'Testing resulting file...' -ForegroundColor yellow
 (&winget configure --help) > $null
 
 if ($LASTEXITCODE -eq 0) {
