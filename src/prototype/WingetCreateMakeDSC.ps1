@@ -1,10 +1,9 @@
 # This script is a prototype for quickly creating DSC files.
 
 #Powershell 7 Required
-$hostdata=host
-if ($hostdata.version.major -lt 7) {
+if ($(host).version.major -lt 7) {
   Write-host "This script requires powershell 7. You can update powershell by typing winget install Microsoft.Powershell." -ForegroundColor red
-  [Environment]::Exit(1) 
+  Exit(1)
 }
 
 #Set output encoding to UTF-8
