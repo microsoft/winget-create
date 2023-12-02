@@ -9,7 +9,7 @@ if ($(host).version.major -lt 7) {
 #Set output encoding to UTF-8
 $OutputEncoding = [ System.Text.Encoding]::UTF8   
 
-if ($null -eq (Get-InstalledModule -Name Microsoft.Winget.Client))
+if ($null -eq (Get-InstalledModule -Name Microsoft.Winget.Client -ErrorAction 'SilentlyContinue'))
 {
   try {  Install-Module Microsoft.Winget.Client
   } catch {
@@ -19,7 +19,7 @@ if ($null -eq (Get-InstalledModule -Name Microsoft.Winget.Client))
   }
 }
 
-if ($null -eq (Get-InstalledModule -Name powershell-yaml))
+if ($null -eq (Get-InstalledModule -Name powershell-yaml -ErrorAction 'SilentlyContinue'))
 {
   try {
     Install-Module powershell-yaml
