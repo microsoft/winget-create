@@ -1,97 +1,87 @@
 # This script is a prototype for quickly creating DSC files.
 
 #Powershell 7 Required
-if ($(host).version.major -lt 7) {
-  Write-host "This script requires powershell 7. You can update powershell by typing winget install Microsoft.Powershell." -ForegroundColor red
+if ($(Get-host).version.major -lt 7) {
+  Write-Host 'This script requires powershell 7. You can update powershell by typing winget install Microsoft.Powershell.' -ForegroundColor red
   Exit(1)
 }
 
 #Set output encoding to UTF-8
 $OutputEncoding = [ System.Text.Encoding]::UTF8   
 
-if ($null -eq (Get-InstalledModule -Name Microsoft.Winget.Client -ErrorAction 'SilentlyContinue'))
-{
-  try {  Install-Module Microsoft.Winget.Client
+if ($null -eq (Get-InstalledModule -Name Microsoft.Winget.Client -ErrorAction 'SilentlyContinue')) {
+  try {
+    Install-Module Microsoft.Winget.Client
   } catch {
-  #Pass the exception 
-  throw [System.Net.WebException]::new("Error retrieving powershell module: Microsoft.Winget.Client. Check that you have installed the Windows Package Manager modules correctly.", $_.Exception)
-  #bugbug is this good enough?
+    #Pass the exception 
+    throw [System.Net.WebException]::new('Error retrieving powershell module: Microsoft.Winget.Client. Check that you have installed the Windows Package Manager modules correctly.', $_.Exception)
+    #bugbug is this good enough?
   }
 }
 
-if ($null -eq (Get-InstalledModule -Name powershell-yaml -ErrorAction 'SilentlyContinue'))
-{
+if ($null -eq (Get-InstalledModule -Name powershell-yaml -ErrorAction 'SilentlyContinue')) {
   try {
     Install-Module powershell-yaml
   } catch {
-  #Pass the exception 
-  throw [System.Net.WebException]::new("Error retrieving powershell module: powershell-yaml. Check that you have installed the Windows Package Manager modules correctly.", $_.Exception)
-  #bugbug is this good enough?
+    #Pass the exception 
+    throw [System.Net.WebException]::new('Error retrieving powershell module: powershell-yaml. Check that you have installed the Windows Package Manager modules correctly.', $_.Exception)
+    #bugbug is this good enough?
   }
 }
 
 [System.Collections.ArrayList]$finalPackages = @()
-$configurationVersion = "0.2.0"
+$configurationVersion = '0.2.0'
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
 $DSCHeader = "# yaml-language-server: `$schema=https://aka.ms/configuration-dsc-schema/$($configurationVersion)"
 
-do
-{
-  $appId = Read-Host "What is the Winget ID, or name of the package you want to add to the configuration file?"
+do {
+  $appId = Read-Host 'What is the Winget ID, or name of the package you want to add to the configuration file?'
   $findResult = Find-WinGetPackage $appId
   
-  if ($findResult.count -ne 0)
-  {
+  if ($findResult.count -ne 0) {
     # Assign an index to each package
-    $findResult | ForEach-Object { $i=1 } { Add-Member -InputObject $_ -NotePropertyName Index -NotePropertyValue $i; $i++ }
-    $findResult | Select-Object -Property Index,Name,Id,Version | Format-Table | Out-Host
+    $findResult | ForEach-Object { $i = 1 } { Add-Member -InputObject $_ -NotePropertyName Index -NotePropertyValue $i; $i++ }
+    $findResult | Select-Object -Property Index, Name, Id, Version | Format-Table | Out-Host
 
     $selection = -1
     $packageSelected = $false
-    while (-not($packageSelected))
-    {
-      write-host
+    while (-not($packageSelected)) {
+      Write-Host
       # TODO: We should capture against bad value. "string"
       # TODO: We should allow user to skip.  Maybe hit S or X.
-      $selection = [int](Read-Host "Input the number of the package you want to select")
-      if ($selection -notin $findResult.Index)
-      {
-        Write-Host "Selection is out of range, try again."
-      }
-      else
-      {
+      $selection = [int](Read-Host 'Input the number of the package you want to select')
+      if ($selection -notin $findResult.Index) {
+        Write-Host 'Selection is out of range, try again.'
+      } else {
         $packageSelected = $true 
       }
     }
 
-    $selectedPackage = $findResult.Where({$_.Index -eq $selection}) 
-    $unit = @{"resource" = "Microsoft.WinGet.DSC/WinGetPackage"; "directives" = @{"description" = $selectedPackage.Name; "allowPrerelease" = $true; }; "settings" = @{"id" = $selectedPackage.Id; "source"=$selectedPackage.Source }}
+    $selectedPackage = $findResult.Where({ $_.Index -eq $selection }) 
+    $unit = @{'resource' = 'Microsoft.WinGet.DSC/WinGetPackage'; 'directives' = @{'description' = $selectedPackage.Name; 'allowPrerelease' = $true; }; 'settings' = @{'id' = $selectedPackage.Id; 'source' = $selectedPackage.Source } }
     [void]$finalPackages.Add($unit)
-    write-host Added  $selectedPackage.Name -ForegroundColor blue
+    Write-Host Added $selectedPackage.Name -ForegroundColor blue
  
   
+  } else {
+    Write-Host 'No package found matching input criteria.' -ForegroundColor DarkYellow
   }
-  else
-  {
-    Write-Host "No package found matching input criteria." -ForegroundColor DarkYellow
-  }
-}  while ($(Read-Host "Would you like to add another package? [y/n]") -eq 'y')
-
-Write-host
-$fileName = Read-Host "Name of the configuration file (without extension)"
-$filePath = Join-Path -Path (Get-Location) -ChildPath "$($fileName).winget"
-
-$rawYaml = ConvertTo-Yaml @{"properties"= @{"resources"=$finalPackages; "configurationVersion"= $configurationVersion}}
-[System.IO.File]::WriteAllLines($filePath, @($DSCHeader,'',$rawYaml.trim()), $Utf8NoBomEncoding)
+}  while ($(Read-Host 'Would you like to add another package? [y/n]') -eq 'y')
 
 Write-Host
-Write-Host Testing resulting file.  -ForegroundColor yellow
+$fileName = Read-Host 'Name of the configuration file (without extension)'
+$filePath = Join-Path -Path (Get-Location) -ChildPath "$($fileName).winget"
+
+$rawYaml = ConvertTo-Yaml @{'properties' = @{'resources' = $finalPackages; 'configurationVersion' = $configurationVersion } }
+[System.IO.File]::WriteAllLines($filePath, @($DSCHeader, '', $rawYaml.trim()), $Utf8NoBomEncoding)
+
+Write-Host
+Write-Host Testing resulting file. -ForegroundColor yellow
 (&winget configure --help) > $null
 
 if ($LASTEXITCODE -eq 0) {
   winget configure validate --file $filePath
-}
-else {
+} else {
   Write-Host "'winget configure' is not available, skipping validation." -ForegroundColor Yellow
 }
 
