@@ -31,7 +31,9 @@ if ($null -eq (Get-InstalledModule -Name powershell-yaml -ErrorAction 'SilentlyC
 }
 
 [System.Collections.ArrayList]$finalPackages = @()
-$configurationVersion = "0.2.0" 
+$configurationVersion = "0.2.0"
+$Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
+$DSCHeader = "# yaml-language-server: `$schema=https://aka.ms/configuration-dsc-schema/$($configurationVersion)"
 
 do
 {
@@ -79,7 +81,8 @@ Write-host
 $fileName = Read-Host "Name of the configuration file (without extension)"
 $filePath = Join-Path -Path (Get-Location) -ChildPath "$($fileName).winget"
 
-ConvertTo-Yaml @{"properties"= @{"resources"=$finalPackages; "configurationVersion"= $configurationVersion}} -OutFile $filePath -Force
+$rawYaml = ConvertTo-Yaml @{"properties"= @{"resources"=$finalPackages; "configurationVersion"= $configurationVersion}}
+[System.IO.File]::WriteAllLines($filePath, @($DSCHeader,'',$rawYaml.trim()), $Utf8NoBomEncoding)
 
 Write-Host
 Write-Host Testing resulting file.  -ForegroundColor yellow
