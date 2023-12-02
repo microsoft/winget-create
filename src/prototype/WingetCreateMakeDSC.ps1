@@ -63,17 +63,7 @@ do
     }
 
     $selectedPackage = $findResult[$selection - 1] 
-
-    #Specify Source 
-    #Winget currently has 2 sources. If the ID contains a period, we will assume winget.
-    #otherwise it is the MSSTORE.  We are not accounting for private REPOs at this time.
-    If ($selectedPackage.Id -like "*.*") {
-      $source="winget"
-    } else {
-      $source="msstore"
-    }
- 
-    $unit = @{"resource" = "Microsoft.WinGet.DSC/WinGetPackage"; "directives" = @{"description" = $selectedPackage.Name; "allowPrerelease" = $true; }; "settings" = @{"id" = $selectedPackage.Id; "source"=$source }}
+    $unit = @{"resource" = "Microsoft.WinGet.DSC/WinGetPackage"; "directives" = @{"description" = $selectedPackage.Name; "allowPrerelease" = $true; }; "settings" = @{"id" = $selectedPackage.Id; "source"=$selectedPackage.Source }}
     $tempvar = $finalPackages.Add($unit)
     write-host Added  $selectedPackage.Name -ForegroundColor blue
  
