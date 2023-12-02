@@ -96,7 +96,7 @@ do {
     if ($selectedPackage) {
       $unit = @{'resource' = 'Microsoft.WinGet.DSC/WinGetPackage'; 'directives' = @{'description' = $selectedPackage.Name; 'allowPrerelease' = $true; }; 'settings' = @{'id' = $selectedPackage.Id; 'source' = $selectedPackage.Source } }
       [void]$finalPackages.Add($unit)
-      Write-Host Added $selectedPackage.Name -ForegroundColor blue
+      Write-Host "Added $($selectedPackage.Name)" -ForegroundColor Blue
     }
   
   } else {
