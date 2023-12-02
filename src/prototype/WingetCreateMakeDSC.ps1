@@ -64,7 +64,7 @@ do
 
     $selectedPackage = $findResult.Where({$_.Index -eq $selection}) 
     $unit = @{"resource" = "Microsoft.WinGet.DSC/WinGetPackage"; "directives" = @{"description" = $selectedPackage.Name; "allowPrerelease" = $true; }; "settings" = @{"id" = $selectedPackage.Id; "source"=$selectedPackage.Source }}
-    $tempvar = $finalPackages.Add($unit)
+    [void]$finalPackages.Add($unit)
     write-host Added  $selectedPackage.Name -ForegroundColor blue
  
   
