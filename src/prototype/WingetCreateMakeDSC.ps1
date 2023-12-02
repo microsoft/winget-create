@@ -41,13 +41,9 @@ do
   
   if ($findResult.count -ne 0)
   {
-    $Index=1
-    foreach ($package in $findResult)
-    {
-        $packageDetails = "[$($Index)] $($package.Name) | $($package.Id) | $($package.Version)"
-        Write-Host $packageDetails
-        $index++
-    }
+    # Assign an index to each package
+    $findResult | ForEach-Object { $i=1 } { Add-Member -InputObject $_ -NotePropertyName Index -NotePropertyValue $i; $i++ }
+    $findResult | Select-Object -Property Index,Name,Id,Version | Out-Host
 
     $selection = -1
     $packageSelected = $false
