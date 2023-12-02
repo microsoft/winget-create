@@ -38,7 +38,7 @@ if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
   } finally {
     # Check to be sure it acutally installed
     if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
-      throw [UnmetDependencyException]::new("`powershell-yaml` was not found. Check that you have installed the Windows Package Manager modules correctly.")
+      throw [UnmetDependencyException]::new("`powershell-yaml` was not found. Check that you have installed the module correctly.")
     }
   }
 }
