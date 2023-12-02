@@ -42,7 +42,7 @@ do
   {
     # Assign an index to each package
     $findResult | ForEach-Object { $i=1 } { Add-Member -InputObject $_ -NotePropertyName Index -NotePropertyValue $i; $i++ }
-    $findResult | Select-Object -Property Index,Name,Id,Version | Out-Host
+    $findResult | Select-Object -Property Index,Name,Id,Version | Format-Table | Out-Host
 
     $selection = -1
     $packageSelected = $false
@@ -52,7 +52,7 @@ do
       # TODO: We should capture against bad value. "string"
       # TODO: We should allow user to skip.  Maybe hit S or X.
       $selection = [int](Read-Host "Input the number of the package you want to select")
-      if (($selection -gt $findResult.count) -or ($selection -lt 1))
+      if ($selection -notin $findResult.Index)
       {
         Write-Host "Selection is out of range, try again."
       }
@@ -62,7 +62,7 @@ do
       }
     }
 
-    $selectedPackage = $findResult[$selection - 1] 
+    $selectedPackage = $findResult.Where({$_.Index -eq $selection}) 
     $unit = @{"resource" = "Microsoft.WinGet.DSC/WinGetPackage"; "directives" = @{"description" = $selectedPackage.Name; "allowPrerelease" = $true; }; "settings" = @{"id" = $selectedPackage.Id; "source"=$selectedPackage.Source }}
     $tempvar = $finalPackages.Add($unit)
     write-host Added  $selectedPackage.Name -ForegroundColor blue
