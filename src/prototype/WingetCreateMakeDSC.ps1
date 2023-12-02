@@ -1,7 +1,7 @@
 # This script is a prototype for quickly creating DSC files.
 
 #Powershell 7 Required
-if ($(Get-host).version.major -lt 7) {
+if ($(Get-Host).version.major -lt 7) {
   Write-Host 'This script requires powershell 7. You can update powershell by typing winget install Microsoft.Powershell.' -ForegroundColor red
   Exit(1)
 }
@@ -12,9 +12,7 @@ class UnmetDependencyException : Exception {
   UnmetDependencyException([string] $message, [Exception] $exception) : base($message, $exception) {}
 }
 
-#Set output encoding to UTF-8
-$OutputEncoding = [ System.Text.Encoding]::UTF8   
-
+# Ensure the Winget PowerShell modules are installed
 if (-not(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
   try {
     Install-Module Microsoft.Winget.Client
@@ -29,6 +27,7 @@ if (-not(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
   }
 }
 
+# Ensure the powershell-yaml module is installed
 if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
   try {
     Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
@@ -50,33 +49,55 @@ $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
 $DSCHeader = "# yaml-language-server: `$schema=https://aka.ms/configuration-dsc-schema/$($configurationVersion)"
 
 do {
-  $appId = Read-Host 'What is the Winget ID, or name of the package you want to add to the configuration file?'
-  $findResult = Find-WinGetPackage $appId
+  $findResult = Find-WinGetPackage $(Read-Host 'What is the Winget ID, or name of the package you want to add to the configuration file?')
   
   if ($findResult.count -ne 0) {
     # Assign an index to each package
     $findResult | ForEach-Object { $i = 1 } { Add-Member -InputObject $_ -NotePropertyName Index -NotePropertyValue $i; $i++ }
     $findResult | Select-Object -Property Index, Name, Id, Version | Format-Table | Out-Host
 
-    $selection = -1
     $packageSelected = $false
     while (-not($packageSelected)) {
       Write-Host
-      # TODO: We should capture against bad value. "string"
-      # TODO: We should allow user to skip.  Maybe hit S or X.
-      $selection = [int](Read-Host 'Input the number of the package you want to select')
-      if ($selection -notin $findResult.Index) {
-        Write-Host 'Selection is out of range, try again.'
+      # Prompt user for selection string
+      $selection = (Read-Host 'Select a package by Index, Name, or Id. Press enter to continue or skip')
+      $selectedPackage = $null
+      # If user didn't enter any selection string, set no package as selected and continue
+      if ( [string]::IsNullOrWhiteSpace($selection) ) {
+        $packageSelected = $true
+      } elseif ( $selection -in $findResult.Id ) {
+        # If the user entered a string which matches the Id, select that package
+        $selectedPackage = $findResult.Where({ $_.Id -eq $selection })
+        $packageSelected = $true
+      } elseif ( $selection -in $findResult.Name ) {
+        # If the user entered a string which matches the Name, select that package
+        # Because names could conflict, take the first item in the list to avoid error
+        $selectedPackage = $findResult.Where({ $_.Name -eq $selection }) | Select-Object -First 1
+        $packageSelected = $true
       } else {
-        $packageSelected = $true 
+        # If the name and ID didn't match, try selecting by index
+        # This needs to be a try-catch to handle converting strings to integers
+        try {
+          $selectedPackage = $findResult.Where({ $_.Index -eq [int]$selection })
+          # If the user selects an index out of range, don't set no package as selected. Instead, allow for correcting the index
+          # If the intent is to select no package, the user will be able to skip after being notified the index is out of range
+          if ($selectedPackage) {
+            $packageSelected = $true
+          } else {
+            Write-Host 'Index out of range, please try again'
+          }
+        } catch {
+          Write-Host 'Invalid entry, please try again'
+        }
       }
     }
 
-    $selectedPackage = $findResult.Where({ $_.Index -eq $selection }) 
-    $unit = @{'resource' = 'Microsoft.WinGet.DSC/WinGetPackage'; 'directives' = @{'description' = $selectedPackage.Name; 'allowPrerelease' = $true; }; 'settings' = @{'id' = $selectedPackage.Id; 'source' = $selectedPackage.Source } }
-    [void]$finalPackages.Add($unit)
-    Write-Host Added $selectedPackage.Name -ForegroundColor blue
- 
+    # If a package was selected, add it to the package list; Otherwise, continue
+    if ($selectedPackage) {
+      $unit = @{'resource' = 'Microsoft.WinGet.DSC/WinGetPackage'; 'directives' = @{'description' = $selectedPackage.Name; 'allowPrerelease' = $true; }; 'settings' = @{'id' = $selectedPackage.Id; 'source' = $selectedPackage.Source } }
+      [void]$finalPackages.Add($unit)
+      Write-Host Added $selectedPackage.Name -ForegroundColor blue
+    }
   
   } else {
     Write-Host 'No package found matching input criteria.' -ForegroundColor DarkYellow
