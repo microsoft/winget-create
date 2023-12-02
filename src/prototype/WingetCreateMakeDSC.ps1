@@ -34,7 +34,6 @@ if ($null -eq (Get-InstalledModule -Name powershell-yaml))
 [System.Collections.ArrayList]$finalPackages = @()
 $configurationVersion = "0.2.0" 
 
-$continue = $true
 do
 {
   $appId = Read-Host "What is the Winget ID, or name of the package you want to add to the configuration file?"
