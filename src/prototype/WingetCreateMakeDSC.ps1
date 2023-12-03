@@ -53,7 +53,7 @@ do {
   
   if ($findResult.count -ne 0) {
     # Assign an index to each package
-    $findResult | ForEach-Object { $i = 1 } { Add-Member -InputObject $_ -NotePropertyName Index -NotePropertyValue $i; $i++ }
+    $findResult | ForEach-Object { $script:i = 1 } { Add-Member -InputObject $_ -NotePropertyName Index -NotePropertyValue $i; $i++ }
     $findResult | Select-Object -Property Index, Name, Id, Version | Format-Table | Out-Host
 
     $packageSelected = $false
