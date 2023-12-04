@@ -52,6 +52,7 @@ choco install wingetcreate
 | [Token](doc/token.md)   | Command for managing cached GitHub personal access tokens |
 | [Settings](doc/settings.md) | Command for editing the settings file configurations |
 | [Cache](doc/cache.md) | Command for managing downloaded installers stored in cache
+| [Info](doc/info.md)      | Displays information about the client |
 | [-?](doc/help.md)      | Displays command line help |
 
 Click on the individual commands to learn more.

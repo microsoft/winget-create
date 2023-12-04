@@ -50,6 +50,17 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
     
     }
     
+    /// <summary>Visual settings</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class Visual 
+    {
+        /// <summary>Controls whether paths displayed on the console are substituted with environment variables</summary>
+        [Newtonsoft.Json.JsonProperty("anonymizePaths", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool AnonymizePaths { get; set; } = true;
+    
+    
+    }
+    
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class SettingsManifest 
     {
@@ -68,6 +79,10 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
         [Newtonsoft.Json.JsonProperty("WindowsPackageManagerRepository", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public WindowsPackageManagerRepository WindowsPackageManagerRepository { get; set; } = new WindowsPackageManagerRepository();
+    
+        [Newtonsoft.Json.JsonProperty("Visual", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public Visual Visual { get; set; } = new Visual();
     
     
     }

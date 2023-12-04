@@ -322,6 +322,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The following commands are available:.
+        /// </summary>
+        public static string CommandsAvailable_Message {
+            get {
+                return ResourceManager.GetString("CommandsAvailable_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please ensure that the updated manifest you are submitting is different from the existing package..
         /// </summary>
         public static string CompareUpdatedManifestWithExisting_Message {
@@ -597,6 +606,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string DoneSymbol_String {
             get {
                 return ResourceManager.GetString("DoneSymbol_String", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates whether the installer is prohibited from being downloaded for offline installation.
+        /// </summary>
+        public static string DownloadCommandProhibited_KeywordDescription {
+            get {
+                return ResourceManager.GetString("DownloadCommandProhibited_KeywordDescription", resourceCulture);
             }
         }
         
@@ -970,6 +988,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Homepage.
+        /// </summary>
+        public static string Homepage_Heading {
+            get {
+                return ResourceManager.GetString("Homepage_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The home page for the package.
         /// </summary>
         public static string Homepage_KeywordDescription {
@@ -1042,6 +1069,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Displays general info of the tool.
+        /// </summary>
+        public static string InfoCommand_HelpText {
+            get {
+                return ResourceManager.GetString("InfoCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initiating GitHub login....
         /// </summary>
         public static string InitiatingGitHubLogin_Message {
@@ -1092,6 +1128,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string InstallerBinaryMismatch_Message {
             get {
                 return ResourceManager.GetString("InstallerBinaryMismatch_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installer cache.
+        /// </summary>
+        public static string InstallerCache_Heading {
+            get {
+                return ResourceManager.GetString("InstallerCache_Heading", resourceCulture);
             }
         }
         
@@ -1375,11 +1420,29 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to License Agreement.
+        /// </summary>
+        public static string LicenseAgreement_Heading {
+            get {
+                return ResourceManager.GetString("LicenseAgreement_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The license page.
         /// </summary>
         public static string LicenseUrl_KeywordDescription {
             get {
                 return ResourceManager.GetString("LicenseUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Links.
+        /// </summary>
+        public static string Links_Heading {
+            get {
+                return ResourceManager.GetString("Links_Heading", resourceCulture);
             }
         }
         
@@ -1443,6 +1506,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Log_KeywordDescription {
             get {
                 return ResourceManager.GetString("Log_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logs.
+        /// </summary>
+        public static string Logs_Heading {
+            get {
+                return ResourceManager.GetString("Logs_Heading", resourceCulture);
             }
         }
         
@@ -1807,6 +1879,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operating System: {0}.
+        /// </summary>
+        public static string OperatingSystem_Info {
+            get {
+                return ResourceManager.GetString("OperatingSystem_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is an older version of Winget-Create and may be missing some critical features..
         /// </summary>
         public static string OutdatedVersionNotice_Message {
@@ -1942,6 +2023,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string Path_Heading {
+            get {
+                return ResourceManager.GetString("Path_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Path to a manifest file or directory containing the manifests that you want to submit to the Windows Package Manager repo.
         /// </summary>
         public static string Path_HelpText {
@@ -1996,7 +2086,16 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Privacy statement: https://aka.ms/privacy.
+        ///   Looks up a localized string similar to Privacy Statement.
+        /// </summary>
+        public static string PrivacyStatement_Heading {
+            get {
+                return ResourceManager.GetString("PrivacyStatement_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy statement: {0}.
         /// </summary>
         public static string PrivacyStatement_HelpText {
             get {
@@ -2167,6 +2266,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Replace operation cannot be performed. Package identifier &apos;{0}&apos; does not exist in the Windows Package Manager repo..
+        /// </summary>
+        public static string ReplacePackageIdDoesNotExist_Error {
+            get {
+                return ResourceManager.GetString("ReplacePackageIdDoesNotExist_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false..
         /// </summary>
         public static string ReplacePrevious_HelpText {
@@ -2181,6 +2289,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ReplaceVersion_HelpText {
             get {
                 return ResourceManager.GetString("ReplaceVersion_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The replace version cannot be equal to the submit version..
+        /// </summary>
+        public static string ReplaceVersionEqualsSubmitVersion_ErrorMessage {
+            get {
+                return ResourceManager.GetString("ReplaceVersionEqualsSubmitVersion_ErrorMessage", resourceCulture);
             }
         }
         
@@ -2347,6 +2464,195 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; is defined with a bad format..
+        /// </summary>
+        public static string SentenceBadFormatConversionErrorOption {
+            get {
+                return ResourceManager.GetString("SentenceBadFormatConversionErrorOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A value not bound to option name is defined with a bad format..
+        /// </summary>
+        public static string SentenceBadFormatConversionErrorValue {
+            get {
+                return ResourceManager.GetString("SentenceBadFormatConversionErrorValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Token &apos;{0}&apos; is not recognized..
+        /// </summary>
+        public static string SentenceBadFormatTokenError {
+            get {
+                return ResourceManager.GetString("SentenceBadFormatTokenError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verb &apos;{0}&apos; is not recognized..
+        /// </summary>
+        public static string SentenceBadVerbSelectedError {
+            get {
+                return ResourceManager.GetString("SentenceBadVerbSelectedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ERROR(S):.
+        /// </summary>
+        public static string SentenceErrorsHeadingText {
+            get {
+                return ResourceManager.GetString("SentenceErrorsHeadingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display this help screen..
+        /// </summary>
+        public static string SentenceHelpCommandTextOption {
+            get {
+                return ResourceManager.GetString("SentenceHelpCommandTextOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display more information on a specific command..
+        /// </summary>
+        public static string SentenceHelpCommandTextVerb {
+            get {
+                return ResourceManager.GetString("SentenceHelpCommandTextVerb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required option &apos;{0}&apos; is missing..
+        /// </summary>
+        public static string SentenceMissingRequiredOptionError {
+            get {
+                return ResourceManager.GetString("SentenceMissingRequiredOptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A required value not bound to option name is missing..
+        /// </summary>
+        public static string SentenceMissingRequiredValueError {
+            get {
+                return ResourceManager.GetString("SentenceMissingRequiredValueError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; has no value..
+        /// </summary>
+        public static string SentenceMissingValueOptionError {
+            get {
+                return ResourceManager.GetString("SentenceMissingValueOptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Options: {0} are not compatible with {1}..
+        /// </summary>
+        public static string SentenceMutuallyExclusiveSetErrors {
+            get {
+                return ResourceManager.GetString("SentenceMutuallyExclusiveSetErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No verb selected..
+        /// </summary>
+        public static string SentenceNoVerbSelectedError {
+            get {
+                return ResourceManager.GetString("SentenceNoVerbSelectedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group.
+        /// </summary>
+        public static string SentenceOptionGroupWord {
+            get {
+                return ResourceManager.GetString("SentenceOptionGroupWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; is defined multiple times..
+        /// </summary>
+        public static string SentenceRepeatedOptionError {
+            get {
+                return ResourceManager.GetString("SentenceRepeatedOptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required..
+        /// </summary>
+        public static string SentenceRequiredWord {
+            get {
+                return ResourceManager.GetString("SentenceRequiredWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A sequence option &apos;{0}&apos; is defined with fewer or more items than required..
+        /// </summary>
+        public static string SentenceSequenceOutOfRangeErrorOption {
+            get {
+                return ResourceManager.GetString("SentenceSequenceOutOfRangeErrorOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A sequence value not bound to option name is defined with fewer items than required..
+        /// </summary>
+        public static string SentenceSequenceOutOfRangeErrorValue {
+            get {
+                return ResourceManager.GetString("SentenceSequenceOutOfRangeErrorValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error setting value to option &apos;{0}&apos;: {1}.
+        /// </summary>
+        public static string SentenceSetValueExceptionError {
+            get {
+                return ResourceManager.GetString("SentenceSetValueExceptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Option &apos;{0}&apos; is unknown..
+        /// </summary>
+        public static string SentenceUnknownOptionError {
+            get {
+                return ResourceManager.GetString("SentenceUnknownOptionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to USAGE:.
+        /// </summary>
+        public static string SentenceUsageHeadingText {
+            get {
+                return ResourceManager.GetString("SentenceUsageHeadingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display version information..
+        /// </summary>
+        public static string SentenceVersionCommandText {
+            get {
+                return ResourceManager.GetString("SentenceVersionCommandText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open settings.
         /// </summary>
         public static string SettingsCommand_HelpText {
@@ -2482,6 +2788,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Submit arguments were provided. Did you forget to include the --submit, -s flag?.
+        /// </summary>
+        public static string SubmitFlagMissing_Warning {
+            get {
+                return ResourceManager.GetString("SubmitFlagMissing_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Submitting pull request for manifest....
         /// </summary>
         public static string SubmittingPullRequest_Message {
@@ -2514,6 +2829,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SyncForkWithUpstream_Message {
             get {
                 return ResourceManager.GetString("SyncForkWithUpstream_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System Architecture: {0}.
+        /// </summary>
+        public static string SystemArchitecture_Info {
+            get {
+                return ResourceManager.GetString("SystemArchitecture_Info", resourceCulture);
             }
         }
         
@@ -2559,6 +2883,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string TelemetrySettings_Message {
             get {
                 return ResourceManager.GetString("TelemetrySettings_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Third Party Notices.
+        /// </summary>
+        public static string ThirdPartyNotices_Heading {
+            get {
+                return ResourceManager.GetString("ThirdPartyNotices_Heading", resourceCulture);
             }
         }
         
@@ -2734,6 +3067,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User settings.
+        /// </summary>
+        public static string UserSettings_Heading {
+            get {
+                return ResourceManager.GetString("UserSettings_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please check and verify the usage of this command by passing in the --help flag..
         /// </summary>
         public static string VerifyCommandUsage_Message {
@@ -2802,6 +3144,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string WindowsLibraries_KeywordDescription {
             get {
                 return ResourceManager.GetString("WindowsLibraries_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Winget-Create Directories.
+        /// </summary>
+        public static string WingetCreateDirectories_Heading {
+            get {
+                return ResourceManager.GetString("WingetCreateDirectories_Heading", resourceCulture);
             }
         }
         

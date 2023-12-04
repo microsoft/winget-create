@@ -27,6 +27,7 @@ namespace Microsoft.WingetCreateCLI
             Logger.Initialize();
             UserSettings.FirstRunTelemetryConsent();
             TelemetryEventListener.EventListener.IsTelemetryEnabled();
+            SentenceBuilder.Factory = () => new LocalizableSentenceBuilder();
 
             string arguments = string.Join(' ', Environment.GetCommandLineArgs());
             Logger.Trace($"Command line args: {arguments}");
@@ -46,6 +47,7 @@ namespace Microsoft.WingetCreateCLI
                 typeof(TokenCommand),
                 typeof(CacheCommand),
                 typeof(ShowCommand),
+                typeof(InfoCommand),
             };
             var parserResult = myParser.ParseArguments(args, types);
 
@@ -58,9 +60,11 @@ namespace Microsoft.WingetCreateCLI
                 return args.Any() ? 1 : 0;
             }
 
-            if (command is not SettingsCommand && command is not CacheCommand)
+            bool commandHandlesToken = command is not CacheCommand and not InfoCommand and not SettingsCommand;
+
+            // Do not load github client for commands that do not deal with a GitHub token.
+            if (commandHandlesToken)
             {
-                // Do not load github client for settings or cache command.
                 if (await command.LoadGitHubClient())
                 {
                     try
@@ -70,7 +74,7 @@ namespace Microsoft.WingetCreateCLI
                         if (trimmedVersion != Utils.GetEntryAssemblyVersion())
                         {
                             Logger.WarnLocalized(nameof(Resources.OutdatedVersionNotice_Message));
-                            Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), latestVersion, "https://github.com/microsoft/winget-create/releases");
+                            Logger.WarnLocalized(nameof(Resources.GetLatestVersion_Message), latestVersion, Constants.GitHubReleasesUrl);
                             Logger.WarnLocalized(nameof(Resources.UpgradeUsingWinget_Message));
                             Console.WriteLine();
                         }
@@ -112,7 +116,7 @@ namespace Microsoft.WingetCreateCLI
                 if (!UserSettings.CleanUpDisabled)
                 {
                     Common.CleanUpFilesOlderThan(PackageParser.InstallerDownloadPath, UserSettings.CleanUpDays);
-                    Common.CleanUpFilesOlderThan(Path.Combine(Common.LocalAppStatePath, "DiagOutputDir"), UserSettings.CleanUpDays);
+                    Common.CleanUpFilesOlderThan(Path.Combine(Common.LocalAppStatePath, Constants.DiagnosticOutputDirectoryFolderName), UserSettings.CleanUpDays);
                 }
             }
         }
@@ -125,11 +129,13 @@ namespace Microsoft.WingetCreateCLI
                 {
                     h.AddDashesToOption = true;
                     h.AdditionalNewLineAfterOption = false;
-                    h.Heading = string.Format(Resources.Heading, Utils.GetEntryAssemblyVersion()) + Environment.NewLine;
+                    h.Heading = string.Format(Resources.Heading, Utils.GetEntryAssemblyVersion());
                     h.Copyright = Constants.MicrosoftCopyright;
                     h.AddNewLineBetweenHelpSections = true;
                     h.AddPreOptionsLine(Resources.AppDescription_HelpText);
-                    h.AddPostOptionsLines(new string[] { Resources.MoreHelp_HelpText, Resources.PrivacyStatement_HelpText });
+                    h.AddPreOptionsLine(Environment.NewLine);
+                    h.AddPreOptionsLine(Resources.CommandsAvailable_Message);
+                    h.AddPostOptionsLines(new string[] { Resources.MoreHelp_HelpText, string.Format(Resources.PrivacyStatement_HelpText, Constants.PrivacyStatementUrl) });
                     h.MaximumDisplayWidth = 100;
                     h.AutoHelp = false;
                     h.AutoVersion = false;

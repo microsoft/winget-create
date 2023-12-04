@@ -13,6 +13,9 @@ namespace Microsoft.WingetCreateCLI
     public static class Common
     {
         private const string ModuleName = "WindowsPackageManagerManifestCreator";
+        private const string UserProfileEnvironmentVariable = "%USERPROFILE%";
+        private const string LocalAppDataEnvironmentVariable = "%LOCALAPPDATA%";
+        private const string TempEnvironmentVariable = "%TEMP%";
 
         private static readonly Lazy<string> AppStatePathLazy = new(() =>
         {
@@ -59,6 +62,39 @@ namespace Microsoft.WingetCreateCLI
                     subDirectory.Delete(true);
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the path for display. This will anonymize the path if caller provides the appropriate flag.
+        /// </summary>
+        /// <param name="path">Path to be displayed.</param>
+        /// <param name="substituteEnvironmentVariables">Whether or not to substitute environment variables.</param>
+        /// <returns>Anonymized path or original path.</returns>
+        public static string GetPathForDisplay(string path, bool substituteEnvironmentVariables = true)
+        {
+            if (string.IsNullOrEmpty(path) || !substituteEnvironmentVariables)
+            {
+                return path;
+            }
+
+            string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string tempPath = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar);
+
+            if (path.StartsWith(tempPath, StringComparison.OrdinalIgnoreCase))
+            {
+                return path.Replace(tempPath, TempEnvironmentVariable, StringComparison.OrdinalIgnoreCase);
+            }
+            else if (path.StartsWith(localAppDataPath, StringComparison.OrdinalIgnoreCase))
+            {
+                return path.Replace(localAppDataPath, LocalAppDataEnvironmentVariable, StringComparison.OrdinalIgnoreCase);
+            }
+            else if (path.StartsWith(userProfilePath, StringComparison.OrdinalIgnoreCase))
+            {
+                return path.Replace(userProfilePath, UserProfileEnvironmentVariable, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return path;
         }
 
         private static bool IsRunningAsUwp()
