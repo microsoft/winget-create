@@ -46,7 +46,7 @@ if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
 [System.Collections.ArrayList]$finalPackages = @()
 $configurationVersion = '0.2.0'
 $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
-$DSCHeader = "# yaml-language-server: `$schema=https://aka.ms/configuration-dsc-schema/$($configurationVersion)"
+$DSCHeader = "# yaml-language-server: `$schema=https://aka.ms/configuration-dsc-schema/$($configurationVersion -Replace '\.0$','')"
 
 do {
   $findResult = Find-WinGetPackage $(Read-Host 'What is the Winget ID, or name of the package you want to add to the configuration file?')
