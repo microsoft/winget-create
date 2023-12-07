@@ -452,13 +452,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 UpdatePropertyForLocaleManifests(nameof(LocaleManifest.PackageVersion), this.Version, localeManifests);
             }
 
-            // TODO: Move relevant metadata from root node to installer node.
-            if (installerManifest.InstallerType != null)
-            {
-                installerManifest.Installers.ForEach(i => i.InstallerType = installerManifest.InstallerType);
-                installerManifest.InstallerType = null;
-            }
-
             return manifests;
         }
 

@@ -1012,15 +1012,19 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verifies that installer fields are overridden by root fields in update scenario.
+        /// Verifies that null installer fields are overwritten by root fields in update scenario.
+        /// Expected flow:
+        ///   1) Null installer level fields are overwritten by root fields at the start of the update.
+        ///   2) The update flow modifies the installer level fields if needed. (e.g. ProductCode in case of MSI upgrade)
+        ///   3) At the end of the update, the common installer fields are moved to the root level.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task UpdateOverridesInstallerFields()
+        public async Task UpdateOverwritesNullInstallerFields()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
             string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.OverrideInstallerFields", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86" });
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.OverwriteNullInstallerFields", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86" });
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             Assert.IsNotNull(updatedManifests, "Command should have succeeded");
 
@@ -1096,6 +1100,138 @@ namespace Microsoft.WingetCreateUnitTests
                 Assert.IsNull(installer.UnsupportedArguments, "UnsupportedArguments at the installer level should be null");
                 Assert.IsNull(installer.InstallationMetadata, "InstallationMetadata at the installer level should be null");
             }
+        }
+
+        /// <summary>
+        /// Verifies that non-null installer fields are preserved when overwriting with root fields at the start of the update.
+        /// Expected flow:
+        ///   1) For the first installer, all root level fields are copied over and root fields are set to null.
+        ///   2) For the second installer, installer level fields are preserved since they are not null.
+        ///   3) InstallerType, NestedInstallerType and NestedInstallerFiles are common across both installers, so they are moved to the root level at the end of the update.
+        ///   TODO: Use different NestedInstallerType and RelativeFilePath for each installer once logic for handling multiple nested installers is improved.
+        ///   Reference: https://github.com/microsoft/winget-create/issues/392.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateRetainsNonNullInstallerFields()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.RetainInstallerFields", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86" });
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
+            Installer firstInstaller = updatedInstallerManifest.Installers[0];
+            Installer secondInstaller = updatedInstallerManifest.Installers[1];
+
+            // Fields for first installer should be copied over from root
+            Assert.IsTrue(firstInstaller.Scope == Scope.Machine, "Scope for the first installer should be copied over from root");
+            Assert.IsTrue(firstInstaller.MinimumOSVersion == "10.0.22000.0", "MinimumOSVersion for the first installer should be copied over from root");
+            Assert.IsTrue(firstInstaller.PackageFamilyName == "TestPackageFamilyName1", "PackageFamilyName for the first installer should be copied over from root");
+            Assert.IsTrue(firstInstaller.UpgradeBehavior == UpgradeBehavior.Install, "UpgradeBehavior for the first installer should be copied over from root");
+            Assert.IsTrue(firstInstaller.ElevationRequirement == ElevationRequirement.ElevationRequired, "ElevationRequirement for the first installer should be copied over from root");
+            Assert.IsTrue(firstInstaller.InstallerAbortsTerminal == true, "InstallerAbortsTerminal for the first installer should be copied over from root");
+            Assert.IsTrue(firstInstaller.InstallLocationRequired == true, "InstallLocation for the first installer should be copied over from root");
+            Assert.IsTrue(firstInstaller.RequireExplicitUpgrade == true, "RequireExplicitUpgrade for the first installer should be copied over from root");
+            Assert.IsTrue(firstInstaller.DisplayInstallWarnings == true, "DisplayInstallWarnings for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.InstallerSwitches, "InstallerSwitches for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.InstallerSwitches.Silent == "/silent1", "Silent installer switch for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.Dependencies, "Dependencies for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.Dependencies.PackageDependencies[0].PackageIdentifier == "TestPackageDependency1", "PackageDependencies PackageIdentifier for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.AppsAndFeaturesEntries, "AppsAndFeaturesEntries for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.AppsAndFeaturesEntries[0].ProductCode == "TestProductCode1", "AppsAndFeaturesEntries ProductCode for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.Platform, "Platform for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.Platform[0] == Platform.Windows_Desktop, "Platform for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.ExpectedReturnCodes, "ExpectedReturnCodes afor the first installer should not be null");
+            Assert.IsTrue(firstInstaller.ExpectedReturnCodes[0].InstallerReturnCode == 1001, "ExpectedReturnCodes InstallerReturnCode for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.Commands, "Commands for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.Commands[0] == "fakeCommand1", "Commands for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.Protocols, "Protocols for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.Protocols[0] == "fakeProtocol1", "Protocols for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.FileExtensions, "FileExtensions for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.FileExtensions[0] == ".exe", "FileExtensions for the first installer should be copied over from root");
+
+            // TODO: Uncomment when installer model gets updated to support markets field.
+            // Assert.IsNotNull(firstInstaller.Markets, "Markets for the first installer should not be null");
+            Assert.IsNotNull(firstInstaller.UnsupportedOSArchitectures, "UnsupportedOSArchitectures for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.UnsupportedOSArchitectures[0] == UnsupportedOSArchitecture.Arm64, "UnsupportedOSArchitectures for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.InstallerSuccessCodes, "InstallerSuccessCodes for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.InstallerSuccessCodes[0] == 1, "InstallerSuccessCodes for the first installer should contain be copied over from root");
+            Assert.IsNotNull(firstInstaller.UnsupportedArguments, "UnsupportedArguments for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.UnsupportedArguments[1] == UnsupportedArgument.Location, "UnsupportedArguments for the first installer should be copied over from root");
+            Assert.IsNotNull(firstInstaller.InstallationMetadata, "InstallationMetadata for the first installer should not be null");
+            Assert.IsTrue(firstInstaller.InstallationMetadata.DefaultInstallLocation == "%ProgramFiles%\\TestApp1", "DefaultInstallLocation for the first installer should be copied over from root");
+
+            // Fields for second installer should be preserved
+            Assert.IsTrue(secondInstaller.Scope == Scope.User, "Scope for the second installer should be preserved");
+            Assert.IsTrue(secondInstaller.MinimumOSVersion == "10.0.17763.0", "MinimumOSVersion for the second installer should be preserved");
+            Assert.IsTrue(secondInstaller.PackageFamilyName == "TestPackageFamilyName2", "PackageFamilyName for the second installer should be preserved");
+            Assert.IsTrue(secondInstaller.UpgradeBehavior == UpgradeBehavior.UninstallPrevious, "UpgradeBehavior for the second installer should be preserved");
+            Assert.IsTrue(secondInstaller.ElevationRequirement == ElevationRequirement.ElevatesSelf, "ElevationRequirement for the second installer should be preserved");
+            Assert.IsTrue(secondInstaller.InstallerAbortsTerminal == false, "InstallerAbortsTerminal for the second installer should be preserved");
+            Assert.IsTrue(secondInstaller.InstallLocationRequired == false, "InstallLocation for the second installer should be preserved");
+            Assert.IsTrue(secondInstaller.RequireExplicitUpgrade == false, "RequireExplicitUpgrade for the second installer should be preserved");
+            Assert.IsTrue(secondInstaller.DisplayInstallWarnings == false, "DisplayInstallWarnings for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.InstallerSwitches, "InstallerSwitches for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.InstallerSwitches.Silent == "/silent2", "Silent installer switch for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.Dependencies, "Dependencies for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.Dependencies.PackageDependencies[0].PackageIdentifier == "TestPackageDependency2", "PackageDependencies PackageIdentifier for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.AppsAndFeaturesEntries, "AppsAndFeaturesEntries for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.AppsAndFeaturesEntries[0].ProductCode == "TestProductCode2", "AppsAndFeaturesEntries ProductCode for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.Platform, "Platform for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.Platform[0] == Platform.Windows_Universal, "Platform for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.ExpectedReturnCodes, "ExpectedReturnCodes for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.ExpectedReturnCodes[0].InstallerReturnCode == 1002, "ExpectedReturnCodes InstallerReturnCode for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.Commands, "Commands for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.Commands[0] == "fakeCommand2", "Commands for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.Protocols, "Protocols for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.Protocols[0] == "fakeProtocol2", "Protocols for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.FileExtensions, "FileExtensions for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.FileExtensions[0] == ".msi", "FileExtensions for the second installer should be preserved");
+
+            // TODO: Uncomment when installer model gets updated to support markets field.
+            // Assert.IsNotNull(secondInstaller.Markets, "Markets for the first installer should not be null");
+            Assert.IsNotNull(secondInstaller.UnsupportedOSArchitectures, "UnsupportedOSArchitectures for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.UnsupportedOSArchitectures[0] == UnsupportedOSArchitecture.Arm, "UnsupportedOSArchitectures for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.InstallerSuccessCodes, "InstallerSuccessCodes for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.InstallerSuccessCodes[0] == 2, "InstallerSuccessCodes for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.UnsupportedArguments, "UnsupportedArguments for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.UnsupportedArguments[0] == UnsupportedArgument.Log, "UnsupportedArguments for the second installer should be preserved");
+            Assert.IsNotNull(secondInstaller.InstallationMetadata, "InstallationMetadata for the second installer should not be null");
+            Assert.IsTrue(secondInstaller.InstallationMetadata.DefaultInstallLocation == "%ProgramFiles%\\TestApp2", "DefaultInstallLocation for the second installer should be preserved");
+
+            // Root fields should be null
+            Assert.IsNull(updatedInstallerManifest.Scope, "Scope at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.MinimumOSVersion, "MinimumOSVersion at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.PackageFamilyName, "PackageFamilyName at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.UpgradeBehavior, "UpgradeBehavior at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.ElevationRequirement, "ElevationRequirement at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.InstallerAbortsTerminal, "InstallerAbortsTerminal at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.InstallLocationRequired, "InstallLocation at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.RequireExplicitUpgrade, "RequireExplicitUpgrade at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.DisplayInstallWarnings, "DisplayInstallWarnings at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.InstallerSwitches, "InstallerSwitches at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.Dependencies, "Dependencies at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.AppsAndFeaturesEntries, "AppsAndFeaturesEntries at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.Platform, "Platform at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.ExpectedReturnCodes, "ExpectedReturnCodes at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.Commands, "Commands at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.Protocols, "Protocols at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.FileExtensions, "FileExtensions at the root level should be null");
+
+            // TODO: Uncomment when installer model gets updated to support markets field.
+            // Assert.IsNull(updatedInstallerManifest.Markets, "Markets at the root level should be null");
+            Assert.IsNull(updatedInstallerManifest.UnsupportedOSArchitectures, "UnsupportedOSArchitectures at the installer level should be null");
+            Assert.IsNull(updatedInstallerManifest.InstallerSuccessCodes, "InstallerSuccessCodes at the installer level should be null");
+            Assert.IsNull(updatedInstallerManifest.UnsupportedArguments, "UnsupportedArguments at the installer level should be null");
+            Assert.IsNull(updatedInstallerManifest.InstallationMetadata, "InstallationMetadata at the installer level should be null");
+
+            // Fields that should be moved to root
+            Assert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType at the root level should be ZIP");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType at the root level should be EXE");
+            Assert.IsNotNull(updatedInstallerManifest.NestedInstallerFiles, "NestedInstallerFiles at the root level should not be null");
+            Assert.IsTrue(updatedInstallerManifest.NestedInstallerFiles[0].PortableCommandAlias == "TestAlias", "PortableCommandAlias at the root level should be TestAlias");
         }
 
         /// <summary>
