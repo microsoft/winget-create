@@ -44,16 +44,28 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string Path { get; set; }
 
         /// <summary>
-        /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
+        /// Gets or sets the previous version to replace from the Windows Package Manager repository.
         /// </summary>
-        [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
-        public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
+        [Value(1, MetaName = "ReplaceVersion", Required = false, HelpText = "ReplaceVersion_HelpText", ResourceType = typeof(Resources))]
+        public string ReplaceVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the title for the pull request.
         /// </summary>
         [Option('p', "prtitle", Required = false, HelpText = "PullRequestTitle_HelpText", ResourceType = typeof(Resources))]
         public override string PRTitle { get => base.PRTitle; set => base.PRTitle = value; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to replace a previous version of the manifest with the update.
+        /// </summary>
+        [Option('r', "replace", Required = false, HelpText = "ReplacePrevious_HelpText", ResourceType = typeof(Resources))]
+        public bool Replace { get; set; }
+
+        /// <summary>
+        /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
+        /// </summary>
+        [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
+        public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
 
         /// <summary>
         /// Gets or sets the unbound arguments that exist after the first positional parameter.
@@ -99,23 +111,79 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             string expandedPath = System.Environment.ExpandEnvironmentVariables(this.Path);
 
+            // TODO: Remove singleton support.
             if (File.Exists(expandedPath) && ValidateManifest(expandedPath))
             {
                 Manifests manifests = new Manifests();
                 manifests.SingletonManifest = Serialization.DeserializeFromPath<SingletonManifest>(expandedPath);
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle);
+
+                if (this.Replace && !await this.ValidateReplaceArguments(manifests.SingletonManifest.PackageIdentifier, manifests.SingletonManifest.PackageVersion))
+                {
+                    return false;
+                }
+
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
             }
             else if (Directory.Exists(expandedPath) && ValidateManifest(expandedPath))
             {
                 List<string> manifestContents = Directory.GetFiles(expandedPath).Select(f => File.ReadAllText(f)).ToList();
                 Manifests manifests = Serialization.DeserializeManifestContents(manifestContents);
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle);
+
+                if (this.Replace && !await this.ValidateReplaceArguments(manifests.VersionManifest.PackageIdentifier, manifests.VersionManifest.PackageVersion))
+                {
+                    return false;
+                }
+
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
             }
             else
             {
                 Logger.ErrorLocalized(nameof(Resources.Error_Prefix), Resources.PathDoesNotExist_Warning);
                 return false;
             }
+        }
+
+        private async Task<bool> ValidateReplaceArguments(string packageId, string submitVersion)
+        {
+            string exactId;
+            try
+            {
+                exactId = await this.GitHubClient.FindPackageId(packageId);
+            }
+            catch (Octokit.RateLimitExceededException)
+            {
+                Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(exactId))
+            {
+                Logger.ErrorLocalized(nameof(Resources.ReplacePackageIdDoesNotExist_Error), packageId);
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(this.ReplaceVersion))
+            {
+                // If submit version is same as replace version, it's a regular update.
+                if (submitVersion == this.ReplaceVersion)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.ReplaceVersionEqualsSubmitVersion_ErrorMessage));
+                    return false;
+                }
+
+                // Check if the replace version exists in the repository.
+                try
+                {
+                    await this.GitHubClient.GetManifestContentAsync(packageId, this.ReplaceVersion);
+                }
+                catch (Octokit.NotFoundException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.VersionDoesNotExist_Error), this.ReplaceVersion, packageId);
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
