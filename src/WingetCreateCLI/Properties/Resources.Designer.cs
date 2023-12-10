@@ -2374,7 +2374,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Locale manifest to be used for offering auto-complete suggestions. If not provided, the default locale manifest will be used..
+        ///   Looks up a localized string similar to Existing locale manifest to be used as reference for default values. If not provided, the default locale manifest will be used..
         /// </summary>
         public static string ReferenceLocale_HelpText {
             get {

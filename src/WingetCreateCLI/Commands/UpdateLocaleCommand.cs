@@ -5,6 +5,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -84,55 +85,65 @@ namespace Microsoft.WingetCreateCLI.Commands
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
             };
 
-            Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
-            Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
-
-            string exactId;
             try
             {
-                exactId = await this.GitHubClient.FindPackageId(this.Id);
-            }
-            catch (Octokit.RateLimitExceededException)
-            {
-                Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
-                return false;
-            }
+                Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
+                Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
 
-            if (!string.IsNullOrEmpty(exactId))
-            {
-                this.Id = exactId;
-            }
+                // Validate format of input locale argument
+                try
+                {
+                    if (!string.IsNullOrEmpty(this.Locale))
+                    {
+                        _ = new RegionInfo(this.Locale);
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.InvalidLocale_ErrorMessage));
+                    return false;
+                }
 
-            List<string> manifestContent;
+                string exactId;
+                try
+                {
+                    exactId = await this.GitHubClient.FindPackageId(this.Id);
+                }
+                catch (Octokit.RateLimitExceededException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                    return false;
+                }
 
-            try
-            {
-                manifestContent = await this.GitHubClient.GetManifestContentAsync(this.Id, this.Version);
+                if (!string.IsNullOrEmpty(exactId))
+                {
+                    this.Id = exactId;
+                }
+
+                List<string> manifestContent;
+
+                try
+                {
+                    manifestContent = await this.GitHubClient.GetManifestContentAsync(this.Id, this.Version);
+                }
+                catch (Octokit.NotFoundException e)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
+                    Logger.ErrorLocalized(nameof(Resources.OctokitNotFound_Error));
+                    return false;
+                }
+
                 Manifests originalManifests = Serialization.DeserializeManifestContents(manifestContent);
 
-                // Validate input locale argument and switch command flow if applicable.
+                // Validate input locale argument
                 if (!string.IsNullOrEmpty(this.Locale))
                 {
                     try
                     {
-                        if (LocaleHelper.GetMatchingLocaleManifest(this.Locale, originalManifests) == null)
+                        if (!LocaleHelper.DoesLocaleManifestExist(this.Locale, originalManifests))
                         {
                             Logger.ErrorLocalized(nameof(Resources.LocaleDoesNotExist_Message), this.Locale);
-
-                            // Switch to new locale flow if user accepts.
-                            if (Prompt.Confirm(Resources.SwitchToNewLocaleFlow_Message))
-                            {
-                                NewLocaleCommand command = new NewLocaleCommand
-                                {
-                                    Id = this.Id,
-                                    Version = this.Version,
-                                    Locale = this.Locale,
-                                    GitHubToken = this.GitHubToken,
-                                };
-                                await command.LoadGitHubClient();
-                                Console.WriteLine();
-                                return await command.Execute();
-                            }
+                            return false;
                         }
                     }
                     catch (ArgumentException)
@@ -161,7 +172,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return await this.LoadGitHubClient(true) ?
                             (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                                 originalManifests,
-                                this.GetPRTitle(originalManifests, null, nameof(UpdateLocaleCommand))))
+                                $"Update locale: {originalManifests.VersionManifest.PackageIdentifier} version {originalManifests.VersionManifest.PackageVersion}"))
                             : false;
                     }
                     else
@@ -176,26 +187,20 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 return await Task.FromResult(commandEvent.IsSuccessful = true);
             }
-            catch (Octokit.NotFoundException e)
-            {
-                Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
-                Logger.ErrorLocalized(nameof(Resources.OctokitNotFound_Error));
-                return false;
-            }
             finally
             {
                 TelemetryManager.Log.WriteEvent(commandEvent);
             }
         }
 
-        private static object PromptAllLocalesAsMenuSelection(Manifests originalManifests)
+        private static object PromptAllLocalesAsMenuSelection(DefaultLocaleManifest defaultLocale, List<LocaleManifest> localeManifests)
         {
             Dictionary<string, object> localeMap = new Dictionary<string, object>
             {
-                { originalManifests.DefaultLocaleManifest.PackageLocale + " (" + Resources.DefaultLocale_MenuItem + ")", originalManifests.DefaultLocaleManifest },
+                { string.Format("{0} ({1})", defaultLocale.PackageLocale, Resources.DefaultLocale_MenuItem), defaultLocale },
             };
 
-            foreach (var locale in originalManifests.LocaleManifests)
+            foreach (var locale in localeManifests)
             {
                 localeMap.Add(locale.PackageLocale, locale);
             }
@@ -247,7 +252,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 else
                 {
-                    selectedLocale = PromptAllLocalesAsMenuSelection(originalManifests);
+                    selectedLocale = PromptAllLocalesAsMenuSelection(originalManifests.DefaultLocaleManifest, originalManifests.LocaleManifests);
                 }
 
                 bool isDefaultLocale = false;
@@ -271,12 +276,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     if (isDefaultLocale)
                     {
-                        PromptOptionalProperties(updatedLocales.DefaultLocaleManifest, LocaleHelper.GetUnPromptedLocalePropertyNames(updatedLocales.DefaultLocaleManifest, defaultPromptPropertiesForUpdateLocale));
+                        PromptOptionalProperties(updatedLocales.DefaultLocaleManifest, LocaleHelper.GetOptionalLocalePropertyNames(updatedLocales.DefaultLocaleManifest, defaultPromptPropertiesForUpdateLocale));
                     }
                     else
                     {
                         LocaleManifest manifest = (LocaleManifest)selectedLocale;
-                        PromptOptionalProperties(manifest, LocaleHelper.GetUnPromptedLocalePropertyNames(manifest, defaultPromptPropertiesForUpdateLocale));
+                        PromptOptionalProperties(manifest, LocaleHelper.GetOptionalLocalePropertyNames(manifest, defaultPromptPropertiesForUpdateLocale));
                     }
                 }
 

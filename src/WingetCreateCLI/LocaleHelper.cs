@@ -49,22 +49,22 @@ namespace Microsoft.WingetCreateCLI
         }
 
         /// <summary>
-        /// Checks whether package locale already exists in the default locale manifest or one of the locale manifests and returns the matching manifest.
+        /// Returns the locale manifest that matches the provided locale string. Returns null if the locale does not exist.
         /// This function throws an exception if the locale string is in an invalid format.
         /// </summary>
         /// <param name="locale">The package locale string to check.</param>
-        /// <param name="originalManifests">The base manifests to check against.</param>
+        /// <param name="manifests">The base manifests to check against.</param>
         /// <returns>An object representing the matching locale manifest.</returns>
-        public static object GetMatchingLocaleManifest(string locale, Manifests originalManifests)
+        public static object GetMatchingLocaleManifest(string locale, Manifests manifests)
         {
             RegionInfo localeInfo = new RegionInfo(locale);
 
-            if (localeInfo.Equals(new RegionInfo(originalManifests.DefaultLocaleManifest.PackageLocale)))
+            if (localeInfo.Equals(new RegionInfo(manifests.DefaultLocaleManifest.PackageLocale)))
             {
-                return originalManifests.DefaultLocaleManifest;
+                return manifests.DefaultLocaleManifest;
             }
 
-            foreach (var localeManifest in originalManifests.LocaleManifests)
+            foreach (var localeManifest in manifests.LocaleManifests)
             {
                 if (localeInfo.Equals(new RegionInfo(localeManifest.PackageLocale)))
                 {
@@ -76,13 +76,32 @@ namespace Microsoft.WingetCreateCLI
         }
 
         /// <summary>
+        /// Checks whether package locale already exists in the default locale manifest or one of the locale manifests.
+        /// This function throws an exception if the locale string is in an invalid format.
+        /// </summary>
+        /// <param name="locale">The package locale string to check.</param>
+        /// <param name="manifests">The base manifests to check against.</param>
+        /// <returns>A boolean value indicating whether the locale exists.</returns>
+        public static bool DoesLocaleManifestExist(string locale, Manifests manifests)
+        {
+            RegionInfo targetLocaleInfo = new RegionInfo(locale);
+
+            if (targetLocaleInfo.Equals(new RegionInfo(manifests.DefaultLocaleManifest.PackageLocale)))
+            {
+                return true;
+            }
+
+            return manifests.LocaleManifests.Any(localeManifest => targetLocaleInfo.Equals(new RegionInfo(localeManifest.PackageLocale)));
+        }
+
+        /// <summary>
         /// Gets the list of locale properties that have not been prompted for.
         /// </summary>
         /// <typeparam name="T">Type of the manifest. Expected to be either LocaleManifest or DefaultLocaleManifest.</typeparam>
         /// <param name="manifest">Object model of the locale/defaultLocale manifest.</param>
         /// <param name="promptedProperties">Properties that have already been prompted for.</param>
         /// <returns>List of locale property names.</returns>
-        public static List<string> GetUnPromptedLocalePropertyNames<T>(T manifest, List<string> promptedProperties)
+        public static List<string> GetOptionalLocalePropertyNames<T>(T manifest, List<string> promptedProperties)
         {
             return manifest.GetType().GetProperties().ToList().Where(p =>
                                 p.GetCustomAttribute<RequiredAttribute>() == null &&
@@ -101,7 +120,7 @@ namespace Microsoft.WingetCreateCLI
         {
             try
             {
-                if (GetMatchingLocaleManifest(locale, manifests) != null)
+                if (DoesLocaleManifestExist(locale, manifests))
                 {
                     Logger.ErrorLocalized(nameof(Resources.LocaleAlreadyExists_ErrorMessage), locale);
                     Console.WriteLine();

@@ -5,6 +5,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Threading.Tasks;
     using CommandLine;
@@ -25,6 +26,17 @@ namespace Microsoft.WingetCreateCLI.Commands
     [Verb("new-locale", HelpText = "NewLocaleCommand_HelpText", ResourceType = typeof(Resources))]
     public class NewLocaleCommand : BaseCommand
     {
+        private readonly List<string> defaultPromptPropertiesForNewLocale = new()
+        {
+            nameof(LocaleManifest.PackageLocale),
+            nameof(LocaleManifest.PackageName),
+            nameof(LocaleManifest.Publisher),
+            nameof(LocaleManifest.License),
+            nameof(LocaleManifest.ShortDescription),
+        };
+
+        private bool localeArgumentUsed = false;
+
         /// <summary>
         /// Gets the usage examples for the new-locale command.
         /// </summary>
@@ -89,56 +101,69 @@ namespace Microsoft.WingetCreateCLI.Commands
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
             };
 
-            Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
-            Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
-
-            string exactId;
             try
             {
-                exactId = await this.GitHubClient.FindPackageId(this.Id);
-            }
-            catch (Octokit.RateLimitExceededException)
-            {
-                Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
-                return false;
-            }
+                Prompt.Symbols.Done = new Symbol(string.Empty, string.Empty);
+                Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
 
-            if (!string.IsNullOrEmpty(exactId))
-            {
-                this.Id = exactId;
-            }
+                // Validate format of input locale and reference locale arguments
+                try
+                {
+                    if (!string.IsNullOrEmpty(this.Locale))
+                    {
+                        _ = new RegionInfo(this.Locale);
+                    }
 
-            List<string> manifestContent;
+                    if (!string.IsNullOrEmpty(this.ReferenceLocale))
+                    {
+                        _ = new RegionInfo(this.ReferenceLocale);
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.InvalidLocale_ErrorMessage));
+                    return false;
+                }
 
-            try
-            {
-                manifestContent = await this.GitHubClient.GetManifestContentAsync(this.Id, this.Version);
+                string exactId;
+                try
+                {
+                    exactId = await this.GitHubClient.FindPackageId(this.Id);
+                }
+                catch (Octokit.RateLimitExceededException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.RateLimitExceeded_Message));
+                    return false;
+                }
+
+                if (!string.IsNullOrEmpty(exactId))
+                {
+                    this.Id = exactId;
+                }
+
+                List<string> manifestContent;
+
+                try
+                {
+                    manifestContent = await this.GitHubClient.GetManifestContentAsync(this.Id, this.Version);
+                }
+                catch (Octokit.NotFoundException e)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
+                    Logger.ErrorLocalized(nameof(Resources.OctokitNotFound_Error));
+                    return false;
+                }
+
                 Manifests originalManifests = Serialization.DeserializeManifestContents(manifestContent);
 
-                // Validate input locale argument and switch command flow if applicable.
                 if (!string.IsNullOrEmpty(this.Locale))
                 {
                     try
                     {
-                        if (LocaleHelper.GetMatchingLocaleManifest(this.Locale, originalManifests) != null)
+                        if (LocaleHelper.DoesLocaleManifestExist(this.Locale, originalManifests))
                         {
                             Logger.ErrorLocalized(nameof(Resources.LocaleAlreadyExists_ErrorMessage), this.Locale);
-                            Console.WriteLine();
-
-                            // Switch to update locale flow if user accepts to.
-                            if (Prompt.Confirm(Resources.SwitchToUpdateLocaleFlow_Message))
-                            {
-                                UpdateLocaleCommand command = new UpdateLocaleCommand
-                                {
-                                    Id = this.Id,
-                                    Version = this.Version,
-                                    Locale = this.Locale,
-                                    GitHubToken = this.GitHubToken,
-                                };
-                                await command.LoadGitHubClient();
-                                Console.WriteLine();
-                                return await command.Execute();
-                            }
+                            return false;
                         }
                     }
                     catch (ArgumentException)
@@ -146,6 +171,32 @@ namespace Microsoft.WingetCreateCLI.Commands
                         Logger.ErrorLocalized(nameof(Resources.InvalidLocale_ErrorMessage));
                         return false;
                     }
+                }
+
+                // Validate input reference locale argument and set the reference locale
+                LocaleManifest referenceLocaleManifest;
+
+                if (!string.IsNullOrEmpty(this.ReferenceLocale))
+                {
+                    try
+                    {
+                        referenceLocaleManifest = (LocaleManifest)LocaleHelper.GetMatchingLocaleManifest(this.ReferenceLocale, originalManifests);
+                    }
+                    catch (ArgumentException)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.InvalidLocale_ErrorMessage));
+                        return false;
+                    }
+
+                    if (referenceLocaleManifest == null)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.ReferenceLocaleNotFound_Error));
+                        return false;
+                    }
+                }
+                else
+                {
+                    referenceLocaleManifest = originalManifests.DefaultLocaleManifest.ToLocaleManifest();
                 }
 
                 Console.WriteLine(Resources.NewLocaleCommand_Header);
@@ -157,12 +208,16 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
 
-                List<LocaleManifest> newLocales = this.ParseArgumentsAndGenerateLocales(originalManifests);
-
-                if (newLocales == null)
+                List<LocaleManifest> newLocales = new();
+                do
                 {
-                    return false;
+                    LocaleManifest newlocale = this.GenerateLocaleManifest(originalManifests, referenceLocaleManifest);
+                    Console.WriteLine();
+                    ValidateManifestsInTempDir(originalManifests);
+                    originalManifests.LocaleManifests.Add(newlocale);
+                    newLocales.Add(newlocale);
                 }
+                while (Prompt.Confirm(Resources.CreateAnotherLocale_Message));
 
                 Console.WriteLine();
                 EnsureManifestVersionConsistency(originalManifests);
@@ -182,7 +237,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return await this.LoadGitHubClient(true) ?
                             (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                                 originalManifests,
-                                this.GetPRTitle(originalManifests, null, nameof(NewLocaleCommand))))
+                                $"Add locale: {originalManifests.VersionManifest.PackageIdentifier} version {originalManifests.VersionManifest.PackageVersion}"))
                             : false;
                     }
                     else
@@ -196,12 +251,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 return await Task.FromResult(commandEvent.IsSuccessful = true);
-            }
-            catch (Octokit.NotFoundException e)
-            {
-                Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
-                Logger.ErrorLocalized(nameof(Resources.OctokitNotFound_Error));
-                return false;
             }
             finally
             {
@@ -219,7 +268,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void FillLocalePropertiesForUserCompletion(LocaleManifest fromManifest, LocaleManifest toManifest, List<string> properties)
+        private static void PopulateLocalePropertiesWithDefaultValues(LocaleManifest reference, LocaleManifest target, List<string> properties)
         {
             foreach (string propertyName in properties)
             {
@@ -228,99 +277,52 @@ namespace Microsoft.WingetCreateCLI.Commands
                     continue;
                 }
 
-                var value = fromManifest.GetType().GetProperty(propertyName).GetValue(fromManifest);
+                var value = reference.GetType().GetProperty(propertyName).GetValue(reference);
                 if (value != null)
                 {
-                    toManifest.GetType().GetProperty(propertyName).SetValue(toManifest, value);
+                    target.GetType().GetProperty(propertyName).SetValue(target, value);
                 }
             }
         }
 
-        private List<LocaleManifest> ParseArgumentsAndGenerateLocales(Manifests originalManifests)
+        private LocaleManifest GenerateLocaleManifest(Manifests originalManifests, LocaleManifest referenceLocaleManifest)
         {
-            LocaleManifest referenceLocaleManifest;
-
-            if (!string.IsNullOrEmpty(this.ReferenceLocale))
+            LocaleManifest newLocaleManifest = new LocaleManifest
             {
-                try
-                {
-                    referenceLocaleManifest = (LocaleManifest)LocaleHelper.GetMatchingLocaleManifest(this.ReferenceLocale, originalManifests);
-                }
-                catch (ArgumentException)
-                {
-                    Logger.ErrorLocalized(nameof(Resources.InvalidLocale_ErrorMessage));
-                    return null;
-                }
+                PackageIdentifier = originalManifests.VersionManifest.PackageIdentifier,
+                PackageVersion = originalManifests.VersionManifest.PackageVersion,
+            };
 
-                if (referenceLocaleManifest == null)
-                {
-                    Logger.ErrorLocalized(nameof(Resources.ReferenceLocaleNotFound_Error));
-                    return null;
-                }
+            // Fill in properties from the reference locale. This is to help user see previous values to quickly fill out the new manifest.
+            PopulateLocalePropertiesWithDefaultValues(referenceLocaleManifest, newLocaleManifest, this.defaultPromptPropertiesForNewLocale);
+
+            if (!string.IsNullOrEmpty(this.Locale) && !this.localeArgumentUsed)
+            {
+                newLocaleManifest.PackageLocale = this.Locale;
+
+                // Don't prompt for PackageLocale if it is provided as an argument.
+                List<string> properties = new(this.defaultPromptPropertiesForNewLocale);
+                properties.Remove(nameof(LocaleManifest.PackageLocale));
+
+                Logger.DebugLocalized(nameof(Resources.FieldSetToValue_Message), nameof(LocaleManifest.PackageLocale), this.Locale);
+                LocaleHelper.PromptAndSetLocaleProperties(newLocaleManifest, properties, originalManifests);
+                this.localeArgumentUsed = true;
             }
             else
             {
-                referenceLocaleManifest = originalManifests.DefaultLocaleManifest.ToLocaleManifest();
+                LocaleHelper.PromptAndSetLocaleProperties(newLocaleManifest, this.defaultPromptPropertiesForNewLocale, originalManifests);
             }
 
-            List<LocaleManifest> generatedLocales = new();
-
-            List<string> defaultPromptPropertiesForNewLocale = new()
+            Console.WriteLine();
+            if (Prompt.Confirm(Resources.AddAdditionalLocaleProperties_Message))
             {
-                nameof(LocaleManifest.PackageLocale),
-                nameof(LocaleManifest.PackageName),
-                nameof(LocaleManifest.Publisher),
-                nameof(LocaleManifest.License),
-                nameof(LocaleManifest.ShortDescription),
-            };
-
-            bool localeArgumentUsed = false;
-            do
-            {
-                LocaleManifest newLocaleManifest = new LocaleManifest
-                {
-                    PackageIdentifier = originalManifests.VersionManifest.PackageIdentifier,
-                    PackageVersion = originalManifests.VersionManifest.PackageVersion,
-                };
-
-                // Fill in properties from the reference locale. This is to help user see previous values to quickly fill out the new manifest.
-                FillLocalePropertiesForUserCompletion(referenceLocaleManifest, newLocaleManifest, defaultPromptPropertiesForNewLocale);
-
-                if (!string.IsNullOrEmpty(this.Locale) && !localeArgumentUsed)
-                {
-                    newLocaleManifest.PackageLocale = this.Locale;
-
-                    // Don't prompt for PackageLocale if it is provided as an argument.
-                    List<string> properties = new(defaultPromptPropertiesForNewLocale);
-                    properties.Remove(nameof(LocaleManifest.PackageLocale));
-
-                    Logger.DebugLocalized(nameof(Resources.FieldSetToValue_Message), nameof(LocaleManifest.PackageLocale), this.Locale);
-                    LocaleHelper.PromptAndSetLocaleProperties(newLocaleManifest, properties, originalManifests);
-                    localeArgumentUsed = true;
-                }
-                else
-                {
-                    LocaleHelper.PromptAndSetLocaleProperties(newLocaleManifest, defaultPromptPropertiesForNewLocale, originalManifests);
-                }
-
-                Console.WriteLine();
-                if (Prompt.Confirm(Resources.AddAdditionalLocaleProperties_Message))
-                {
-                    // Get optional properties that have not been prompted before.
-                    var optionalProperties = LocaleHelper.GetUnPromptedLocalePropertyNames(newLocaleManifest, defaultPromptPropertiesForNewLocale);
-                    FillLocalePropertiesForUserCompletion(referenceLocaleManifest, newLocaleManifest, optionalProperties);
-                    PromptOptionalProperties(newLocaleManifest, optionalProperties);
-                }
-
-                originalManifests.LocaleManifests.Add(newLocaleManifest);
-                generatedLocales.Add(newLocaleManifest);
-
-                Console.WriteLine();
-                ValidateManifestsInTempDir(originalManifests);
+                // Get optional properties that have not been prompted before.
+                var optionalProperties = LocaleHelper.GetOptionalLocalePropertyNames(newLocaleManifest, this.defaultPromptPropertiesForNewLocale);
+                PopulateLocalePropertiesWithDefaultValues(referenceLocaleManifest, newLocaleManifest, optionalProperties);
+                PromptOptionalProperties(newLocaleManifest, optionalProperties);
             }
-            while (Prompt.Confirm(Resources.CreateAnotherLocale_Message));
 
-            return generatedLocales;
+            return newLocaleManifest;
         }
     }
 }

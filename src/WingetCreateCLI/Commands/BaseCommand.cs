@@ -764,9 +764,8 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         /// <param name="currentManifest">Manifest object containing metadata of new manifest to be submitted.</param>
         /// <param name="repositoryManifest">Manifest object representing an already exisitng manifest in the repository.</param>
-        /// <param name="commandName">Name of the command calling this method.</param>
         /// <returns>A string representing the pull request title.</returns>
-        protected string GetPRTitle(Manifests currentManifest, Manifests repositoryManifest = null, string commandName = null)
+        protected string GetPRTitle(Manifests currentManifest, Manifests repositoryManifest = null)
         {
             // Use custom PR title if provided by the user.
             if (!string.IsNullOrEmpty(this.PRTitle))
@@ -776,18 +775,6 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             string packageId = currentManifest.VersionManifest != null ? currentManifest.VersionManifest.PackageIdentifier : currentManifest.SingletonManifest.PackageIdentifier;
             string currentVersion = currentManifest.VersionManifest != null ? currentManifest.VersionManifest.PackageVersion : currentManifest.SingletonManifest.PackageVersion;
-
-            if (!string.IsNullOrEmpty(commandName))
-            {
-                if (commandName.Equals(nameof(NewLocaleCommand)))
-                {
-                    return $"Add locale: {packageId} version {currentVersion}";
-                }
-                else if (commandName.Equals(nameof(UpdateLocaleCommand)))
-                {
-                    return $"Update locale: {packageId} version {currentVersion}";
-                }
-            }
 
             // If no manifest exists in the repository, this is a new package.
             if (repositoryManifest == null)

@@ -26,16 +26,27 @@ namespace Microsoft.WingetCreateUnitTests
             var initialManifestContent = TestUtils.GetInitialMultifileManifestContent("Multifile.MsixTest");
             Manifests manifests = Serialization.DeserializeManifestContents(initialManifestContent);
 
-            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("en-us", manifests), manifests.DefaultLocaleManifest, "Locale for en-US already exists in the manifest.");
-            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("en-USA", manifests), manifests.DefaultLocaleManifest, "Locale for en-US already exists in the manifest.");
-            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("en-GB", manifests), manifests.LocaleManifests[0], "Locale for en-GB already exists in the manifest.");
+            // Verify with different casing.
+            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("en-us", manifests), manifests.DefaultLocaleManifest, "The locale manifest for en-US should be returned.");
+            Assert.IsTrue(LocaleHelper.DoesLocaleManifestExist("en-us", manifests), "Locale for en-US already exists in the manifest.");
+            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("en-USA", manifests), manifests.DefaultLocaleManifest, "The locale manifest for en-US should be returned.");
+            Assert.IsTrue(LocaleHelper.DoesLocaleManifestExist("en-USA", manifests), "Locale for en-US already exists in the manifest.");
+            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("en-GB", manifests), manifests.LocaleManifests[0], "The locale manifest for en-GB should be returned.");
+            Assert.IsTrue(LocaleHelper.DoesLocaleManifestExist("en-GB", manifests), "Locale for en-GB already exists in the manifest.");
             Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("en-gb", manifests), manifests.LocaleManifests[0], "Locale for en-GB already exists in the manifest.");
+            Assert.IsTrue(LocaleHelper.DoesLocaleManifestExist("en-gb", manifests), "Locale for en-GB already exists in the manifest.");
 
-            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("fr-FR", manifests), null, "Locale for fr-FR does not exist in the manifest.");
-            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("de-DE", manifests), null, "Locale for de-DE does not exist in the manifest.");
+            // Check for non-existent locales.
+            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("fr-FR", manifests), null, "Null should be returned as the locale manifest for fr-FR does not exist.");
+            Assert.IsFalse(LocaleHelper.DoesLocaleManifestExist("fr-FR", manifests), "Locale for fr-FR does not exist in the manifest.");
+            Assert.AreEqual(LocaleHelper.GetMatchingLocaleManifest("de-DE", manifests), null, "Null should be returned as the locale manifest for de-DE does not exist.");
+            Assert.IsFalse(LocaleHelper.DoesLocaleManifestExist("de-DE", manifests), "Locale for de-DE does not exist in the manifest.");
 
+            // Check for invalid locale formats.
             Assert.Throws<ArgumentException>(() => LocaleHelper.GetMatchingLocaleManifest("en", manifests), "Locale is not in the correct format.");
+            Assert.Throws<ArgumentException>(() => LocaleHelper.DoesLocaleManifestExist("en", manifests), "Locale is not in the correct format.");
             Assert.Throws<ArgumentException>(() => LocaleHelper.GetMatchingLocaleManifest("fr_FR", manifests), "Locale is not in the correct format.");
+            Assert.Throws<ArgumentException>(() => LocaleHelper.DoesLocaleManifestExist("fr_FR", manifests), "Locale is not in the correct format.");
         }
 
         /// <summary>

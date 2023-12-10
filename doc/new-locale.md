@@ -25,7 +25,7 @@ The following arguments are available:
 | **id** |  Required. Package identifier used to lookup the existing manifest on the Windows Package Manager repo.
 | **-v, --version** |  The version of the package to add a new locale for. Default is the latest version.
 | **-l, --locale** |  The package locale to create a new manifest for. If not provided, the tool will prompt you for this value.
-| **-r, --reference-locale** | Locale manifest to be used for offering auto-complete suggestions.
+| **-r, --reference-locale** | Existing locale manifest to be used as reference for default values. If not provided, the default locale manifest will be used.
 | **-o, --out** |  The output directory where the newly created manifests will be saved locally.
 | **-t,--token**  | GitHub personal access token used for direct submission to the Windows Package Manager repo |
 | **-?, --help** |  Gets additional help on this command |
