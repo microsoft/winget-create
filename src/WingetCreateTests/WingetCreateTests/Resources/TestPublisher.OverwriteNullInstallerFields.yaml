@@ -1,0 +1,88 @@
+PackageIdentifier: TestPublisher.OverwriteNullInstallerFields
+PackageVersion: 0.1.2
+PackageName: Overwrite installer level fields by root fields
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest that verifies that installer level fields are overwritten by root fields.
+Description: |-
+  Expected flow:
+
+  1) Installer level fields are overwritten by root fields at the start of the update.
+  2) The update flow modifies the installer level fields if needed. (e.g. ProductCode in case of MSI upgrade)
+  3) At the end of the update, the common installer fields are moved to the root level.
+InstallerLocale: en-US
+InstallerType: zip
+NestedInstallerType: exe
+NestedInstallerFiles:
+- RelativeFilePath: WingetCreateTestExeInstaller.exe
+  PortableCommandAlias: PortableCommandAlias1
+AppsAndFeaturesEntries:
+- DisplayName: TestDisplayName1
+  Publisher: TestPublisher1
+  DisplayVersion: 1.0.1
+  ProductCode: TestProductCode1
+  UpgradeCode: TestUpgradeCode1
+  InstallerType: msi
+InstallerSwitches:
+  Silent: /silent1
+  SilentWithProgress: /silentwithprogress1
+Dependencies:
+  PackageDependencies:
+  - PackageIdentifier: TestPackageDependency1
+  MinimumVersion: 1.0.1
+  WindowsFeatures:
+  - TestWindowsFeature1
+  ExternalDependencies:
+  - TestExternalDependency1
+  WindowsLibraries:
+  - TestWindowsLibrary1
+ExpectedReturnCodes:
+  - InstallerReturnCode: 1001
+    ReturnResponse: installInProgress
+MinimumOSVersion: 10.0.22000.0
+PackageFamilyName: TestPackageFamilyName1
+Platform:
+- Windows.Desktop
+Scope: machine
+UpgradeBehavior: install
+ElevationRequirement: elevationRequired
+Commands:
+  - fakeCommand1
+Protocols:
+  - fakeProtocol1
+FileExtensions:
+  - .exe
+# Uncomment when installer model gets updated to support these fields
+#Markets:
+#  AllowedMarkets:
+#   - fakeAllowedMarket
+#  ExcludedMarkets:
+#    - fakeExcludedMarket
+InstallerAbortsTerminal: true
+InstallLocationRequired: true
+RequireExplicitUpgrade: true
+UnsupportedOSArchitectures:
+  - arm64
+DisplayInstallWarnings: true
+InstallerSuccessCodes:
+  - 1
+UnsupportedArguments:
+  - log
+  - location
+InstallationMetadata:
+  DefaultInstallLocation: "%ProgramFiles%\\TestApp1"
+  Files:
+  - RelativeFilePath: "main1.exe"
+    FileSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82
+    FileType: launch
+    InvocationParameter: "/arg1"
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
+    InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  - Architecture: x86
+    InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
+    InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.4.0

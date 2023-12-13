@@ -422,6 +422,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         /// <summary>
         /// Shifts common installer fields from manifest root to installer level.
+        /// If value is already defined at the installer level, then it should not be overwritten.
         /// </summary>
         /// <param name="installerManifest">Wrapper object containing the installer manifest object models.</param>
         protected static void ShiftRootFieldsToInstallerLevel(InstallerManifest installerManifest)
@@ -439,8 +440,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     foreach (var installer in installerManifest.Installers)
                     {
-                        // Copy the value to installer level
-                        installer.GetType().GetProperty(property.Name).SetValue(installer, rootValue);
+                        var installerProperty = installer.GetType().GetProperty(property.Name);
+
+                        // Only set the value if it is null at the installer level
+                        if (installerProperty.GetValue(installer) == null)
+                        {
+                            installerProperty.SetValue(installer, rootValue);
+                        }
                     }
 
                     // Set root value to null
