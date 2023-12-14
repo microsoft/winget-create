@@ -223,6 +223,12 @@ namespace Microsoft.WingetCreateCLI.Commands
             File.WriteAllText(Path.Combine(randomDirPath, installerManifestFileName), manifests.InstallerManifest.ToYaml());
             File.WriteAllText(Path.Combine(randomDirPath, defaultLocaleManifestFileName), manifests.DefaultLocaleManifest.ToYaml());
 
+            foreach (LocaleManifest localeManifest in manifests.LocaleManifests)
+            {
+                string localeManifestFileName = Manifests.GetFileName(localeManifest);
+                File.WriteAllText(Path.Combine(randomDirPath, localeManifestFileName), localeManifest.ToYaml());
+            }
+
             bool result = ValidateManifest(randomDirPath);
             Directory.Delete(randomDirPath, true);
             return result;

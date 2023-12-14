@@ -5,8 +5,11 @@ namespace Microsoft.WingetCreateCLI.Commands
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
@@ -18,6 +21,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.Locale;
+    using Newtonsoft.Json;
     using Sharprompt;
 
     /// <summary>
@@ -221,7 +225,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 Console.WriteLine();
                 EnsureManifestVersionConsistency(originalManifests);
-                DisplayGeneratedLocales(newLocales);
+                this.DisplayGeneratedLocales(newLocales);
 
                 if (string.IsNullOrEmpty(this.OutputDir))
                 {
@@ -258,17 +262,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void DisplayGeneratedLocales(List<LocaleManifest> newLocales)
-        {
-            Logger.DebugLocalized(nameof(Resources.GenerateNewLocalePreview_Message));
-            foreach (var localeManifest in newLocales)
-            {
-                Logger.InfoLocalized(nameof(Resources.LocaleManifest_Message), localeManifest.PackageLocale);
-                Console.WriteLine(localeManifest.ToYaml(true));
-            }
-        }
-
-        private static void PopulateLocalePropertiesWithDefaultValues(LocaleManifest reference, LocaleManifest target, List<string> properties)
+        private void PopulateLocalePropertiesWithDefaultValues(LocaleManifest reference, LocaleManifest target, List<string> properties)
         {
             foreach (string propertyName in properties)
             {
@@ -294,7 +288,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             };
 
             // Fill in properties from the reference locale. This is to help user see previous values to quickly fill out the new manifest.
-            PopulateLocalePropertiesWithDefaultValues(referenceLocaleManifest, newLocaleManifest, this.defaultPromptPropertiesForNewLocale);
+            this.PopulateLocalePropertiesWithDefaultValues(referenceLocaleManifest, newLocaleManifest, this.defaultPromptPropertiesForNewLocale);
 
             if (!string.IsNullOrEmpty(this.Locale) && !this.localeArgumentUsed)
             {
@@ -317,12 +311,26 @@ namespace Microsoft.WingetCreateCLI.Commands
             if (Prompt.Confirm(Resources.AddAdditionalLocaleProperties_Message))
             {
                 // Get optional properties that have not been prompted before.
-                var optionalProperties = LocaleHelper.GetOptionalLocalePropertyNames(newLocaleManifest, this.defaultPromptPropertiesForNewLocale);
-                PopulateLocalePropertiesWithDefaultValues(referenceLocaleManifest, newLocaleManifest, optionalProperties);
+                List<string> optionalProperties = newLocaleManifest.GetType().GetProperties().ToList().Where(p =>
+                                p.GetCustomAttribute<RequiredAttribute>() == null &&
+                                p.GetCustomAttribute<JsonPropertyAttribute>() != null &&
+                                !this.defaultPromptPropertiesForNewLocale.Any(d => d == p.Name))
+                                .Select(p => p.Name).ToList();
+                this.PopulateLocalePropertiesWithDefaultValues(referenceLocaleManifest, newLocaleManifest, optionalProperties);
                 PromptOptionalProperties(newLocaleManifest, optionalProperties);
             }
 
             return newLocaleManifest;
+        }
+
+        private void DisplayGeneratedLocales(List<LocaleManifest> newLocales)
+        {
+            Logger.DebugLocalized(nameof(Resources.GenerateNewLocalePreview_Message));
+            foreach (var localeManifest in newLocales)
+            {
+                Logger.InfoLocalized(nameof(Resources.LocaleManifest_Message), localeManifest.PackageLocale);
+                Console.WriteLine(localeManifest.ToYaml(true));
+            }
         }
     }
 }

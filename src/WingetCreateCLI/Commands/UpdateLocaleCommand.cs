@@ -153,10 +153,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                 }
 
-                Manifests updatedLocales = this.PromptAndUpdateExistingLocales(originalManifests);
+                var updatedLocalesTuple = this.PromptAndUpdateExistingLocales(originalManifests);
                 Console.WriteLine();
                 EnsureManifestVersionConsistency(originalManifests);
-                DisplayUpdatedLocales(updatedLocales);
+                this.DisplayUpdatedLocales(updatedLocalesTuple);
 
                 if (string.IsNullOrEmpty(this.OutputDir))
                 {
@@ -193,7 +193,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static object PromptAllLocalesAsMenuSelection(DefaultLocaleManifest defaultLocale, List<LocaleManifest> localeManifests)
+        private object PromptAllLocalesAsMenuSelection(DefaultLocaleManifest defaultLocale, List<LocaleManifest> localeManifests)
         {
             Dictionary<string, object> localeMap = new Dictionary<string, object>
             {
@@ -205,92 +205,80 @@ namespace Microsoft.WingetCreateCLI.Commands
                 localeMap.Add(locale.PackageLocale, locale);
             }
 
-            string selectedLocale = Prompt.Select(Resources.SelectExistingLocale_Message, localeMap.Keys.ToList());
+            string selectedLocale = Prompt.Select(Resources.SelectExistingLocale_Message, localeMap.Keys.ToList(), defaultValue: localeMap.Keys.First());
             return localeMap[selectedLocale];
         }
 
-        private static void DisplayUpdatedLocales(Manifests manifest)
+        private void DisplayUpdatedLocales(Tuple<DefaultLocaleManifest, List<LocaleManifest>> updatedLocales)
         {
             Logger.DebugLocalized(nameof(Resources.GenerateUpdatedLocalePreview_Message));
-            if (manifest.DefaultLocaleManifest != null)
+            if (updatedLocales.Item1 != null)
             {
-                DisplayDefaultLocaleManifest(manifest.DefaultLocaleManifest);
+                DisplayDefaultLocaleManifest(updatedLocales.Item1);
             }
 
-            if (manifest.LocaleManifests != null)
+            if (updatedLocales.Item2 != null)
             {
-                DisplayLocaleManifests(manifest.LocaleManifests);
+                DisplayLocaleManifests(updatedLocales.Item2);
             }
         }
 
-        private Manifests PromptAndUpdateExistingLocales(Manifests originalManifests)
+        /// <summary>
+        /// Displays a list of existing locale manifests and prompts user to update properties for the selected locale.
+        /// </summary>
+        /// <param name="manifests">Object model containing existing locale manifests.</param>
+        /// <returns>A tuple containing the updated locale manifests.</returns>
+        private Tuple<DefaultLocaleManifest, List<LocaleManifest>> PromptAndUpdateExistingLocales(Manifests manifests)
         {
-            Manifests updatedLocales = new Manifests()
-            {
-                SingletonManifest = null,
-                VersionManifest = null,
-                InstallerManifest = null,
-            };
-
-            List<string> defaultPromptPropertiesForUpdateLocale = new()
-            {
-                nameof(LocaleManifest.PackageName),
-                nameof(LocaleManifest.Publisher),
-                nameof(LocaleManifest.License),
-                nameof(LocaleManifest.ShortDescription),
-            };
+            // Object containing only the locales that are updated by the user.
+            Manifests updatedLocales = new Manifests();
 
             bool localeArgumentUsed = false;
             object selectedLocale;
+
+            // Properties that should not be prompted for.
+            List<string> excludedProperties = new List<string>()
+            {
+                nameof(LocaleManifest.PackageIdentifier),
+                nameof(LocaleManifest.PackageVersion),
+                nameof(LocaleManifest.PackageLocale),
+                nameof(LocaleManifest.ManifestType),
+                nameof(LocaleManifest.ManifestVersion),
+            };
 
             do
             {
                 if (!string.IsNullOrEmpty(this.Locale) && !localeArgumentUsed)
                 {
-                    selectedLocale = LocaleHelper.GetMatchingLocaleManifest(this.Locale, originalManifests);
+                    selectedLocale = LocaleHelper.GetMatchingLocaleManifest(this.Locale, manifests);
                     localeArgumentUsed = true;
                 }
                 else
                 {
-                    selectedLocale = PromptAllLocalesAsMenuSelection(originalManifests.DefaultLocaleManifest, originalManifests.LocaleManifests);
+                    selectedLocale = this.PromptAllLocalesAsMenuSelection(manifests.DefaultLocaleManifest, manifests.LocaleManifests);
                 }
 
-                bool isDefaultLocale = false;
-
-                if (selectedLocale is LocaleManifest localeManifest)
-                {
-                    Logger.DebugLocalized(nameof(Resources.FieldSetToValue_Message), nameof(LocaleManifest.PackageLocale), localeManifest.PackageLocale);
-                    LocaleHelper.PromptAndSetLocaleProperties(localeManifest, defaultPromptPropertiesForUpdateLocale);
-                    updatedLocales.LocaleManifests.Add(localeManifest);
-                }
-                else if (selectedLocale is DefaultLocaleManifest defaultLocaleManifest)
+                if (selectedLocale is DefaultLocaleManifest defaultLocaleManifest)
                 {
                     Logger.DebugLocalized(nameof(Resources.FieldSetToValue_Message), nameof(LocaleManifest.PackageLocale), defaultLocaleManifest.PackageLocale);
-                    LocaleHelper.PromptAndSetLocaleProperties(defaultLocaleManifest, defaultPromptPropertiesForUpdateLocale);
+                    var properties = LocaleHelper.GetLocalePropertyNames(defaultLocaleManifest).Except(excludedProperties).ToList();
+                    LocaleHelper.PromptAndSetLocaleProperties(defaultLocaleManifest, properties);
                     updatedLocales.DefaultLocaleManifest = defaultLocaleManifest;
-                    isDefaultLocale = true;
                 }
-
-                Console.WriteLine();
-                if (Prompt.Confirm(Resources.UpdateAdditionalLocaleProperties_Message))
+                else if (selectedLocale is LocaleManifest localeManifest)
                 {
-                    if (isDefaultLocale)
-                    {
-                        PromptOptionalProperties(updatedLocales.DefaultLocaleManifest, LocaleHelper.GetOptionalLocalePropertyNames(updatedLocales.DefaultLocaleManifest, defaultPromptPropertiesForUpdateLocale));
-                    }
-                    else
-                    {
-                        LocaleManifest manifest = (LocaleManifest)selectedLocale;
-                        PromptOptionalProperties(manifest, LocaleHelper.GetOptionalLocalePropertyNames(manifest, defaultPromptPropertiesForUpdateLocale));
-                    }
+                    Logger.DebugLocalized(nameof(Resources.FieldSetToValue_Message), nameof(LocaleManifest.PackageLocale), localeManifest.PackageLocale);
+                    var properties = LocaleHelper.GetLocalePropertyNames(localeManifest).Except(excludedProperties).ToList();
+                    LocaleHelper.PromptAndSetLocaleProperties(localeManifest, properties);
+                    updatedLocales.LocaleManifests.Add(localeManifest);
                 }
 
                 Console.WriteLine();
-                ValidateManifestsInTempDir(originalManifests);
+                ValidateManifestsInTempDir(manifests);
             }
             while (Prompt.Confirm(Resources.UpdateAnotherLocale_Message));
 
-            return updatedLocales;
+            return new Tuple<DefaultLocaleManifest, List<LocaleManifest>>(updatedLocales.DefaultLocaleManifest, updatedLocales.LocaleManifests);
         }
     }
 }

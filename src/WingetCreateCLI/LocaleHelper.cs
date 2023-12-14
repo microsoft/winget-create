@@ -5,15 +5,16 @@ namespace Microsoft.WingetCreateCLI
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
+    using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.Locale;
     using Newtonsoft.Json;
+    using Sharprompt;
 
     /// <summary>
     /// Provides helper functions for dealing with prompting and validating locale properties.
@@ -32,6 +33,17 @@ namespace Microsoft.WingetCreateCLI
             foreach (string propertyName in properties)
             {
                 PropertyInfo property = typeof(T).GetProperty(propertyName);
+
+                Type type = property.PropertyType;
+                if (type.IsEnumerable())
+                {
+                    Type elementType = type.GetGenericArguments().SingleOrDefault();
+                    if (elementType.IsNonStringClassType() && !Prompt.Confirm(string.Format(Resources.EditObjectTypeField_Message, property.Name)))
+                    {
+                        continue;
+                    }
+                }
+
                 PromptHelper.PromptPropertyAndSetValue(localeManifest, propertyName, property.GetValue(localeManifest));
 
                 if (propertyName == nameof(LocaleManifest.PackageLocale) && originalManifests != null)
@@ -95,18 +107,15 @@ namespace Microsoft.WingetCreateCLI
         }
 
         /// <summary>
-        /// Gets the list of locale properties that have not been prompted for.
+        /// Gets the list of all locale properties.
         /// </summary>
         /// <typeparam name="T">Type of the manifest. Expected to be either LocaleManifest or DefaultLocaleManifest.</typeparam>
         /// <param name="manifest">Object model of the locale/defaultLocale manifest.</param>
-        /// <param name="promptedProperties">Properties that have already been prompted for.</param>
         /// <returns>List of locale property names.</returns>
-        public static List<string> GetOptionalLocalePropertyNames<T>(T manifest, List<string> promptedProperties)
+        public static List<string> GetLocalePropertyNames<T>(T manifest)
         {
-            return manifest.GetType().GetProperties().ToList().Where(p =>
-                                p.GetCustomAttribute<RequiredAttribute>() == null &&
-                                p.GetCustomAttribute<JsonPropertyAttribute>() != null &&
-                                !promptedProperties.Any(d => d == p.Name)).Select(p => p.Name).ToList();
+            return manifest.GetType().GetProperties().ToList().Where(p => p.GetCustomAttribute<JsonPropertyAttribute>() != null)
+                .Select(property => property.Name).ToList();
         }
 
         /// <summary>
