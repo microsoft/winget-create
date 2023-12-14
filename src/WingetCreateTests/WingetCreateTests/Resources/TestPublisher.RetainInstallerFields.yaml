@@ -1,21 +1,24 @@
-PackageIdentifier: TestPublisher.OverrideInstallerFields
+PackageIdentifier: TestPublisher.RetainInstallerFields
 PackageVersion: 0.1.2
-PackageName: Override installer level fields by root fields
+PackageName: Retain installer level fields when copying over root values
 Publisher: Test publisher
 License: MIT
-ShortDescription: A manifest that verifies that installer level fields are overridden by root fields.
+ShortDescription: A manifest that verifies that non-null installer level fields are not overwritten by root fields.
 Description: |-
   Expected flow:
 
-  1) Installer level fields are overridden by root fields at the start of the update.
-  2) The update flow modifies the installer level fields if needed. (e.g. ProductCode in case of MSI upgrade)
-  3) At the end of the update, the common installer fields are moved to the root level.
+  1) For the first installer, all root level fields are copied over and root fields are set to null.
+  2) For the second installer, installer level fields are preserved since they are not null.
+  3) InstallerType and NestedInstallerType are common across both installers, so they are moved to the root level at the end of the update.
+
+  TODO: Use different NestedInstallerType and RelativeFilePath for each installer once logic for handling multiple nested installers is improved.
+  Reference: https://github.com/microsoft/winget-create/issues/392
 InstallerLocale: en-US
 InstallerType: zip
 NestedInstallerType: exe
 NestedInstallerFiles:
 - RelativeFilePath: WingetCreateTestExeInstaller.exe
-  PortableCommandAlias: PortableCommandAlias1
+  PortableCommandAlias: TestAlias
 AppsAndFeaturesEntries:
 - DisplayName: TestDisplayName1
   Publisher: TestPublisher1
@@ -78,80 +81,16 @@ InstallationMetadata:
     InvocationParameter: "/arg1"
 Installers:
   - Architecture: x64
-    InstallerType: zip
     InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
     InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
-    NestedInstallerType: msi
-    NestedInstallerFiles:
-      - RelativeFilePath: WingetCreateTestExeInstaller.exe
-        PortableCommandAlias: PortableCommandAlias2
-    AppsAndFeaturesEntries:
-      - DisplayName: TestDisplayName2
-        Publisher: TestPublisher2
-        DisplayVersion: 1.0.2
-        ProductCode: TestProductCode2
-        UpgradeCode: TestUpgradeCode2
-        InstallerType: exe
-    InstallerSwitches:
-      Silent: /silent2
-      SilentWithProgress: /silentwithprogress2
-    Dependencies:
-      PackageDependencies:
-      - PackageIdentifier: TestPackageDependency2
-        MinimumVersion: 1.0.2
-      WindowsFeatures:
-        - TestWindowsFeature2
-      ExternalDependencies:
-        - TestExternalDependency2
-      WindowsLibraries:
-        - TestWindowsLibrary2
-    ExpectedReturnCodes:
-    - InstallerReturnCode: 1002
-      ReturnResponse: installInProgress
-    MinimumOSVersion: 10.0.17763.0
-    PackageFamilyName: TestPackageFamilyName2
-    Platform:
-    - Windows.Universal
-    Scope: user
-    UpgradeBehavior: uninstallPrevious
-    ElevationRequirement: elevatesSelf
-    Commands:
-      - fakeCommand2
-    Protocols:
-      - fakeProtocol2
-    FileExtensions:
-      - .msi
-    # Uncomment when installer model gets updated to support these fields
-    #Markets:
-    #  AllowedMarkets:
-    #   - fakeAllowedMarket
-    #  ExcludedMarkets:
-    #    - fakeExcludedMarket
-    InstallerAbortsTerminal: false
-    InstallLocationRequired: false
-    RequireExplicitUpgrade: false
-    UnsupportedOSArchitectures:
-      - arm
-    DisplayInstallWarnings: false
-    InstallerSuccessCodes:
-      - 2
-    UnsupportedArguments:
-      - log
-    InstallationMetadata:
-      DefaultInstallLocation: "%ProgramFiles%\\TestApp2"
-      Files:
-        - RelativeFilePath: "main2.exe"
-          FileSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82
-          FileType: launch
-          InvocationParameter: "/arg2"
   - Architecture: x86
     InstallerType: zip
     InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
     InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
-    NestedInstallerType: msi
+    NestedInstallerType: exe
     NestedInstallerFiles:
       - RelativeFilePath: WingetCreateTestExeInstaller.exe
-        PortableCommandAlias: PortableCommandAlias2
+        PortableCommandAlias: TestAlias
     AppsAndFeaturesEntries:
       - DisplayName: TestDisplayName2
         Publisher: TestPublisher2
@@ -188,7 +127,7 @@ Installers:
       - fakeProtocol2
     FileExtensions:
       - .msi
-    # Uncomment when installer model gets updated to support these fields
+    # TODO: Uncomment when installer model gets updated to support these fields
     #Markets:
     #  AllowedMarkets:
     #   - fakeAllowedMarket
