@@ -95,7 +95,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                 HasGitHubToken = !string.IsNullOrEmpty(this.GitHubToken),
             };
 
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
             string exactId;
             try
             {
@@ -151,21 +150,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             Logger.InfoLocalized(nameof(Resources.VersionManifest_Message));
             Console.WriteLine(versionManifest.ToYaml(true));
-        }
-
-        private static void DisplayDefaultLocaleManifest(DefaultLocaleManifest defaultLocaleManifest)
-        {
-            Logger.InfoLocalized(nameof(Resources.DefaultLocaleManifest_Message), defaultLocaleManifest.PackageLocale);
-            Console.WriteLine(defaultLocaleManifest.ToYaml(true));
-        }
-
-        private static void DisplayLocaleManifests(List<LocaleManifest> localeManifests)
-        {
-            foreach (var localeManifest in localeManifests)
-            {
-                Logger.InfoLocalized(nameof(Resources.LocaleManifest_Message), localeManifest.PackageLocale);
-                Console.WriteLine(localeManifest.ToYaml(true));
-            }
         }
 
         private static void DisplaySingletonManifest(SingletonManifest singletonManifest)

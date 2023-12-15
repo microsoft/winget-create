@@ -6,10 +6,12 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
@@ -23,8 +25,10 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Locale;
     using Microsoft.WingetCreateCore.Models.Version;
+    using Newtonsoft.Json;
     using Octokit;
     using RestSharp;
+    using Sharprompt;
 
     /// <summary>
     /// Abstract base command class that all commands inherit from.
@@ -218,6 +222,12 @@ namespace Microsoft.WingetCreateCLI.Commands
             File.WriteAllText(Path.Combine(randomDirPath, versionManifestFileName), manifests.VersionManifest.ToYaml());
             File.WriteAllText(Path.Combine(randomDirPath, installerManifestFileName), manifests.InstallerManifest.ToYaml());
             File.WriteAllText(Path.Combine(randomDirPath, defaultLocaleManifestFileName), manifests.DefaultLocaleManifest.ToYaml());
+
+            foreach (LocaleManifest localeManifest in manifests.LocaleManifests)
+            {
+                string localeManifestFileName = Manifests.GetFileName(localeManifest);
+                File.WriteAllText(Path.Combine(randomDirPath, localeManifestFileName), localeManifest.ToYaml());
+            }
 
             bool result = ValidateManifest(randomDirPath);
             Directory.Delete(randomDirPath, true);
@@ -512,6 +522,83 @@ namespace Microsoft.WingetCreateCLI.Commands
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Prompts user to enter values for the optional properties of the manifest.
+        /// </summary>
+        /// <typeparam name="T">Type of the manifest.</typeparam>
+        /// <param name="manifest">Object model of the manifest.</param>
+        /// <param name="optionalPropertiesNames">Optional parameter to specify the list of property names to be prompted for.</param>
+        protected static void PromptOptionalProperties<T>(T manifest, List<string> optionalPropertiesNames = null)
+        {
+            List<PropertyInfo> optionalProperties;
+            if (optionalPropertiesNames == null)
+            {
+                optionalProperties = manifest.GetType().GetProperties().ToList().Where(p =>
+                    p.GetCustomAttribute<RequiredAttribute>() == null &&
+                    p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
+            }
+            else
+            {
+                optionalProperties = manifest.GetType().GetProperties().Where(p => optionalPropertiesNames.Contains(p.Name)).ToList();
+            }
+
+            foreach (var property in optionalProperties)
+            {
+                Type type = property.PropertyType;
+                if (type.IsEnumerable())
+                {
+                    Type elementType = type.GetGenericArguments().SingleOrDefault();
+                    if (elementType.IsNonStringClassType() && !Prompt.Confirm(string.Format(Resources.EditObjectTypeField_Message, property.Name)))
+                    {
+                        continue;
+                    }
+                }
+
+                PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));
+                Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
+            }
+        }
+
+        /// <summary>
+        /// Displays the preview of the default locale manifest to the console.
+        /// </summary>
+        /// <param name="defaultLocaleManifest">Object model of the default locale manifest.</param>
+        protected static void DisplayDefaultLocaleManifest(DefaultLocaleManifest defaultLocaleManifest)
+        {
+            Logger.InfoLocalized(nameof(Resources.DefaultLocaleManifest_Message), defaultLocaleManifest.PackageLocale);
+            Console.WriteLine(defaultLocaleManifest.ToYaml(true));
+        }
+
+        /// <summary>
+        /// Displays the preview of all the locale manifests to the console.
+        /// </summary>
+        /// <param name="localeManifests">List of locale manifest object models.</param>
+        protected static void DisplayLocaleManifests(List<LocaleManifest> localeManifests)
+        {
+            foreach (var localeManifest in localeManifests)
+            {
+                Logger.InfoLocalized(nameof(Resources.LocaleManifest_Message), localeManifest.PackageLocale);
+                Console.WriteLine(localeManifest.ToYaml(true));
+            }
+        }
+
+        /// <summary>
+        /// Ensures that the manifestVersion is consistent across all manifest object models.
+        /// </summary>
+        /// <param name="manifests">Manifests object model.</param>
+        protected static void EnsureManifestVersionConsistency(Manifests manifests)
+        {
+            string latestManifestVersion = new VersionManifest().ManifestVersion;
+            manifests.VersionManifest.ManifestVersion = latestManifestVersion;
+            manifests.DefaultLocaleManifest.ManifestVersion = latestManifestVersion;
+            manifests.InstallerManifest.ManifestVersion = latestManifestVersion;
+
+            foreach (var localeManifest in manifests.LocaleManifests)
+            {
+                localeManifest.ManifestVersion = latestManifestVersion;
             }
         }
 

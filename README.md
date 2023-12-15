@@ -47,6 +47,8 @@ choco install wingetcreate
 | -------  | ----------- |
 | [New](doc/new.md)      | Command for creating a new manifest from scratch |
 | [Update](doc/update.md)  | Command for updating an existing manifest |
+| [New-Locale](doc/new-locale.md)  | Command for creating a new locale for an existing manifest |
+| [Update-Locale](doc/update-locale.md)  | Command for updating a locale for an existing manifest |
 | [Submit](doc/submit.md)  | Command for submitting an existing PR  |
 | [Show](doc/show.md)      | Command for displaying existing manifests  |
 | [Token](doc/token.md)   | Command for managing cached GitHub personal access tokens |

@@ -70,6 +70,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to add additional locale properties?.
+        /// </summary>
+        public static string AddAdditionalLocaleProperties_Message {
+            get {
+                return ResourceManager.GetString("AddAdditionalLocaleProperties_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Additional metadata needed for installer from {0}.
         /// </summary>
         public static string AdditionalMetadataNeeded_Message {
@@ -385,6 +394,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to create another locale?.
+        /// </summary>
+        public static string CreateAnotherLocale_Message {
+            get {
+                return ResourceManager.GetString("CreateAnotherLocale_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The custom installer switches.
         /// </summary>
         public static string Custom_KeywordDescription {
@@ -408,6 +426,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string DefaultLocale_KeywordDescription {
             get {
                 return ResourceManager.GetString("DefaultLocale_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default locale.
+        /// </summary>
+        public static string DefaultLocale_MenuItem {
+            get {
+                return ResourceManager.GetString("DefaultLocale_MenuItem", resourceCulture);
             }
         }
         
@@ -745,6 +772,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add a new locale for the latest version of a package.
+        /// </summary>
+        public static string Example_NewLocaleCommand_AddForLatestVersion {
+            get {
+                return ResourceManager.GetString("Example_NewLocaleCommand_AddForLatestVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a new locale for a specific version of a package.
+        /// </summary>
+        public static string Example_NewLocaleCommand_AddForSpecificVersion {
+            get {
+                return ResourceManager.GetString("Example_NewLocaleCommand_AddForSpecificVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a new locale and save the generated manifests to a specified directory.
+        /// </summary>
+        public static string Example_NewLocaleCommand_SaveToDirectory {
+            get {
+                return ResourceManager.GetString("Example_NewLocaleCommand_SaveToDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show the latest manifest of an existing package from the Windows Package Manager repo.
         /// </summary>
         public static string Example_ShowCommand_DisplayLatestManifest {
@@ -826,6 +880,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update existing locale and save the generated manifests to a specified directory.
+        /// </summary>
+        public static string Example_UpdateLocaleCommand_SaveToDirectory {
+            get {
+                return ResourceManager.GetString("Example_UpdateLocaleCommand_SaveToDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update existing locale for the latest version of a package.
+        /// </summary>
+        public static string Example_UpdateLocaleCommand_UpdateForLatestVersion {
+            get {
+                return ResourceManager.GetString("Example_UpdateLocaleCommand_UpdateForLatestVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update existing locale for a specific version of a package.
+        /// </summary>
+        public static string Example_UpdateLocaleCommand_UpdateForSpecificVersion {
+            get {
+                return ResourceManager.GetString("Example_UpdateLocaleCommand_UpdateForSpecificVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The excluded installer target markets.
         /// </summary>
         public static string ExcludedMarkets_KeywordDescription {
@@ -858,6 +939,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ExternalDependencies_KeywordDescription {
             get {
                 return ResourceManager.GetString("ExternalDependencies_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}] value is: {1}.
+        /// </summary>
+        public static string FieldSetToValue_Message {
+            get {
+                return ResourceManager.GetString("FieldSetToValue_Message", resourceCulture);
             }
         }
         
@@ -925,11 +1015,29 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generating a preview of the created locale(s).....
+        /// </summary>
+        public static string GenerateNewLocalePreview_Message {
+            get {
+                return ResourceManager.GetString("GenerateNewLocalePreview_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No settings file found, generating new settings file from loaded settings....
         /// </summary>
         public static string GenerateNewSettingsFile_Message {
             get {
                 return ResourceManager.GetString("GenerateNewSettingsFile_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generating a preview of the updated locale(s).....
+        /// </summary>
+        public static string GenerateUpdatedLocalePreview_Message {
+            get {
+                return ResourceManager.GetString("GenerateUpdatedLocalePreview_Message", resourceCulture);
             }
         }
         
@@ -1357,6 +1465,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid locale. Enter a valid language tag..
+        /// </summary>
+        public static string InvalidLocale_ErrorMessage {
+            get {
+                return ResourceManager.GetString("InvalidLocale_ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid token provided, please generate a new GitHub token and try again..
         /// </summary>
         public static string InvalidTokenError_Message {
@@ -1470,6 +1587,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string LoadSettingsFromDefault_Message {
             get {
                 return ResourceManager.GetString("LoadSettingsFromDefault_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locale manifest matching with input locale &quot;{0}&quot; already exists.
+        /// </summary>
+        public static string LocaleAlreadyExists_ErrorMessage {
+            get {
+                return ResourceManager.GetString("LocaleAlreadyExists_ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manifest for input locale &quot;{0}&quot; does not exist. .
+        /// </summary>
+        public static string LocaleDoesNotExist_Message {
+            get {
+                return ResourceManager.GetString("LocaleDoesNotExist_Message", resourceCulture);
             }
         }
         
@@ -1771,16 +1906,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Press ENTER to submit the value for each question including accepting the (default) value..
-        /// </summary>
-        public static string NewCommand_Description {
-            get {
-                return ResourceManager.GetString("NewCommand_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This tool will walk you through a series of questions to help you create your package manifest..
+        ///   Looks up a localized string similar to This command will walk you through a series of questions to help you create your package manifest..
         /// </summary>
         public static string NewCommand_Header {
             get {
@@ -1794,6 +1920,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NewCommand_HelpText {
             get {
                 return ResourceManager.GetString("NewCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press ENTER to submit the value for each question including accepting the (default) value..
+        /// </summary>
+        public static string NewCommand_PrePrompt_Header {
+            get {
+                return ResourceManager.GetString("NewCommand_PrePrompt_Header", resourceCulture);
             }
         }
         
@@ -1812,6 +1947,51 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string NewInstallerUrlMustMatchExisting_Message {
             get {
                 return ResourceManager.GetString("NewInstallerUrlMustMatchExisting_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This command will walk you through a series of questions to help generate a new locale manifest..
+        /// </summary>
+        public static string NewLocaleCommand_Header {
+            get {
+                return ResourceManager.GetString("NewLocaleCommand_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launches a series of questions to help generate a new locale manifest.
+        /// </summary>
+        public static string NewLocaleCommand_HelpText {
+            get {
+                return ResourceManager.GetString("NewLocaleCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The package locale to create a new manifest for. If not provided, the tool will prompt for this value..
+        /// </summary>
+        public static string NewLocaleCommand_Locale_HelpText {
+            get {
+                return ResourceManager.GetString("NewLocaleCommand_Locale_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Press ENTER to submit the value for each question including accepting the (reference) value from reference locale manifest..
+        /// </summary>
+        public static string NewLocaleCommand_PrePrompt_Header {
+            get {
+                return ResourceManager.GetString("NewLocaleCommand_PrePrompt_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The version of the package to add a new locale for..
+        /// </summary>
+        public static string NewLocaleCommand_Version_HelpText {
+            get {
+                return ResourceManager.GetString("NewLocaleCommand_Version_HelpText", resourceCulture);
             }
         }
         
@@ -1897,7 +2077,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Output directory where the newly created manifests will be saved locally.
+        ///   Looks up a localized string similar to The output directory to store the generated manifests locally..
         /// </summary>
         public static string OutputDirectory_HelpText {
             get {
@@ -1978,7 +2158,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The package meta-data locale.
+        ///   Looks up a localized string similar to The package meta-data locale |e.g. en-US|.
         /// </summary>
         public static string PackageLocale_KeywordDescription {
             get {
@@ -2190,6 +2370,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string RateLimitExceeded_Message {
             get {
                 return ResourceManager.GetString("RateLimitExceeded_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Existing locale manifest to be used as reference for default values. If not provided, the default locale manifest will be used..
+        /// </summary>
+        public static string ReferenceLocale_HelpText {
+            get {
+                return ResourceManager.GetString("ReferenceLocale_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The reference locale does not exist in the manifest..
+        /// </summary>
+        public static string ReferenceLocaleNotFound_Error {
+            get {
+                return ResourceManager.GetString("ReferenceLocaleNotFound_Error", resourceCulture);
             }
         }
         
@@ -2406,6 +2604,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SelectAction_Message {
             get {
                 return ResourceManager.GetString("SelectAction_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select an existing locale.
+        /// </summary>
+        public static string SelectExistingLocale_Message {
+            get {
+                return ResourceManager.GetString("SelectExistingLocale_Message", resourceCulture);
             }
         }
         
@@ -2824,6 +3031,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to create the locale manifest instead?.
+        /// </summary>
+        public static string SwitchToNewLocaleFlow_Message {
+            get {
+                return ResourceManager.GetString("SwitchToNewLocaleFlow_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to update the locale manifest instead?.
+        /// </summary>
+        public static string SwitchToUpdateLocaleFlow_Message {
+            get {
+                return ResourceManager.GetString("SwitchToUpdateLocaleFlow_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to create a reference to the forked repository. This can be caused when the forked repository is behind by too many commits. Sync your fork and try again..
         /// </summary>
         public static string SyncForkWithUpstream_Message {
@@ -2986,6 +3211,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Would you like to modify additional locale properties?.
+        /// </summary>
+        public static string UpdateAdditionalLocaleProperties_Message {
+            get {
+                return ResourceManager.GetString("UpdateAdditionalLocaleProperties_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would you like to update another locale?.
+        /// </summary>
+        public static string UpdateAnotherLocale_Message {
+            get {
+                return ResourceManager.GetString("UpdateAnotherLocale_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The upgrade method.
         /// </summary>
         public static string UpdateBehavior_KeywordDescription {
@@ -3000,6 +3243,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UpdateCommand_HelpText {
             get {
                 return ResourceManager.GetString("UpdateCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Launches a series of questions to help update an existing locale manifest.
+        /// </summary>
+        public static string UpdateLocaleCommand_HelpText {
+            get {
+                return ResourceManager.GetString("UpdateLocaleCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The package locale to update the manifest for. If not provided, the tool will prompt you a list of existing locales to choose from..
+        /// </summary>
+        public static string UpdateLocaleCommand_Locale_HelpText {
+            get {
+                return ResourceManager.GetString("UpdateLocaleCommand_Locale_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The version of the package to update the locale for..
+        /// </summary>
+        public static string UpdateLocaleCommand_Version_HelpText {
+            get {
+                return ResourceManager.GetString("UpdateLocaleCommand_Version_HelpText", resourceCulture);
             }
         }
         

@@ -39,6 +39,9 @@
     <None Update="Resources\TestPublisher.RetainInstallerFields.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\TestPublisher.LocaleConversionTest.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\TestPublisher.OverwriteNullInstallerFields.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

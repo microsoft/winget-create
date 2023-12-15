@@ -546,23 +546,6 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Ensures that the manifestVersion is consistent across all manifest object models.
-        /// </summary>
-        /// <param name="manifests">Manifests object model.</param>
-        private static void EnsureManifestVersionConsistency(Manifests manifests)
-        {
-            string latestManifestVersion = new VersionManifest().ManifestVersion;
-            manifests.VersionManifest.ManifestVersion = latestManifestVersion;
-            manifests.DefaultLocaleManifest.ManifestVersion = latestManifestVersion;
-            manifests.InstallerManifest.ManifestVersion = latestManifestVersion;
-
-            foreach (var localeManifest in manifests.LocaleManifests)
-            {
-                localeManifest.ManifestVersion = latestManifestVersion;
-            }
-        }
-
-        /// <summary>
         /// Resets the value of version specific fields to null.
         /// </summary>
         /// <param name="manifests">Manifests object model.</param>

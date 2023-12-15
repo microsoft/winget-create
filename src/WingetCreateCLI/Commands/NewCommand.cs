@@ -34,11 +34,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     public class NewCommand : BaseCommand
     {
         /// <summary>
-        /// The url path to the manifest documentation site.
-        /// </summary>
-        private const string ManifestDocumentationUrl = "https://aka.ms/winget-manifest-schema";
-
-        /// <summary>
         /// Installer types for which we can trust that the detected architecture is correct, so don't need to prompt the user to confirm.
         /// </summary>
         private static readonly InstallerType[] ReliableArchitectureInstallerTypes = new[] { InstallerType.Msix, InstallerType.Appx };
@@ -210,9 +205,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Console.WriteLine();
                 Console.WriteLine(Resources.NewCommand_Header);
                 Console.WriteLine();
-                Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), ManifestDocumentationUrl);
+                Logger.InfoLocalized(nameof(Resources.ManifestDocumentation_HelpText), Constants.ManifestDocumentationUrl);
                 Console.WriteLine();
-                Console.WriteLine(Resources.NewCommand_Description);
+                Console.WriteLine(Resources.NewCommand_PrePrompt_Header);
                 Console.WriteLine();
 
                 Logger.DebugLocalized(nameof(Resources.EnterFollowingFields_Message));
@@ -335,30 +330,6 @@ namespace Microsoft.WingetCreateCLI.Commands
                     PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));
                     Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
                 }
-            }
-        }
-
-        private static void PromptOptionalProperties<T>(T manifest)
-        {
-            var properties = manifest.GetType().GetProperties().ToList();
-            var optionalProperties = properties.Where(p =>
-                p.GetCustomAttribute<RequiredAttribute>() == null &&
-                p.GetCustomAttribute<JsonPropertyAttribute>() != null).ToList();
-
-            foreach (var property in optionalProperties)
-            {
-                Type type = property.PropertyType;
-                if (type.IsEnumerable())
-                {
-                    Type elementType = type.GetGenericArguments().SingleOrDefault();
-                    if (elementType.IsNonStringClassType() && !Prompt.Confirm(string.Format(Resources.EditObjectTypeField_Message, property.Name)))
-                    {
-                        continue;
-                    }
-                }
-
-                PromptHelper.PromptPropertyAndSetValue(manifest, property.Name, property.GetValue(manifest));
-                Logger.Trace($"Property [{property.Name}] set to the value [{property.GetValue(manifest)}]");
             }
         }
 
