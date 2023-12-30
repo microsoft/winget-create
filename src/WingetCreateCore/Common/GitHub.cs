@@ -300,7 +300,7 @@ namespace Microsoft.WingetCreateCore.Common
                 repo = await this.github.Repository.Get(this.wingetRepoOwner, this.wingetRepo);
             }
 
-            string newBranchName = $"{packageId}-{version}-{Guid.NewGuid()}";
+            string newBranchName = $"{packageId}-{version}-{Guid.NewGuid()}".Replace(" ", string.Empty);
             string newBranchNameHeads = $"heads/{newBranchName}";
 
             if (string.IsNullOrEmpty(prTitle))
