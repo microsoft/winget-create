@@ -98,7 +98,7 @@ namespace Microsoft.WingetCreateUnitTests
             }
             catch (Exception e)
             {
-                Assert.Fail($"Failed to generate PR. {e.Message}");
+                Assert.Fail($"Failed to generate pull request. {e.Message}");
             }
 
             await this.gitHub.ClosePullRequest(pullRequest.Number);
