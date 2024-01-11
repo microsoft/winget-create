@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateUnitTests
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -74,6 +75,32 @@ namespace Microsoft.WingetCreateUnitTests
 
             PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, TestConstants.TestPRTitle);
             Assert.That(TestConstants.TestPRTitle, Is.EqualTo(pullRequest.Title), TitleMismatch);
+            await this.gitHub.ClosePullRequest(pullRequest.Number);
+            StringAssert.StartsWith(string.Format(GitHubPullRequestBaseUrl, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo), pullRequest.HtmlUrl, PullRequestFailedToGenerate);
+        }
+
+        /// <summary>
+        /// Verifies that the branch name is trimmed of whitespace when submitting a PR. Successful PR generation verifies that the branch name was trimmed.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task RemoveWhitespaceFromBranchName()
+        {
+            string packageId = "TestPublisher.VersionWithWhitespace";
+            List<string> manifestContents = TestUtils.GetInitialManifestContent($"{packageId}.yaml");
+            Manifests manifests = Serialization.DeserializeManifestContents(manifestContents);
+            Assert.That(manifests.SingletonManifest.PackageIdentifier, Is.EqualTo(packageId), FailedToRetrieveManifestFromId);
+
+            PullRequest pullRequest = new();
+            try
+            {
+                pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"Failed to generate pull request. {e.Message}");
+            }
+
             await this.gitHub.ClosePullRequest(pullRequest.Number);
             StringAssert.StartsWith(string.Format(GitHubPullRequestBaseUrl, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo), pullRequest.HtmlUrl, PullRequestFailedToGenerate);
         }
