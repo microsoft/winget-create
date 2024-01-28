@@ -1,12 +1,12 @@
  # new command (Winget-Create)
- 
-The **new** command of the [Winget-Create](../README.md) tool begins the process of generating a manifest file.  This command is used if you need to create a [manifest file](https://docs.microsoft.com/windows/package-manager/package/manifest) for submitting software to the **Microsoft Community Package Manifest Repository** on GitHub.  
+
+The **new** command of the [Winget-Create](../README.md) tool begins the process of generating a manifest file.  This command is used if you need to create a [manifest file](https://docs.microsoft.com/windows/package-manager/package/manifest) for submitting software to the **Microsoft Community Package Manifest Repository** on GitHub.
 
 ## Usage
 
 `wingetcreate.exe new [<urls>] [\<options>]`
 
-The **new** command can be called with the optional URL(s). **Winget-Create** will download each provided installer as it begins.  If the URL is not included, the user will need to add it when prompted. 
+The **new** command can be called with the optional URL(s). **Winget-Create** will download each provided installer as it begins.  If the URL is not included, the user will need to add it when prompted.
 
 ### Multiple URLs in command line:
 
@@ -32,9 +32,9 @@ The following arguments are available:
 
 ## Winget-Create New Command flow
 
-### Downloading the installer  
+### Downloading the installer
 
-The first action **Winget-Create** will take is to download the installer. **Winget-Create** will attempt to access the meta data associated with the installer.  If the metadata is discovered, it will pre-populate the default strings.  
+The first action **Winget-Create** will take is to download the installer. **Winget-Create** will attempt to access the meta data associated with the installer.  If the metadata is discovered, it will pre-populate the default strings.
 As can be seen in this image, the Windows SDK was used as the URL and the PackageIdentifier is pre-populated.
 
 ![new command](./images/create-new.png)
@@ -45,24 +45,24 @@ By typing **ENTER** you will accept the string, and the wizard will move on.
 
 ![new command PackageIdentifier](./images/create-packageidentifier.png)
 
-### Remaining required fields  
+### Remaining required fields
 
 Like the **PackageIdentifier** you will have the opportunity to accept or modify the remaining fields.
 
 ![new command default values](./images/create-defaults.png)
 
 ### Review Changes
-Once you have successfully filled in the details, fields, **Winget-Create** will display the results for you to review.  
+Once you have successfully filled in the details, fields, **Winget-Create** will display the results for you to review.
 
 ![new command review](./images/create-review.png)
 
-If you would like to make changes, **Winget-Create** will walk you through the fields again allowing you to change them.  
+If you would like to make changes, **Winget-Create** will walk you through the fields again allowing you to change them.
 
 If you are content with the changes, choose **no** and the manifest will be saved.
 
-### Submit  
+### Submit
 
-The last option **Winget-Create** will offer is for you to submit the manifest to the [Windows Package Manager repository](https://github.com/microsoft/winget-pkgs).  
+The last option **Winget-Create** will offer is for you to submit the manifest to the [Windows Package Manager repository](https://github.com/microsoft/winget-pkgs).
 If you choose yes, you will automatically submit your Pull Request (PR) to the [Windows Package Manager repository](https://github.com/microsoft/winget-pkgs).
 
 If you have provided your [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) on the command line, you can skip the login process. Instructions on setting up GitHub Token for Winget-Create can be found [here](../README.md#github-personal-access-token-classic-permissions).
