@@ -219,3 +219,5 @@ You can also opt-out of telemetry by configuring the `settings.json` file and se
 See the [privacy statement](/PRIVACY.md) for more details.
 
 ## Known Issues
+
+Certain functionalities of wingetcreate, particularly input prompting, may not be fully supported on certain shells such as PowerShell ISE. The supported shells for the prompting package utilized by wingetcreate are specified [here](https://github.com/shibayan/Sharprompt#supported-platforms)
