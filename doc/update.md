@@ -1,7 +1,7 @@
 
 # update command (Winget-Create)
 
-The **update** command of the [Winget-Create](../README.md) tool is designed to update an existing manifest. The **update** command is non-interactive so that it can be seamlessly integrated into your build pipeline to assist with the publishing of your installer.  The **update** command will update the manifest with the new URL, hash and version and can automatically submit the pull request (PR) to the [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/).
+The **update** command of the [Winget-Create](../README.md) tool is designed to update an existing manifest. The **update** command supports both an interactive mode and an autonomous (non-interactive) mode. The interactive mode will prompt for user input offering a guided experience. The autonomous mode is designed to be used in a CI/CD pipeline to assist with automating the process of updating your package manifest. The **update** command will update the manifest with the new URL, hash and version and can automatically submit the pull request (PR) to the [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/).
 
 ## Usage
 
@@ -52,6 +52,7 @@ The following arguments are available:
 | **id** |  Required. Package identifier used to lookup the existing manifest on the Windows Package Manager repo.
 | **-u, --urls** |  Installer Url(s) used to extract relevant metadata for generating a manifest
 | **-v, --version** |  Version to be used when updating the package version field.
+| **-i, --interactive** |  Boolean value for making the update command interactive. If true, the tool will prompt the user for input. Default is false.
 | **-o, --out** |  The output directory where the newly created manifests will be saved locally
 | **-s, --submit** |  Boolean value for submitting to the Windows Package Manager repo. If true, updated manifest will be submitted directly using the provided GitHub Token
 | **-r, --replace** |  Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false.
