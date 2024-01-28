@@ -9,6 +9,14 @@ Instructions on setting up GitHub Token for Winget-Create can be found [here](..
 
 `wingetcreate.exe token [\<options>]`
 
+### Store a new GitHub token in your local cache
+
+`wingetcreate.exe token --store --token <GitHubPersonalAccessToken>`
+
+### Clear the cached GitHub token
+
+`wingetcreate.exe token --clear`
+
 ## Arguments
 
 The following arguments are available:

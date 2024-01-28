@@ -835,6 +835,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear the cached GitHub token.
+        /// </summary>
+        public static string Example_TokenCommand_ClearExistingToken {
+            get {
+                return ResourceManager.GetString("Example_TokenCommand_ClearExistingToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Store a new GitHub token in your local cache.
+        /// </summary>
+        public static string Example_TokenCommand_StoreNewToken {
+            get {
+                return ResourceManager.GetString("Example_TokenCommand_StoreNewToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Override the architecture of an installer.
         /// </summary>
         public static string Example_UpdateCommand_OverrideArchitecture {
@@ -1591,7 +1609,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Locale manifest matching with input locale &quot;{0}&quot; already exists.
+        ///   Looks up a localized string similar to Locale manifest matching with input locale &quot;{0}&quot; already exists. Use the update-locale command to update an existing locale manifest..
         /// </summary>
         public static string LocaleAlreadyExists_ErrorMessage {
             get {
@@ -1600,7 +1618,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Manifest for input locale &quot;{0}&quot; does not exist. .
+        ///   Looks up a localized string similar to Manifest for input locale &quot;{0}&quot; does not exist. Use the new-locale command to generate a new locale manifest..
         /// </summary>
         public static string LocaleDoesNotExist_Message {
             get {
