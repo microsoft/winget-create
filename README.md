@@ -89,7 +89,8 @@ Or you can utilize a PowerShell task and run the following script.
     .\dotnet-install.ps1 -Runtime dotnet -Architecture x64 -Version 6.0.13 -InstallDir $env:ProgramFiles\dotnet
 ```
 
-> **Note**: Make sure your build machine has the [Microsoft Visual C++ Redistributable for Visual Studio](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) already installed. Without this, the standalone WingetCreate exe will fail to execute and likely show a "DllNotFoundException" error.
+> [!IMPORTANT]
+> Make sure your build machine has the [Microsoft Visual C++ Redistributable for Visual Studio](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) already installed. Without this, the standalone WingetCreate exe will fail to execute and likely show a "DllNotFoundException" error.
 
 To execute the standalone exe, add another PowerShell task to download and run the ./wingetcreate.exe to update your existing manifest. You will need a GitHub personal access token if you would like to submit your updated manifest. It is not recommended to hardcode your PAT in your script as this poses as a security threat. You should instead store your PAT as a [secret pipeline variable](https://docs.microsoft.com/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables) or a [repository secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) in case of GitHub Actions.
 
@@ -102,7 +103,8 @@ To execute the standalone exe, add another PowerShell task to download and run t
 
 Windows Server 2022 now supports App Execution Aliases, which means the alias `wingetcreate` can be used to run the tool after installing the msixbundle. The latest version of the msixbundle can be found at https://aka.ms/wingetcreate/latest/msixbundle. Similar to the standalone exe steps, download the msixbundle, add the package, and run `wingetcreate` to update your manifest.
 
-> **Note**: Winget-Create has a dependency on the [C++ Runtime Desktop framework package](https://docs.microsoft.com/en-us/troubleshoot/developer/visualstudio/cpp/libraries/c-runtime-packages-desktop-bridge). Be sure to also download and install this package prior to installing wingetcreate as shown in the steps below.
+> [!IMPORTANT]
+> Winget-Create has a dependency on the [C++ Runtime Desktop framework package](https://docs.microsoft.com/en-us/troubleshoot/developer/visualstudio/cpp/libraries/c-runtime-packages-desktop-bridge). Be sure to also download and install this package prior to installing wingetcreate as shown in the steps below.
 
 ```yaml
 - powershell: |
@@ -180,7 +182,8 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 * Set the solution wide runsettings file for the tests
     * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
-> **Warning**: You should treat your access token like a password. To avoid exposing your PAT, be sure to reset changes to the `WingetCreateTests/Test.runsettings` file before committing your changes. You can also use the command `git update-index --skip-worktree src/WingetCreateTests/WingetCreateTests/Test.runsettings` command to untrack changes to the file and prevent it from being committed.
+> [!CAUTION]
+> You should treat your access token like a password. To avoid exposing your PAT, be sure to reset changes to the `WingetCreateTests/Test.runsettings` file before committing your changes. You can also use the command `git update-index --skip-worktree src/WingetCreateTests/WingetCreateTests/Test.runsettings` command to untrack changes to the file and prevent it from being committed.
 
 ## Contributing
 

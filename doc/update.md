@@ -9,7 +9,7 @@ The **update** command of the [Winget-Create](../README.md) tool is designed to 
 
 The **update** command can be called with the installer URL(s) that you wish to update the manifest with. **Please make sure that the number of installer URL(s) included matches the number of existing installer nodes in the manifest you are updating. Otherwise, the command will fail.** This is to ensure that we can deterministically update each installer node with the correct matching installer url provided.
 
-> **Note**\
+> [!NOTE]
 > The [show](show.md) command can be used to quickly view an existing manifest from the packages repository.
 
 ### *How does Winget-Create know which installer(s) to match when executing an update?*
@@ -39,7 +39,7 @@ Override the architecture of an installer:
 Override the scope of an installer:
 `wingetcreate.exe update --urls "<InstallerUrl1>|<InstallerScope>" --version <Version> <PackageIdentifier>`
 
-> **Note**\
+> [!NOTE]
 > The <kbd>|</kbd> character is interpreted as the pipeline operator in most shells. To use the overrides, you should wrap the installer url in quotes.
 
 Update an existing manifest and submit PR to GitHub:
