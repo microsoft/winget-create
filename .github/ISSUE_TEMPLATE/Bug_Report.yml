@@ -46,11 +46,9 @@ body:
         [wingetcreate --help]
         Windows Package Manager Manifest Creator version
 
-        [winget --info]
-        Windows Package Manager version
+        [wingetcreate info]
+        Operating System: Windows.Desktop version
         System Architecture: CPU architecture
-        Windows: Windows.Desktop version
-        Package: Microsoft.DesktopAppInstaller version
 
         Any other software?
       render: shell
