@@ -68,6 +68,7 @@ You can use WingetCreate to update your existing app manifest as part of your CI
 - [PowerToys](https://github.com/microsoft/PowerToys/blob/main/.github/workflows/package-submissions.yml)
 - [Terminal](https://github.com/microsoft/terminal/blob/main/.github/workflows/winget.yml)
 
+You can also check out this [episode of Open at Microsoft](https://learn.microsoft.com/en-us/shows/open-at-microsoft/wingetcreate-keeping-winget-packages-up-to-date) where we cover the same topic.
 
 ### Using the standalone exe:
 
