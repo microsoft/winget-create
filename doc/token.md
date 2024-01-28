@@ -26,3 +26,4 @@ The following arguments are available:
 | **-c, --clear**  | Required. Clear the cached GitHub token
 | **-s, --store**  | Required. Set the cached GitHub token. Can specify token to cache with --token parameter, otherwise will initiate OAuth flow.
 | **-t, --token**   | GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
+| **-?, --help** |  Gets additional help on this command. |
