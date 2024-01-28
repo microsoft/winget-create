@@ -34,10 +34,13 @@ Save and publish updated manifest:
 
 Override the architecture of an installer:
 
-`wingetcreate.exe update --urls <InstallerUrl1>|<InstallerArchitecture> --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update --urls "<InstallerUrl1>|<InstallerArchitecture>" --version <Version> <PackageIdentifier>`
 
 Override the scope of an installer:
-`wingetcreate.exe update --urls <InstallerUrl1>|<InstallerScope> --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update --urls "<InstallerUrl1>|<InstallerScope>" --version <Version> <PackageIdentifier>`
+
+> **Note**\
+> The <kbd>|</kbd> character is interpreted as the pipeline operator in most shells. To use the overrides, you should wrap the installer url in quotes.
 
 Update an existing manifest and submit PR to GitHub:
 
