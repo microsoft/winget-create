@@ -46,16 +46,17 @@ namespace Microsoft.WingetCreateCore.Models
         /// </summary>
         /// <typeparam name="T">Manifest type.</typeparam>
         /// <param name="manifest">Manifest object model.</param>
+        /// <param name="extension">File extension to use depending on the serialization format.</param>
         /// <returns>File name string of manifest.</returns>
-        public static string GetFileName<T>(T manifest)
+        public static string GetFileName<T>(T manifest, string extension)
         {
             return manifest switch
             {
-                InstallerManifest installerManifest => $"{installerManifest.PackageIdentifier}.installer.yaml",
-                VersionManifest versionManifest => $"{versionManifest.PackageIdentifier}.yaml",
-                DefaultLocaleManifest defaultLocaleManifest => $"{defaultLocaleManifest.PackageIdentifier}.locale.{defaultLocaleManifest.PackageLocale}.yaml",
-                LocaleManifest localeManifest => $"{localeManifest.PackageIdentifier}.locale.{localeManifest.PackageLocale}.yaml",
-                SingletonManifest singletonManifest => $"{singletonManifest.PackageIdentifier}.yaml",
+                InstallerManifest installerManifest => $"{installerManifest.PackageIdentifier}.installer{extension}",
+                VersionManifest versionManifest => $"{versionManifest.PackageIdentifier}{extension}",
+                DefaultLocaleManifest defaultLocaleManifest => $"{defaultLocaleManifest.PackageIdentifier}.locale.{defaultLocaleManifest.PackageLocale}{extension}",
+                LocaleManifest localeManifest => $"{localeManifest.PackageIdentifier}.locale.{localeManifest.PackageLocale}{extension}",
+                SingletonManifest singletonManifest => $"{singletonManifest.PackageIdentifier}{extension}",
                 _ => throw new ArgumentException(nameof(manifest)),
             };
         }

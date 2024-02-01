@@ -56,6 +56,7 @@ The following arguments are available:
 | **-s, --submit** |  Boolean value for submitting to the Windows Package Manager repo. If true, updated manifest will be submitted directly using the provided GitHub Token
 | **-r, --replace** |  Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false.
 | **-p, --prtitle** |  The title of the pull request submitted to GitHub.
+| **-f,--format** |  Output format of the manifest. Default is "yaml". |
 | **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
 | **-?, --help** |  Gets additional help on this command. |
 

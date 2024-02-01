@@ -7,62 +7,45 @@ namespace Microsoft.WingetCreateCore
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
     using System.Text;
+    using Microsoft.WingetCreateCore.Interfaces;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Locale;
     using Microsoft.WingetCreateCore.Models.Singleton;
     using Microsoft.WingetCreateCore.Models.Version;
-    using Newtonsoft.Json;
-    using YamlDotNet.Core;
-    using YamlDotNet.Core.Events;
-    using YamlDotNet.Serialization;
-    using YamlDotNet.Serialization.EventEmitters;
-    using YamlDotNet.Serialization.NamingConventions;
-    using YamlDotNet.Serialization.TypeInspectors;
+    using Microsoft.WingetCreateCore.Serializers;
 
     /// <summary>
     /// Provides functionality for the serialization of JSON objects to yaml.
     /// </summary>
     public static class Serialization
     {
+        static Serialization()
+        {
+            // Default to yaml serializer.
+            ManifestSerializer = new YamlSerializer();
+        }
+
+        /// <summary>
+        /// Gets or sets the manifest serializer to be used for serializing output manifest.
+        /// </summary>
+        public static IManifestSerializer ManifestSerializer { get; set; }
+
+        /// <summary>
+        /// Gets implementation types of <see cref="IManifestSerializer"/> available in the current app domain.
+        /// </summary>
+        public static List<Type> AvailableSerializerTypes { get; } =
+            AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(s => s.GetTypes())
+            .Where(p => typeof(IManifestSerializer).IsAssignableFrom(p) && !p.IsInterface)
+            .ToList();
+
         /// <summary>
         /// Gets or sets the application that produced the manifest, will be added to comment header.
         /// </summary>
         public static string ProducedBy { get; set; }
-
-        /// <summary>
-        /// Helper to build a YAML serializer.
-        /// </summary>
-        /// <returns>ISerializer object.</returns>
-        public static ISerializer CreateSerializer()
-        {
-            var serializer = new SerializerBuilder()
-                .WithQuotingNecessaryStrings()
-                .WithNamingConvention(PascalCaseNamingConvention.Instance)
-                .WithTypeConverter(new YamlStringEnumConverter())
-                .WithEmissionPhaseObjectGraphVisitor(args => new YamlSkipPropertyVisitor(args.InnerVisitor))
-                .WithEventEmitter(nextEmitter => new MultilineScalarFlowStyleEmitter(nextEmitter))
-                .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull);
-            return serializer.Build();
-        }
-
-        /// <summary>
-        /// Helper to build a YAML deserializer.
-        /// </summary>
-        /// <returns>IDeserializer object.</returns>
-        public static IDeserializer CreateDeserializer()
-        {
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(PascalCaseNamingConvention.Instance)
-                .WithTypeConverter(new YamlStringEnumConverter())
-                .WithTypeInspector(inspector => new AliasTypeInspector(inspector))
-                .IgnoreUnmatchedProperties();
-            return deserializer.Build();
-        }
 
         /// <summary>
         /// Deserialize a stream reader into a Manifest object.
@@ -84,67 +67,46 @@ namespace Microsoft.WingetCreateCore
         /// <returns>Manifest object populated and validated.</returns>
         public static T DeserializeFromString<T>(string value)
         {
-            var deserializer = Serialization.CreateDeserializer();
-            return deserializer.Deserialize<T>(value);
+            value = value.Trim();
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentException("Manifest is empty.");
+            }
+
+            // Early return if the value is already a json object or array.
+            if ((value.StartsWith("{") && value.EndsWith("}")) ||
+                (value.StartsWith("[") && value.EndsWith("]")))
+            {
+                return new JsonSerializer().ManifestDeserialize<T>(value);
+            }
+
+            foreach (var serializerType in AvailableSerializerTypes)
+            {
+                var serializer = (IManifestSerializer)Activator.CreateInstance(serializerType);
+                try
+                {
+                    return serializer.ManifestDeserialize<T>(value);
+                }
+                catch (Exception)
+                {
+                    // Ignore exception and try next serializer.
+                }
+            }
+
+            throw new ArgumentException("Manifest is not in a valid format.");
         }
 
         /// <summary>
-        /// Serialize an object to a YAML string.
+        /// Serialize an object to a manifest string.
         /// </summary>
-        /// <param name="value">Object to serialize to YAML.</param>
+        /// <param name="value">Object to serialize.</param>
         /// <typeparam name="T">Type of object to serialize.</typeparam>
         /// <param name="omitCreatedByHeader">Value to indicate whether to omit the created by header.</param>
         /// <returns>Manifest in string value.</returns>
-        public static string ToYaml<T>(this T value, bool omitCreatedByHeader = false)
+        public static string ToManifestString<T>(this T value, bool omitCreatedByHeader = false)
             where T : new()
         {
-            var serializer = CreateSerializer();
-            string manifestYaml = serializer.Serialize(value);
-            StringBuilder serialized = new StringBuilder();
-
-            if (!omitCreatedByHeader)
-            {
-                serialized.AppendLine($"# Created using {ProducedBy}");
-            }
-
-            string schemaTemplate = "# yaml-language-server: $schema=https://aka.ms/winget-manifest.{0}.{1}.schema.json";
-
-            switch (value)
-            {
-                case Models.Singleton.SingletonManifest singletonManifest:
-                    serialized.AppendLine(string.Format(schemaTemplate, singletonManifest.ManifestType, singletonManifest.ManifestVersion));
-                    break;
-                case Models.Version.VersionManifest versionManifest:
-                    serialized.AppendLine(string.Format(schemaTemplate, versionManifest.ManifestType, versionManifest.ManifestVersion));
-                    break;
-                case Models.Installer.InstallerManifest installerManifest:
-                    serialized.AppendLine(string.Format(schemaTemplate, installerManifest.ManifestType, installerManifest.ManifestVersion));
-                    break;
-                case Models.Locale.LocaleManifest localeManifest:
-                    serialized.AppendLine(string.Format(schemaTemplate, localeManifest.ManifestType, localeManifest.ManifestVersion));
-                    break;
-                case Models.DefaultLocale.DefaultLocaleManifest defaultLocaleManifest:
-                    serialized.AppendLine(string.Format(schemaTemplate, defaultLocaleManifest.ManifestType, defaultLocaleManifest.ManifestVersion));
-                    break;
-            }
-
-            serialized.AppendLine();
-            serialized.Append(manifestYaml);
-
-            return serialized.ToString();
-        }
-
-        /// <summary>
-        /// Deserializes yaml to JSON object.
-        /// </summary>
-        /// <param name="yaml">yaml to deserialize to JSON object.</param>
-        /// <returns>Manifest as a JSON object.</returns>
-        public static string ConvertYamlToJson(string yaml)
-        {
-            var deserializer = CreateDeserializer();
-            using var reader = new StringReader(yaml);
-            var yamlObject = deserializer.Deserialize(reader);
-            return JsonConvert.SerializeObject(yamlObject);
+            return ManifestSerializer.ToManifestString(value, omitCreatedByHeader);
         }
 
         /// <summary>
@@ -154,8 +116,7 @@ namespace Microsoft.WingetCreateCore
         /// <returns>Serialized string.</returns>
         public static string Serialize(object value)
         {
-            var serializer = CreateSerializer();
-            return serializer.Serialize(value);
+            return ManifestSerializer.ManifestSerialize(value);
         }
 
         /// <summary>
@@ -199,6 +160,22 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
+        /// Set the manifest serializer based on the provided value.
+        /// </summary>
+        /// <param name="outputFormat">String value denoting the output manifest format.</param>
+        /// <exception cref="ArgumentException">Exception thrown when an invalid serialization type is provided.</exception>
+        public static void SetManifestSerializer(string outputFormat)
+        {
+            // Set the serializer based on the provided value
+            ManifestSerializer = outputFormat.ToLower() switch
+            {
+                "yaml" => new YamlSerializer(),
+                "json" => new JsonSerializer(),
+                _ => throw new ArgumentException($"Invalid serialization type: {outputFormat}"),
+            };
+        }
+
+        /// <summary>
         /// Removes Byte Order Marker (BOM) prefix if exists in string.
         /// </summary>
         /// <param name="value">String to fix.</param>
@@ -207,139 +184,6 @@ namespace Microsoft.WingetCreateCore
         {
             string bomMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
             return value.StartsWith(bomMarkUtf8, StringComparison.OrdinalIgnoreCase) ? value.Remove(0, bomMarkUtf8.Length) : value;
-        }
-
-        /// <summary>
-        /// Custom TypeInspector to priorize properties that have a defined YamlMemberAttribute for custom override.
-        /// </summary>
-        private class AliasTypeInspector : TypeInspectorSkeleton
-        {
-            private readonly ITypeInspector innerTypeDescriptor;
-
-            public AliasTypeInspector(ITypeInspector innerTypeDescriptor)
-            {
-                this.innerTypeDescriptor = innerTypeDescriptor;
-            }
-
-            /// <summary>
-            /// Because certain properties were generated incorrectly, we needed to create custom fields for those properties.
-            /// Therefore to resolve naming conflicts during deserialization, we prioritize fields that have the YamlMemberAttribute defined
-            /// as that attribute indicates an override.
-            /// </summary>
-            public override IEnumerable<IPropertyDescriptor> GetProperties(Type type, object container)
-            {
-                var propertyDescriptors = this.innerTypeDescriptor.GetProperties(type, container);
-                var aliasDefinedProps = type.GetProperties().ToList()
-                    .Where(p =>
-                    {
-                        var yamlMemberAttribute = p.GetCustomAttribute<YamlMemberAttribute>();
-                        return yamlMemberAttribute != null && !string.IsNullOrEmpty(yamlMemberAttribute.Alias);
-                    })
-                    .ToList();
-
-                if (aliasDefinedProps.Any())
-                {
-                    var overriddenProps = propertyDescriptors
-                        .Where(prop => aliasDefinedProps.Any(aliasProp =>
-                            prop.Name == aliasProp.GetCustomAttribute<YamlMemberAttribute>().Alias && // Use Alias name (ex. ReleaseDate) instead of property name (ex. ReleaseDateString).
-                            prop.Type != aliasProp.PropertyType))
-                        .ToList();
-
-                    // Remove overridden properties from the returned list of deserializable properties.
-                    return propertyDescriptors
-                        .Where(prop => !overriddenProps.Any(overridenProp =>
-                            prop.Name == overridenProp.Name &&
-                            prop.Type == overridenProp.Type))
-                        .ToList();
-                }
-                else
-                {
-                    return propertyDescriptors;
-                }
-            }
-        }
-
-        private class YamlStringEnumConverter : IYamlTypeConverter
-        {
-            public bool Accepts(Type type)
-            {
-                Type u = Nullable.GetUnderlyingType(type);
-                return type.IsEnum || ((u != null) && u.IsEnum);
-            }
-
-            public object ReadYaml(IParser parser, Type type)
-            {
-                Type u = Nullable.GetUnderlyingType(type);
-                if (u != null)
-                {
-                    type = u;
-                }
-
-                var parsedEnum = parser.Consume<Scalar>();
-                var serializableValues = type.GetMembers()
-                    .Select(m => new KeyValuePair<string, MemberInfo>(m.GetCustomAttributes<EnumMemberAttribute>(true).Select(ema => ema.Value).FirstOrDefault(), m))
-                    .Where(pa => !string.IsNullOrEmpty(pa.Key)).ToDictionary(pa => pa.Key, pa => pa.Value);
-                if (!serializableValues.ContainsKey(parsedEnum.Value))
-                {
-                    throw new YamlException(parsedEnum.Start, parsedEnum.End, $"Value '{parsedEnum.Value}' not found in enum '{type.Name}'");
-                }
-
-                return Enum.Parse(type, serializableValues[parsedEnum.Value].Name);
-            }
-
-            public void WriteYaml(IEmitter emitter, object value, Type type)
-            {
-                var enumMember = type.GetMember(value.ToString()).FirstOrDefault();
-                var yamlValue = enumMember?.GetCustomAttributes<EnumMemberAttribute>(true).Select(ema => ema.Value).FirstOrDefault() ?? value.ToString();
-                emitter.Emit(new Scalar(yamlValue));
-            }
-        }
-
-        private class YamlSkipPropertyVisitor : YamlDotNet.Serialization.ObjectGraphVisitors.ChainedObjectGraphVisitor
-        {
-            public YamlSkipPropertyVisitor(IObjectGraphVisitor<IEmitter> nextVisitor)
-                : base(nextVisitor)
-            {
-            }
-
-            public override bool EnterMapping(IPropertyDescriptor key, IObjectDescriptor value, IEmitter context)
-            {
-                if (key.Name == "AdditionalProperties")
-                {
-                    return false;
-                }
-
-                return base.EnterMapping(key, value, context);
-            }
-        }
-
-        /// <summary>
-        /// A custom emitter for YamlDotNet which ensures all multiline fields use a <see cref="ScalarStyle.Literal"/>.
-        /// </summary>
-        private class MultilineScalarFlowStyleEmitter : ChainedEventEmitter
-        {
-            public MultilineScalarFlowStyleEmitter(IEventEmitter nextEmitter)
-                : base(nextEmitter)
-            {
-            }
-
-            public override void Emit(ScalarEventInfo eventInfo, IEmitter emitter)
-            {
-                if (typeof(string).IsAssignableFrom(eventInfo.Source.Type))
-                {
-                    var outString = eventInfo.Source.Value as string;
-                    if (!string.IsNullOrEmpty(outString))
-                    {
-                        bool isMultiLine = new[] { '\r', '\n', '\x85', '\x2028', '\x2029' }.Any(outString.Contains);
-                        if (isMultiLine)
-                        {
-                            eventInfo = new ScalarEventInfo(eventInfo.Source) { Style = ScalarStyle.Literal };
-                        }
-                    }
-                }
-
-                this.nextEmitter.Emit(eventInfo, emitter);
-            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿PackageIdentifier: WingetCreateE2E.MsiTest
+﻿PackageIdentifier: WingetCreateE2E.Yaml.MsiTest
 PackageName: MsiTest
 PackageVersion: 1.2.3.4
 Publisher: WingetCreateE2E

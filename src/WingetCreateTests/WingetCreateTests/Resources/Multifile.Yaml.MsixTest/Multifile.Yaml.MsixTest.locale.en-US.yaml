@@ -1,9 +1,9 @@
-﻿PackageIdentifier: Multifile.MsixTest
+﻿PackageIdentifier: Multifile.Yaml.MsixTest
 PackageVersion: 1.2.3.4
-PackageLocale: en-GB
+PackageLocale: en-US
 Publisher: Multifile
 PackageName: MsixTest
 License: MIT
 ShortDescription: Testing WingetCreate with a multifile msix manifest
-ManifestType: locale
+ManifestType: defaultLocale
 ManifestVersion: 1.0.0

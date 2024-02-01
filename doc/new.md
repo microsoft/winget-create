@@ -27,6 +27,7 @@ The following arguments are available:
 | Argument  | Description |
 |--------------|-------------|
 | **-o,--out** |  The output directory where the newly created manifests will be saved locally |
+| **-f,--format** |  Output format of the manifest. Default is "yaml". |
 | **-t,--token**  | GitHub personal access token used for direct submission to the Windows Package Manager repo |
 | **-?, --help** |  Gets additional help on this command |
 

@@ -49,7 +49,19 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
     
     
     }
-    
+
+    /// <summary>Output manifest settings</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class Manifest
+    {
+        /// <summary>Specifies the format of the manifest file</summary>
+        [Newtonsoft.Json.JsonProperty("format", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public ManifestFormat Format { get; set; } = Microsoft.WingetCreateCLI.Models.Settings.ManifestFormat.Yaml;
+
+
+    }
+
     /// <summary>Visual settings</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
     public partial class Visual 
@@ -79,11 +91,26 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
         [Newtonsoft.Json.JsonProperty("WindowsPackageManagerRepository", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public WindowsPackageManagerRepository WindowsPackageManagerRepository { get; set; } = new WindowsPackageManagerRepository();
-    
+
+        [Newtonsoft.Json.JsonProperty("Manifest", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public Manifest Manifest { get; set; } = new Manifest();
+
         [Newtonsoft.Json.JsonProperty("Visual", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public Visual Visual { get; set; } = new Visual();
     
     
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.4.3.0 (Newtonsoft.Json v11.0.0.0)")]
+    public enum ManifestFormat
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"yaml")]
+        Yaml = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"json")]
+        Json = 1,
+
     }
 }

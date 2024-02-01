@@ -27,13 +27,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.locale.en-GB.yaml">
+    <None Update="Resources\Multifile.Yaml.MsixTest\Multifile.Yaml.MsixTest.locale.en-GB.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.installer.yaml">
+    <None Update="Resources\Multifile.Yaml.MsixTest\Multifile.Yaml.MsixTest.installer.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.locale.en-US.yaml">
+    <None Update="Resources\Multifile.Yaml.MsixTest\Multifile.Yaml.MsixTest.locale.en-US.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+	<None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.locale.en-GB.json">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+	<None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.installer.json">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+	<None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.locale.en-US.json">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+    <None Update="Resources\TestPublisher.FullJsonSingleton1_1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TestPublisher.FullJsonSingleton1_2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TestPublisher.FullJsonSingleton1_4.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TestPublisher.FullJsonSingleton1_5.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.VersionWithWhitespace.yaml">
@@ -54,7 +75,7 @@
     <None Update="Resources\TestPublisher.DontMoveInstallerFieldsToRoot.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\TestPublisher.FullSingleton1_5.yaml">
+    <None Update="Resources\TestPublisher.FullYamlSingleton1_5.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.ArchAndScopeOverride.yaml">
@@ -84,19 +105,19 @@
     <None Update="Resources\TestPublisher.ZipWithExe.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\TestPublisher.FullSingleton1_4.yaml">
+    <None Update="Resources\TestPublisher.FullYamlSingleton1_4.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.Portable.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\TestPublisher.FullSingleton1_2.yaml">
+    <None Update="Resources\TestPublisher.FullYamlSingleton1_2.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.ResetVersionSpecificFields.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\TestPublisher.FullSingleton1_1.yaml">
+    <None Update="Resources\TestPublisher.FullYamlSingleton1_1.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.DeserializeAliasFields.yaml">
@@ -129,13 +150,28 @@
     <None Update="Resources\TestPublisher.SingleMsixInExistingBundle.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Multifile.MsixTest\Multifile.MsixTest.yaml">
+    <None Update="Resources\Multifile.Yaml.MsixTest\Multifile.Yaml.MsixTest.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\WingetCreateE2E.ZipTest.yaml">
+	<None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.json">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+    <None Update="Resources\WingetCreateE2E.Json.ExeTest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\WingetCreateE2E.PortableTest.yaml">
+    <None Update="Resources\WingetCreateE2E.Json.MsiTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\WingetCreateE2E.Json.PortableTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\WingetCreateE2E.Json.ZipTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\WingetCreateE2E.Yaml.ZipTest.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\WingetCreateE2E.Yaml.PortableTest.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\WingetCreateTestExeInstaller.exe">
@@ -147,10 +183,10 @@
     <None Update="Resources\WingetCreateTestMsixInstaller.msixbundle">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\WingetCreateE2E.ExeTest.yaml">
+    <None Update="Resources\WingetCreateE2E.Yaml.ExeTest.yaml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\WingetCreateE2E.MsiTest.yaml">
+    <None Update="Resources\WingetCreateE2E.Yaml.MsiTest.yaml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.TestApp.yaml">
