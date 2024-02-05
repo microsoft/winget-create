@@ -43,10 +43,8 @@ body:
     attributes:
       label: Environment
       placeholder: |
-        [wingetcreate --help]
-        Windows Package Manager Manifest Creator version
-
         [wingetcreate info]
+        Windows Package Manager Manifest Creator version
         Operating System: Windows.Desktop version
         System Architecture: CPU architecture
 
