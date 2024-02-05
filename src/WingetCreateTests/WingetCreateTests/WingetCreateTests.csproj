@@ -36,15 +36,15 @@
     <None Update="Resources\Multifile.Yaml.MsixTest\Multifile.Yaml.MsixTest.locale.en-US.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.locale.en-GB.json">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-	<None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.installer.json">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-	<None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.locale.en-US.json">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+    <None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.locale.en-GB.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.installer.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.locale.en-US.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\TestPublisher.FullJsonSingleton1_1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -153,9 +153,9 @@
     <None Update="Resources\Multifile.Yaml.MsixTest\Multifile.Yaml.MsixTest.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.json">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+    <None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\WingetCreateE2E.Json.ExeTest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
