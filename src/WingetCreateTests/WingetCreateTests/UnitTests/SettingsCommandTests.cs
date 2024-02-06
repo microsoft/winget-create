@@ -100,12 +100,14 @@ namespace Microsoft.WingetCreateUnitTests
             int cleanUpDays = 30;
             string testRepoOwner = "testRepoOwner";
             string testRepoName = "testRepoName";
+            ManifestFormat manifestFormat = ManifestFormat.Json;
             UserSettings.TelemetryDisabled = !isTelemetryDisabled;
             UserSettings.CleanUpDisabled = !isCleanUpDisabled;
             UserSettings.AnonymizePaths = !arePathsAnonymized;
             UserSettings.CleanUpDays = cleanUpDays;
             UserSettings.WindowsPackageManagerRepositoryOwner = testRepoOwner;
             UserSettings.WindowsPackageManagerRepositoryName = testRepoName;
+            UserSettings.ManifestFormat = manifestFormat;
             UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest);
             Assert.IsTrue(manifest.Telemetry.Disable == !isTelemetryDisabled, "Changed Telemetry setting was not reflected in the settings file.");
             Assert.IsTrue(manifest.CleanUp.Disable == !isCleanUpDisabled, "Changed CleanUp.Disable setting was not reflected in the settings file.");
@@ -113,6 +115,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.IsTrue(manifest.CleanUp.IntervalInDays == cleanUpDays, "Changed CleanUp.IntervalInDays setting was not reflected in the settings file.");
             Assert.IsTrue(manifest.WindowsPackageManagerRepository.Owner == testRepoOwner, "Changed WindowsPackageManagerRepository.Owner setting was not reflected in the settings file.");
             Assert.IsTrue(manifest.WindowsPackageManagerRepository.Name == testRepoName, "Changed WindowsPackageManagerRepository.Name setting was not reflected in the settings file.");
+            Assert.IsTrue(manifest.Manifest.Format == manifestFormat, "Changed Manifest.Format setting was not reflected in the settings file.");
         }
 
         /// <summary>
