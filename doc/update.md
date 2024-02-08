@@ -18,9 +18,9 @@ The **update** command can be called with the installer URL(s) that you wish to 
 
 There are cases where the intended architecture specified in the existing manifest can sometimes differ from the actual architecture of the installer package. To mitigate this discrepancy, the installer architecture will first be determined by performing a regex string match to identify the possible architecture in the installer url. If no match is found, [Winget-Create](../README.md) will resort to obtaining the architecture from the downloaded installer.
 
-In case Winget-Create fails to obtain the architecture from the binary or the obtained architecture does not match an architecture in the existing manifest, Winget-Create will fail to generate the manifest. In this case, you can explicitly provide the intended architecture in the update command using the following override format:
+If Winget-Create fails to detect the architecture from the binary or the detected architecture does not match an architecture in the existing manifest, Winget-Create will fail to generate the manifest. In this case, you can explicitly provide the intended architecture in the update command using the following override format:
 
-`<InstallerUrl>|<InstallerArchitecture>`
+`'<InstallerUrl>|<InstallerArchitecture>'`
 
 e.g.,
 
@@ -28,11 +28,11 @@ e.g.,
 
 In case there are multiple installers with the same architecture, it may mean the same installer is available for multiple scopes. In this case, you can explicitly provide the installer scope in the update command using the following override format:
 
-`<InstallerUrl>|<InstallerArchitecture>|<InstallerScope>`
+`'<InstallerUrl>|<InstallerArchitecture>|<InstallerScope>'`
 
 e.g.,
 
-`wingetcreate update <PackageIdentifier> --urls "<InstallerUrl1>|x64|user" "<InstallerUrl1>|x64|machine" "<InstallerUrl2>|x86|user" "<InstallerUrl2>|x86|machine"`
+`wingetcreate update <PackageIdentifier> --urls '<InstallerUrl1>|x64|user' '<InstallerUrl1>|x64|machine' '<InstallerUrl2>|x86|user' '<InstallerUrl2>|x86|machine'`
 
 ## Usage Examples
 
@@ -50,10 +50,10 @@ Save and publish updated manifest:
 
 Override the architecture of an installer:
 
-`wingetcreate.exe update --urls "<InstallerUrl1>|<InstallerArchitecture>" --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update --urls '<InstallerUrl1>|<InstallerArchitecture>' --version <Version> <PackageIdentifier>`
 
 Override the scope of an installer:
-`wingetcreate.exe update --urls "<InstallerUrl1>|<InstallerScope>" --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update --urls '<InstallerUrl1>|<InstallerScope>' --version <Version> <PackageIdentifier>`
 
 > [!NOTE]
 > The <kbd>|</kbd> character is interpreted as the pipeline operator in most shells. To use the overrides, you should wrap the installer url in quotes.
