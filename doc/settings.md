@@ -45,7 +45,7 @@ The `intervalInDays` setting specifies how often Winget-Create will remove tempo
 
 ## WindowsPackageManagerRepository
 
-The `WindowsPackageManagerRepository` setting specifies which repository Winget-Create targets. By default, this setting targets the main [`microsoft/winget-pkgs`](https://github.com/microsoft/winget-pkgs) repository but can be changed to target a forked copy of the main repository like a [test](https://github.com/microsoft/winget-pkgs-submission-test) or private production repository. 
+The `WindowsPackageManagerRepository` setting specifies which repository Winget-Create targets. By default, this setting targets the main [`microsoft/winget-pkgs`](https://github.com/microsoft/winget-pkgs) repository but can be changed to target a forked copy of the main repository like a [test](https://github.com/microsoft/winget-pkgs-submission-test) or private production repository.
 
 ### Owner
 The `owner` setting specifies who owns the targeted GitHub repository. By default, this is set to `microsoft`.

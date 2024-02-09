@@ -835,6 +835,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear the cached GitHub token.
+        /// </summary>
+        public static string Example_TokenCommand_ClearExistingToken {
+            get {
+                return ResourceManager.GetString("Example_TokenCommand_ClearExistingToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Store a new GitHub token in your local cache.
+        /// </summary>
+        public static string Example_TokenCommand_StoreNewToken {
+            get {
+                return ResourceManager.GetString("Example_TokenCommand_StoreNewToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Override the architecture of an installer.
         /// </summary>
         public static string Example_UpdateCommand_OverrideArchitecture {

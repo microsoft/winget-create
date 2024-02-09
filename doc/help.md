@@ -6,5 +6,3 @@ The **help** command of the [Winget-Create](../README.md) tool displays help for
 
 * Display help for all commands: `wingetcreate.exe -?`
 * View options for a command: `wingetcreate.exe <command> -?`
-
- 

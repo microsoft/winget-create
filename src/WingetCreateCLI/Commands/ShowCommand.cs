@@ -26,7 +26,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     public class ShowCommand : BaseCommand
     {
         /// <summary>
-        /// Gets the usage examples for the update command.
+        /// Gets the usage examples for the show command.
         /// </summary>
         [Usage(ApplicationAlias = ProgramApplicationAlias)]
         public static IEnumerable<Example> Examples

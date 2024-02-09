@@ -1351,4 +1351,10 @@
   <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
     <value>Format not supported. The Windows Package Manager Community repository accepts only "yaml" manifest submissions.</value>
   </data>
+  <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
+    <value>Clear the cached GitHub token</value>
+  </data>
+  <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
+    <value>Store a new GitHub token in your local cache</value>
+  </data>
 </root>

@@ -29,5 +29,6 @@ The following arguments are available:
 | **--version-manifest** |  Switch to display the version manifest.
 | **-f,--format** |  Output format of the manifest. Default is "yaml". |
 | **-t, --token** |  GitHub personal access token used for authenticated access to the GitHub API. It is recommended to provide a token to get a higher [API rate limit](https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting).
+| **-?, --help** |  Gets additional help on this command. |
 
 Instructions on setting up GitHub Token for Winget-Create can be found [here](../README.md#github-personal-access-token-classic-permissions).

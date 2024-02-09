@@ -68,6 +68,7 @@ You can use WingetCreate to update your existing app manifest as part of your CI
 - [PowerToys](https://github.com/microsoft/PowerToys/blob/main/.github/workflows/package-submissions.yml)
 - [Terminal](https://github.com/microsoft/terminal/blob/main/.github/workflows/winget.yml)
 
+You can also check out this [episode of Open at Microsoft](https://learn.microsoft.com/en-us/shows/open-at-microsoft/wingetcreate-keeping-winget-packages-up-to-date) where we cover the same topic.
 
 ### Using the standalone exe:
 
@@ -89,7 +90,8 @@ Or you can utilize a PowerShell task and run the following script.
     .\dotnet-install.ps1 -Runtime dotnet -Architecture x64 -Version 6.0.13 -InstallDir $env:ProgramFiles\dotnet
 ```
 
-> **Note**: Make sure your build machine has the [Microsoft Visual C++ Redistributable for Visual Studio](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) already installed. Without this, the standalone WingetCreate exe will fail to execute and likely show a "DllNotFoundException" error.
+> [!IMPORTANT]
+> Make sure your build machine has the [Microsoft Visual C++ Redistributable for Visual Studio](https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0) already installed. Without this, the standalone WingetCreate exe will fail to execute and likely show a "DllNotFoundException" error.
 
 To execute the standalone exe, add another PowerShell task to download and run the ./wingetcreate.exe to update your existing manifest. You will need a GitHub personal access token if you would like to submit your updated manifest. It is not recommended to hardcode your PAT in your script as this poses as a security threat. You should instead store your PAT as a [secret pipeline variable](https://docs.microsoft.com/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#secret-variables) or a [repository secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) in case of GitHub Actions.
 
@@ -102,7 +104,8 @@ To execute the standalone exe, add another PowerShell task to download and run t
 
 Windows Server 2022 now supports App Execution Aliases, which means the alias `wingetcreate` can be used to run the tool after installing the msixbundle. The latest version of the msixbundle can be found at https://aka.ms/wingetcreate/latest/msixbundle. Similar to the standalone exe steps, download the msixbundle, add the package, and run `wingetcreate` to update your manifest.
 
-> **Note**: Winget-Create has a dependency on the [C++ Runtime Desktop framework package](https://docs.microsoft.com/en-us/troubleshoot/developer/visualstudio/cpp/libraries/c-runtime-packages-desktop-bridge). Be sure to also download and install this package prior to installing wingetcreate as shown in the steps below.
+> [!IMPORTANT]
+> Winget-Create has a dependency on the [C++ Runtime Desktop framework package](https://docs.microsoft.com/en-us/troubleshoot/developer/visualstudio/cpp/libraries/c-runtime-packages-desktop-bridge). Be sure to also download and install this package prior to installing wingetcreate as shown in the steps below.
 
 ```yaml
 - powershell: |
@@ -136,10 +139,14 @@ You can install the prerequisites in one of two ways:
 
 #### Using the configuration file
 
-1. Clone the repository.
-2. Configure the system using the [configuration file](.configurations/configuration.dsc.yaml). This can be applied by either:
-    - [Dev Home](https://github.com/microsoft/devhome)'s machine configuration tool
-    - [WinGet configuration](https://learn.microsoft.com/windows/package-manager/configuration/). If you have the [experimental feature](https://aka.ms/winget-settings#configuration) enabled, run `winget configure -f .configurations/configuration.dsc.yaml` from an elevated shell.
+1. Clone the repository
+2. Configure your system
+   * Please use the [configuration file](.configurations/configuration.dsc.yaml). This can be applied by either:
+     * [Dev Home](https://github.com/microsoft/devhome)'s machine configuration tool
+     * WinGet configuration. If you have WinGet version [v1.6.2631 or later](https://github.com/microsoft/winget-cli/releases), run `winget configure .configurations/configuration.dsc.yaml` in an elevated shell from the project root so relative paths resolve correctly
+   * Alternatively, if you already are running the minimum OS version, have Visual Studio installed, and have developer mode enabled, you may configure your Visual Studio directly via the .vsconfig file. To do this:
+     * Open the Visual Studio Installer, select “More” on your product card and then "Import configuration"
+     * Specify the .vsconfig file at the root of the repo and select “Review Details”
 
 #### Manual set up
 
@@ -176,7 +183,8 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 * Set the solution wide runsettings file for the tests
     * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
-> **Warning**: You should treat your access token like a password. To avoid exposing your PAT, be sure to reset changes to the `WingetCreateTests/Test.runsettings` file before committing your changes. You can also use the command `git update-index --skip-worktree src/WingetCreateTests/WingetCreateTests/Test.runsettings` command to untrack changes to the file and prevent it from being committed.
+> [!CAUTION]
+> You should treat your access token like a password. To avoid exposing your PAT, be sure to reset changes to the `WingetCreateTests/Test.runsettings` file before committing your changes. You can also use the command `git update-index --skip-worktree src/WingetCreateTests/WingetCreateTests/Test.runsettings` command to untrack changes to the file and prevent it from being committed.
 
 ## Contributing
 
@@ -212,3 +220,5 @@ You can also opt-out of telemetry by configuring the `settings.json` file and se
 See the [privacy statement](/PRIVACY.md) for more details.
 
 ## Known Issues
+
+Certain functionalities of wingetcreate, particularly input prompting, may not be fully supported on certain shells such as PowerShell ISE. The supported shells for the prompting package utilized by wingetcreate are specified [here](https://github.com/shibayan/Sharprompt#supported-platforms)

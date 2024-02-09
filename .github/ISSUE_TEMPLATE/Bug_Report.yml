@@ -43,14 +43,10 @@ body:
     attributes:
       label: Environment
       placeholder: |
-        [wingetcreate --help]
+        [wingetcreate info]
         Windows Package Manager Manifest Creator version
-
-        [winget --info]
-        Windows Package Manager version
+        Operating System: Windows.Desktop version
         System Architecture: CPU architecture
-        Windows: Windows.Desktop version
-        Package: Microsoft.DesktopAppInstaller version
 
         Any other software?
       render: shell
