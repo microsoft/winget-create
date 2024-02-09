@@ -15,3 +15,4 @@ The following arguments are available:
 | **-c, --clean** | Deletes all downloaded installers in the cache folder |
 | **-l, --list** | Lists out all the downloaded installers stored in cache |
 | **-o, --open** | Opens the cache folder storing the downloaded installers |
+| **-?, --help** |  Gets additional help on this command. |

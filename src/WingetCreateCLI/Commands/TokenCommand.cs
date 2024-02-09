@@ -3,8 +3,10 @@
 
 namespace Microsoft.WingetCreateCLI.Commands
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using CommandLine;
+    using CommandLine.Text;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
@@ -16,6 +18,19 @@ namespace Microsoft.WingetCreateCLI.Commands
     [Verb("token", HelpText = "TokenCommand_HelpText", ResourceType = typeof(Resources))]
     public class TokenCommand : BaseCommand
     {
+        /// <summary>
+        /// Gets the usage examples for the token command.
+        /// </summary>
+        [Usage(ApplicationAlias = ProgramApplicationAlias)]
+        public static IEnumerable<Example> Examples
+        {
+            get
+            {
+                yield return new Example(Resources.Example_TokenCommand_StoreNewToken, new TokenCommand { Store = true, GitHubToken = "<GitHubPersonalAccessToken>" });
+                yield return new Example(Resources.Example_TokenCommand_ClearExistingToken, new TokenCommand { Clear = true });
+            }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether to clear the cached GitHub token.
         /// </summary>
