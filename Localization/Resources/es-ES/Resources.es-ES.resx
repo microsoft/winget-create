@@ -312,11 +312,11 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>El nombre del paquete |por ejemplo, Visual Studio|</value>
   </data>
-  <data name="NewCommand_Description" xml:space="preserve">
+  <data name="NewCommand_PrePrompt_Header" xml:space="preserve">
     <value>Presione Entrar para enviar el valor de cada pregunta, incluida la aceptación del valor (predeterminado).</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
-    <value>Esta herramienta le guiará a través de una serie de preguntas que le ayudarán a crear el manifiesto del paquete.</value>
+    <value>Este comando le guiará a través de una serie de preguntas para ayudarle a crear el manifiesto del paquete.</value>
   </data>
   <data name="NewCommand_HelpText" xml:space="preserve">
     <value>Inicia una serie de preguntas para ayudar a generar un nuevo manifiesto</value>
@@ -325,13 +325,13 @@
     <value>Compruebe si los argumentos del paquete proporcionados son correctos.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
-    <value>Directorio de salida donde los manifiestos recién creados se guardarán localmente</value>
+    <value>Directorio de salida para almacenar localmente los manifiestos generados.</value>
   </data>
   <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
     <value>El nombre de familia del paquete del instalador de MSIX</value>
   </data>
   <data name="PackageLocale_KeywordDescription" xml:space="preserve">
-    <value>La configuración regional de metadatos del paquete</value>
+    <value>La configuración regional de metadatos del paquete |p. ej. en-US|</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
     <value>Página principal del paquete</value>
@@ -1233,5 +1233,119 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>Los siguientes comandos están disponibles:</value>
+  </data>
+  <data name="GenerateNewLocalePreview_Message" xml:space="preserve">
+    <value>Generando una vista previa de las configuraciones regionales creadas...</value>
+  </data>
+  <data name="AddAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>¿Desea añadir propiedades de configuración regional adicionales?</value>
+  </data>
+  <data name="CreateAnotherLocale_Message" xml:space="preserve">
+    <value>¿Desea crear otra configuración regional?</value>
+  </data>
+  <data name="DefaultLocale_MenuItem" xml:space="preserve">
+    <value>Configuración regional predeterminada</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForLatestVersion" xml:space="preserve">
+    <value>Agregar una nueva configuración regional para la versión más reciente de un paquete</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForSpecificVersion" xml:space="preserve">
+    <value>Agregar una nueva configuración regional para una versión específica de un paquete</value>
+  </data>
+  <data name="Example_NewLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Crear una nueva configuración regional y guardar los manifiestos generados en un directorio especificado</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Actualizar la configuración regional existente y guardar los manifiestos generados en un directorio especificado</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForLatestVersion" xml:space="preserve">
+    <value>Actualizar la configuración regional existente para la última versión de un paquete</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForSpecificVersion" xml:space="preserve">
+    <value>Actualizar la configuración regional existente para una versión específica de un paquete</value>
+  </data>
+  <data name="GenerateUpdatedLocalePreview_Message" xml:space="preserve">
+    <value>Generando una vista previa de las configuraciones regionales actualizadas...</value>
+  </data>
+  <data name="InvalidLocale_ErrorMessage" xml:space="preserve">
+    <value>Configuración regional no válida. Escriba una etiqueta de idioma válida.</value>
+  </data>
+  <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
+    <value>Ya existe un manifiesto de configuración regional que coincide con la configuración regional de entrada "{0}". Use el comando update-locale para actualizar un manifiesto de configuración regional existente.</value>
+    <comment>{0} - represents the input package locale string</comment>
+  </data>
+  <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>Versión del paquete para el que se agregará una nueva configuración regional.</value>
+  </data>
+  <data name="SelectExistingLocale_Message" xml:space="preserve">
+    <value>Seleccionar una configuración regional existente</value>
+  </data>
+  <data name="UpdateAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>¿Desea modificar propiedades de configuración regional adicionales?</value>
+  </data>
+  <data name="UpdateAnotherLocale_Message" xml:space="preserve">
+    <value>¿Desea actualizar otra configuración regional?</value>
+  </data>
+  <data name="UpdateLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>Versión del paquete para el que se actualizará la configuración regional.</value>
+  </data>
+  <data name="NewLocaleCommand_HelpText" xml:space="preserve">
+    <value>Inicia una serie de preguntas para ayudar a generar un nuevo manifiesto de configuración regional</value>
+  </data>
+  <data name="ReferenceLocale_HelpText" xml:space="preserve">
+    <value>Manifiesto de configuración regional existente que se usará como referencia para los valores predeterminados. Si no se proporciona, se usará el manifiesto de configuración regional predeterminado.</value>
+  </data>
+  <data name="UpdateLocaleCommand_HelpText" xml:space="preserve">
+    <value>Inicia una serie de preguntas para ayudar a actualizar un manifiesto de configuración regional existente</value>
+  </data>
+  <data name="ReferenceLocaleNotFound_Error" xml:space="preserve">
+    <value>La configuración regional de referencia no existe en el manifiesto.</value>
+  </data>
+  <data name="FieldSetToValue_Message" xml:space="preserve">
+    <value>El valor de [{0}] es: {1}</value>
+    <comment>{0} - represents the name of the manifest field
+{1} - represents the value of the manifest field</comment>
+  </data>
+  <data name="UpdateLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>Configuración regional del paquete para la que se actualizará el manifiesto. Si no se proporciona, la herramienta le pedirá una lista de configuraciones regionales existentes entre las que elegir.</value>
+  </data>
+  <data name="NewLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>Configuración regional del paquete para la que se creará un nuevo manifiesto. Si no se proporciona, la herramienta solicitará este valor.</value>
+  </data>
+  <data name="LocaleDoesNotExist_Message" xml:space="preserve">
+    <value>El manifiesto para la configuración regional de entrada "{0}" no existe. Use el comando new-locale para generar un nuevo manifiesto de configuración regional.</value>
+    <comment>{0} - represents the package locale string</comment>
+  </data>
+  <data name="SwitchToNewLocaleFlow_Message" xml:space="preserve">
+    <value>¿Desea crear el manifiesto de configuración regional en su lugar?</value>
+  </data>
+  <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
+    <value>¿Desea actualizar el manifiesto de configuración regional en su lugar?</value>
+  </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>Indica si se prohíbe descargar el instalador para instalación sin conexión</value>
+  </data>
+  <data name="NewLocaleCommand_Header" xml:space="preserve">
+    <value>Este comando le guiará a través de una serie de preguntas para ayudar a generar un nuevo manifiesto de configuración regional.</value>
+  </data>
+  <data name="NewLocaleCommand_PrePrompt_Header" xml:space="preserve">
+    <value>Presione ENTRAR para enviar el valor de cada pregunta, incluida la aceptación del valor (referencia) del manifiesto de configuración regional de referencia.</value>
+  </data>
+  <data name="SubmitFlagMissing_Warning" xml:space="preserve">
+    <value>Se proporcionaron argumentos de envío. ¿Olvidó incluir la marca --submit, -s?</value>
+    <comment>'--submit, -s' refers to a command line switch argument</comment>
+  </data>
+  <data name="ReplacePackageIdDoesNotExist_Error" xml:space="preserve">
+    <value>No se puede realizar la operación de reemplazo. El identificador de paquete '{0}' no existe en el repositorio Administrador de paquetes de Windows.</value>
+    <comment>{0} - will be replaced with the ID of the package</comment>
+  </data>
+  <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
+    <value>La versión de reemplazo no puede ser igual a la versión de envío.</value>
+  </data>
+  <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
+    <value>Borrar el token de GitHub en caché</value>
+  </data>
+  <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
+    <value>Almacenar un nuevo token de GitHub en la memoria caché local</value>
   </data>
 </root>

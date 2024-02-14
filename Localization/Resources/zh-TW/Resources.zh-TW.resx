@@ -312,11 +312,11 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>封裝名稱 |例如 Visual Studio|</value>
   </data>
-  <data name="NewCommand_Description" xml:space="preserve">
+  <data name="NewCommand_PrePrompt_Header" xml:space="preserve">
     <value>按 ENTER 以提交每個問題的值，包括接受 (預設) 值。</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
-    <value>此工具會引導您完成一系列的問題，以協助您建立您的封裝資訊清單。</value>
+    <value>此命令將引導您完成一系列的問題，以協助您建立套件資訊清單。</value>
   </data>
   <data name="NewCommand_HelpText" xml:space="preserve">
     <value>啟動一系列問題，協助產生新的資訊清單</value>
@@ -325,13 +325,13 @@
     <value>請檢查提供的套件引數是否正確。</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
-    <value>將在本機儲存新建立的資訊清單的輸出目錄</value>
+    <value>用於在本地儲存產生的資訊清單的輸出目錄。</value>
   </data>
   <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
     <value>MSIX 安裝程式封裝系列名稱</value>
   </data>
   <data name="PackageLocale_KeywordDescription" xml:space="preserve">
-    <value>封裝中繼資料地區設定</value>
+    <value>封裝中繼資料地區設定 |例如 en-US|</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
     <value>套件首頁</value>
@@ -1233,5 +1233,119 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>以下是所有可用的命令:</value>
+  </data>
+  <data name="GenerateNewLocalePreview_Message" xml:space="preserve">
+    <value>正在產生建立的地區設定預覽...。</value>
+  </data>
+  <data name="AddAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>您要新增其他地區設定屬性嗎?</value>
+  </data>
+  <data name="CreateAnotherLocale_Message" xml:space="preserve">
+    <value>您要建立另一個地區設定嗎?</value>
+  </data>
+  <data name="DefaultLocale_MenuItem" xml:space="preserve">
+    <value>預設地區設定</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForLatestVersion" xml:space="preserve">
+    <value>為最新版本的套件新增地區設定</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForSpecificVersion" xml:space="preserve">
+    <value>為特定版本的套件新增地區設定</value>
+  </data>
+  <data name="Example_NewLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>建立新的地區設定並將產生的資訊清單儲存到指定的目錄</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>更新現有的地區設定，並將產生的資訊清單儲存到指定的目錄</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForLatestVersion" xml:space="preserve">
+    <value>更新最新版套件的現有地區設定</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForSpecificVersion" xml:space="preserve">
+    <value>更新特定版本套件的現有地區設定</value>
+  </data>
+  <data name="GenerateUpdatedLocalePreview_Message" xml:space="preserve">
+    <value>正在產生更新的地區設定預覽...。</value>
+  </data>
+  <data name="InvalidLocale_ErrorMessage" xml:space="preserve">
+    <value>地區設定不正確。請輸入有效的語言標籤。</value>
+  </data>
+  <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
+    <value>與輸入地區設定 [{0}] 相符的地區設定資訊清單已存在。使用 update-locale 命令來更新現有的地區設定資訊清單。</value>
+    <comment>{0} - represents the input package locale string</comment>
+  </data>
+  <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>要新增地區設定的套件版本。</value>
+  </data>
+  <data name="SelectExistingLocale_Message" xml:space="preserve">
+    <value>選取現有地區設定</value>
+  </data>
+  <data name="UpdateAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>您要修改其他地區設定屬性嗎?</value>
+  </data>
+  <data name="UpdateAnotherLocale_Message" xml:space="preserve">
+    <value>您要更新另一個地區設定嗎?</value>
+  </data>
+  <data name="UpdateLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>要更新地區設定的套件版本。</value>
+  </data>
+  <data name="NewLocaleCommand_HelpText" xml:space="preserve">
+    <value>啟動一系列的問題以協助產生新的地區設定資訊清單</value>
+  </data>
+  <data name="ReferenceLocale_HelpText" xml:space="preserve">
+    <value>要做為預設值參考的現有地區設定資訊清單。若未提供，將會使用預設的地區設定資訊清單。</value>
+  </data>
+  <data name="UpdateLocaleCommand_HelpText" xml:space="preserve">
+    <value>啟動一系列的問題以協助更新現有的地區設定資訊清單</value>
+  </data>
+  <data name="ReferenceLocaleNotFound_Error" xml:space="preserve">
+    <value>資訊清單中沒有參照地區設定。</value>
+  </data>
+  <data name="FieldSetToValue_Message" xml:space="preserve">
+    <value>[{0}] 值為: {1}</value>
+    <comment>{0} - represents the name of the manifest field
+{1} - represents the value of the manifest field</comment>
+  </data>
+  <data name="UpdateLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>要更新資訊清單的套件地區設定。若未提供，工具會提示您選擇現有的地區設定清單。</value>
+  </data>
+  <data name="NewLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>要為其建立新資訊清單的套件地區設定。若未提供，工具會提示您輸入此值。</value>
+  </data>
+  <data name="LocaleDoesNotExist_Message" xml:space="preserve">
+    <value>輸入地區設定 [{0}] 的資訊清單不存在。使用 new-locale 命令來產生新的地區設定資訊清單。</value>
+    <comment>{0} - represents the package locale string</comment>
+  </data>
+  <data name="SwitchToNewLocaleFlow_Message" xml:space="preserve">
+    <value>您要改為建立地區設定資訊清單嗎?</value>
+  </data>
+  <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
+    <value>您要改為更新地區設定資訊清單嗎?</value>
+  </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>指出是否禁止下載安裝程式進行離線安裝</value>
+  </data>
+  <data name="NewLocaleCommand_Header" xml:space="preserve">
+    <value>此命令會引導您完成一系列的問題，以協助產生新的地區設定資訊清單。</value>
+  </data>
+  <data name="NewLocaleCommand_PrePrompt_Header" xml:space="preserve">
+    <value>按下 ENTER 以提交每個問題的值，包括接受參考地區設定資訊清單的 (參考) 值。</value>
+  </data>
+  <data name="SubmitFlagMissing_Warning" xml:space="preserve">
+    <value>已提供提交引數。是否忘記包含 --submit， -s 旗標？</value>
+    <comment>'--submit, -s' refers to a command line switch argument</comment>
+  </data>
+  <data name="ReplacePackageIdDoesNotExist_Error" xml:space="preserve">
+    <value>無法執行取代作業。套件識別碼 '{0}' 不存在於Windows 封裝管理員存放庫中。</value>
+    <comment>{0} - will be replaced with the ID of the package</comment>
+  </data>
+  <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
+    <value>取代版本不能等於提交版本。</value>
+  </data>
+  <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
+    <value>清除已快取的 GitHub 權杖</value>
+  </data>
+  <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
+    <value>在您的本機快取中儲存新的 GitHub 權杖</value>
   </data>
 </root>
