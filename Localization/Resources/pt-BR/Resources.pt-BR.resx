@@ -312,11 +312,11 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>O nome do pacote |ex.: Visual Studio|</value>
   </data>
-  <data name="NewCommand_Description" xml:space="preserve">
+  <data name="NewCommand_PrePrompt_Header" xml:space="preserve">
     <value>Pressione ENTER para enviar o valor para cada pergunta, incluindo aceitar o valor (padrão).</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
-    <value>Esta ferramenta orientará você em uma série de perguntas para ajudá-lo a criar o manifesto do pacote.</value>
+    <value>Este comando o guiará por uma série de perguntas para ajudá-lo a criar o manifesto do pacote.</value>
   </data>
   <data name="NewCommand_HelpText" xml:space="preserve">
     <value>Inicia uma série de perguntas para ajudar a gerar um novo manifesto</value>
@@ -325,13 +325,13 @@
     <value>Verifique marcar se os argumentos de pacote fornecidos estão corretos.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
-    <value>Diretório de saída onde os manifestos recém-criados serão salvos localmente</value>
+    <value>O diretório de saída para armazenar os manifestos gerados localmente.</value>
   </data>
   <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
     <value>O nome da família de pacotes do instalador do MSIX</value>
   </data>
   <data name="PackageLocale_KeywordDescription" xml:space="preserve">
-    <value>A localidade de metadados do pacote</value>
+    <value>O idioma e região dos metadados do pacote (por exemplo, en-US)</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
     <value>A página inicial do pacote</value>
@@ -1233,5 +1233,119 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>Os seguintes comandos estão disponíveis:</value>
+  </data>
+  <data name="GenerateNewLocalePreview_Message" xml:space="preserve">
+    <value>Gerando uma visualização dos dados locais criados...</value>
+  </data>
+  <data name="AddAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Quer adicionar propriedades adicionais de idioma e região?</value>
+  </data>
+  <data name="CreateAnotherLocale_Message" xml:space="preserve">
+    <value>Quer criar outros dados locais?</value>
+  </data>
+  <data name="DefaultLocale_MenuItem" xml:space="preserve">
+    <value>Idioma e região padrão</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForLatestVersion" xml:space="preserve">
+    <value>Adicionar uma nova localidade para a versão mais recente de um pacote</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForSpecificVersion" xml:space="preserve">
+    <value>Adicionar uma nova localidade para uma versão específica de um pacote</value>
+  </data>
+  <data name="Example_NewLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Criar uma nova localidade e salvar os manifestos gerados em um diretório especificado</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Atualize a localidade existente e salve os manifestos gerados em um diretório especificado</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForLatestVersion" xml:space="preserve">
+    <value>Atualizar localidade existente para a versão mais recente de um pacote</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForSpecificVersion" xml:space="preserve">
+    <value>Atualizar localidade existente para uma versão específica de um pacote</value>
+  </data>
+  <data name="GenerateUpdatedLocalePreview_Message" xml:space="preserve">
+    <value>Gerando uma visualização dos dados locais atualizados...</value>
+  </data>
+  <data name="InvalidLocale_ErrorMessage" xml:space="preserve">
+    <value>Idioma e região inválidos. Insira uma tag de idioma válida.</value>
+  </data>
+  <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
+    <value>O manifesto no idioma e região correspondentes aos dados locais inseridos "{0}" já existe. Use o comando update-locale para atualizar um manifesto de idioma e região existente.</value>
+    <comment>{0} - represents the input package locale string</comment>
+  </data>
+  <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>A versão do pacote para a qual adicionar uma nova localidade.</value>
+  </data>
+  <data name="SelectExistingLocale_Message" xml:space="preserve">
+    <value>Selecionar um idioma e região existentes</value>
+  </data>
+  <data name="UpdateAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Quer modificar as propriedades de idioma e local adicionais?</value>
+  </data>
+  <data name="UpdateAnotherLocale_Message" xml:space="preserve">
+    <value>Quer atualizar outros dados locais?</value>
+  </data>
+  <data name="UpdateLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>A versão do pacote para a qual atualizar a localidade.</value>
+  </data>
+  <data name="NewLocaleCommand_HelpText" xml:space="preserve">
+    <value>Inicia uma série de perguntas para ajudar a gerar um novo manifesto de localidade</value>
+  </data>
+  <data name="ReferenceLocale_HelpText" xml:space="preserve">
+    <value>Manifesto de localidade existente a ser usado como referência para valores padrão. Se não for fornecido, o manifesto de localidade padrão será usado.</value>
+  </data>
+  <data name="UpdateLocaleCommand_HelpText" xml:space="preserve">
+    <value>Inicia uma série de perguntas para ajudar a atualizar um manifesto de localidade existente</value>
+  </data>
+  <data name="ReferenceLocaleNotFound_Error" xml:space="preserve">
+    <value>O idioma e região de referência não existem no manifesto.</value>
+  </data>
+  <data name="FieldSetToValue_Message" xml:space="preserve">
+    <value>O valor [{0}] é: {1}</value>
+    <comment>{0} - represents the name of the manifest field
+{1} - represents the value of the manifest field</comment>
+  </data>
+  <data name="UpdateLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>A localidade do pacote para a qual atualizar o manifesto. Se não for fornecida, a ferramenta solicitará uma lista de localidades existentes para escolher.</value>
+  </data>
+  <data name="NewLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>A localidade do pacote para a qual criar um novo manifesto. Se não for fornecido, a ferramenta solicitará esse valor.</value>
+  </data>
+  <data name="LocaleDoesNotExist_Message" xml:space="preserve">
+    <value>O manifesto de idioma e região inseridos "{0}" não existe. Use o comando new-locale para gerar um novo manifesto de idioma e região.</value>
+    <comment>{0} - represents the package locale string</comment>
+  </data>
+  <data name="SwitchToNewLocaleFlow_Message" xml:space="preserve">
+    <value>Gostaria de criar o manifesto de dados locais em vez disso?</value>
+  </data>
+  <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
+    <value>Gostaria de atualizar o manifesto do idioma e região em vez disso?</value>
+  </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>Indica se o instalador está proibido de ser baixado para instalação offline</value>
+  </data>
+  <data name="NewLocaleCommand_Header" xml:space="preserve">
+    <value>Este comando o guiará por uma série de perguntas para ajudar a gerar um novo manifesto de localidade.</value>
+  </data>
+  <data name="NewLocaleCommand_PrePrompt_Header" xml:space="preserve">
+    <value>Pressione ENTER para enviar o valor de cada pergunta, incluindo aceitar o valor (referência) do manifesto de localidade de referência.</value>
+  </data>
+  <data name="SubmitFlagMissing_Warning" xml:space="preserve">
+    <value>Foram fornecidos argumentos de envio. Você esqueceu de incluir o sinalizador --submit, -s?</value>
+    <comment>'--submit, -s' refers to a command line switch argument</comment>
+  </data>
+  <data name="ReplacePackageIdDoesNotExist_Error" xml:space="preserve">
+    <value>Não é possível executar a operação de substituição. O identificador '{0}' pacote não existe no Gerenciador de Pacotes do Windows repositório.</value>
+    <comment>{0} - will be replaced with the ID of the package</comment>
+  </data>
+  <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
+    <value>A versão de substituição não pode ser igual à versão de envio.</value>
+  </data>
+  <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
+    <value>Limpar o token GitHub armazenado em cache</value>
+  </data>
+  <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
+    <value>Armazene um novo token GitHub em seu cache local</value>
   </data>
 </root>
