@@ -312,11 +312,11 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>パッケージ名 | 例: Visual Studio|</value>
   </data>
-  <data name="NewCommand_Description" xml:space="preserve">
+  <data name="NewCommand_PrePrompt_Header" xml:space="preserve">
     <value>ENTER を押して、 (既定の) 値の受け入れを含む各質問の値を送信します。</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
-    <value>このツールは、パッケージ マニフェストの作成に役立つ一連の質問を案内します。</value>
+    <value>このコマンドでは、パッケージ マニフェストの作成に役立つ一連の質問について案内します。</value>
   </data>
   <data name="NewCommand_HelpText" xml:space="preserve">
     <value>新しいマニフェストの生成に役立つ一連の質問を開始します</value>
@@ -325,13 +325,13 @@
     <value>指定されたパッケージ引数が正しいかどうかをチェックしてください。</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
-    <value>新しく作成されたマニフェストがローカルに保存される出力ディレクトリ</value>
+    <value>生成されたマニフェストをローカルに格納する出力ディレクトリ。</value>
   </data>
   <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
     <value>MSIX インストーラー パッケージのファミリ名</value>
   </data>
   <data name="PackageLocale_KeywordDescription" xml:space="preserve">
-    <value>パッケージのメタデータ ロケール</value>
+    <value>パッケージ メタデータ ロケール |例: en-US|</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
     <value>パッケージのホーム ページ</value>
@@ -1233,5 +1233,119 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>使用できるコマンドは次のとおりです:</value>
+  </data>
+  <data name="GenerateNewLocalePreview_Message" xml:space="preserve">
+    <value>作成されたロケールのプレビューを生成しています...</value>
+  </data>
+  <data name="AddAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>ロケール プロパティを追加しますか?</value>
+  </data>
+  <data name="CreateAnotherLocale_Message" xml:space="preserve">
+    <value>別のロケールを作成しますか?</value>
+  </data>
+  <data name="DefaultLocale_MenuItem" xml:space="preserve">
+    <value>既定のロケール</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForLatestVersion" xml:space="preserve">
+    <value>パッケージの最新バージョンの新しいロケールを追加する</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForSpecificVersion" xml:space="preserve">
+    <value>パッケージの特定のバージョンの新しいロケールを追加する</value>
+  </data>
+  <data name="Example_NewLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>新しいロケールを作成し、生成されたマニフェストを指定されたディレクトリに保存します</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>既存のロケールを更新し、生成されたマニフェストを指定されたディレクトリに保存します</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForLatestVersion" xml:space="preserve">
+    <value>パッケージの最新バージョンの既存のロケールを更新する</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForSpecificVersion" xml:space="preserve">
+    <value>パッケージの特定のバージョンの既存のロケールを更新する</value>
+  </data>
+  <data name="GenerateUpdatedLocalePreview_Message" xml:space="preserve">
+    <value>更新されたロケールのプレビューを生成しています...</value>
+  </data>
+  <data name="InvalidLocale_ErrorMessage" xml:space="preserve">
+    <value>無効なロケールです。有効な言語タグを入力してください。</value>
+  </data>
+  <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
+    <value>入力ロケール "{0}" と一致するロケール マニフェストは既に存在します。既存のロケール マニフェストを更新するには、update-locale コマンドを使用します。</value>
+    <comment>{0} - represents the input package locale string</comment>
+  </data>
+  <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>新しいロケールを追加するパッケージのバージョン。</value>
+  </data>
+  <data name="SelectExistingLocale_Message" xml:space="preserve">
+    <value>既存のロケールを選択</value>
+  </data>
+  <data name="UpdateAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>追加のロケール プロパティを変更しますか?</value>
+  </data>
+  <data name="UpdateAnotherLocale_Message" xml:space="preserve">
+    <value>別のロケールを更新しますか?</value>
+  </data>
+  <data name="UpdateLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>ロケールを更新するパッケージのバージョン。</value>
+  </data>
+  <data name="NewLocaleCommand_HelpText" xml:space="preserve">
+    <value>新しいロケール マニフェストの生成に役立つ一連の質問を開始します</value>
+  </data>
+  <data name="ReferenceLocale_HelpText" xml:space="preserve">
+    <value>既定値の参照として使用される既存のロケール マニフェスト。指定しない場合、既定のロケール マニフェストが使用されます。</value>
+  </data>
+  <data name="UpdateLocaleCommand_HelpText" xml:space="preserve">
+    <value>既存のロケール マニフェストの更新に役立つ一連の質問を開始します</value>
+  </data>
+  <data name="ReferenceLocaleNotFound_Error" xml:space="preserve">
+    <value>参照ロケールがマニフェストに存在しません。</value>
+  </data>
+  <data name="FieldSetToValue_Message" xml:space="preserve">
+    <value>[{0}] の値は次のとおりです: {1}</value>
+    <comment>{0} - represents the name of the manifest field
+{1} - represents the value of the manifest field</comment>
+  </data>
+  <data name="UpdateLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>マニフェストを更新するパッケージ ロケール。指定しない場合、選択する既存のロケールの一覧を確認するメッセージが表示されます。</value>
+  </data>
+  <data name="NewLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>新しいマニフェストを作成するパッケージ ロケール。指定しない場合は、この値の入力を求めるメッセージが表示されます。</value>
+  </data>
+  <data name="LocaleDoesNotExist_Message" xml:space="preserve">
+    <value>入力ロケール "{0}" のマニフェストが存在しません。新しいロケール マニフェストを生成するには、new-locale コマンドを使用します。</value>
+    <comment>{0} - represents the package locale string</comment>
+  </data>
+  <data name="SwitchToNewLocaleFlow_Message" xml:space="preserve">
+    <value>代わりにロケール マニフェストを作成しますか?</value>
+  </data>
+  <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
+    <value>代わりにロケール マニフェストを更新しますか?</value>
+  </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>インストーラーをオフライン インストール用にダウンロードすることを禁止するかどうかを示します</value>
+  </data>
+  <data name="NewLocaleCommand_Header" xml:space="preserve">
+    <value>このコマンドでは、新しいロケール マニフェストの生成に役立つ一連の質問について説明します。</value>
+  </data>
+  <data name="NewLocaleCommand_PrePrompt_Header" xml:space="preserve">
+    <value>Enter キーを押して、参照ロケール マニフェストからの (参照) 値の受け入れなど、各質問の値を送信します。</value>
+  </data>
+  <data name="SubmitFlagMissing_Warning" xml:space="preserve">
+    <value>送信引数が指定されました。--submit, -s フラグを含めましたか?</value>
+    <comment>'--submit, -s' refers to a command line switch argument</comment>
+  </data>
+  <data name="ReplacePackageIdDoesNotExist_Error" xml:space="preserve">
+    <value>置換操作を実行できません。パッケージ識別子 '{0}' がWindows パッケージ マネージャーリポジトリに存在しません。</value>
+    <comment>{0} - will be replaced with the ID of the package</comment>
+  </data>
+  <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
+    <value>置換バージョンを送信バージョンと同じにすることはできません。</value>
+  </data>
+  <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
+    <value>キャッシュされた GitHub トークンをクリアします</value>
+  </data>
+  <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
+    <value>新しい GitHub トークンをローカル キャッシュに保存する</value>
   </data>
 </root>

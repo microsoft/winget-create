@@ -312,11 +312,11 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>Der Paketname |z. B. Visual Studio|</value>
   </data>
-  <data name="NewCommand_Description" xml:space="preserve">
+  <data name="NewCommand_PrePrompt_Header" xml:space="preserve">
     <value>Drücken Sie die EINGABETASTE, um den Wert für jede Frage abzusenden, einschließlich der Übernahme des (Standard-)Wertes.</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
-    <value>Dieses Tool führt Sie durch eine Reihe von Fragen, die Sie bei der Erstellung Ihres Paketmanifests unterstützen.</value>
+    <value>Dieser Befehl führt Sie durch eine Reihe von Fragen, die Sie beim Erstellen Ihres Paketmanifests unterstützen.</value>
   </data>
   <data name="NewCommand_HelpText" xml:space="preserve">
     <value>Startet eine Reihe von Fragen, die bei der Erstellung eines neuen Manifests helfen</value>
@@ -325,13 +325,13 @@
     <value>Überprüfen Sie, ob die angegebenen Paketargumente korrekt sind.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
-    <value>Ausgabeverzeichnis, in dem die neu erstellten Manifeste lokal gespeichert werden</value>
+    <value>Das Ausgabeverzeichnis zum lokalen Speichern der generierten Manifeste.</value>
   </data>
   <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
     <value>Der Familienname des MSIX-Installationspakets</value>
   </data>
   <data name="PackageLocale_KeywordDescription" xml:space="preserve">
-    <value>Das Gebietsschema für die Paket-Metadaten</value>
+    <value>Das Gebietsschema der Paketmetadaten |z.B. en-US|</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
     <value>Die Paketstartseite</value>
@@ -1233,5 +1233,119 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>Folgende Befehle sind verfügbar:</value>
+  </data>
+  <data name="GenerateNewLocalePreview_Message" xml:space="preserve">
+    <value>Eine Vorschau der erstellten Gebietsschemas wird generiert...</value>
+  </data>
+  <data name="AddAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Möchten Sie zusätzliche Gebietsschemaeigenschaften hinzufügen?</value>
+  </data>
+  <data name="CreateAnotherLocale_Message" xml:space="preserve">
+    <value>Möchten Sie ein weiteres Gebietsschema erstellen?</value>
+  </data>
+  <data name="DefaultLocale_MenuItem" xml:space="preserve">
+    <value>Standardgebietsschema</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForLatestVersion" xml:space="preserve">
+    <value>Neues Gebietsschema für die neueste Version eines Pakets hinzufügen</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForSpecificVersion" xml:space="preserve">
+    <value>Neues Gebietsschema für eine bestimmte Version eines Pakets hinzufügen</value>
+  </data>
+  <data name="Example_NewLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Erstellen eines neuen Gebietsschemas und Speichern der generierten Manifeste in einem angegebenen Verzeichnis</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Aktualisieren des vorhandenen Gebietsschemas und Speichern der generierten Manifeste in einem angegebenen Verzeichnis</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForLatestVersion" xml:space="preserve">
+    <value>Vorhandenes Gebietsschema für die neueste Version eines Pakets aktualisieren</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForSpecificVersion" xml:space="preserve">
+    <value>Vorhandenes Gebietsschema für eine bestimmte Version eines Pakets aktualisieren</value>
+  </data>
+  <data name="GenerateUpdatedLocalePreview_Message" xml:space="preserve">
+    <value>Eine Vorschau der aktualisierten Gebietsschema(s) wird erstellt....</value>
+  </data>
+  <data name="InvalidLocale_ErrorMessage" xml:space="preserve">
+    <value>Ungültiges Gebietschema. Geben Sie ein gültiges Sprachtag ein.</value>
+  </data>
+  <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
+    <value>Das Gebietsschemamanifest, das mit dem Eingabegebietsschema „{0}“ übereinstimmt, ist bereits vorhanden. Verwenden Sie den Befehl „update-locale“, um ein vorhandenes Gebietsschemamanifest zu aktualisieren.</value>
+    <comment>{0} - represents the input package locale string</comment>
+  </data>
+  <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>Die Version des Pakets, für das ein neues Gebietsschema hinzugefügt werden soll.</value>
+  </data>
+  <data name="SelectExistingLocale_Message" xml:space="preserve">
+    <value>Vorhandenes Gebietsschema auswählen</value>
+  </data>
+  <data name="UpdateAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Möchten Sie zusätzliche Gebietsschemaeigenschaften ändern?</value>
+  </data>
+  <data name="UpdateAnotherLocale_Message" xml:space="preserve">
+    <value>Möchten Sie ein anderes Gebietsschema aktualisieren?</value>
+  </data>
+  <data name="UpdateLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>Die Version des Pakets, für das das Gebietsschema aktualisiert werden soll.</value>
+  </data>
+  <data name="NewLocaleCommand_HelpText" xml:space="preserve">
+    <value>Startet eine Reihe von Fragen, um beim Generieren eines neuen Gebietsschemamanifests zu helfen.</value>
+  </data>
+  <data name="ReferenceLocale_HelpText" xml:space="preserve">
+    <value>Vorhandenes Gebietsschemamanifest, das als Verweis für Standardwerte verwendet werden soll. Wenn keine Angabe erfolgt, wird das Standardgebietsschemamanifest verwendet.</value>
+  </data>
+  <data name="UpdateLocaleCommand_HelpText" xml:space="preserve">
+    <value>Startet eine Reihe von Fragen zum Aktualisieren eines vorhandenen Gebietsschemamanifests.</value>
+  </data>
+  <data name="ReferenceLocaleNotFound_Error" xml:space="preserve">
+    <value>Das Verweisgebietsschema ist im Manifest nicht vorhanden.</value>
+  </data>
+  <data name="FieldSetToValue_Message" xml:space="preserve">
+    <value>[{0}] Wert ist: {1}</value>
+    <comment>{0} - represents the name of the manifest field
+{1} - represents the value of the manifest field</comment>
+  </data>
+  <data name="UpdateLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>Das Paketgebietsschema, für das das Manifest aktualisiert werden soll. Wenn keine Angabe erfolgt, werden Sie vom Tool zur Auswahl einer Liste vorhandener Gebietsschemas aufgefordert.</value>
+  </data>
+  <data name="NewLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>Das Paketgebietsschema, für das ein neues Manifest erstellt werden soll. Falls nicht angegeben, fordert das Tool diesen Wert an.</value>
+  </data>
+  <data name="LocaleDoesNotExist_Message" xml:space="preserve">
+    <value>Das Manifest für das Eingabegebietsschema „{0}“ ist nicht vorhanden. Verwenden Sie den Befehl „new-locale“, um ein neues Gebietsschemamanifest zu generieren.</value>
+    <comment>{0} - represents the package locale string</comment>
+  </data>
+  <data name="SwitchToNewLocaleFlow_Message" xml:space="preserve">
+    <value>Möchten Sie stattdessen das Gebietsschemamanifest erstellen?</value>
+  </data>
+  <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
+    <value>Möchten Sie stattdessen das Gebietsschemamanifest aktualisieren?</value>
+  </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>Gibt an, ob das Herunterladen des Installationsprogramms für die Offlineinstallation nicht zulässig ist.</value>
+  </data>
+  <data name="NewLocaleCommand_Header" xml:space="preserve">
+    <value>Dieser Befehl führt Sie durch eine Reihe von Fragen, um beim Generieren eines neuen Gebietsschemamanifests zu helfen.</value>
+  </data>
+  <data name="NewLocaleCommand_PrePrompt_Header" xml:space="preserve">
+    <value>Drücken Sie die EINGABETASTE, um den Wert für jede Frage zu übermitteln, einschließlich der Annahme des (Referenz-)Werts aus dem Referenzgebietsschemamanifest.</value>
+  </data>
+  <data name="SubmitFlagMissing_Warning" xml:space="preserve">
+    <value>Es wurden Argumente für die Übermittlung angegeben. Haben Sie vergessen, das Flag "--submit", "-s" einzuschließen?</value>
+    <comment>'--submit, -s' refers to a command line switch argument</comment>
+  </data>
+  <data name="ReplacePackageIdDoesNotExist_Error" xml:space="preserve">
+    <value>Der Ersetzungsvorgang kann nicht ausgeführt werden. Der Paketbezeichner '{0}' ist im Windows-Paket-Manager Repository nicht vorhanden.</value>
+    <comment>{0} - will be replaced with the ID of the package</comment>
+  </data>
+  <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
+    <value>Die Ersetzungsversion darf nicht mit der Übermittlungsversion übereinstimmen.</value>
+  </data>
+  <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
+    <value>Löschen des zwischengespeicherten GitHub-Tokens</value>
+  </data>
+  <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
+    <value>Neuen GitHub-Token in Ihrem lokalen Cache speichern</value>
   </data>
 </root>
