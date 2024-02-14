@@ -43,20 +43,8 @@ resources:
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
 
-extends:
-  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
-  condition: not(eq(variables['Build.Reason'], 'PullRequest'))
-  parameters:
-    pool:
-      name: Azure-Pipelines-1ESPT-ExDShared
-      image: windows-2022
-      os: windows
-    customBuildTags:
-    - ES365AIMigrationTooling
-
     stages:
       - stage: GetVersion_Build
-
         jobs:
           - job: GetVersion
             variables:
@@ -86,6 +74,16 @@ extends:
 
               version: "$(majorMinorVersion).$(buildVersion).0"
               appxBundlePath: '$(wingetCreatePackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle'
+
+            extends:
+              template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+              parameters:
+                pool:
+                  name: Azure-Pipelines-1ESPT-ExDShared
+                  image: windows-2022
+                  os: windows
+                customBuildTags:
+                - ES365AIMigrationTooling
 
             steps:
               - checkout: self
