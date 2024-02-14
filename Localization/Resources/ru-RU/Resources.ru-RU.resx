@@ -312,11 +312,11 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>Название пакета |например, Visual Studio|</value>
   </data>
-  <data name="NewCommand_Description" xml:space="preserve">
+  <data name="NewCommand_PrePrompt_Header" xml:space="preserve">
     <value>Нажмите ENTER, чтобы ввести значение для каждого вопроса, а также для принятия значения (по умолчанию).</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
-    <value>Это средство поможет создать манифест пакета с помощью ряда вопросов.</value>
+    <value>Эта команда поможет вам выполнить ряд вопросов, которые помогут вам создать манифест пакета.</value>
   </data>
   <data name="NewCommand_HelpText" xml:space="preserve">
     <value>Задает ряд вопросов, помогающих создать новый манифест</value>
@@ -325,13 +325,13 @@
     <value>Проверьте правильность предоставленных аргументов пакета.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
-    <value>Выходной каталог, в котором недавно созданные манифесты будут сохранены локально</value>
+    <value>Выходной каталог для локального хранения созданных манифестов.</value>
   </data>
   <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
     <value>Имя семейства пакета установщика MSIX</value>
   </data>
   <data name="PackageLocale_KeywordDescription" xml:space="preserve">
-    <value>Языковой стандарт метаданных пакета</value>
+    <value>Языковой стандарт метаданных пакета |например, ru-RU|</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
     <value>Домашняя страница пакета</value>
@@ -1233,5 +1233,119 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>Применимы следующие команды:</value>
+  </data>
+  <data name="GenerateNewLocalePreview_Message" xml:space="preserve">
+    <value>Генерирование предварительного просмотра созданных языковых стандартов...</value>
+  </data>
+  <data name="AddAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Добавить дополнительные свойства языкового стандарта?</value>
+  </data>
+  <data name="CreateAnotherLocale_Message" xml:space="preserve">
+    <value>Создать другой языковой стандарт?</value>
+  </data>
+  <data name="DefaultLocale_MenuItem" xml:space="preserve">
+    <value>Языковой стандарт по умолчанию</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForLatestVersion" xml:space="preserve">
+    <value>Добавить новый языковой стандарт для последней версии пакета</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForSpecificVersion" xml:space="preserve">
+    <value>Добавить новый языковой стандарт для определенной версии пакета</value>
+  </data>
+  <data name="Example_NewLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Создание нового языкового стандарта и сохранение созданных манифестов в указанном каталоге</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Обновление существующего языкового стандарта и сохранение созданных манифестов в указанном каталоге</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForLatestVersion" xml:space="preserve">
+    <value>Обновление существующего языкового стандарта для последней версии пакета</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForSpecificVersion" xml:space="preserve">
+    <value>Обновление существующего языкового стандарта для определенной версии пакета</value>
+  </data>
+  <data name="GenerateUpdatedLocalePreview_Message" xml:space="preserve">
+    <value>Генерирование предварительного просмотра обновленных языковых стандартов...</value>
+  </data>
+  <data name="InvalidLocale_ErrorMessage" xml:space="preserve">
+    <value>Недопустимый языковой стандарт. Введите допустимый тег языка.</value>
+  </data>
+  <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
+    <value>Манифест языкового стандарта, соответствующий языковому стандарту ввода "{0}", уже существует. Используйте команду update-locale для обновления существующего манифеста языкового стандарта.</value>
+    <comment>{0} - represents the input package locale string</comment>
+  </data>
+  <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>Версия пакета для добавления нового языкового стандарта.</value>
+  </data>
+  <data name="SelectExistingLocale_Message" xml:space="preserve">
+    <value>Выбор существующего языкового стандарта</value>
+  </data>
+  <data name="UpdateAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Изменить дополнительные свойства языкового стандарта?</value>
+  </data>
+  <data name="UpdateAnotherLocale_Message" xml:space="preserve">
+    <value>Обновить другой языковой стандарт?</value>
+  </data>
+  <data name="UpdateLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>Версия пакета для обновления языкового стандарта.</value>
+  </data>
+  <data name="NewLocaleCommand_HelpText" xml:space="preserve">
+    <value>Запуск ряда вопросов для создания нового манифеста языкового стандарта</value>
+  </data>
+  <data name="ReferenceLocale_HelpText" xml:space="preserve">
+    <value>Существующий манифест языкового стандарта, который будет использоваться в качестве ссылки для значений по умолчанию. Если этот параметр не указан, будет использоваться манифест языкового стандарта по умолчанию.</value>
+  </data>
+  <data name="UpdateLocaleCommand_HelpText" xml:space="preserve">
+    <value>Запуск ряда вопросов для обновления существующего манифеста языкового стандарта</value>
+  </data>
+  <data name="ReferenceLocaleNotFound_Error" xml:space="preserve">
+    <value>Указанный языковой стандарт не существует в манифесте.</value>
+  </data>
+  <data name="FieldSetToValue_Message" xml:space="preserve">
+    <value>Значение [{0}]: {1}</value>
+    <comment>{0} - represents the name of the manifest field
+{1} - represents the value of the manifest field</comment>
+  </data>
+  <data name="UpdateLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>Языковой стандарт пакета для обновления манифеста. Если этот параметр не указан, средство запрашивает список существующих языков для выбора.</value>
+  </data>
+  <data name="NewLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>Языковой стандарт пакета для создания манифеста. Если значение не указано, средство запрашивает это значение.</value>
+  </data>
+  <data name="LocaleDoesNotExist_Message" xml:space="preserve">
+    <value>Манифест для языкового стандарта ввода "{0}" не существует. Используйте команду new-locale для создания нового манифеста языкового стандарта.</value>
+    <comment>{0} - represents the package locale string</comment>
+  </data>
+  <data name="SwitchToNewLocaleFlow_Message" xml:space="preserve">
+    <value>Создать манифест языкового стандарта?</value>
+  </data>
+  <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
+    <value>Обновить манифест языкового стандарта?</value>
+  </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>Указывает, запрещено ли скачивать установщик для автономной установки</value>
+  </data>
+  <data name="NewLocaleCommand_Header" xml:space="preserve">
+    <value>Эта команда поможет вам выполнить ряд вопросов, чтобы создать новый манифест языкового стандарта.</value>
+  </data>
+  <data name="NewLocaleCommand_PrePrompt_Header" xml:space="preserve">
+    <value>Нажмите клавишу ВВОД, чтобы отправить значение для каждого вопроса, включая принятие значения (ссылки) из манифеста языкового стандарта ссылки.</value>
+  </data>
+  <data name="SubmitFlagMissing_Warning" xml:space="preserve">
+    <value>Предоставлены аргументы отправки. Вы забыли включить флаг --submit, -s?</value>
+    <comment>'--submit, -s' refers to a command line switch argument</comment>
+  </data>
+  <data name="ReplacePackageIdDoesNotExist_Error" xml:space="preserve">
+    <value>Невозможно выполнить операцию замены. Идентификатор '{0}' не существует в репозитории Диспетчер пакетов Windows пакета.</value>
+    <comment>{0} - will be replaced with the ID of the package</comment>
+  </data>
+  <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
+    <value>Версия замены не может совпадать с версией отправки.</value>
+  </data>
+  <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
+    <value>Очистка кэшированного токена GitHub</value>
+  </data>
+  <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
+    <value>Сохраните новый токен GitHub в локальном кэше</value>
   </data>
 </root>

@@ -312,11 +312,11 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>程序包名 |例如 Visual Studio|</value>
   </data>
-  <data name="NewCommand_Description" xml:space="preserve">
+  <data name="NewCommand_PrePrompt_Header" xml:space="preserve">
     <value>按 ENTER 提交每个问题的值，包括接受 (默认) 值。</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
-    <value>此工具将引导你完成一系列问题，以帮助你创建程序包清单。</value>
+    <value>此命令将引导你浏览一系列问题以帮助你创建程序包清单。</value>
   </data>
   <data name="NewCommand_HelpText" xml:space="preserve">
     <value>启动一系列问题以帮助生成新清单</value>
@@ -325,13 +325,13 @@
     <value>请检查提供的包参数是否正确。</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
-    <value>将新创建的清单保存到本地的输出目录</value>
+    <value>用于在本地存储生成的清单的输出目录。</value>
   </data>
   <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
     <value>MSIX 安装程序包系列名称</value>
   </data>
   <data name="PackageLocale_KeywordDescription" xml:space="preserve">
-    <value>程序包元数据区域设置</value>
+    <value>程序包元数据区域设置 |例如 en-US|</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
     <value>程序包主页</value>
@@ -1233,5 +1233,119 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>下列命令有效:</value>
+  </data>
+  <data name="GenerateNewLocalePreview_Message" xml:space="preserve">
+    <value>正在生成已创建区域设置的预览...</value>
+  </data>
+  <data name="AddAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>是否要添加其他区域设置属性?</value>
+  </data>
+  <data name="CreateAnotherLocale_Message" xml:space="preserve">
+    <value>是否要创建另一个区域设置?</value>
+  </data>
+  <data name="DefaultLocale_MenuItem" xml:space="preserve">
+    <value>默认区域设置</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForLatestVersion" xml:space="preserve">
+    <value>为最新版本的包添加新区域设置</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForSpecificVersion" xml:space="preserve">
+    <value>为包的特定版本添加新区域设置</value>
+  </data>
+  <data name="Example_NewLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>创建新区域设置并将生成的清单保存到指定目录</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>更新现有区域设置并将生成的清单保存到指定目录</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForLatestVersion" xml:space="preserve">
+    <value>更新包的最新版本的现有区域设置</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForSpecificVersion" xml:space="preserve">
+    <value>更新包的特定版本的现有区域设置</value>
+  </data>
+  <data name="GenerateUpdatedLocalePreview_Message" xml:space="preserve">
+    <value>正在生成已更新区域设置的预览...</value>
+  </data>
+  <data name="InvalidLocale_ErrorMessage" xml:space="preserve">
+    <value>无效的区域设置。输入有效的语言标记。</value>
+  </data>
+  <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
+    <value>已存在与输入区域设置“{0}”匹配的区域设置清单。使用 update-locale 命令更新现有区域设置清单。</value>
+    <comment>{0} - represents the input package locale string</comment>
+  </data>
+  <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>要为其添加新区域设置的包的版本。</value>
+  </data>
+  <data name="SelectExistingLocale_Message" xml:space="preserve">
+    <value>选择现有区域设置</value>
+  </data>
+  <data name="UpdateAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>是否要修改其他区域设置属性?</value>
+  </data>
+  <data name="UpdateAnotherLocale_Message" xml:space="preserve">
+    <value>是否要更新另一个区域设置?</value>
+  </data>
+  <data name="UpdateLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>要为其更新区域设置的包的版本。</value>
+  </data>
+  <data name="NewLocaleCommand_HelpText" xml:space="preserve">
+    <value>启动一系列问题以帮助生成新的区域设置清单</value>
+  </data>
+  <data name="ReferenceLocale_HelpText" xml:space="preserve">
+    <value>要用作默认值引用的现有区域设置清单。如果未提供，将使用默认区域设置清单。</value>
+  </data>
+  <data name="UpdateLocaleCommand_HelpText" xml:space="preserve">
+    <value>启动一系列问题以帮助更新现有区域设置清单</value>
+  </data>
+  <data name="ReferenceLocaleNotFound_Error" xml:space="preserve">
+    <value>清单中不存在引用区域设置。</value>
+  </data>
+  <data name="FieldSetToValue_Message" xml:space="preserve">
+    <value>[{0}] 值为: {1}</value>
+    <comment>{0} - represents the name of the manifest field
+{1} - represents the value of the manifest field</comment>
+  </data>
+  <data name="UpdateLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>要更新其清单的包区域设置。如果未提供，该工具将提示你选择现有区域设置的列表。</value>
+  </data>
+  <data name="NewLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>要为其创建新清单的包区域设置。如果未提供，工具将提示此值。</value>
+  </data>
+  <data name="LocaleDoesNotExist_Message" xml:space="preserve">
+    <value>输入区域设置“{0}”清单不存在。使用 new-locale 命令生成新的区域设置清单。</value>
+    <comment>{0} - represents the package locale string</comment>
+  </data>
+  <data name="SwitchToNewLocaleFlow_Message" xml:space="preserve">
+    <value>是否要改为创建区域设置清单?</value>
+  </data>
+  <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
+    <value>是否要改为更新区域设置清单?</value>
+  </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>指示是否禁止下载安装程序进行脱机安装</value>
+  </data>
+  <data name="NewLocaleCommand_Header" xml:space="preserve">
+    <value>此命令将引导你浏览一系列问题，以帮助生成新的区域设置清单。</value>
+  </data>
+  <data name="NewLocaleCommand_PrePrompt_Header" xml:space="preserve">
+    <value>按 Enter 提交每个问题的值，包括接受引用区域设置清单中的 (引用) 值。</value>
+  </data>
+  <data name="SubmitFlagMissing_Warning" xml:space="preserve">
+    <value>提供了提交参数。是否忘记了包含 --submit， -s 标志?</value>
+    <comment>'--submit, -s' refers to a command line switch argument</comment>
+  </data>
+  <data name="ReplacePackageIdDoesNotExist_Error" xml:space="preserve">
+    <value>无法执行替换操作。Windows 程序包管理器存储库中不存在包标识符 '{0}'。</value>
+    <comment>{0} - will be replaced with the ID of the package</comment>
+  </data>
+  <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
+    <value>替换版本不能等于提交版本。</value>
+  </data>
+  <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
+    <value>清除缓存的 GitHub 令牌</value>
+  </data>
+  <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
+    <value>在本地缓存中存储新的 GitHub 令牌</value>
   </data>
 </root>
