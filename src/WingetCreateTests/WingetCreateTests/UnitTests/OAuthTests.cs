@@ -25,7 +25,7 @@ namespace Microsoft.WingetCreateUnitTests
         public void GetTokenAsyncMockTest()
         {
             Mock<IRestClient> mockClient = new Mock<IRestClient>();
-            mockClient.Setup(x => x.ExecutePostAsync(It.IsAny<IRestRequest>(), default))
+            mockClient.Setup(x => x.ExecutePostAsync(It.IsAny<RestRequest>(), default))
                 .ReturnsAsync(GenerateTokenResponse());
 
             var response = GitHubOAuth.GetTokenAsync(mockClient.Object, new GitHubOAuth.DeviceAuthorizationResponse()).Result;
@@ -33,7 +33,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.That(response.AccessToken, Is.Not.Null.And.Not.Empty, FailedToObtainAccessTokenString);
         }
 
-        private static IRestResponse GenerateTokenResponse()
+        private static RestResponse GenerateTokenResponse()
         {
             GitHubOAuth.TokenResponse tokenResponse = new GitHubOAuth.TokenResponse();
             tokenResponse.AccessToken = "A_FAKE_TOKEN";
@@ -42,7 +42,7 @@ namespace Microsoft.WingetCreateUnitTests
             return SerializeToRestResponse(tokenResponse);
         }
 
-        private static IRestResponse SerializeToRestResponse(object model)
+        private static RestResponse SerializeToRestResponse(object model)
         {
             var responseContent = JsonSerializer.Serialize(model);
             RestResponse restResponse = new RestResponse();

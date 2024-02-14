@@ -13,6 +13,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCore.Models.Singleton;
     using Microsoft.WingetCreateTests;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
     using Octokit;
 
     /// <summary>

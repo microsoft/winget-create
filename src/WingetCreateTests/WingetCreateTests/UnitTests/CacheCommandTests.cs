@@ -12,6 +12,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateTests;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
 
     /// <summary>
     /// Unit test class for the Settings Command.
@@ -74,7 +75,7 @@ namespace Microsoft.WingetCreateUnitTests
             CacheCommand command = new CacheCommand() { Clean = true };
             await command.Execute();
             var installerFiles = Directory.GetFiles(PackageParser.InstallerDownloadPath);
-            Assert.AreEqual(0, installerFiles.Length, "Cached installers were not deleted.");
+            ClassicAssert.AreEqual(0, installerFiles.Length, "Cached installers were not deleted.");
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Microsoft.WingetCreateE2ETests
     using Microsoft.WingetCreateTests;
     using Microsoft.WingetCreateUnitTests;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
     using Octokit;
     using Polly;
 
@@ -69,7 +70,7 @@ namespace Microsoft.WingetCreateE2ETests
                 SubmitPRToFork = this.SubmitPRToFork,
                 OpenPRInBrowser = false,
             };
-            Assert.IsTrue(await submitCommand.Execute(), "Command should have succeeded");
+            ClassicAssert.IsTrue(await submitCommand.Execute(), "Command should have succeeded");
 
             var mergeRetryPolicy = Policy
                 .Handle<PullRequestNotMergeableException>()
@@ -95,12 +96,12 @@ namespace Microsoft.WingetCreateE2ETests
                 OpenPRInBrowser = false,
             };
 
-            Assert.IsTrue(await updateCommand.LoadGitHubClient(), "Failed to create GitHub client");
-            Assert.IsTrue(await updateCommand.Execute(), "Command should execute successfully");
+            ClassicAssert.IsTrue(await updateCommand.LoadGitHubClient(), "Failed to create GitHub client");
+            ClassicAssert.IsTrue(await updateCommand.Execute(), "Command should execute successfully");
 
             string pathToValidate = Path.Combine(Directory.GetCurrentDirectory(), Utils.GetAppManifestDirPath(packageId, PackageVersion));
             (bool success, string message) = WinGetUtil.ValidateManifest(pathToValidate);
-            Assert.IsTrue(success, message);
+            ClassicAssert.IsTrue(success, message);
 
             await this.gitHub.ClosePullRequest(updateCommand.PullRequestNumber);
         }

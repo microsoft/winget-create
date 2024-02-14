@@ -4,7 +4,6 @@
 namespace Microsoft.WingetCreateCore.Models.Singleton
 {
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using Microsoft.WingetCreateCore.Models.CustomValidation;
     using YamlDotNet.Serialization;
 

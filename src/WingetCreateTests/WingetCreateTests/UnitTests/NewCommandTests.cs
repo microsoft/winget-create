@@ -10,6 +10,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
 
     /// <summary>
     /// Test cases for verifying that the "new" command is working as expected.
@@ -28,7 +29,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             Logger.Initialize();
             NewCommand command = new NewCommand { InstallerUrls = new[] { "invalidUrl" } };
-            Assert.IsFalse(await command.Execute(), "Command should have failed");
+            ClassicAssert.IsFalse(await command.Execute(), "Command should have failed");
             string actual = sw.ToString();
             Assert.That(actual, Does.Contain(Resources.DownloadFile_Error), "Failed to catch invalid URL");
         }

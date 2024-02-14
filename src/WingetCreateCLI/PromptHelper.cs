@@ -298,7 +298,7 @@ namespace Microsoft.WingetCreateCLI
 
             if (instanceType == typeof(string))
             {
-                string result = Prompt.Input<string>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
+                string result = Prompt.Input<string>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) }.ToString());
 
                 if (!string.IsNullOrEmpty(result))
                 {
@@ -307,7 +307,7 @@ namespace Microsoft.WingetCreateCLI
             }
             else if (instanceType == typeof(long))
             {
-                long result = Prompt.Input<long>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
+                long result = Prompt.Input<long>(message, property.GetValue(model), new[] { FieldValidation.ValidateProperty(model, memberName, instance) }.ToString());
                 property.SetValue(model, result);
             }
             else if (instanceType.IsEnum)

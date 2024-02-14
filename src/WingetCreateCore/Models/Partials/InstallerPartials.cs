@@ -6,9 +6,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.Json.Serialization;
     using Microsoft.WingetCreateCore.Models.CustomValidation;
-    using Newtonsoft.Json;
     using YamlDotNet.Serialization;
 
     /// <summary>

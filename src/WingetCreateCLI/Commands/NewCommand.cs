@@ -24,7 +24,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Version;
-    using Newtonsoft.Json;
     using Sharprompt;
 
     /// <summary>

@@ -13,6 +13,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateTests;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
 
     /// <summary>
     /// Unit tests to verify downloading installers and parsing the package file.
@@ -55,11 +56,11 @@ namespace Microsoft.WingetCreateUnitTests
             };
 
             Assert.DoesNotThrow(() => PackageParser.ParsePackages(installerMetadataList, manifests));
-            Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
-            Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
-            Assert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
-            Assert.AreEqual("Microsoft Copyright", manifests.DefaultLocaleManifest.Copyright);
-            Assert.AreEqual(InstallerType.Exe, manifests.InstallerManifest.Installers.First().InstallerType);
+            ClassicAssert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
+            ClassicAssert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
+            ClassicAssert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
+            ClassicAssert.AreEqual("Microsoft Copyright", manifests.DefaultLocaleManifest.Copyright);
+            ClassicAssert.AreEqual(InstallerType.Exe, manifests.InstallerManifest.Installers.First().InstallerType);
         }
 
         /// <summary>
@@ -77,11 +78,11 @@ namespace Microsoft.WingetCreateUnitTests
             };
 
             Assert.DoesNotThrow(() => PackageParser.ParsePackages(installerMetadataList, manifests));
-            Assert.AreEqual("WingetCreateTestMsiInstaller", manifests.DefaultLocaleManifest.PackageName);
-            Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
-            Assert.AreEqual("MicrosoftCorporation.WingetCreateTestMsiInstaller", manifests.VersionManifest.PackageIdentifier);
-            Assert.AreEqual(InstallerType.Msi, manifests.InstallerManifest.Installers.First().InstallerType);
-            Assert.AreEqual("{E2650EFC-DCD3-4FAA-BBAC-FD1812B03A61}", manifests.InstallerManifest.Installers.First().ProductCode);
+            ClassicAssert.AreEqual("WingetCreateTestMsiInstaller", manifests.DefaultLocaleManifest.PackageName);
+            ClassicAssert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
+            ClassicAssert.AreEqual("MicrosoftCorporation.WingetCreateTestMsiInstaller", manifests.VersionManifest.PackageIdentifier);
+            ClassicAssert.AreEqual(InstallerType.Msi, manifests.InstallerManifest.Installers.First().InstallerType);
+            ClassicAssert.AreEqual("{E2650EFC-DCD3-4FAA-BBAC-FD1812B03A61}", manifests.InstallerManifest.Installers.First().ProductCode);
         }
 
         /// <summary>
@@ -99,12 +100,11 @@ namespace Microsoft.WingetCreateUnitTests
             };
 
             Assert.DoesNotThrow(() => PackageParser.ParsePackages(installerMetadataList, manifests));
-            Assert.AreEqual("WingetCreateTestMsixInstaller", manifests.DefaultLocaleManifest.PackageName);
-            Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
-            Assert.AreEqual("1.0.1.0", manifests.VersionManifest.PackageVersion);
-            Assert.AreEqual("MicrosoftCorporation.WingetCreateTestMsixInstaller", manifests.VersionManifest.PackageIdentifier);
-            Assert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.First().InstallerType);
-            Assert.AreEqual(2, manifests.InstallerManifest.Installers.Count);
+            ClassicAssert.AreEqual("WingetCreateTestMsixInstaller", manifests.DefaultLocaleManifest.PackageName);
+            ClassicAssert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
+            ClassicAssert.AreEqual("MicrosoftCorporation.WingetCreateTestMsixInstaller", manifests.VersionManifest.PackageIdentifier);
+            ClassicAssert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.First().InstallerType);
+            ClassicAssert.AreEqual(2, manifests.InstallerManifest.Installers.Count);
         }
 
         /// <summary>
@@ -131,16 +131,16 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.DoesNotThrow(() => PackageParser.ParsePackages(installerMetadataList, manifests));
 
             // Shared properties will be parsed from all installers, with priority given to the first-parsed value.
-            Assert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
-            Assert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
-            Assert.AreEqual("1.2.3.4", manifests.VersionManifest.PackageVersion);
-            Assert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
+            ClassicAssert.AreEqual("WingetCreateTestExeInstaller", manifests.DefaultLocaleManifest.PackageName);
+            ClassicAssert.AreEqual("Microsoft Corporation", manifests.DefaultLocaleManifest.Publisher);
+            ClassicAssert.AreEqual("1.2.3.4", manifests.VersionManifest.PackageVersion);
+            ClassicAssert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
 
-            Assert.AreEqual(4, manifests.InstallerManifest.Installers.Count);
-            Assert.AreEqual(InstallerType.Exe, manifests.InstallerManifest.Installers.First().InstallerType);
-            Assert.AreEqual(InstallerType.Msi, manifests.InstallerManifest.Installers.Skip(1).First().InstallerType);
-            Assert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(2).First().InstallerType);
-            Assert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(3).First().InstallerType);
+            ClassicAssert.AreEqual(4, manifests.InstallerManifest.Installers.Count);
+            ClassicAssert.AreEqual(InstallerType.Exe, manifests.InstallerManifest.Installers.First().InstallerType);
+            ClassicAssert.AreEqual(InstallerType.Msi, manifests.InstallerManifest.Installers.Skip(1).First().InstallerType);
+            ClassicAssert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(2).First().InstallerType);
+            ClassicAssert.AreEqual(InstallerType.Msix, manifests.InstallerManifest.Installers.Skip(3).First().InstallerType);
         }
 
         /// <summary>
@@ -158,10 +158,10 @@ namespace Microsoft.WingetCreateUnitTests
             Installer installer = ConvertSingletonInstaller(initialInstaller);
 
             PackageParser.ParsePackageAndUpdateInstallerNode(installer, testMsiInstallerPath, installer.InstallerUrl);
-            Assert.AreEqual(InstallerType.Msi, installer.InstallerType, "InstallerType should be updated.");
-            Assert.AreEqual(initialInstaller.Architecture.ToEnumAttributeValue(), installer.Architecture.ToEnumAttributeValue(), "Architecture should not change.");
-            Assert.AreNotEqual(initialInstaller.InstallerSha256, installer.InstallerSha256, "InstallerSha256 should be updated.");
-            Assert.AreEqual("{E2650EFC-DCD3-4FAA-BBAC-FD1812B03A61}", installer.ProductCode, "ProductCode should be updated");
+            ClassicAssert.AreEqual(InstallerType.Msi, installer.InstallerType, "InstallerType should be updated.");
+            ClassicAssert.AreEqual(initialInstaller.Architecture.ToEnumAttributeValue(), installer.Architecture.ToEnumAttributeValue(), "Architecture should not change.");
+            ClassicAssert.AreNotEqual(initialInstaller.InstallerSha256, installer.InstallerSha256, "InstallerSha256 should be updated.");
+            ClassicAssert.AreEqual("{E2650EFC-DCD3-4FAA-BBAC-FD1812B03A61}", installer.ProductCode, "ProductCode should be updated");
         }
 
         /// <summary>

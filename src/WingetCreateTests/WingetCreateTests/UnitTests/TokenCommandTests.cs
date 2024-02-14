@@ -9,6 +9,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
 
     /// <summary>
     /// Test cases for verifying that the "token" command is working as expected.
@@ -26,16 +27,16 @@ namespace Microsoft.WingetCreateUnitTests
 
             // Preemptively clear existing token
             var command = new TokenCommand { Clear = true };
-            Assert.IsTrue(await command.Execute(), "Command should have succeeded");
+            ClassicAssert.IsTrue(await command.Execute(), "Command should have succeeded");
 
             string tokenCacheFile = Path.Combine(Common.LocalAppStatePath, "tokenCache.bin");
             FileAssert.DoesNotExist(tokenCacheFile, "Token cache file shouldn't exist before running Token --store command");
             command = new TokenCommand { Store = true, GitHubToken = this.GitHubApiKey };
-            Assert.IsTrue(await command.Execute(), "Command should have succeeded");
+            ClassicAssert.IsTrue(await command.Execute(), "Command should have succeeded");
             FileAssert.Exists(tokenCacheFile, "Token cache file should exist after storing token");
 
             command = new TokenCommand { Clear = true };
-            Assert.IsTrue(await command.Execute(), "Command should have succeeded");
+            ClassicAssert.IsTrue(await command.Execute(), "Command should have succeeded");
             FileAssert.DoesNotExist(tokenCacheFile, "Token cache file shouldn't exist after running Token --clear command");
         }
     }

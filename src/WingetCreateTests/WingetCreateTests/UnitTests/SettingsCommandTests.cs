@@ -13,6 +13,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
 
     /// <summary>
     /// Unit test class for the Settings Command.
@@ -56,8 +57,8 @@ namespace Microsoft.WingetCreateUnitTests
         {
             SettingsCommand command = new SettingsCommand();
             command.Execute();
-            Assert.IsTrue(File.Exists(UserSettings.SettingsJsonPath), "Settings file was not created successfully.");
-            Assert.IsTrue(UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest).IsValid, "Generated settings file was not valid.");
+            ClassicAssert.IsTrue(File.Exists(UserSettings.SettingsJsonPath), "Settings file was not created successfully.");
+            ClassicAssert.IsTrue(UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest).IsValid, "Generated settings file was not valid.");
         }
 
         /// <summary>
@@ -70,8 +71,8 @@ namespace Microsoft.WingetCreateUnitTests
             firstCommand.Execute();
             SettingsCommand secondCommand = new SettingsCommand();
             secondCommand.Execute();
-            Assert.IsTrue(File.Exists(UserSettings.SettingsBackupJsonPath), "Backup settings file was not created successfully.");
-            Assert.IsTrue(UserSettings.ParseJsonFile(UserSettings.SettingsBackupJsonPath, out SettingsManifest manifest).IsValid, "Generated backup settings file was not valid.");
+            ClassicAssert.IsTrue(File.Exists(UserSettings.SettingsBackupJsonPath), "Backup settings file was not created successfully.");
+            ClassicAssert.IsTrue(UserSettings.ParseJsonFile(UserSettings.SettingsBackupJsonPath, out SettingsManifest manifest).IsValid, "Generated backup settings file was not valid.");
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace Microsoft.WingetCreateUnitTests
             command.Execute();
             File.WriteAllText(UserSettings.SettingsJsonPath, string.Empty);
             (bool isValid, List<string> errors) = UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest);
-            Assert.IsFalse(isValid, "Empty settings manifest should fail validation");
+            ClassicAssert.IsFalse(isValid, "Empty settings manifest should fail validation");
             StringAssert.Contains("Manifest cannot be empty", errors.First(), "Error message should be caught.");
         }
 
@@ -107,12 +108,12 @@ namespace Microsoft.WingetCreateUnitTests
             UserSettings.WindowsPackageManagerRepositoryOwner = testRepoOwner;
             UserSettings.WindowsPackageManagerRepositoryName = testRepoName;
             UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest);
-            Assert.IsTrue(manifest.Telemetry.Disable == !isTelemetryDisabled, "Changed Telemetry setting was not reflected in the settings file.");
-            Assert.IsTrue(manifest.CleanUp.Disable == !isCleanUpDisabled, "Changed CleanUp.Disable setting was not reflected in the settings file.");
-            Assert.IsTrue(manifest.Visual.AnonymizePaths == !arePathsAnonymized, "Changed Visual.AnonymizePaths setting was not reflected in the settings file.");
-            Assert.IsTrue(manifest.CleanUp.IntervalInDays == cleanUpDays, "Changed CleanUp.IntervalInDays setting was not reflected in the settings file.");
-            Assert.IsTrue(manifest.WindowsPackageManagerRepository.Owner == testRepoOwner, "Changed WindowsPackageManagerRepository.Owner setting was not reflected in the settings file.");
-            Assert.IsTrue(manifest.WindowsPackageManagerRepository.Name == testRepoName, "Changed WindowsPackageManagerRepository.Name setting was not reflected in the settings file.");
+            ClassicAssert.IsTrue(manifest.Telemetry.Disable == !isTelemetryDisabled, "Changed Telemetry setting was not reflected in the settings file.");
+            ClassicAssert.IsTrue(manifest.CleanUp.Disable == !isCleanUpDisabled, "Changed CleanUp.Disable setting was not reflected in the settings file.");
+            ClassicAssert.IsTrue(manifest.Visual.AnonymizePaths == !arePathsAnonymized, "Changed Visual.AnonymizePaths setting was not reflected in the settings file.");
+            ClassicAssert.IsTrue(manifest.CleanUp.IntervalInDays == cleanUpDays, "Changed CleanUp.IntervalInDays setting was not reflected in the settings file.");
+            ClassicAssert.IsTrue(manifest.WindowsPackageManagerRepository.Owner == testRepoOwner, "Changed WindowsPackageManagerRepository.Owner setting was not reflected in the settings file.");
+            ClassicAssert.IsTrue(manifest.WindowsPackageManagerRepository.Name == testRepoName, "Changed WindowsPackageManagerRepository.Name setting was not reflected in the settings file.");
         }
 
         /// <summary>

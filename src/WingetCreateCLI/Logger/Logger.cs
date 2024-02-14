@@ -39,15 +39,16 @@ namespace Microsoft.WingetCreateCLI.Logging
         public static void Initialize()
         {
             // Add rules to file log configuration
-            var loggerFileConfig = new LoggingConfiguration();
+            LogFactory loggerFileFactory = new();
+            var loggerFileConfig = new LoggingConfiguration(logFactory: loggerFileFactory);
             loggerFileConfig.AddRule(LogLevel.Trace, LogLevel.Fatal, FileTarget);
 
             // Apply file log config
-            var loggerFileFactory = new LogFactory(loggerFileConfig);
             loggerFile = loggerFileFactory.GetLogger("File");
 
             // Add rules to console log configuration
-            var loggerConsoleConfig = new LoggingConfiguration();
+            LogFactory loggerConsoleFactory = new();
+            var loggerConsoleConfig = new LoggingConfiguration(logFactory: loggerConsoleFactory);
             loggerConsoleConfig.AddRule(LogLevel.Debug, LogLevel.Fatal, ConsoleTarget);
 
             // Set color for specific log level
@@ -56,7 +57,6 @@ namespace Microsoft.WingetCreateCLI.Logging
             SetColorForConsoleTarget(ConsoleTarget, LogLevel.Error, ConsoleOutputColor.Red);
 
             // Apply console log config
-            var loggerConsoleFactory = new LogFactory(loggerConsoleConfig);
             loggerConsole = loggerConsoleFactory.GetLogger("Console");
         }
 
