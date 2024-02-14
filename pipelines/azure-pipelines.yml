@@ -52,6 +52,8 @@ extends:
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
+    settings:
+      skipBuildTagsForGitHubPullRequests: true
 
     stages:
       - stage: GetVersion_Build
