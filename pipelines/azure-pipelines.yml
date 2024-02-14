@@ -43,129 +43,129 @@ resources:
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
 
-    stages:
-      - stage: GetVersion_Build
-        jobs:
-          - job: GetVersion
-            variables:
-              runCodesignValidationInjection: ${{ false }}
-              skipComponentGovernanceDetection: ${{ true }}
-            steps:
-              - task: PowerShell@2
-                name: GetVersionStep
-                displayName: Get version from CLI project
-                inputs:
-                  targetType: "inline"
-                  script: |
-                    [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
-                    $version = $project.Project.PropertyGroup.Version
-                    echo "##vso[task.setvariable variable=majorMinorVersion;isOutput=true]$version"
+stages:
+  - stage: GetVersion_Build
+    jobs:
+      - job: GetVersion
+        variables:
+          runCodesignValidationInjection: ${{ false }}
+          skipComponentGovernanceDetection: ${{ true }}
+        steps:
+          - task: PowerShell@2
+            name: GetVersionStep
+            displayName: Get version from CLI project
+            inputs:
+              targetType: "inline"
+              script: |
+                [xml]$project = get-content "$(workingDirectory)/WingetCreateCLI/WingetCreateCLI.csproj"
+                $version = $project.Project.PropertyGroup.Version
+                echo "##vso[task.setvariable variable=majorMinorVersion;isOutput=true]$version"
 
-          - job: Build
-            displayName: Build
-            dependsOn: GetVersion
-            variables:
-              majorMinorVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorVersion']]
-              # Only update counter for non-PR builds, otherwise just use 0 for the revision
-              ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-                buildVersion: 0
-              ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-                buildVersion: $[counter(variables['majorMinorVersion'], 1)]
+      - job: Build
+        displayName: Build
+        dependsOn: GetVersion
+        variables:
+          majorMinorVersion: $[dependencies.GetVersion.outputs['GetVersionStep.majorMinorVersion']]
+          # Only update counter for non-PR builds, otherwise just use 0 for the revision
+          ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+            buildVersion: 0
+          ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
+            buildVersion: $[counter(variables['majorMinorVersion'], 1)]
 
-              version: "$(majorMinorVersion).$(buildVersion).0"
-              appxBundlePath: '$(wingetCreatePackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle'
+          version: "$(majorMinorVersion).$(buildVersion).0"
+          appxBundlePath: '$(wingetCreatePackageDir)\Microsoft.WindowsPackageManagerManifestCreator_$(version)_8wekyb3d8bbwe.msixbundle'
 
-            extends:
-              template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
-              parameters:
-                pool:
-                  name: Azure-Pipelines-1ESPT-ExDShared
-                  image: windows-2022
-                  os: windows
-                customBuildTags:
-                - ES365AIMigrationTooling
+        extends:
+          template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+          parameters:
+            pool:
+              name: Azure-Pipelines-1ESPT-ExDShared
+              image: windows-2022
+              os: windows
+            customBuildTags:
+            - ES365AIMigrationTooling
 
-            steps:
-              - checkout: self
-                lfs: "true"
+        steps:
+          - checkout: self
+            lfs: "true"
 
-              - task: PowerShell@2
-                displayName: Display version and bundle path for diagnosing
-                inputs:
-                  targetType: inline
-                  script: |
-                    echo $(version)
-                    echo $(appxBundlePath)
+          - task: PowerShell@2
+            displayName: Display version and bundle path for diagnosing
+            inputs:
+              targetType: inline
+              script: |
+                echo $(version)
+                echo $(appxBundlePath)
 
-              - task: PowerShell@2
-                displayName: "Update package manifest version"
-                inputs:
-                  targetType: inline
-                  script: |
-                    [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
-                    $manifest.Package.Identity.Version = "$(version)"
-                    $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
+          - task: PowerShell@2
+            displayName: "Update package manifest version"
+            inputs:
+              targetType: inline
+              script: |
+                [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
+                $manifest.Package.Identity.Version = "$(version)"
+                $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
 
-              - task: DotNetCoreCLI@2
-                displayName: Restore
-                inputs:
-                  command: "restore"
-                  feedsToUse: "config"
-                  nugetConfigPath: "NuGet.config"
-                  projects: $(workingDirectory)/**/*.csproj
+          - task: DotNetCoreCLI@2
+            displayName: Restore
+            inputs:
+              command: "restore"
+              feedsToUse: "config"
+              nugetConfigPath: "NuGet.config"
+              projects: $(workingDirectory)/**/*.csproj
 
-              - task: MSBuild@1
-                displayName: Build Solution
-                inputs:
-                  platform: "$(buildPlatform)"
-                  solution: "$(solution)"
-                  configuration: "$(buildConfiguration)"
-                  msbuildArguments: '/p:AppxBundleOutput="$(appxBundlePath)"
-                    /p:AppxBundle=Always
-                    /p:UapAppxPackageBuildMode=SideloadOnly
-                    /p:AppxPackageSigningEnabled=false'
+          - task: MSBuild@1
+            displayName: Build Solution
+            inputs:
+              platform: "$(buildPlatform)"
+              solution: "$(solution)"
+              configuration: "$(buildConfiguration)"
+              msbuildArguments: '/p:AppxBundleOutput="$(appxBundlePath)"
+                /p:AppxBundle=Always
+                /p:UapAppxPackageBuildMode=SideloadOnly
+                /p:AppxPackageSigningEnabled=false'
 
-              - task: 1ES.PublishPipelineArtifact@1
-                inputs:
-                  targetPath: $(wingetCreatePackageDir)
-                  artifactName: wingetcreate_msixbundle
-                  displayName: Publish WingetCreate msix bundle
+          - task: 1ES.PublishPipelineArtifact@1
+            inputs:
+              targetPath: $(wingetCreatePackageDir)
+              artifactName: wingetcreate_msixbundle
+              displayName: Publish WingetCreate msix bundle
 
-              - task: ComponentGovernanceComponentDetection@0
-                displayName: Component Governance
-                inputs:
-                  scanType: "Register"
-                  verbosity: "Verbose"
-                  alertWarningLevel: "High"
+          - task: ComponentGovernanceComponentDetection@0
+            displayName: Component Governance
+            inputs:
+              scanType: "Register"
+              verbosity: "Verbose"
+              alertWarningLevel: "High"
 
-              - task: notice@0
-                displayName: "NOTICE File Generator"
-                condition: not(eq(variables['Build.Reason'], 'PullRequest'))
-                inputs:
-                  outputfile: "$(System.DefaultWorkingDirectory)/temp/NOTICE.txt"
-                  outputformat: "text"
+          - task: notice@0
+            displayName: "NOTICE File Generator"
+            condition: not(eq(variables['Build.Reason'], 'PullRequest'))
+            inputs:
+              outputfile: "$(System.DefaultWorkingDirectory)/temp/NOTICE.txt"
+              outputformat: "text"
 
-              - bash: |
-                  echo "Diffing existing NOTICE.txt with generated version"
-                  diff -w NOTICE.txt temp/NOTICE.txt
-                  if [[ $? -ne 0 ]];
-                  then
-                    echo "Notice file modified"
-                    echo "*******************************************************************************************************"
-                    echo "Download the updated NOTICE.txt from the build artifacts and update the file in your PR, then re-submit"
-                    echo "*******************************************************************************************************"
-                    exit 1
-                  else
-                    echo "Notice file not modified."
-                  fi
-                displayName: "Trigger build warning if NOTICE.txt file needs to be modified."
-                condition: not(eq(variables['Build.Reason'], 'PullRequest'))
-                continueOnError: "true"
+          - bash: |
+              echo "Diffing existing NOTICE.txt with generated version"
+              diff -w NOTICE.txt temp/NOTICE.txt
+              if [[ $? -ne 0 ]];
+              then
+                echo "Notice file modified"
+                echo "*******************************************************************************************************"
+                echo "Download the updated NOTICE.txt from the build artifacts and update the file in your PR, then re-submit"
+                echo "*******************************************************************************************************"
+                exit 1
+              else
+                echo "Notice file not modified."
+              fi
+            displayName: "Trigger build warning if NOTICE.txt file needs to be modified."
+            condition: not(eq(variables['Build.Reason'], 'PullRequest'))
+            continueOnError: "true"
 
-              - task: VSTest@2
-                displayName: Run Tests
-                inputs:
-                  testSelector: "testAssemblies"
-                  testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\$(targetFramework)\WingetCreateTests.dll'
-                  runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
-                  overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'
+          - task: VSTest@2
+            displayName: Run Tests
+            inputs:
+              testSelector: "testAssemblies"
+              testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\$(targetFramework)\WingetCreateTests.dll'
+              runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
+              overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'
