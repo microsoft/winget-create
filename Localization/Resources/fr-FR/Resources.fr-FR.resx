@@ -312,11 +312,11 @@
   <data name="Name_KeywordDescription" xml:space="preserve">
     <value>Le nom du package |par exemple, Visual Studio|</value>
   </data>
-  <data name="NewCommand_Description" xml:space="preserve">
+  <data name="NewCommand_PrePrompt_Header" xml:space="preserve">
     <value>Appuyez sur entrée pour envoyer la valeur de chaque question, y compris l’acceptation de la valeur (par défaut).</value>
   </data>
   <data name="NewCommand_Header" xml:space="preserve">
-    <value>Cet outil vous guidera dans une série de questions pour vous aider à créer votre manifeste de package.</value>
+    <value>Cette commande vous guidera tout au long d’une série de questions pour vous aider à créer votre manifeste de package.</value>
   </data>
   <data name="NewCommand_HelpText" xml:space="preserve">
     <value>Lance une série de questions pour vous aider à générer un nouveau manifeste</value>
@@ -325,13 +325,13 @@
     <value>Veuillez vérifier que les arguments fournis pour le paquetage sont corrects.</value>
   </data>
   <data name="OutputDirectory_HelpText" xml:space="preserve">
-    <value>Répertoire de sortie dans lequel les manifestes nouvellement créés seront enregistrés localement</value>
+    <value>Répertoire de sortie pour stocker localement les manifestes générés.</value>
   </data>
   <data name="PackageFamilyName_KeywordDescription" xml:space="preserve">
     <value>Nom de la famille de packages d’installation MSIX</value>
   </data>
   <data name="PackageLocale_KeywordDescription" xml:space="preserve">
-    <value>Les paramètres régionaux des métadonnées du package</value>
+    <value>Paramètres régionaux des métadonnées du package |par ex. en-US|</value>
   </data>
   <data name="PackageUrl_KeywordDescription" xml:space="preserve">
     <value>La page d’accueil du package</value>
@@ -1233,5 +1233,119 @@
   </data>
   <data name="CommandsAvailable_Message" xml:space="preserve">
     <value>Les commandes suivantes sont disponibles :</value>
+  </data>
+  <data name="GenerateNewLocalePreview_Message" xml:space="preserve">
+    <value>Génération d’un aperçu des paramètres régionaux créés....</value>
+  </data>
+  <data name="AddAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Souhaitez-vous ajouter des propriétés de paramètres régionaux supplémentaires ?</value>
+  </data>
+  <data name="CreateAnotherLocale_Message" xml:space="preserve">
+    <value>Souhaitez-vous créer d’autres paramètres régionaux ?</value>
+  </data>
+  <data name="DefaultLocale_MenuItem" xml:space="preserve">
+    <value>Paramètres régionaux par défaut</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForLatestVersion" xml:space="preserve">
+    <value>Ajouter un nouveau paramètre régional pour la dernière version d’un package</value>
+  </data>
+  <data name="Example_NewLocaleCommand_AddForSpecificVersion" xml:space="preserve">
+    <value>Ajouter un nouveau paramètre régional pour une version spécifique d’un package</value>
+  </data>
+  <data name="Example_NewLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Créer un nouveau paramètre régional et enregistrer les manifestes générés dans un répertoire spécifié</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_SaveToDirectory" xml:space="preserve">
+    <value>Mettre à jour les paramètres régionaux existants et enregistrer les manifestes générés dans un répertoire spécifié</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForLatestVersion" xml:space="preserve">
+    <value>Mettre à jour les paramètres régionaux existants pour la dernière version d’un package</value>
+  </data>
+  <data name="Example_UpdateLocaleCommand_UpdateForSpecificVersion" xml:space="preserve">
+    <value>Mettre à jour les paramètres régionaux existants pour une version spécifique d’un package</value>
+  </data>
+  <data name="GenerateUpdatedLocalePreview_Message" xml:space="preserve">
+    <value>Génération d’un aperçu des paramètres régionaux mis à jour....</value>
+  </data>
+  <data name="InvalidLocale_ErrorMessage" xml:space="preserve">
+    <value>Paramètres régionaux non valides. Entrez une balise de langue valide.</value>
+  </data>
+  <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
+    <value>Le manifeste de paramètres régionaux correspondant aux paramètres régionaux d’entrée « {0} » existe déjà. Utilisez la commande update-locale pour mettre à jour un manifeste de paramètres régionaux existant.</value>
+    <comment>{0} - represents the input package locale string</comment>
+  </data>
+  <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>Version du package pour lequel ajouter un nouveau paramètre régional.</value>
+  </data>
+  <data name="SelectExistingLocale_Message" xml:space="preserve">
+    <value>Sélectionner des paramètres régionaux existants</value>
+  </data>
+  <data name="UpdateAdditionalLocaleProperties_Message" xml:space="preserve">
+    <value>Souhaitez-vous modifier des propriétés de paramètres régionaux supplémentaires ?</value>
+  </data>
+  <data name="UpdateAnotherLocale_Message" xml:space="preserve">
+    <value>Souhaitez-vous mettre à jour d’autres paramètres régionaux ?</value>
+  </data>
+  <data name="UpdateLocaleCommand_Version_HelpText" xml:space="preserve">
+    <value>Version du package pour lequel mettre à jour les paramètres régionaux.</value>
+  </data>
+  <data name="NewLocaleCommand_HelpText" xml:space="preserve">
+    <value>Lance une série de questions pour vous aider à générer un nouveau manifeste de paramètres régionaux</value>
+  </data>
+  <data name="ReferenceLocale_HelpText" xml:space="preserve">
+    <value>Manifeste de paramètres régionaux existant à utiliser comme référence pour les valeurs par défaut. S’il n’est pas fourni, le manifeste des paramètres régionaux par défaut est utilisé.</value>
+  </data>
+  <data name="UpdateLocaleCommand_HelpText" xml:space="preserve">
+    <value>Lance une série de questions pour aider à mettre à jour un manifeste de paramètres régionaux existant</value>
+  </data>
+  <data name="ReferenceLocaleNotFound_Error" xml:space="preserve">
+    <value>Les paramètres régionaux de référence n’existent pas dans le manifeste.</value>
+  </data>
+  <data name="FieldSetToValue_Message" xml:space="preserve">
+    <value>La valeur de [{0}] est : {1}</value>
+    <comment>{0} - represents the name of the manifest field
+{1} - represents the value of the manifest field</comment>
+  </data>
+  <data name="UpdateLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>Paramètres régionaux du package pour lesquels mettre à jour le manifeste. S’il n’est pas fourni, l’outil vous invite à choisir une liste de paramètres régionaux existants.</value>
+  </data>
+  <data name="NewLocaleCommand_Locale_HelpText" xml:space="preserve">
+    <value>Paramètres régionaux du package pour lesquels créer un manifeste. S’il n’est pas fourni, l’outil demande cette valeur.</value>
+  </data>
+  <data name="LocaleDoesNotExist_Message" xml:space="preserve">
+    <value>Le manifeste des paramètres régionaux d’entrée « {0} » n’existe pas. Utilisez la commande new-locale pour générer un nouveau manifeste de paramètres régionaux.</value>
+    <comment>{0} - represents the package locale string</comment>
+  </data>
+  <data name="SwitchToNewLocaleFlow_Message" xml:space="preserve">
+    <value>Souhaitez-vous créer le manifeste de paramètres régionaux à la place ?</value>
+  </data>
+  <data name="SwitchToUpdateLocaleFlow_Message" xml:space="preserve">
+    <value>Souhaitez-vous mettre à jour le manifeste de paramètres régionaux à la place ?</value>
+  </data>
+  <data name="DownloadCommandProhibited_KeywordDescription" xml:space="preserve">
+    <value>Indique si le programme d’installation ne peut pas être téléchargé pour une installation hors connexion</value>
+  </data>
+  <data name="NewLocaleCommand_Header" xml:space="preserve">
+    <value>Cette commande vous guide tout au long d’une série de questions pour vous aider à générer un nouveau manifeste de paramètres régionaux.</value>
+  </data>
+  <data name="NewLocaleCommand_PrePrompt_Header" xml:space="preserve">
+    <value>Appuyez sur Entrée pour envoyer la valeur de chaque question, notamment en acceptant la valeur (de référence) du manifeste des paramètres régionaux de référence.</value>
+  </data>
+  <data name="SubmitFlagMissing_Warning" xml:space="preserve">
+    <value>Des arguments de soumission ont été fournis. Avez-vous oublié d'inclure l'option --submit, -s ?</value>
+    <comment>'--submit, -s' refers to a command line switch argument</comment>
+  </data>
+  <data name="ReplacePackageIdDoesNotExist_Error" xml:space="preserve">
+    <value>Impossible d’effectuer l’opération de remplacement. L’identificateur de package '{0}' n’existe pas dans le dépôt Gestionnaire de package Windows.</value>
+    <comment>{0} - will be replaced with the ID of the package</comment>
+  </data>
+  <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
+    <value>La version de remplacement ne peut pas être égale à la version d’envoi.</value>
+  </data>
+  <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
+    <value>Effacer le jeton GitHub mis en cache</value>
+  </data>
+  <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
+    <value>Stockez un nouveau jeton GitHub dans votre cache local</value>
   </data>
 </root>
