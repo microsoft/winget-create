@@ -45,6 +45,7 @@ resources:
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  condition: not(eq(variables['Build.Reason'], 'PullRequest'))
   parameters:
     pool:
       name: Azure-Pipelines-1ESPT-ExDShared
