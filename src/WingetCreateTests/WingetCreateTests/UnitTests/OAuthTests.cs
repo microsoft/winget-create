@@ -25,7 +25,7 @@ namespace Microsoft.WingetCreateUnitTests
         public void GetTokenAsyncMockTest()
         {
             Mock<IRestClient> mockClient = new Mock<IRestClient>();
-            mockClient.Setup(x => x.ExecutePostAsync(It.IsAny<RestRequest>(), default))
+            mockClient.Setup(x => x.ExecuteAsync(It.IsAny<RestRequest>(), default))
                 .ReturnsAsync(GenerateTokenResponse());
 
             var response = GitHubOAuth.GetTokenAsync(mockClient.Object, new GitHubOAuth.DeviceAuthorizationResponse()).Result;
