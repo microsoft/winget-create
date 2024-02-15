@@ -153,11 +153,12 @@ You can install the prerequisites in one of two ways:
 * Windows 10 1709 (16299) or later
 * [Developer mode enabled](https://docs.microsoft.com/windows/uwp/get-started/enable-your-device-for-development) (optional)
 * [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)
-   * Or use winget to install it ;) (although you may need to adjust the workloads via Tools->Get Tools and Features...)
+   * Or use winget to install it ;) (although you may need to adjust the workloads via Tools -> Get Tools and Features...)
 * [Git Large File Storage (LFS)](https://git-lfs.github.com/)
 * The following workloads:
    * .NET Desktop Development
    * Universal Windows Platform Development
+* Windows 11 SDK (10.0.22000.0) (Tools -> Get Tools and Features -> Individual Components)
 
 ### Building
 

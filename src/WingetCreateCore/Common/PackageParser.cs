@@ -582,21 +582,21 @@ namespace Microsoft.WingetCreateCore
             List<Architecture> archMatches = new List<Architecture>();
 
             // Arm must only be checked if arm64 check fails, otherwise it'll match for arm64 too
-            if (Regex.Match(url, "arm64|aarch64", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, "arm64|aarch64(ec)?", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.Arm64);
             }
-            else if (Regex.Match(url, @"\barm\b|armv[567]", RegexOptions.IgnoreCase).Success)
+            else if (Regex.Match(url, @"\barm\b|armv[567]|\baarch\b", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.Arm);
             }
 
-            if (Regex.Match(url, "x64|win64|_64|64-bit|amd64", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, "x64|winx?64|_64|64-?bit|ia64|amd64|x86(-|_)64", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.X64);
             }
 
-            if (Regex.Match(url, @"x86|win32|ia32|_86|32-bit|i386|\b386\b", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, @"x86|win32|winx86|_86|32-?bit|ia32|i[3456]86|\b[3456]86\b", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.X86);
             }
