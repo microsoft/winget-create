@@ -46,12 +46,13 @@ namespace Microsoft.WingetCreateUnitTests
                     SingletonManifest manifest = new SingletonManifest { Description = testString };
                     File.WriteAllText(testManifestFilePath, serializer.ToManifestString(manifest));
 
-                SingletonManifest testManifest = Serialization.DeserializeFromPath<SingletonManifest>(testManifestFilePath);
-                ClassicAssert.AreEqual(
-                    testString,
-                    testManifest.Description,
-                    string.Format("Unicode string: {0} failed to display correctly.", testString));
-                File.Delete(testManifestFilePath);
+                    SingletonManifest testManifest = Serialization.DeserializeFromPath<SingletonManifest>(testManifestFilePath);
+                    ClassicAssert.AreEqual(
+                        testString,
+                        testManifest.Description,
+                        string.Format("Unicode string: {0} failed to display correctly.", testString));
+                    File.Delete(testManifestFilePath);
+                }
             }
         }
 
@@ -85,17 +86,15 @@ namespace Microsoft.WingetCreateUnitTests
                     {
                         // we know that \r\n and \x85 characters are replaced with \n by YamlDotNet library.
                         var writtenFixed = string.Join('\n', written.Description.Split(new string[] { "\n", "\r\n", "\x85" }, StringSplitOptions.None));
-                        Assert.AreEqual(writtenFixed, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
+                        ClassicAssert.AreEqual(writtenFixed, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
                     }
                     else
                     {
-                        Assert.AreEqual(written.Description, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
+                        ClassicAssert.AreEqual(written.Description, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
                     }
 
-                // we know when written that \r\n and \x85 characters are replaced with \n.
-                var writtenFixed = string.Join('\n', written.Description.Split(new string[] { "\n", "\r\n", "\x85" }, StringSplitOptions.None));
-                ClassicAssert.AreEqual(writtenFixed, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
-                File.Delete(testManifestFilePath);
+                    File.Delete(testManifestFilePath);
+                }
             }
         }
     }

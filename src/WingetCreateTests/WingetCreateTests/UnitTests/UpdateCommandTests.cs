@@ -208,7 +208,6 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MismatchedMsixInExistingBundle", null, this.tempPath, null);
-            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
@@ -613,7 +612,6 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.MatchWithCompatibleInstallerType", null, this.tempPath, null);
-            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
             ClassicAssert.AreEqual(InstallerType.Appx, updatedManifests.InstallerManifest.InstallerType, "Msix installerType should be matched with Appx");
@@ -663,8 +661,7 @@ namespace Microsoft.WingetCreateUnitTests
         public void UpdateDeserializesAliasDefinedFields()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.DeserializeAliasFields", null, this.tempPath, null);
+            (_, List<string> initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.DeserializeAliasFields", null, this.tempPath, null);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var singletonManifest = initialManifests.SingletonManifest;
             var installer = singletonManifest.Installers.First();
@@ -732,7 +729,7 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_5", null, this.tempPath, null);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
-            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
 
         /// <summary>
@@ -745,7 +742,7 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_1", null, this.tempPath, null, fileExtension: ".json");
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
-            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
 
         /// <summary>
@@ -758,7 +755,7 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_2", null, this.tempPath, null, fileExtension: ".json");
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
-            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
 
         /// <summary>
@@ -771,7 +768,7 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_4", null, this.tempPath, null, fileExtension: ".json");
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
-            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
 
         /// <summary>
@@ -822,7 +819,6 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
 
             InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
-            var updatedInstaller = updatedInstallerManifest.Installers.First();
 
             ClassicAssert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Portable, "InstallerType should be portable");
             ClassicAssert.IsTrue(updatedInstallerManifest.Commands[0] == "portableCommand", "Command value should be preserved.");

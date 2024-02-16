@@ -126,10 +126,7 @@ namespace Microsoft.WingetCreateCLI
         {
             var property = model.GetType().GetProperty(memberName);
             List<T> objectList = (List<T>)property.GetValue(model);
-            if (objectList == null)
-            {
-                objectList = new List<T>();
-            }
+            objectList ??= new List<T>();
 
             string name = objectList.GetType().GetGenericArguments().Single().Name;
 
@@ -299,7 +296,6 @@ namespace Microsoft.WingetCreateCLI
             if (instanceType == typeof(string))
             {
                 string result = Prompt.Input<string>(message, property.GetValue(model), null, new[] { FieldValidation.ValidateProperty(model, memberName, instance) });
-
 
                 if (!string.IsNullOrEmpty(result))
                 {
