@@ -3,6 +3,8 @@
 
 namespace Microsoft.WingetCreateTests
 {
+    using Microsoft.WingetCreateCLI.Models.Settings;
+
     /// <summary>
     /// Shared string constants to be used in test cases.
     /// </summary>
@@ -49,53 +51,125 @@ namespace Microsoft.WingetCreateTests
         public const string TestZipInstaller = "WingetCreateTestZipInstaller.zip";
 
         /// <summary>
-        /// PackageIdentifier for test exe.
+        /// Format argument to be used for YAML submissions.
         /// </summary>
-        public const string TestExePackageIdentifier = "WingetCreateE2E.ExeTest";
+        public const ManifestFormat YamlManifestFormat = ManifestFormat.Yaml;
 
         /// <summary>
-        /// PackageIdentifier for test msi.
+        /// Format argument to be used for JSON submissions.
         /// </summary>
-        public const string TestMsiPackageIdentifier = "WingetCreateE2E.MsiTest";
+        public const ManifestFormat JsonManifestFormat = ManifestFormat.Json;
 
         /// <summary>
-        /// File name of the test msix manifest.
+        /// Test constants to use for YAML manifest tests.
         /// </summary>
-        public const string TestMultifileMsixPackageIdentifier = "Multifile.MsixTest";
+        public static class YamlConstants
+        {
+            /// <summary>
+            /// PackageIdentifier for test exe.
+            /// </summary>
+            public const string TestExePackageIdentifier = "WingetCreateE2E.Yaml.ExeTest";
+
+            /// <summary>
+            /// PackageIdentifier for test msi.
+            /// </summary>
+            public const string TestMsiPackageIdentifier = "WingetCreateE2E.Yaml.MsiTest";
+
+            /// <summary>
+            /// File name of the test msix manifest.
+            /// </summary>
+            public const string TestMultifileMsixPackageIdentifier = "Multifile.Yaml.MsixTest";
+
+            /// <summary>
+            /// PackageIdentifier for test portable.
+            /// </summary>
+            public const string TestPortablePackageIdentifier = "WingetCreateE2E.Yaml.PortableTest";
+
+            /// <summary>
+            /// PackageIdentifier for test zip.
+            /// </summary>
+            public const string TestZipPackageIdentifier = "WingetCreateE2E.Yaml.ZipTest";
+
+            /// <summary>
+            /// File name of the test exe manifest.
+            /// </summary>
+            public const string TestExeManifest = "WingetCreateE2E.Yaml.ExeTest.yaml";
+
+            /// <summary>
+            /// File name of the test msi manifest.
+            /// </summary>
+            public const string TestMsiManifest = "WingetCreateE2E.Yaml.MsiTest.yaml";
+
+            /// <summary>
+            /// File name of the test portable manifest.
+            /// </summary>
+            public const string TestPortableManifest = "WingetCreateE2E.Yaml.PortableTest.yaml";
+
+            /// <summary>
+            /// Path of the directory with the multifile msix test manifests.
+            /// </summary>
+            public const string TestMultifileMsixManifestDir = "Multifile.Yaml.MsixTest";
+
+            /// <summary>
+            ///  File name of the test zip manifest.
+            /// </summary>
+            public const string TestZipManifest = "WingetCreateE2E.Yaml.ZipTest.yaml";
+        }
 
         /// <summary>
-        /// PackageIdentifier for test portable.
+        /// Test constants to use for JSON manifest tests.
         /// </summary>
-        public const string TestPortablePackageIdentifier = "WingetCreateE2E.PortableTest";
+        public static class JsonConstants
+        {
+            /// <summary>
+            /// PackageIdentifier for test exe.
+            /// </summary>
+            public const string TestExePackageIdentifier = "WingetCreateE2E.Json.ExeTest";
 
-        /// <summary>
-        /// PackageIdentifier for test zip.
-        /// </summary>
-        public const string TestZipPackageIdentifier = "WingetCreateE2E.ZipTest";
+            /// <summary>
+            /// PackageIdentifier for test msi.
+            /// </summary>
+            public const string TestMsiPackageIdentifier = "WingetCreateE2E.Json.MsiTest";
 
-        /// <summary>
-        /// File name of the test exe manifest.
-        /// </summary>
-        public const string TestExeManifest = "WingetCreateE2E.ExeTest.yaml";
+            /// <summary>
+            /// File name of the test msix manifest.
+            /// </summary>
+            public const string TestMultifileMsixPackageIdentifier = "Multifile.Json.MsixTest";
 
-        /// <summary>
-        /// File name of the test msi manifest.
-        /// </summary>
-        public const string TestMsiManifest = "WingetCreateE2E.MsiTest.yaml";
+            /// <summary>
+            /// PackageIdentifier for test portable.
+            /// </summary>
+            public const string TestPortablePackageIdentifier = "WingetCreateE2E.Json.PortableTest";
 
-        /// <summary>
-        /// File name of the test portable manifest.
-        /// </summary>
-        public const string TestPortableManifest = "WingetCreateE2E.PortableTest.yaml";
+            /// <summary>
+            /// PackageIdentifier for test zip.
+            /// </summary>
+            public const string TestZipPackageIdentifier = "WingetCreateE2E.Json.ZipTest";
 
-        /// <summary>
-        /// Path of the directory with the multifile msix test manifests.
-        /// </summary>
-        public const string TestMultifileMsixManifestDir = "Multifile.MsixTest";
+            /// <summary>
+            /// File name of the test exe manifest.
+            /// </summary>
+            public const string TestExeManifest = "WingetCreateE2E.Json.ExeTest.json";
 
-        /// <summary>
-        ///  File name of the test zip manifest.
-        /// </summary>
-        public const string TestZipManifest = "WingetCreateE2E.ZipTest.yaml";
+            /// <summary>
+            /// File name of the test msi manifest.
+            /// </summary>
+            public const string TestMsiManifest = "WingetCreateE2E.Json.MsiTest.json";
+
+            /// <summary>
+            /// File name of the test portable manifest.
+            /// </summary>
+            public const string TestPortableManifest = "WingetCreateE2E.Json.PortableTest.json";
+
+            /// <summary>
+            /// Path of the directory with the multifile msix test manifests.
+            /// </summary>
+            public const string TestMultifileMsixManifestDir = "Multifile.Json.MsixTest";
+
+            /// <summary>
+            ///  File name of the test zip manifest.
+            /// </summary>
+            public const string TestZipManifest = "WingetCreateE2E.Json.ZipTest.json";
+        }
     }
 }

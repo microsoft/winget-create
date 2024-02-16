@@ -27,6 +27,7 @@ The following arguments are available:
 | **-l, --locale** |  The package locale to create a new manifest for. If not provided, the tool will prompt you for this value.
 | **-r, --reference-locale** | Existing locale manifest to be used as reference for default values. If not provided, the default locale manifest will be used.
 | **-o, --out** |  The output directory where the newly created manifests will be saved locally.
+| **-f,--format** |  Output format of the manifest. Default is "yaml". |
 | **-t,--token**  | GitHub personal access token used for direct submission to the Windows Package Manager repo |
 | **-?, --help** |  Gets additional help on this command |
 

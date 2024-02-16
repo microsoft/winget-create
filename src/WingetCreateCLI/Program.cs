@@ -37,6 +37,7 @@ namespace Microsoft.WingetCreateCLI
             {
                 config.HelpWriter = null;
                 config.CaseSensitive = false;
+                config.CaseInsensitiveEnumValues = true;
             });
 
             var types = new Type[]
@@ -99,8 +100,29 @@ namespace Microsoft.WingetCreateCLI
 
             try
             {
+                Serialization.SetManifestSerializer(command.Format.ToString());
+            }
+            catch (ArgumentException ex)
+            {
+                Logger.ErrorLocalized(nameof(Resources.InvalidManifestFormat_ErrorMessage));
+                TelemetryManager.Log.WriteEvent(new GlobalExceptionEvent
+                {
+                    ExceptionType = ex.GetType().ToString(),
+                    ErrorMessage = ex.Message,
+                    StackTrace = ex.StackTrace,
+                });
+                return 1;
+            }
+
+            try
+            {
                 WingetCreateCore.Serialization.ProducedBy = string.Join(" ", Constants.ProgramName, Utils.GetEntryAssemblyVersion());
                 return await command.Execute() ? 0 : 1;
+            }
+            catch (ArgumentException)
+            {
+                Logger.ErrorLocalized(nameof(Resources.InvalidManifestFormat_ErrorMessage));
+                return 1;
             }
             catch (Exception ex)
             {

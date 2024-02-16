@@ -1,4 +1,4 @@
-﻿PackageIdentifier: Multifile.MsixTest
+﻿PackageIdentifier: Multifile.Yaml.MsixTest
 PackageVersion: 1.2.3.4
 Installers:
   - Architecture: x64

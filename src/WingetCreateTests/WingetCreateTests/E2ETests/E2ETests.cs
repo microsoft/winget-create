@@ -8,6 +8,8 @@ namespace Microsoft.WingetCreateE2ETests
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
+    using Microsoft.WingetCreateCLI.Models.Settings;
+    using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateTests;
     using Microsoft.WingetCreateUnitTests;
@@ -41,32 +43,45 @@ namespace Microsoft.WingetCreateE2ETests
         /// </summary>
         /// <param name="packageId">The id used for looking up an existing manifest in the repository.</param>
         /// <param name="manifestName">Manifest to convert and submit.</param>
-        /// <param name="installerName">The installar package associated with the manifest.</param>
+        /// <param name="installerName">The installer package associated with the manifest.</param>
+        /// <param name="format">The format of the manifest file.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous test.</returns>
-        [TestCase(TestConstants.TestExePackageIdentifier, TestConstants.TestExeManifest, TestConstants.TestExeInstaller)]
-        [TestCase(TestConstants.TestMsiPackageIdentifier, TestConstants.TestMsiManifest, TestConstants.TestMsiInstaller)]
-        [TestCase(TestConstants.TestMultifileMsixPackageIdentifier, TestConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller)]
-        [TestCase(TestConstants.TestPortablePackageIdentifier, TestConstants.TestPortableManifest, TestConstants.TestExeInstaller)]
-        [TestCase(TestConstants.TestZipPackageIdentifier, TestConstants.TestZipManifest, TestConstants.TestZipInstaller)]
-        public async Task SubmitAndUpdateInstaller(string packageId, string manifestName, string installerName)
+        // YAML E2E Tests
+        [TestCase(TestConstants.YamlConstants.TestExePackageIdentifier, TestConstants.YamlConstants.TestExeManifest, TestConstants.TestExeInstaller, TestConstants.YamlManifestFormat)]
+        [TestCase(TestConstants.YamlConstants.TestMsiPackageIdentifier, TestConstants.YamlConstants.TestMsiManifest, TestConstants.TestMsiInstaller, TestConstants.YamlManifestFormat)]
+        [TestCase(TestConstants.YamlConstants.TestMultifileMsixPackageIdentifier, TestConstants.YamlConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller, TestConstants.YamlManifestFormat)]
+        [TestCase(TestConstants.YamlConstants.TestPortablePackageIdentifier, TestConstants.YamlConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.YamlManifestFormat)]
+        [TestCase(TestConstants.YamlConstants.TestZipPackageIdentifier, TestConstants.YamlConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.YamlManifestFormat)]
+
+        // JSON E2E Tests
+        [TestCase(TestConstants.JsonConstants.TestExePackageIdentifier, TestConstants.JsonConstants.TestExeManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat)]
+        [TestCase(TestConstants.JsonConstants.TestMsiPackageIdentifier, TestConstants.JsonConstants.TestMsiManifest, TestConstants.TestMsiInstaller, TestConstants.JsonManifestFormat)]
+        [TestCase(TestConstants.JsonConstants.TestMultifileMsixPackageIdentifier, TestConstants.JsonConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller, TestConstants.JsonManifestFormat)]
+        [TestCase(TestConstants.JsonConstants.TestPortablePackageIdentifier, TestConstants.JsonConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat)]
+        [TestCase(TestConstants.JsonConstants.TestZipPackageIdentifier, TestConstants.JsonConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.JsonManifestFormat)]
+
+        public async Task SubmitAndUpdateInstaller(string packageId, string manifestName, string installerName, ManifestFormat format)
         {
-            await this.RunSubmitAndUpdateFlow(packageId, TestUtils.GetTestFile(manifestName), installerName);
+            await this.RunSubmitAndUpdateFlow(packageId, TestUtils.GetTestFile(manifestName), installerName, format);
         }
 
         /// <summary>
         /// Helper method for running the E2E test flow for the submit and update commands.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
-        private async Task RunSubmitAndUpdateFlow(string packageId, string manifestPath, string installerName)
+        private async Task RunSubmitAndUpdateFlow(string packageId, string manifestPath, string installerName, ManifestFormat format)
         {
+            string pullRequestTitle = $"{packageId} {PackageVersion} ({format})";
+            Serialization.SetManifestSerializer(format.ToString());
             SubmitCommand submitCommand = new SubmitCommand
             {
                 GitHubToken = this.GitHubApiKey,
                 WingetRepo = this.WingetPkgsTestRepo,
                 WingetRepoOwner = this.WingetPkgsTestRepoOwner,
                 Path = manifestPath,
-                PRTitle = packageId + ' ' + PackageVersion,
+                PRTitle = pullRequestTitle,
                 SubmitPRToFork = this.SubmitPRToFork,
+                Format = format,
                 OpenPRInBrowser = false,
             };
             Assert.IsTrue(await submitCommand.Execute(), "Command should have succeeded");
@@ -91,7 +106,8 @@ namespace Microsoft.WingetCreateE2ETests
                 WingetRepo = this.WingetPkgsTestRepo,
                 WingetRepoOwner = this.WingetPkgsTestRepoOwner,
                 SubmitPRToFork = this.SubmitPRToFork,
-                PRTitle = packageId + ' ' + PackageVersion,
+                PRTitle = pullRequestTitle,
+                Format = format,
                 OpenPRInBrowser = false,
             };
 

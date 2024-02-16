@@ -5,9 +5,10 @@ namespace Microsoft.WingetCreateUnitTests
 {
     using System;
     using System.IO;
-    using System.Linq;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateCore.Interfaces;
     using Microsoft.WingetCreateCore.Models.Singleton;
+    using Microsoft.WingetCreateCore.Serializers;
     using NUnit.Framework;
 
     /// <summary>
@@ -35,19 +36,22 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void VerifyTextSupport()
         {
-            string testManifestFilePath = Path.Combine(Path.GetTempPath(), "TestManifest.yaml");
-
-            foreach (string testString in this.testStrings)
+            foreach (var serializerType in Serialization.AvailableSerializerTypes)
             {
-                SingletonManifest manifest = new SingletonManifest { Description = testString };
-                File.WriteAllText(testManifestFilePath, manifest.ToYaml());
+                IManifestSerializer serializer = (IManifestSerializer)Activator.CreateInstance(serializerType);
+                string testManifestFilePath = Path.Combine(Path.GetTempPath(), $"TestManifest{serializer.AssociatedFileExtension}");
+                foreach (string testString in this.testStrings)
+                {
+                    SingletonManifest manifest = new SingletonManifest { Description = testString };
+                    File.WriteAllText(testManifestFilePath, serializer.ToManifestString(manifest));
 
-                SingletonManifest testManifest = Serialization.DeserializeFromPath<SingletonManifest>(testManifestFilePath);
-                Assert.AreEqual(
-                    testString,
-                    testManifest.Description,
-                    string.Format("Unicode string: {0} failed to display correctly.", testString));
-                File.Delete(testManifestFilePath);
+                    SingletonManifest testManifest = Serialization.DeserializeFromPath<SingletonManifest>(testManifestFilePath);
+                    Assert.AreEqual(
+                        testString,
+                        testManifest.Description,
+                        string.Format("Unicode string: {0} failed to display correctly.", testString));
+                    File.Delete(testManifestFilePath);
+                }
             }
         }
 
@@ -55,7 +59,7 @@ namespace Microsoft.WingetCreateUnitTests
         /// Verifies that we aren't adding more newlines than expected.
         /// </summary>
         [Test]
-        public void VerfiyNewLineSupport()
+        public void VerifyNewLineSupport()
         {
             string[] stringsWithNewLines =
             {
@@ -66,18 +70,30 @@ namespace Microsoft.WingetCreateUnitTests
                 "Me too!\x2029:)",
             };
 
-            string testManifestFilePath = Path.Combine(Path.GetTempPath(), "TestManifest.yaml");
-
-            foreach (var i in stringsWithNewLines)
+            foreach (var serializerType in Serialization.AvailableSerializerTypes)
             {
-                SingletonManifest written = new SingletonManifest { Description = i };
-                File.WriteAllText(testManifestFilePath, written.ToYaml());
-                SingletonManifest read = Serialization.DeserializeFromPath<SingletonManifest>(testManifestFilePath);
+                IManifestSerializer serializer = (IManifestSerializer)Activator.CreateInstance(serializerType);
+                string testManifestFilePath = Path.Combine(Path.GetTempPath(), $"TestManifest{serializer.AssociatedFileExtension}");
 
-                // we know when written that \r\n and \x85 characters are replaced with \n.
-                var writtenFixed = string.Join('\n', written.Description.Split(new string[] { "\n", "\r\n", "\x85" }, StringSplitOptions.None));
-                Assert.AreEqual(writtenFixed, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
-                File.Delete(testManifestFilePath);
+                foreach (var i in stringsWithNewLines)
+                {
+                    SingletonManifest written = new SingletonManifest { Description = i };
+                    File.WriteAllText(testManifestFilePath, serializer.ToManifestString(written));
+                    SingletonManifest read = Serialization.DeserializeFromPath<SingletonManifest>(testManifestFilePath);
+
+                    if (serializer.GetType() == typeof(YamlSerializer))
+                    {
+                        // we know that \r\n and \x85 characters are replaced with \n by YamlDotNet library.
+                        var writtenFixed = string.Join('\n', written.Description.Split(new string[] { "\n", "\r\n", "\x85" }, StringSplitOptions.None));
+                        Assert.AreEqual(writtenFixed, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
+                    }
+                    else
+                    {
+                        Assert.AreEqual(written.Description, read.Description, $"String {read.Description} had the wrong number of newlines :(.");
+                    }
+
+                    File.Delete(testManifestFilePath);
+                }
             }
         }
     }

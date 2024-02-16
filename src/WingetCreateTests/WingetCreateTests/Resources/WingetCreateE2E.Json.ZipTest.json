@@ -1,0 +1,36 @@
+﻿{
+  "PackageIdentifier": "WingetCreateE2E.Json.ZipTest",
+  "PackageName": "ZipTest",
+  "PackageVersion": "1.2.3.4",
+  "Publisher": "WingetCreateE2E",
+  "Author": "Microsoft",
+  "License": "MIT",
+  "LicenseUrl": "https://github.com/microsoft/winget-create",
+  "MinimumOSVersion": "10.0.0.0",
+  "ShortDescription": "Testing WingetCreate with a zip",
+  "PackageLocale": "en-US",
+  "Tags": [
+    "Windows Package Manager",
+    "winget create",
+    "package manager",
+    "utility",
+    "tool",
+    "test"
+  ],
+  "InstallerType": "zip",
+  "Installers": [
+    {
+      "Architecture": "x64",
+      "InstallerUrl": "https://fakedomain.com/WingetCreateTestZipInstaller.zip",
+      "InstallerSha256": "A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC",
+      "NestedInstallerType": "msi",
+      "NestedInstallerFiles": [
+        {
+          "RelativeFilePath": "WingetCreateTestMsiInstaller.msi"
+        }
+      ]
+    }
+  ],
+  "ManifestType": "singleton",
+  "ManifestVersion": "1.4.0"
+}
