@@ -39,24 +39,26 @@ namespace Microsoft.WingetCreateCLI.Logging
         public static void Initialize()
         {
             // Add rules to file log configuration
-            var loggerFileConfig = new LoggingConfiguration();
-            loggerFileConfig.AddRule(LogLevel.Trace, LogLevel.Fatal, FileTarget);
+            var loggerFileFactory = new LogFactory().Setup().LoadConfiguration(builder =>
+            {
+                builder.Configuration.AddRule(LogLevel.Trace, LogLevel.Fatal, FileTarget, "File");
+            });
 
-            // Apply file log config
-            var loggerFileFactory = new LogFactory(loggerFileConfig);
+            // Get logger for file
             loggerFile = loggerFileFactory.GetLogger("File");
 
             // Add rules to console log configuration
-            var loggerConsoleConfig = new LoggingConfiguration();
-            loggerConsoleConfig.AddRule(LogLevel.Debug, LogLevel.Fatal, ConsoleTarget);
+            var loggerConsoleFactory = new LogFactory().Setup().LoadConfiguration(builder =>
+            {
+                builder.Configuration.AddRule(LogLevel.Debug, LogLevel.Fatal, ConsoleTarget, "Console");
+            });
 
             // Set color for specific log level
             SetColorForConsoleTarget(ConsoleTarget, LogLevel.Info, ConsoleOutputColor.Green);
             SetColorForConsoleTarget(ConsoleTarget, LogLevel.Warn, ConsoleOutputColor.Yellow);
             SetColorForConsoleTarget(ConsoleTarget, LogLevel.Error, ConsoleOutputColor.Red);
 
-            // Apply console log config
-            var loggerConsoleFactory = new LogFactory(loggerConsoleConfig);
+            // Get logger for console
             loggerConsole = loggerConsoleFactory.GetLogger("Console");
         }
 
