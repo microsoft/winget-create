@@ -14,6 +14,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Logging;
+    using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
@@ -56,9 +57,19 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static readonly Dictionary<string, string> DownloadedInstallers = new();
 
         /// <summary>
+        /// Gets the extension of the output manifest files.
+        /// </summary>
+        public static string Extension => Serialization.ManifestSerializer.AssociatedFileExtension;
+
+        /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
         public virtual string GitHubToken { get; set; }
+
+        /// <summary>
+        /// Gets or sets the format of the output manifest files and preview.
+        /// </summary>
+        public virtual ManifestFormat Format { get; set; } = UserSettings.ManifestFormat;
 
         /// <summary>
         /// Gets or sets the winget repo owner to use.
@@ -116,7 +127,6 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 Logger.Trace("No token parameter, reading cached token");
                 this.GitHubToken = GitHubOAuth.ReadTokenCache();
-
                 if (string.IsNullOrEmpty(this.GitHubToken))
                 {
                     if (requireToken)
@@ -184,18 +194,18 @@ namespace Microsoft.WingetCreateCLI.Commands
                 fullDirPath = Path.Combine(outputDir, manifestDir);
             }
 
-            string versionManifestFileName = Manifests.GetFileName(manifests.VersionManifest);
-            string installerManifestFileName = Manifests.GetFileName(manifests.InstallerManifest);
-            string defaultLocaleManifestFileName = Manifests.GetFileName(manifests.DefaultLocaleManifest);
+            string versionManifestFileName = Manifests.GetFileName(manifests.VersionManifest, Extension);
+            string installerManifestFileName = Manifests.GetFileName(manifests.InstallerManifest, Extension);
+            string defaultLocaleManifestFileName = Manifests.GetFileName(manifests.DefaultLocaleManifest, Extension);
 
-            File.WriteAllText(Path.Combine(fullDirPath, versionManifestFileName), versionManifest.ToYaml());
-            File.WriteAllText(Path.Combine(fullDirPath, installerManifestFileName), installerManifest.ToYaml());
-            File.WriteAllText(Path.Combine(fullDirPath, defaultLocaleManifestFileName), defaultLocaleManifest.ToYaml());
+            File.WriteAllText(Path.Combine(fullDirPath, versionManifestFileName), versionManifest.ToManifestString());
+            File.WriteAllText(Path.Combine(fullDirPath, installerManifestFileName), installerManifest.ToManifestString());
+            File.WriteAllText(Path.Combine(fullDirPath, defaultLocaleManifestFileName), defaultLocaleManifest.ToManifestString());
 
             foreach (LocaleManifest localeManifest in localeManifests)
             {
-                string localeManifestFileName = Manifests.GetFileName(localeManifest);
-                File.WriteAllText(Path.Combine(fullDirPath, localeManifestFileName), localeManifest.ToYaml());
+                string localeManifestFileName = Manifests.GetFileName(localeManifest, Extension);
+                File.WriteAllText(Path.Combine(fullDirPath, localeManifestFileName), localeManifest.ToManifestString());
             }
 
             Console.WriteLine();
@@ -212,21 +222,21 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>A boolean value indicating whether validation of the manifests was successful.</returns>
         protected static bool ValidateManifestsInTempDir(Manifests manifests)
         {
-            string versionManifestFileName = Manifests.GetFileName(manifests.VersionManifest);
-            string installerManifestFileName = Manifests.GetFileName(manifests.InstallerManifest);
-            string defaultLocaleManifestFileName = Manifests.GetFileName(manifests.DefaultLocaleManifest);
+            string versionManifestFileName = Manifests.GetFileName(manifests.VersionManifest, Extension);
+            string installerManifestFileName = Manifests.GetFileName(manifests.InstallerManifest, Extension);
+            string defaultLocaleManifestFileName = Manifests.GetFileName(manifests.DefaultLocaleManifest, Extension);
 
             string randomDirPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(randomDirPath);
 
-            File.WriteAllText(Path.Combine(randomDirPath, versionManifestFileName), manifests.VersionManifest.ToYaml());
-            File.WriteAllText(Path.Combine(randomDirPath, installerManifestFileName), manifests.InstallerManifest.ToYaml());
-            File.WriteAllText(Path.Combine(randomDirPath, defaultLocaleManifestFileName), manifests.DefaultLocaleManifest.ToYaml());
+            File.WriteAllText(Path.Combine(randomDirPath, versionManifestFileName), manifests.VersionManifest.ToManifestString());
+            File.WriteAllText(Path.Combine(randomDirPath, installerManifestFileName), manifests.InstallerManifest.ToManifestString());
+            File.WriteAllText(Path.Combine(randomDirPath, defaultLocaleManifestFileName), manifests.DefaultLocaleManifest.ToManifestString());
 
             foreach (LocaleManifest localeManifest in manifests.LocaleManifests)
             {
-                string localeManifestFileName = Manifests.GetFileName(localeManifest);
-                File.WriteAllText(Path.Combine(randomDirPath, localeManifestFileName), localeManifest.ToYaml());
+                string localeManifestFileName = Manifests.GetFileName(localeManifest, Extension);
+                File.WriteAllText(Path.Combine(randomDirPath, localeManifestFileName), localeManifest.ToManifestString());
             }
 
             bool result = ValidateManifest(randomDirPath);
@@ -403,11 +413,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             Logger.Debug(Resources.GenerateManifestPreview_Message);
             Logger.Info(Resources.VersionManifestPreview_Message);
-            Console.WriteLine(manifests.VersionManifest.ToYaml());
+            Console.WriteLine(manifests.VersionManifest.ToManifestString());
             Logger.Info(Resources.InstallerManifestPreview_Message);
-            Console.WriteLine(manifests.InstallerManifest.ToYaml());
+            Console.WriteLine(manifests.InstallerManifest.ToManifestString());
             Logger.Info(Resources.DefaultLocaleManifestPreview_Message);
-            Console.WriteLine(manifests.DefaultLocaleManifest.ToYaml());
+            Console.WriteLine(manifests.DefaultLocaleManifest.ToManifestString());
         }
 
         /// <summary>
@@ -569,7 +579,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         protected static void DisplayDefaultLocaleManifest(DefaultLocaleManifest defaultLocaleManifest)
         {
             Logger.InfoLocalized(nameof(Resources.DefaultLocaleManifest_Message), defaultLocaleManifest.PackageLocale);
-            Console.WriteLine(defaultLocaleManifest.ToYaml(true));
+            Console.WriteLine(defaultLocaleManifest.ToManifestString(true));
         }
 
         /// <summary>
@@ -581,7 +591,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             foreach (var localeManifest in localeManifests)
             {
                 Logger.InfoLocalized(nameof(Resources.LocaleManifest_Message), localeManifest.PackageLocale);
-                Console.WriteLine(localeManifest.ToYaml(true));
+                Console.WriteLine(localeManifest.ToManifestString(true));
             }
         }
 
@@ -710,6 +720,15 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
         protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
         {
+            // Community repo only supports yaml submissions.
+            if (this.WingetRepo == DefaultWingetRepo &&
+                this.WingetRepoOwner == DefaultWingetRepoOwner &&
+                this.Format != ManifestFormat.Yaml)
+            {
+                Logger.ErrorLocalized(nameof(Resources.FormatNotSupportedForDefaultRepo_Error));
+                return false;
+            }
+
             if (string.IsNullOrEmpty(this.GitHubToken))
             {
                 Logger.WarnLocalized(nameof(Resources.NoTokenProvided_Message));

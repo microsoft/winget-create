@@ -26,6 +26,7 @@ The following arguments are available:
 | **-v, --version** |  The version of the package to update the locale for. Default is the latest version.
 | **-l, --locale** |  The package locale to update the manifest for. If not provided, the tool will prompt you a list of existing locales to choose from.
 | **-o, --out** |  The output directory where the newly created manifests will be saved locally.
+| **-f,--format** |  Output format of the manifest. Default is "yaml". |
 | **-t,--token**  | GitHub personal access token used for direct submission to the Windows Package Manager repo |
 | **-?, --help** |  Gets additional help on this command |
 

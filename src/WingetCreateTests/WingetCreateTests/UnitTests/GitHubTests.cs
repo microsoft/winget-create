@@ -11,6 +11,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.Singleton;
+    using Microsoft.WingetCreateCore.Serializers;
     using Microsoft.WingetCreateTests;
     using NUnit.Framework;
     using NUnit.Framework.Legacy;
@@ -39,6 +40,7 @@ namespace Microsoft.WingetCreateUnitTests
         {
             this.gitHub = new GitHub(this.GitHubApiKey, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
             Serialization.ProducedBy = "WingetCreateUnitTests";
+            Serialization.ManifestSerializer = new YamlSerializer();
         }
 
         /// <summary>

@@ -14,6 +14,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using CommandLine;
     using CommandLine.Text;
     using Microsoft.WingetCreateCLI.Logging;
+    using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
@@ -84,6 +85,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         [Option('o', "out", Required = false, HelpText = "OutputDirectory_HelpText", ResourceType = typeof(Resources))]
         public string OutputDir { get; set; }
+
+        /// <summary>
+        /// Gets or sets the format of the output manifest files.
+        /// </summary>
+        [Option('f', "format", Required = false, HelpText = "ManifestFormat_HelpText", ResourceType = typeof(Resources))]
+        public override ManifestFormat Format { get => base.Format; set => base.Format = value; }
 
         /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
@@ -329,7 +336,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             foreach (var localeManifest in newLocales)
             {
                 Logger.InfoLocalized(nameof(Resources.LocaleManifest_Message), localeManifest.PackageLocale);
-                Console.WriteLine(localeManifest.ToYaml(true));
+                Console.WriteLine(localeManifest.ToManifestString(true));
             }
         }
     }

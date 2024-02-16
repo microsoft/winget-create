@@ -101,12 +101,14 @@ namespace Microsoft.WingetCreateUnitTests
             int cleanUpDays = 30;
             string testRepoOwner = "testRepoOwner";
             string testRepoName = "testRepoName";
+            ManifestFormat manifestFormat = ManifestFormat.Json;
             UserSettings.TelemetryDisabled = !isTelemetryDisabled;
             UserSettings.CleanUpDisabled = !isCleanUpDisabled;
             UserSettings.AnonymizePaths = !arePathsAnonymized;
             UserSettings.CleanUpDays = cleanUpDays;
             UserSettings.WindowsPackageManagerRepositoryOwner = testRepoOwner;
             UserSettings.WindowsPackageManagerRepositoryName = testRepoName;
+            UserSettings.ManifestFormat = manifestFormat;
             UserSettings.ParseJsonFile(UserSettings.SettingsJsonPath, out SettingsManifest manifest);
             ClassicAssert.IsTrue(manifest.Telemetry.Disable == !isTelemetryDisabled, "Changed Telemetry setting was not reflected in the settings file.");
             ClassicAssert.IsTrue(manifest.CleanUp.Disable == !isCleanUpDisabled, "Changed CleanUp.Disable setting was not reflected in the settings file.");

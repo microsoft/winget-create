@@ -1,12 +1,12 @@
-﻿PackageIdentifier: WingetCreateE2E.ExeTest
-PackageName: ExeTest
+﻿PackageIdentifier: WingetCreateE2E.Yaml.ZipTest
+PackageName: ZipTest
 PackageVersion: 1.2.3.4
 Publisher: WingetCreateE2E
 Author: Microsoft
 License: MIT
 LicenseUrl: https://github.com/microsoft/winget-create
 MinimumOSVersion: 10.0.0.0
-ShortDescription: Testing WingetCreate with an exe installer
+ShortDescription: Testing WingetCreate with a zip
 PackageLocale: en-US
 Tags: 
   - Windows Package Manager
@@ -15,13 +15,13 @@ Tags:
   - utility
   - tool
   - test
-InstallerType: exe
-InstallerSwitches:
-  Silent: --silent
-  SilentWithProgress: --silent
+InstallerType: zip
 Installers:
   - Architecture: x64
-    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
     InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+    NestedInstallerType: msi
+    NestedInstallerFiles:
+    - RelativeFilePath: WingetCreateTestMsiInstaller.msi
 ManifestType: singleton
-ManifestVersion: 1.0.0
+ManifestVersion: 1.4.0

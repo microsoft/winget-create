@@ -13,6 +13,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using CommandLine;
     using CommandLine.Text;
     using Microsoft.WingetCreateCLI.Logging;
+    using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
@@ -95,6 +96,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         [Option('i', "interactive", Required = false, HelpText = "InteractiveUpdate_HelpText", ResourceType = typeof(Resources))]
         public bool Interactive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the format of the output manifest files.
+        /// </summary>
+        [Option('f', "format", Required = false, HelpText = "ManifestFormat_HelpText", ResourceType = typeof(Resources))]
+        public override ManifestFormat Format { get => base.Format; set => base.Format = value; }
 
         /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
@@ -590,20 +597,20 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static void DisplayManifestsAsMenuSelection(Manifests manifests)
         {
             Console.Clear();
-            string versionFileName = Manifests.GetFileName(manifests.VersionManifest);
-            string installerFileName = Manifests.GetFileName(manifests.InstallerManifest);
+            string versionFileName = Manifests.GetFileName(manifests.VersionManifest, Extension);
+            string installerFileName = Manifests.GetFileName(manifests.InstallerManifest, Extension);
             string versionManifestMenuItem = $"{manifests.VersionManifest.ManifestType.ToUpper()}: " + versionFileName;
             string installerManifestMenuItem = $"{manifests.InstallerManifest.ManifestType.ToUpper()}: " + installerFileName;
 
             while (true)
             {
                 // Need to update locale manifest file name each time as PackageLocale can change
-                string defaultLocaleMenuItem = $"{manifests.DefaultLocaleManifest.ManifestType.ToUpper()}: " + Manifests.GetFileName(manifests.DefaultLocaleManifest);
+                string defaultLocaleMenuItem = $"{manifests.DefaultLocaleManifest.ManifestType.ToUpper()}: " + Manifests.GetFileName(manifests.DefaultLocaleManifest, Extension);
                 List<string> selectionList = new List<string> { versionManifestMenuItem, installerManifestMenuItem, defaultLocaleMenuItem };
                 Dictionary<string, LocaleManifest> localeManifestMap = new Dictionary<string, LocaleManifest>();
                 foreach (LocaleManifest localeManifest in manifests.LocaleManifests)
                 {
-                    string localeManifestFileName = $"{localeManifest.ManifestType.ToUpper()}: " + Manifests.GetFileName(localeManifest);
+                    string localeManifestFileName = $"{localeManifest.ManifestType.ToUpper()}: " + Manifests.GetFileName(localeManifest, Extension);
                     localeManifestMap.Add(localeManifestFileName, localeManifest);
                     selectionList.Add(localeManifestFileName);
                 }
@@ -622,7 +629,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
                 else if (selectedItem == defaultLocaleMenuItem)
                 {
-                    PromptHelper.PromptPropertiesWithMenu(manifests.DefaultLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(manifests.DefaultLocaleManifest));
+                    PromptHelper.PromptPropertiesWithMenu(manifests.DefaultLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(manifests.DefaultLocaleManifest, Extension));
                 }
                 else if (selectedItem == Resources.Done_MenuItem)
                 {
@@ -631,7 +638,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 else
                 {
                     var selectedLocaleManifest = localeManifestMap[selectedItem];
-                    PromptHelper.PromptPropertiesWithMenu(selectedLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(selectedLocaleManifest));
+                    PromptHelper.PromptPropertiesWithMenu(selectedLocaleManifest, Resources.SaveAndExit_MenuItem, Manifests.GetFileName(selectedLocaleManifest, Extension));
                 }
             }
         }

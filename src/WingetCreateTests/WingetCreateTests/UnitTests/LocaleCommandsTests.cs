@@ -24,7 +24,7 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void VerifyLocaleValidations()
         {
-            var initialManifestContent = TestUtils.GetInitialMultifileManifestContent("Multifile.MsixTest");
+            var initialManifestContent = TestUtils.GetInitialMultifileManifestContent("Multifile.Yaml.MsixTest");
             Manifests manifests = Serialization.DeserializeManifestContents(initialManifestContent);
 
             // Verify with different casing.

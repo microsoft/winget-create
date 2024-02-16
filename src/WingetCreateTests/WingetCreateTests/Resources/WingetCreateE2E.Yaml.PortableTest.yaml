@@ -1,4 +1,4 @@
-﻿PackageIdentifier: WingetCreateE2E.PortableTest
+﻿PackageIdentifier: WingetCreateE2E.Yaml.PortableTest
 PackageName: PortableTest
 PackageVersion: 1.2.3.4
 Publisher: WingetCreateE2E

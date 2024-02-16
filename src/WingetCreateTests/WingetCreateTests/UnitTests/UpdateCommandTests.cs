@@ -17,6 +17,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
+    using Microsoft.WingetCreateCore.Serializers;
     using Microsoft.WingetCreateTests;
     using NUnit.Framework;
     using NUnit.Framework.Legacy;
@@ -38,6 +39,7 @@ namespace Microsoft.WingetCreateUnitTests
         {
             this.testCommandEvent = new CommandExecutedEvent();
             Logger.Initialize();
+            Serialization.ManifestSerializer = new YamlSerializer();
         }
 
         /// <summary>
@@ -88,7 +90,7 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsiInstaller);
             string version = "1.2.3.4";
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMsiPackageIdentifier, version, this.tempPath, null);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.YamlConstants.TestMsiPackageIdentifier, version, this.tempPath, null);
 
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
@@ -643,7 +645,7 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task UpdateMultifileToLatestManifestVersion()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("Multifile.MsixTest", null, this.tempPath, null, true);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("Multifile.Yaml.MsixTest", null, this.tempPath, null, true);
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             string initialManifestVersion = initialManifests.VersionManifest.ManifestVersion;
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
@@ -682,53 +684,105 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Ensures that all fields from the Singleton v1.1 manifest can be deserialized and updated correctly.
+        /// Ensures that all fields from the YAML Singleton v1.1 manifest can be deserialized and updated correctly.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task UpdateFullSingletonVersion1_1()
+        public async Task UpdateFullYamlSingletonVersion1_1()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullSingleton1_1", null, this.tempPath, null);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_1", null, this.tempPath, null);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
 
         /// <summary>
-        /// Ensures that all fields from the Singleton v1.2 manifest can be deserialized and updated correctly.
+        /// Ensures that all fields from the YAML Singleton v1.2 manifest can be deserialized and updated correctly.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task UpdateFullSingletonVersion1_2()
+        public async Task UpdateFullYamlSingletonVersion1_2()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullSingleton1_2", null, this.tempPath, null);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_2", null, this.tempPath, null);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
 
         /// <summary>
-        /// Ensures that all fields from the Singleton v1.4 manifest can be deserialized and updated correctly.
+        /// Ensures that all fields from the YAML Singleton v1.4 manifest can be deserialized and updated correctly.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task UpdateFullSingletonVersion1_4()
+        public async Task UpdateFullYamlSingletonVersion1_4()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullSingleton1_4", null, this.tempPath, null);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_4", null, this.tempPath, null);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
 
         /// <summary>
-        /// Ensures that all fields from the Singleton v1.5 manifest can be deserialized and updated correctly.
+        /// Ensures that all fields from the YAML Singleton v1.5 manifest can be deserialized and updated correctly.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task UpdateFullSingletonVersion1_5()
+        public async Task UpdateFullYamlSingletonVersion1_5()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullSingleton1_5", null, this.tempPath, null);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_5", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the JSON Singleton v1.1 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullJsonSingletonVersion1_1()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_1", null, this.tempPath, null, fileExtension: ".json");
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the JSON Singleton v1.2 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullJsonSingletonVersion1_2()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_2", null, this.tempPath, null, fileExtension: ".json");
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the JSON Singleton v1.4 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullJsonSingletonVersion1_4()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_4", null, this.tempPath, null, fileExtension: ".json");
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            Assert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the Singleton JSON v1.5 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullJsonSingletonVersion1_5()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_5", null, this.tempPath, null, fileExtension: ".json");
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
@@ -741,7 +795,7 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task UpdateResetsVersionSpecificFields()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullSingleton1_1", null, this.tempPath, null);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_1", null, this.tempPath, null);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
 
@@ -1314,7 +1368,7 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.That(result, Does.Contain(string.Format(Resources.NestedInstallerFileNotFound_Error, "fakeRelativeFilePath.exe")), "Failed to show warning for invalid relative file path.");
         }
 
-        private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls, bool isMultifile = false)
+        private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls, bool isMultifile = false, string fileExtension = ".yaml")
         {
             var updateCommand = new UpdateCommand
             {
@@ -1328,7 +1382,7 @@ namespace Microsoft.WingetCreateUnitTests
                 updateCommand.InstallerUrls = installerUrls;
             }
 
-            var initialManifestContent = isMultifile ? TestUtils.GetInitialMultifileManifestContent(id) : TestUtils.GetInitialManifestContent($"{id}.yaml");
+            var initialManifestContent = isMultifile ? TestUtils.GetInitialMultifileManifestContent(id) : TestUtils.GetInitialManifestContent($"{id}{fileExtension}");
             return (updateCommand, initialManifestContent);
         }
 

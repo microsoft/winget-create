@@ -1342,6 +1342,15 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>The replace version cannot be equal to the submit version.</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>The provided manifest format is invalid.</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>Output format of the manifest. Default is "yaml".</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>Format not supported. The Windows Package Manager Community repository accepts only "yaml" manifest submissions.</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>Clear the cached GitHub token</value>
   </data>

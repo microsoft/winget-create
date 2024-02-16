@@ -82,7 +82,8 @@ namespace Microsoft.WingetCreateCore.Common
                     //      Microsoft/PowerToys/0.15.2.yaml, or
                     //      Microsoft/VisualStudio/Community/16.0.30011.22.yaml
                     string publisher = i.PathTokens[0];
-                    string version = i.PathTokens[^1].Replace(".yaml", string.Empty, StringComparison.OrdinalIgnoreCase);
+                    string extension = Path.GetExtension(i.Path);
+                    string version = i.PathTokens[^1].Replace(extension, string.Empty, StringComparison.OrdinalIgnoreCase);
                     string app = string.Join('.', i.PathTokens[1..^1]);
                     return new PublisherAppVersion(publisher, app, version, $"{publisher}.{app}", i.Path);
                 })
@@ -97,6 +98,7 @@ namespace Microsoft.WingetCreateCore.Common
         /// <returns>Manifest as a string.</returns>
         public async Task<List<string>> GetManifestContentAsync(string packageId, string version = null)
         {
+            List<string> validExtensions = new List<string> { ".yaml", ".json" };
             string versionDirectoryPath = await this.GetVersionDirectoryPath(packageId, version);
 
             if (string.IsNullOrEmpty(versionDirectoryPath))
@@ -105,7 +107,7 @@ namespace Microsoft.WingetCreateCore.Common
             }
 
             var packageContents = (await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, versionDirectoryPath))
-                .Where(c => c.Type != ContentType.Dir && Path.GetExtension(c.Name).EqualsIC(".yaml"));
+                .Where(c => c.Type != ContentType.Dir && validExtensions.Any(ext => Path.GetExtension(c.Name).EqualsIC(ext)));
 
             // If all contents of version directory are directories themselves, user must've provided an invalid packageId.
             if (!packageContents.Any())
@@ -143,18 +145,18 @@ namespace Microsoft.WingetCreateCore.Common
             {
                 id = manifests.SingletonManifest.PackageIdentifier;
                 version = manifests.SingletonManifest.PackageVersion;
-                contents.Add(manifests.SingletonManifest.PackageIdentifier, manifests.SingletonManifest.ToYaml());
+                contents.Add(manifests.SingletonManifest.PackageIdentifier, manifests.SingletonManifest.ToManifestString());
             }
             else
             {
                 id = manifests.VersionManifest.PackageIdentifier;
                 version = manifests.VersionManifest.PackageVersion;
 
-                contents = manifests.LocaleManifests.ToDictionary(locale => $"{id}.locale.{locale.PackageLocale}", locale => locale.ToYaml());
+                contents = manifests.LocaleManifests.ToDictionary(locale => $"{id}.locale.{locale.PackageLocale}", locale => locale.ToManifestString());
 
-                contents.Add(id, manifests.VersionManifest.ToYaml());
-                contents.Add($"{id}.installer", manifests.InstallerManifest.ToYaml());
-                contents.Add($"{id}.locale.{manifests.DefaultLocaleManifest.PackageLocale}", manifests.DefaultLocaleManifest.ToYaml());
+                contents.Add(id, manifests.VersionManifest.ToManifestString());
+                contents.Add($"{id}.installer", manifests.InstallerManifest.ToManifestString());
+                contents.Add($"{id}.locale.{manifests.DefaultLocaleManifest.PackageLocale}", manifests.DefaultLocaleManifest.ToManifestString());
             }
 
             return this.SubmitPRAsync(id, version, contents, submitToFork, prTitle, shouldReplace, replaceVersion);
@@ -347,7 +349,7 @@ namespace Microsoft.WingetCreateCore.Common
 
                 foreach (KeyValuePair<string, string> item in contents)
                 {
-                    string file = $"{appPath}/{item.Key}.yaml";
+                    string file = $"{appPath}/{item.Key}{Serialization.ManifestSerializer.AssociatedFileExtension}";
                     nt.Tree.Add(new NewTreeItem { Path = file, Mode = "100644", Type = TreeType.Blob, Content = item.Value });
                 }
 

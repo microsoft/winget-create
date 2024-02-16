@@ -1024,6 +1024,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Format not supported. The Windows Package Manager Community repository accepts only &quot;yaml&quot; manifest submissions..
+        /// </summary>
+        public static string FormatNotSupportedForDefaultRepo_Error {
+            get {
+                return ResourceManager.GetString("FormatNotSupportedForDefaultRepo_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generating a preview of your manifests....
         /// </summary>
         public static string GenerateManifestPreview_Message {
@@ -1492,6 +1501,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provided manifest format is invalid..
+        /// </summary>
+        public static string InvalidManifestFormat_ErrorMessage {
+            get {
+                return ResourceManager.GetString("InvalidManifestFormat_ErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid token provided, please generate a new GitHub token and try again..
         /// </summary>
         public static string InvalidTokenError_Message {
@@ -1677,6 +1695,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ManifestDocumentation_HelpText {
             get {
                 return ResourceManager.GetString("ManifestDocumentation_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output format of the manifest. Default is &quot;yaml&quot;..
+        /// </summary>
+        public static string ManifestFormat_HelpText {
+            get {
+                return ResourceManager.GetString("ManifestFormat_HelpText", resourceCulture);
             }
         }
         

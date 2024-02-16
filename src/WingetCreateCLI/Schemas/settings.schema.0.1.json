@@ -50,6 +50,22 @@
       },
       "additionalProperties": false
     },
+    "Manifest": {
+      "description": "Output manifest settings",
+      "type": "object",
+      "properties": {
+        "format": {
+          "description": "Specifies the format of the manifest file",
+          "type": "string",
+          "default": "yaml",
+          "enum": [
+            "yaml",
+            "json"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
     "Visual": {
       "description": "Visual settings",
       "type": "object",
@@ -73,12 +89,14 @@
     "Telemetry": { "$ref": "#/definitions/Telemetry" },
     "CleanUp": { "$ref": "#/definitions/CleanUp" },
     "WindowsPackageManagerRepository": { "$ref": "#/definitions/WindowsPackageManagerRepository" },
+    "Manifest": { "$ref": "#/definitions/Manifest" },
     "Visual": { "$ref": "#/definitions/Visual" }
   },
   "required": [
     "Telemetry",
     "CleanUp",
     "WindowsPackageManagerRepository",
+    "Manifest",
     "Visual"
   ],
   "additionalProperties": false
