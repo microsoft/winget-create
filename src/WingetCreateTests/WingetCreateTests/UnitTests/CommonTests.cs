@@ -7,6 +7,7 @@ namespace Microsoft.WingetCreateUnitTests
     using System.IO;
     using Microsoft.WingetCreateCLI;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
 
     /// <summary>
     /// Test cases for verifying common functions for the CLI.
@@ -28,14 +29,14 @@ namespace Microsoft.WingetCreateUnitTests
             string substitutedPath2 = "%LOCALAPPDATA%" + examplePath;
             string substitutedPath3 = "%TEMP%" + examplePath;
 
-            Assert.AreEqual(substitutedPath1, Common.GetPathForDisplay(path1, true), "The path does not contain the expected substitutions.");
-            Assert.AreEqual(path1, Common.GetPathForDisplay(path1, false), "The path should not contain any substitutions.");
+            ClassicAssert.AreEqual(substitutedPath1, Common.GetPathForDisplay(path1, true), "The path does not contain the expected substitutions.");
+            ClassicAssert.AreEqual(path1, Common.GetPathForDisplay(path1, false), "The path should not contain any substitutions.");
 
-            Assert.AreEqual(substitutedPath2, Common.GetPathForDisplay(path2, true), "The path does not contain the expected substitutions.");
-            Assert.AreEqual(path2, Common.GetPathForDisplay(path2, false), "The path should not contain any substitutions.");
+            ClassicAssert.AreEqual(substitutedPath2, Common.GetPathForDisplay(path2, true), "The path does not contain the expected substitutions.");
+            ClassicAssert.AreEqual(path2, Common.GetPathForDisplay(path2, false), "The path should not contain any substitutions.");
 
-            Assert.AreEqual(substitutedPath3, Common.GetPathForDisplay(path3, true), "The path does not contain the expected substitutions.");
-            Assert.AreEqual(path3, Common.GetPathForDisplay(path3, false), "The path should not contain any substitutions.");
+            ClassicAssert.AreEqual(substitutedPath3, Common.GetPathForDisplay(path3, true), "The path does not contain the expected substitutions.");
+            ClassicAssert.AreEqual(path3, Common.GetPathForDisplay(path3, false), "The path should not contain any substitutions.");
         }
     }
 }

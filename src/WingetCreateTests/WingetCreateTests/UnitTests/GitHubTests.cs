@@ -14,6 +14,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCore.Serializers;
     using Microsoft.WingetCreateTests;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
     using Octokit;
 
     /// <summary>

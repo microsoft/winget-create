@@ -4,7 +4,6 @@
 namespace Microsoft.WingetCreateCore.Models.Locale
 {
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
-    using Newtonsoft.Json;
     using YamlDotNet.Serialization;
 
     /// <summary>

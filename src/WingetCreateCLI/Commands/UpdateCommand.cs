@@ -860,7 +860,8 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             while (true)
             {
-                string url = Prompt.Input<string>(Resources.NewInstallerUrl_Message, null, new[] { FieldValidation.ValidateProperty(newInstaller, nameof(Installer.InstallerUrl)) }).Trim();
+                string url = Prompt.Input<string>(Resources.NewInstallerUrl_Message, null, null, new[] { FieldValidation.ValidateProperty(newInstaller, nameof(Installer.InstallerUrl)) });
+
                 string packageFile = await DownloadPackageFile(url);
 
                 if (string.IsNullOrEmpty(packageFile))

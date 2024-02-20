@@ -8,7 +8,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCLI;
     using Microsoft.WingetCreateCore.Models.Singleton;
     using NUnit.Framework;
-    using Sharprompt;
+    using NUnit.Framework.Legacy;
 
     /// <summary>
     /// Unit tests for verifying that validation takes place for the field inputs.
@@ -72,7 +72,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             var invalidInputResponse = TryValidator("MicrosoftPowerToys", property);
             Assert.That(invalidInputResponse.Result, Is.False, InvalidInputPassedValidationString);
-            Assert.AreEqual(InputDoesNotMatchRegularExpressionString, invalidInputResponse.Message, FailedToDisplayErrorMessageString);
+            ClassicAssert.AreEqual(InputDoesNotMatchRegularExpressionString, invalidInputResponse.Message, FailedToDisplayErrorMessageString);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             var invalidInputResponse = TryValidator("/\\*:?", property);
             Assert.That(invalidInputResponse.Result, Is.False, InvalidInputPassedValidationString);
-            Assert.AreEqual(InputDoesNotMatchRegularExpressionString, invalidInputResponse.Message, FailedToDisplayErrorMessageString);
+            ClassicAssert.AreEqual(InputDoesNotMatchRegularExpressionString, invalidInputResponse.Message, FailedToDisplayErrorMessageString);
         }
 
         /// <summary>
