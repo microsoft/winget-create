@@ -4,10 +4,40 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <RootNamespace>Microsoft.WingetCreateCore</RootNamespace>
-    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-    <Platforms>x86;x64</Platforms>
-    <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
+    <Platforms>x86;x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x86;win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <IsWindows Condition="$(RuntimeIdentifier.StartsWith('win'))">true</IsWindows>
+    <IsOSX Condition="$(RuntimeIdentifier.StartsWith('osx'))">true</IsOSX>
+    <IsLinux Condition="$(RuntimeIdentifier.StartsWith('linux'))">true</IsLinux>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' == ''">
+    <IsWindows
+      Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'=='true'"
+    >true</IsWindows>
+    <IsOSX
+      Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'=='true'"
+    >true</IsOSX>
+    <IsLinux
+      Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'=='true'"
+    >true</IsLinux>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstant Condition="'$(IsWindows)'=='true'">Windows</DefineConstant>
+    <DefineConstant Condition="'$(IsLinux)'=='true' Or '$(IsOSX)'=='true'">Unix</DefineConstant>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsLinux)'=='true' Or '$(IsOSX)'=='true'">
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

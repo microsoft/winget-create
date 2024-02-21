@@ -4,7 +4,6 @@
 namespace Microsoft.WingetCreateCore.Common
 {
     using System;
-    using System.Runtime.InteropServices;
 
     /// <summary>
     /// Wrapper class for utilizing WinGetUtil.dll functionality.
@@ -18,14 +17,18 @@ namespace Microsoft.WingetCreateCore.Common
         /// </summary>
         /// <param name="manifestPath">Manifest path.</param>
         /// <returns>Message from manifest validation.</returns>
-        public static (bool Succeeded, string FailureOrWarningMessage) ValidateManifest(string manifestPath)
+        public static (string Succeeded, string FailureOrWarningMessage) ValidateManifest(string manifestPath)
         {
+#if Windows
             WinGetValidateManifest(
                 manifestPath,
                 out bool succeeded,
                 out string failureOrWarningMessage);
 
-            return (succeeded, failureOrWarningMessage);
+            return (succeeded.ToString(), failureOrWarningMessage);
+#endif
+
+            return (Constants.ManifestValidationUnavailable, string.Empty);
         }
 
         /// <summary>
@@ -36,11 +39,20 @@ namespace Microsoft.WingetCreateCore.Common
         /// <returns>Int representing the version comparison result.</returns>
         public static int CompareVersions(string versionA, string versionB)
         {
+#if Windows
             int hr = WinGetCompareVersions(versionA, versionB, out int comparisonResult);
             Marshal.ThrowExceptionForHR(hr);
             return comparisonResult;
+#endif
+
+            // Since WinGetUtil.dll is not available on non-Windows platforms, we will a simple version comparison.
+            // First, try to parse the versions SemVer. If it fails, we will use string comparison.
+            return Version.TryParse(versionA, out Version versionAObj) && Version.TryParse(versionB, out Version versionBObj)
+                ? versionAObj.CompareTo(versionBObj)
+                : string.Compare(versionA, versionB, StringComparison.OrdinalIgnoreCase);
         }
 
+#if Windows
         /// <summary>
         /// Validates a given manifest. Returns a bool for validation result and
         /// a string representing validation errors if validation failed.
@@ -60,5 +72,6 @@ namespace Microsoft.WingetCreateCore.Common
             string versionA,
             string versionB,
             out int comparisonResult);
+#endif
     }
 }
