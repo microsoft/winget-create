@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <IsPackable>false</IsPackable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Platforms>x64;x86;ARM64</Platforms>
-  </PropertyGroup>
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Platforms>x64;ARM64</Platforms>
+	</PropertyGroup>
 
   <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
     <IsWindows Condition="$(RuntimeIdentifier.StartsWith('win'))">true</IsWindows>

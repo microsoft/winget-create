@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <AssemblyName>WingetCreateCLI</AssemblyName>
-    <RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
-    <Version>1.6</Version>
-    <Platforms>x64;x86;ARM64</Platforms>
-    <RuntimeIdentifiers>win-x64;win-x86;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<AssemblyName>WingetCreateCLI</AssemblyName>
+		<RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
+		<Version>1.6</Version>
+		<Platforms>x64;ARM64</Platforms>
+		<RuntimeIdentifiers>win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
+		<SignAssembly>true</SignAssembly>
+	</PropertyGroup>
 
   <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
     <IsWindows Condition="$(RuntimeIdentifier.StartsWith('win'))">true</IsWindows>
