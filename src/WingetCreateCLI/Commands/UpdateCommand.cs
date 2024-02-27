@@ -68,6 +68,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string Version { get; set; }
 
         /// <summary>
+        /// Gets or sets the new value used to update the display version field in the manifest.
+        /// </summary>
+        [Option('d', "display-version", Required = false, HelpText = "DisplayVersion_HelpText", ResourceType = typeof(Resources))]
+        public string DisplayVersion { get; set; }
+
+        /// <summary>
         /// Gets or sets the outputPath where the generated manifest file should be saved to.
         /// </summary>
         [Option('o', "out", Required = false, HelpText = "OutputDirectory_HelpText", ResourceType = typeof(Resources))]
@@ -300,16 +306,57 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.InstallerUrls = installerManifest.Installers.Select(i => i.InstallerUrl).Distinct().ToArray();
             }
 
-            // Generate list of InstallerUpdate objects and parse out any specified architecture or scope overrides.
-            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForOverrides(this.InstallerUrls.Select(i => i.Trim()).ToList());
+            // Generate list of InstallerUpdate objects and parse out any specified installer URL arguments.
+            List<InstallerMetadata> installerMetadataList = this.ParseInstallerUrlsForArguments(this.InstallerUrls.Select(i => i.Trim()).ToList());
 
-            // If the installer update list is null there was an issue when parsing for architecture or scope override.
+            // If the installer update list is null there was an issue when parsing for additional installer arguments.
             if (installerMetadataList == null)
             {
                 return null;
             }
 
-            // Reassign list with parsed installer URLs without architecture or scope overrides.
+            if (!string.IsNullOrEmpty(this.DisplayVersion))
+            {
+                // Use --display-version value if version was not provided as an argument.
+                foreach (InstallerMetadata installerUpdate in installerMetadataList)
+                {
+                    if (string.IsNullOrEmpty(installerUpdate.DisplayVersion))
+                    {
+                        installerUpdate.DisplayVersion = this.DisplayVersion;
+                    }
+                }
+            }
+
+            var originalAppsAndFeaturesEntries = installerManifest.Installers
+                .Where(i => i.AppsAndFeaturesEntries != null)
+                .SelectMany(i => i.AppsAndFeaturesEntries);
+
+            int originalDisplayVersionCount = originalAppsAndFeaturesEntries
+                .Count(entry => entry.DisplayVersion != null);
+
+            int newDisplayVersionCount = installerMetadataList
+                .Count(entry => entry.DisplayVersion != null);
+
+            if (newDisplayVersionCount < originalDisplayVersionCount)
+            {
+                Logger.WarnLocalized(nameof(Resources.UnchangedDisplayVersion_Warning));
+            }
+
+            // Check if any single installer has multiple display versions in the original manifest.
+            bool installerHasMultipleDisplayVersions = originalAppsAndFeaturesEntries
+                .Where(entry => entry.DisplayVersion != null)
+                .GroupBy(entry => entry.DisplayVersion)
+                .Any(group => group.Count() > 1);
+
+            // It is possible for a single installer to have multiple ARP entries having multiple display versions,
+            // but currently, we only take the primary ARP entry in the community repository. If such a case is detected,
+            // user will have to manually update the manifest.
+            if (installerHasMultipleDisplayVersions)
+            {
+                Logger.WarnLocalized(nameof(Resources.InstallerWithMultipleDisplayVersions_Warning));
+            }
+
+            // Reassign list with parsed installer URLs without installer URL arguments
             this.InstallerUrls = installerMetadataList.Select(x => x.InstallerUrl).ToList();
 
             foreach (var installerUpdate in installerMetadataList)
@@ -713,12 +760,15 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Parses the installer urls for any architecture or scope overrides.
+        /// Parses the installer urls for any additional arguments.
         /// </summary>
-        /// <param name="installerUrlsToBeParsed">List of installer URLs to be parsed for architecture overrides.</param>
+        /// <param name="installerUrlsToBeParsed">List of installer URLs to be parsed for additional arguments.</param>
         /// <returns>List of <see cref="InstallerMetadata"/> helper objects used for updating the installers.</returns>
-        private List<InstallerMetadata> ParseInstallerUrlsForOverrides(List<string> installerUrlsToBeParsed)
+        private List<InstallerMetadata> ParseInstallerUrlsForArguments(List<string> installerUrlsToBeParsed)
         {
+            // There can be at most 4 elements at one time (installerUrl|archOverride|scopeOverride|displayVersion)
+            const int MaxUrlArgumentLimit = 4;
+
             List<InstallerMetadata> installerMetadataList = new List<InstallerMetadata>();
             foreach (string item in installerUrlsToBeParsed)
             {
@@ -726,26 +776,26 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (item.Contains('|'))
                 {
-                    // '|' character indicates that an architecture override can be parsed from the installer.
-                    string[] installerUrlOverride = item.Split('|');
+                    // '|' character indicates that user is providing additional arguments for the installer URL.
+                    string[] installerUrlArguments = item.Split('|');
 
-                    // There can be at most 3 elements at one time (installerUrl|archOverride|scopeOverride)
-                    if (installerUrlOverride.Length > 3)
+                    if (installerUrlArguments.Length > MaxUrlArgumentLimit)
                     {
-                        Logger.ErrorLocalized(nameof(Resources.OverrideLimitExceeded_Error), item);
+                        Logger.ErrorLocalized(nameof(Resources.ArgumentLimitExceeded_Error), item);
                         return null;
                     }
 
-                    installerMetadata.InstallerUrl = installerUrlOverride[0];
+                    installerMetadata.InstallerUrl = installerUrlArguments[0];
 
                     bool archOverridePresent = false;
                     bool scopeOverridePresent = false;
+                    bool displayVersionPresent = false;
 
-                    for (int i = 1; i < installerUrlOverride.Length; i++)
+                    for (int i = 1; i < installerUrlArguments.Length; i++)
                     {
-                        string overrideString = installerUrlOverride[i];
-                        Architecture? overrideArch = overrideString.ToEnumOrDefault<Architecture>();
-                        Scope? overrideScope = overrideString.ToEnumOrDefault<Scope>();
+                        string argumentString = installerUrlArguments[i];
+                        Architecture? overrideArch = argumentString.ToEnumOrDefault<Architecture>();
+                        Scope? overrideScope = argumentString.ToEnumOrDefault<Scope>();
 
                         if (overrideArch.HasValue)
                         {
@@ -773,9 +823,24 @@ namespace Microsoft.WingetCreateCLI.Commands
                                 installerMetadata.OverrideScope = overrideScope.Value;
                             }
                         }
+
+                        // If value is not a convertible enum, it is assumed to be a display version.
+                        else if (!string.IsNullOrEmpty(argumentString))
+                        {
+                            if (displayVersionPresent)
+                            {
+                                Logger.ErrorLocalized(nameof(Resources.MultipleDisplayVersion_Error));
+                                return null;
+                            }
+                            else
+                            {
+                                displayVersionPresent = true;
+                                installerMetadata.DisplayVersion = argumentString;
+                            }
+                        }
                         else
                         {
-                            Logger.ErrorLocalized(nameof(Resources.UnableToParseOverride_Error), overrideString);
+                            Logger.ErrorLocalized(nameof(Resources.UnableToParseArgument_Error), argumentString);
                             return null;
                         }
                     }

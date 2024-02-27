@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Multiple architectures detected. Only one architecture can be specified for an override.</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>Unable to parse the specified override {0}.</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>Unable to parse the specified argument {0}.</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Override the architecture of an installer</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>Multiple scopes detected. Only one scope can be specified for an override.</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>Too many overrides specified for the following installer URL: {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>Too many arguments specified for the following installer URL: {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1356,5 +1356,22 @@
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>Store a new GitHub token in your local cache</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>Base manifest contains DisplayVersion that has not been updated. Use --display-version CLI arg or provide the version in the installer URL.</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>Version to be used when updating the display version field. Version provided in the installer URL arguments will take precendence over this value.</value>
+  </data>
+  <data name="MultipleDisplayVersion_Error" xml:space="preserve">
+    <value>Multiple display versions detected. Only one version can be specified in the installer URL.</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>Using display version '{0}' for {1}</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>Single installer with multiple display versions detected. Winget-Create will only update the first DisplayVersion for a given installer.</value>
   </data>
 </root>

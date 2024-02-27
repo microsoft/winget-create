@@ -170,26 +170,26 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verify that update command fails if there is a discrepency in the URL count.
+        /// Verify that update command fails if there is a discrepancy in the URL count.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task UpdateFailsWithInstallerUrlCountDiscrepency()
+        public async Task UpdateFailsWithInstallerUrlCountDiscrepancy()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestMultipleInstallerPackageIdentifier, null, this.tempPath, new[] { "fakeurl" });
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepency error should be thrown");
+            Assert.That(result, Does.Contain(Resources.MultipleInstallerUpdateDiscrepancy_Error), "Installer discrepancy error should be thrown");
         }
 
         /// <summary>
-        /// Verify that update command fails if there is a discrepency in the package count.
+        /// Verify that update command fails if there is a discrepancy in the package count.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task UpdateFailsWithPackageCountDiscrepency()
+        public async Task UpdateFailsWithPackageCountDiscrepancy()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.SingleMsixInExistingBundle", null, this.tempPath, null);
@@ -200,7 +200,7 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verify that update command fails if there is a discrepency in the package types.
+        /// Verify that update command fails if there is a discrepancy in the package types.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
@@ -347,24 +347,7 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verfies that an error message is shown if the overriding architecture is invalid.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        [Test]
-        public async Task UpdateWithArchitectureOverrideFailsParsing()
-        {
-            string invalidArch = "fakeArch";
-            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
-            (UpdateCommand badCommand, var manifests) =
-                GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|{invalidArch}" });
-            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
-            ClassicAssert.IsNull(failedUpdateManifests, "Command should have failed due to invalid architecture specified for override.");
-            string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(string.Format(Resources.UnableToParseOverride_Error, invalidArch)), "Failed to show architecture override parsing error.");
-        }
-
-        /// <summary>
-        /// Verfies that an error message is shown if multiple architectures are specified for an override.
+        /// Verifies that an error message is shown if multiple architectures are specified for an override.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
@@ -380,7 +363,7 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verfies that an error message is shown if multiple architectures are specified for an override.
+        /// Verifies that an error message is shown if multiple architectures are specified for an override.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
@@ -393,6 +376,22 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsNull(failedUpdateManifests, "Command should have failed due to multiple scope overrides specified for a single installer.");
             string result = this.sw.ToString();
             Assert.That(result, Does.Contain(Resources.MultipleScopeOverride_Error), "Failed to show multiple scope overrides error.");
+        }
+
+        /// <summary>
+        /// Verifies that an error message is shown if multiple architectures are specified for an override.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFailsWithMultipleDisplayVersions()
+        {
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            (UpdateCommand badCommand, var manifests) =
+                GetUpdateCommandAndManifestData("TestPublisher.ScopeOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|3.4|1.2" });
+            var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
+            ClassicAssert.IsNull(failedUpdateManifests, "Command should have failed due to multiple display versions specified for a single installer.");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.MultipleDisplayVersion_Error), "Failed to show multiple display version error.");
         }
 
         /// <summary>
@@ -464,42 +463,210 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verifies that the overriding both the architecture and scope is supported and the update succeeds.
+        /// Verifies that the providing all supported URL arguments will result in a successful update.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task UpdateWithArchAndScopeOverrides()
+        public async Task UpdateWithAllUrlArguments()
         {
             TestUtils.InitializeMockDownload();
             TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
             string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            string newDisplayVersion1 = "2.3";
+            string newDisplayVersion2 = "4.5";
 
             // Test without architecture override should fail.
             (UpdateCommand badCommand, var manifests) =
-                GetUpdateCommandAndManifestData("TestPublisher.ArchAndScopeOverride", "1.2.3.4", this.tempPath, new[] { testInstallerUrl, testInstallerUrl });
+                GetUpdateCommandAndManifestData("TestPublisher.AllUrlArguments", "1.2.3.4", this.tempPath, new[] { testInstallerUrl, testInstallerUrl });
             var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
             ClassicAssert.IsNull(failedUpdateManifests, "Command should have failed without overrides");
 
-            // Test with scope and architecture override should pass.
+            // Test with scope and architecture override should pass. DisplayVersion should also be updated.
             (UpdateCommand goodCommand, var initialManifestContent) =
-                GetUpdateCommandAndManifestData("TestPublisher.ArchAndScopeOverride", "1.2.3.4", this.tempPath, new[] { $"{testInstallerUrl}|user|arm", $"{testInstallerUrl}|arm|machine" });
+                GetUpdateCommandAndManifestData("TestPublisher.AllUrlArguments", "1.2.3.4", this.tempPath, new[] { $"{testInstallerUrl}|user|arm|{newDisplayVersion1}", $"{testInstallerUrl}|arm|machine|{newDisplayVersion2}" });
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(goodCommand, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded as installers should be overrided with architecture and scope.");
 
             var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
             var initialSecondInstaller = initialManifests.SingletonManifest.Installers[1];
+            var initialFirstDisplayVersion = initialFirstInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+            var initialSecondDisplayVersion = initialSecondInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
 
             var updatedFirstInstaller = updatedManifests.InstallerManifest.Installers[0];
             var updatedSecondInstaller = updatedManifests.InstallerManifest.Installers[1];
+            var updatedFirstDisplayVersion = updatedFirstInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+            var updatedSecondDisplayVersion = updatedSecondInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
 
             ClassicAssert.AreEqual(Scope.User, updatedFirstInstaller.Scope, $"Scope should be preserved.");
             ClassicAssert.AreEqual(Scope.Machine, updatedSecondInstaller.Scope, $"Scope should be preserved.");
             ClassicAssert.AreEqual(Architecture.Arm, updatedFirstInstaller.Architecture, $"Architecture should be preserved.");
             ClassicAssert.AreEqual(Architecture.Arm, updatedSecondInstaller.Architecture, $"Architecture should be preserved.");
+            ClassicAssert.AreEqual(newDisplayVersion1, updatedFirstDisplayVersion, $"DisplayVersion should be updated.");
+            ClassicAssert.AreEqual(newDisplayVersion2, updatedSecondDisplayVersion, $"DisplayVersion should be updated.");
 
             ClassicAssert.AreNotEqual(initialFirstInstaller.InstallerSha256, updatedFirstInstaller.InstallerSha256, "InstallerSha256 should be updated");
             ClassicAssert.AreNotEqual(initialSecondInstaller.InstallerSha256, updatedSecondInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.AreNotEqual(initialFirstDisplayVersion, updatedFirstDisplayVersion, "DisplayVersion should be updated");
+            ClassicAssert.AreNotEqual(initialSecondDisplayVersion, updatedSecondDisplayVersion, "DisplayVersion should be updated");
+        }
+
+        /// <summary>
+        /// Verifies that display version provided as CLI arg and in the URL arguments correctly updates the display version in the manifest.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateDisplayVersion()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            string displayVersionForCLIArg = "2.3";
+            string newDisplayVersionForUrl1 = "4.5";
+            string newDisplayVersionForUrl2 = "6.7";
+
+            var initialManifestContent = TestUtils.GetInitialManifestContent("TestPublisher.UpdateDisplayVersion.yaml");
+            UpdateCommand command = new UpdateCommand
+            {
+                Id = "TestPublisher.UpdateDisplayVersion",
+                Version = "1.2.3.4",
+                InstallerUrls = new[]
+                {
+                    $"{testInstallerUrl}|x64|{newDisplayVersionForUrl1}",
+                    $"{testInstallerUrl}|x86|{newDisplayVersionForUrl2}",
+                    $"{testInstallerUrl}|arm",
+                    $"{testInstallerUrl}|arm64",
+                },
+                DisplayVersion = displayVersionForCLIArg,
+            };
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded.");
+
+            // Initial installers
+            var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
+            var initialSecondInstaller = initialManifests.SingletonManifest.Installers[1];
+            var initialThirdInstaller = initialManifests.SingletonManifest.Installers[2];
+            var initialFourthInstaller = initialManifests.SingletonManifest.Installers[3];
+
+            // Initial display versions (fourth installer does not have a display version)
+            var initialFirstDisplayVersion = initialFirstInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+            var initialSecondDisplayVersion = initialSecondInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+            var initialThirdDisplayVersion = initialThirdInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+
+            // Updated installers
+            var updatedFirstInstaller = updatedManifests.InstallerManifest.Installers[0];
+            var updatedSecondInstaller = updatedManifests.InstallerManifest.Installers[1];
+            var updatedThirdInstaller = updatedManifests.InstallerManifest.Installers[2];
+            var updatedFourthInstaller = updatedManifests.InstallerManifest.Installers[3];
+
+            // Updated display versions (fourth installer does not have a display version)
+            var updatedFirstDisplayVersion = updatedFirstInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+            var updatedSecondDisplayVersion = updatedSecondInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+            var updatedThirdDisplayVersion = updatedThirdInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Not.Contain(Resources.UnchangedDisplayVersion_Warning), "Unchanged display version warning should not be shown.");
+            Assert.That(result, Does.Not.Contain(Resources.InstallerWithMultipleDisplayVersions_Warning), "Single installer with multiple display versions warning should not be shown.");
+
+            ClassicAssert.AreEqual(newDisplayVersionForUrl1, updatedFirstDisplayVersion, $"DisplayVersion should be updated by the value in the URL argument.");
+            ClassicAssert.AreEqual(newDisplayVersionForUrl2, updatedSecondDisplayVersion, $"DisplayVersion should be updated by the value in the URL argument.");
+            ClassicAssert.AreEqual(displayVersionForCLIArg, updatedThirdDisplayVersion, $"DisplayVersion should be updated by the value in the CLI arg");
+            ClassicAssert.IsNull(updatedFourthInstaller.AppsAndFeaturesEntries);
+
+            ClassicAssert.AreNotEqual(initialFirstInstaller.InstallerSha256, updatedFirstInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.AreNotEqual(initialSecondInstaller.InstallerSha256, updatedSecondInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.AreNotEqual(initialThirdInstaller.InstallerSha256, updatedThirdInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.AreNotEqual(initialFourthInstaller.InstallerSha256, updatedFourthInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.AreNotEqual(initialFirstDisplayVersion, updatedFirstDisplayVersion, "DisplayVersion should be updated");
+            ClassicAssert.AreNotEqual(initialSecondDisplayVersion, updatedSecondDisplayVersion, "DisplayVersion should be updated");
+            ClassicAssert.AreNotEqual(updatedThirdDisplayVersion, initialThirdDisplayVersion, "DisplayVersion should be updated");
+        }
+
+        /// <summary>
+        /// Verifies that update commands shows a warning if a single installer has multiple display versions.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateShowsWarningForSingleInstallerWithMultipleDisplayVersions()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            string newDisplayVersionForUrl1 = "4.5";
+            string newDisplayVersionForUrl2 = "6.7";
+
+            (UpdateCommand command, var initialManifestContent) =
+                GetUpdateCommandAndManifestData("TestPublisher.SingleInstallerWithMultipleDisplayVersions", null, this.tempPath, new[]
+                {
+                    $"{testInstallerUrl}|x64|{newDisplayVersionForUrl1}",
+                    $"{testInstallerUrl}|x86|{newDisplayVersionForUrl2}",
+                });
+
+            var originalManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var originalInstallers = originalManifests.SingletonManifest.Installers;
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded.");
+
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.InstallerWithMultipleDisplayVersions_Warning), "Single installer with multiple display versions warning should be shown.");
+
+            // Get original display versions for a single installer
+            var originalFirstDisplayVersion = originalInstallers[0].AppsAndFeaturesEntries[0].DisplayVersion;
+            var originalSecondDisplayVersion = originalInstallers[0].AppsAndFeaturesEntries[1].DisplayVersion;
+            var originalThirdDisplayVersion = originalInstallers[0].AppsAndFeaturesEntries[2].DisplayVersion;
+
+            var updatedInstaller = updatedManifests.InstallerManifest.Installers[0];
+            var updatedFirstDisplayVersion = updatedInstaller.AppsAndFeaturesEntries[0].DisplayVersion;
+            var updatedSecondDisplayVersion = updatedInstaller.AppsAndFeaturesEntries[1].DisplayVersion;
+            var updatedThirdDisplayVersion = updatedInstaller.AppsAndFeaturesEntries[2].DisplayVersion;
+
+            // Winget-Create should only update the display version for the first entry and leave the rest unchanged.
+            ClassicAssert.AreEqual(newDisplayVersionForUrl1, updatedFirstDisplayVersion, "DisplayVersion should be updated by the value in the URL argument.");
+            ClassicAssert.AreEqual(originalSecondDisplayVersion, updatedSecondDisplayVersion, "DisplayVersion should remain same.");
+            ClassicAssert.AreEqual(originalThirdDisplayVersion, updatedThirdDisplayVersion, "DisplayVersion should remain same.");
+        }
+
+        /// <summary>
+        /// Verifies that update commands shows a warning if the display version is unchanged for an installer.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateShowsWarningForUnchangedDisplayVersion()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            string newDisplayVersionForUrl1 = "4.5";
+            string newDisplayVersionForUrl2 = "6.7";
+
+            var initialManifestContent = TestUtils.GetInitialManifestContent("TestPublisher.UpdateDisplayVersion.yaml");
+            UpdateCommand command = new UpdateCommand
+            {
+                Id = "TestPublisher.UpdateDisplayVersion",
+                Version = "1.2.3.4",
+                InstallerUrls = new[]
+                {
+                    $"{testInstallerUrl}|x64|{newDisplayVersionForUrl1}",
+                    $"{testInstallerUrl}|x86|{newDisplayVersionForUrl2}",
+                    $"{testInstallerUrl}|arm",
+                    $"{testInstallerUrl}|arm64",
+                },
+            };
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded.");
+
+            var initialThirdInstaller = initialManifests.SingletonManifest.Installers[2];
+            var initialThirdDisplayVersion = initialThirdInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+
+            var updatedThirdInstaller = updatedManifests.InstallerManifest.Installers[2];
+            var updatedThirdDisplayVersion = updatedThirdInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+
+            // DisplayVersion unchanged for third installer
+            ClassicAssert.AreEqual(initialThirdDisplayVersion, updatedThirdDisplayVersion, $"DisplayVersion should remain same.");
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.UnchangedDisplayVersion_Warning), "Unchanged display version warning should be shown.");
         }
 
         /// <summary>
@@ -557,14 +724,14 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task NumberOfOverridesExceeded()
         {
             string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
-            string installerUrlOverride = $"{installerUrl}|x64|user|test";
+            string installerUrlOverride = $"{installerUrl}|x64|user|1.3.4|test";
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) =
                 GetUpdateCommandAndManifestData("TestPublisher.ArchitectureOverride", "1.2.3.4", this.tempPath, new[] { installerUrlOverride });
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNull(updatedManifests, "Command should have failed");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(string.Format(Resources.OverrideLimitExceeded_Error, installerUrlOverride)), "Failed to show warning for override limit exceeded.");
+            Assert.That(result, Does.Contain(string.Format(Resources.ArgumentLimitExceeded_Error, installerUrlOverride)), "Failed to show error for argument limit exceeded.");
         }
 
         /// <summary>
@@ -1258,7 +1425,7 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsTrue(firstInstaller.AppsAndFeaturesEntries[0].ProductCode == "TestProductCode1", "AppsAndFeaturesEntries ProductCode for the first installer should be copied over from root");
             ClassicAssert.IsNotNull(firstInstaller.Platform, "Platform for the first installer should not be null");
             ClassicAssert.IsTrue(firstInstaller.Platform[0] == Platform.Windows_Desktop, "Platform for the first installer should be copied over from root");
-            ClassicAssert.IsNotNull(firstInstaller.ExpectedReturnCodes, "ExpectedReturnCodes afor the first installer should not be null");
+            ClassicAssert.IsNotNull(firstInstaller.ExpectedReturnCodes, "ExpectedReturnCodes for the first installer should not be null");
             ClassicAssert.IsTrue(firstInstaller.ExpectedReturnCodes[0].InstallerReturnCode == 1001, "ExpectedReturnCodes InstallerReturnCode for the first installer should be copied over from root");
             ClassicAssert.IsNotNull(firstInstaller.Commands, "Commands for the first installer should not be null");
             ClassicAssert.IsTrue(firstInstaller.Commands[0] == "fakeCommand1", "Commands for the first installer should be copied over from root");
