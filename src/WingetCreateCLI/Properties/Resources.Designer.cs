@@ -2509,6 +2509,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The value passed to the installer, ModifyPath ARP command, or uninstaller ARP command for a repair.
+        /// </summary>
+        public static string Repair_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Repair_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The repair method.
+        /// </summary>
+        public static string RepairBehavior_KeywordDescription {
+            get {
+                return ResourceManager.GetString("RepairBehavior_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replace operation cannot be performed. Package identifier &apos;{0}&apos; does not exist in the Windows Package Manager repo..
         /// </summary>
         public static string ReplacePackageIdDoesNotExist_Error {

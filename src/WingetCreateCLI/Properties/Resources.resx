@@ -1357,4 +1357,10 @@
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>Store a new GitHub token in your local cache</value>
   </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>The repair method</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>The value passed to the installer, ModifyPath ARP command, or uninstaller ARP command for a repair</value>
+  </data>
 </root>
