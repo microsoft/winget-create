@@ -1,0 +1,37 @@
+﻿PackageIdentifier: TestPublisher.UpdateDisplayVersion
+PackageVersion: 0.1.2
+PackageName: Test for updating display version through CLI arg and URL parameter
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used to test whether the display version is correctly updated with the CLI arg and URL parameter
+InstallerLocale: en-US
+Installers:
+  # DisplayVersion: 1.0.0
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerType: exe
+    AppsAndFeaturesEntries:
+    - DisplayVersion: 1.0.0
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  # DisplayVersion: 2.0.0
+  - Architecture: x86
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    AppsAndFeaturesEntries:
+    - DisplayVersion: 2.0.0
+    InstallerType: exe
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  # DisplayVersion: 3.0.0
+  - Architecture: arm
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    AppsAndFeaturesEntries:
+    - DisplayVersion: 3.0.0
+    InstallerType: exe
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  # No DisplayVersion
+  - Architecture: arm64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerType: exe
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.4.0

@@ -19,6 +19,7 @@ namespace Microsoft.WingetCreateCore
     using Microsoft.Msix.Utils;
     using Microsoft.Msix.Utils.AppxPackaging;
     using Microsoft.Msix.Utils.AppxPackagingInterop;
+    using Microsoft.Msix.Utils.Logger;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
@@ -81,7 +82,7 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
-        /// Parses packages for available metadata including Version, Publisher, Name, Descripion, License, etc.
+        /// Parses packages for available metadata including Version, Publisher, Name, Description, License, etc.
         /// </summary>
         /// <param name="installerMetadataList">List of <see cref="InstallerMetadata"/>.</param>
         /// <param name="manifests">Wrapper object for manifest object models.</param>
@@ -237,6 +238,18 @@ namespace Microsoft.WingetCreateCore
             {
                 foreach (var newInstaller in installerUpdate.NewInstallers)
                 {
+                    // Update DisplayVersion for each AppsAndFeaturesEntry
+                    if (!string.IsNullOrEmpty(installerUpdate.DisplayVersion))
+                    {
+                        newInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
+                        {
+                            new AppsAndFeaturesEntry
+                            {
+                                DisplayVersion = installerUpdate.DisplayVersion,
+                            },
+                        };
+                    }
+
                     // if the installerUpdate does not have a binary or url architecture specified, then just use what is specified in the installer.
                     Installer existingInstallerMatch = FindInstallerMatch(
                         newInstaller,
@@ -432,10 +445,29 @@ namespace Microsoft.WingetCreateCore
             existingInstaller.PackageFamilyName = newInstaller.PackageFamilyName ?? existingInstaller.PackageFamilyName;
             existingInstaller.NestedInstallerFiles = newInstaller.NestedInstallerFiles ?? existingInstaller.NestedInstallerFiles;
             existingInstaller.Platform = newInstaller.Platform ?? existingInstaller.Platform;
+
+            if (existingInstaller.AppsAndFeaturesEntries != null && newInstaller.AppsAndFeaturesEntries != null)
+            {
+                // New installer will always have a single entry in AppsAndFeaturesEntries
+                string newDisplayVersion = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+
+                // Set DisplayVersion for each new installer if it exists in the corresponding existing installer.
+                foreach (var existingAppsAndFeaturesEntry in existingInstaller.AppsAndFeaturesEntries)
+                {
+                    if (existingAppsAndFeaturesEntry.DisplayVersion != null)
+                    {
+                        existingAppsAndFeaturesEntry.DisplayVersion = newDisplayVersion ?? existingAppsAndFeaturesEntry.DisplayVersion;
+
+                        // Break on first match to avoid setting DisplayVersion for all entries.
+                        // We do not support updating multiple DisplayVersions under the same installer.
+                        break;
+                    }
+                }
+            }
         }
 
         /// <summary>
-        /// Parses a package for available metadata including Version, Publisher, Name, Descripion, License, etc.
+        /// Parses a package for available metadata including Version, Publisher, Name, Description, License, etc.
         /// </summary>
         /// <param name="installerMetadata">Helper class for storing an installer's metadata information.</param>
         /// <param name="manifests">Wrapper object for manifest object models.</param>

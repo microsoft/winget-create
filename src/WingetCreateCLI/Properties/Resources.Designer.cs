@@ -223,6 +223,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Too many arguments specified for the following installer URL: {0}.
+        /// </summary>
+        public static string ArgumentLimitExceeded_Error {
+            get {
+                return ResourceManager.GetString("ArgumentLimitExceeded_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package author.
         /// </summary>
         public static string Author_KeywordDescription {
@@ -579,6 +588,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string DisplayPreviewOfSelectedInstaller_Message {
             get {
                 return ResourceManager.GetString("DisplayPreviewOfSelectedInstaller_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version to be used when updating the display version field. Version provided in the installer URL arguments will take precendence over this value..
+        /// </summary>
+        public static string DisplayVersion_HelpText {
+            get {
+                return ResourceManager.GetString("DisplayVersion_HelpText", resourceCulture);
             }
         }
         
@@ -1438,6 +1456,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Single installer with multiple display versions detected. Winget-Create will only update the first DisplayVersion for a given installer..
+        /// </summary>
+        public static string InstallerWithMultipleDisplayVersions_Warning {
+            get {
+                return ResourceManager.GetString("InstallerWithMultipleDisplayVersions_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installer location redirection path.
         /// </summary>
         public static string InstallLocation_KeywordDescription {
@@ -1825,6 +1852,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multiple display versions detected. Only one version can be specified in the installer URL..
+        /// </summary>
+        public static string MultipleDisplayVersion_Error {
+            get {
+                return ResourceManager.GetString("MultipleDisplayVersion_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Updating a manifest is only supported with the same number of installer URLs..
         /// </summary>
         public static string MultipleInstallerUpdateDiscrepancy_Error {
@@ -2127,15 +2163,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string OutputDirectory_HelpText {
             get {
                 return ResourceManager.GetString("OutputDirectory_HelpText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Too many overrides specified for the following installer URL: {0}.
-        /// </summary>
-        public static string OverrideLimitExceeded_Error {
-            get {
-                return ResourceManager.GetString("OverrideLimitExceeded_Error", resourceCulture);
             }
         }
         
@@ -3184,11 +3211,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to parse the specified override {0}..
+        ///   Looks up a localized string similar to Unable to parse the specified argument {0}..
         /// </summary>
-        public static string UnableToParseOverride_Error {
+        public static string UnableToParseArgument_Error {
             get {
-                return ResourceManager.GetString("UnableToParseOverride_Error", resourceCulture);
+                return ResourceManager.GetString("UnableToParseArgument_Error", resourceCulture);
             }
         }
         
@@ -3198,6 +3225,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UnboundArguments_Message {
             get {
                 return ResourceManager.GetString("UnboundArguments_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base manifest contains DisplayVersion that has not been updated. Use --display-version CLI arg or provide the version in the installer URL..
+        /// </summary>
+        public static string UnchangedDisplayVersion_Warning {
+            get {
+                return ResourceManager.GetString("UnchangedDisplayVersion_Warning", resourceCulture);
             }
         }
         
@@ -3387,6 +3423,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string UserSettings_Heading {
             get {
                 return ResourceManager.GetString("UserSettings_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using display version &apos;{0}&apos; for {1}.
+        /// </summary>
+        public static string UsingDisplayVersion_Message {
+            get {
+                return ResourceManager.GetString("UsingDisplayVersion_Message", resourceCulture);
             }
         }
         
