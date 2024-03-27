@@ -1,18 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-		<RootNamespace>Microsoft.WingetCreateCore</RootNamespace>
-		<Platforms>x64;ARM64</Platforms>
-		<RuntimeIdentifiers>win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	</PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <RootNamespace>Microsoft.WingetCreateCore</RootNamespace>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
     <IsWindows Condition="$(RuntimeIdentifier.StartsWith('win'))">true</IsWindows>
     <IsOSX Condition="$(RuntimeIdentifier.StartsWith('osx'))">true</IsOSX>
     <IsLinux Condition="$(RuntimeIdentifier.StartsWith('linux'))">true</IsLinux>
+
+    <IsX64 Condition="$(RuntimeIdentifier.EndsWith('x64'))">true</IsX64>
+    <IsArm64 Condition="$(RuntimeIdentifier.EndsWith('arm64'))">true</IsArm64>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(RuntimeIdentifier)' == ''">
@@ -25,6 +29,12 @@
     <IsLinux
       Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'=='true'"
     >true</IsLinux>
+
+    <IsX64
+      Condition="$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture) == X64">true</IsX64>
+    <IsArm64
+      Condition="$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture) == Arm64">
+      true</IsArm64>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -45,11 +55,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AsmResolver.PE" Version="5.5.1" />
     <PackageReference Include="jose-jwt" Version="4.1.0" />
     <PackageReference Include="Microsoft.CorrelationVector" Version="1.0.42" />
     <PackageReference Include="Microsoft.Msix.Utils" Version="2.1.1" />
     <!--https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#generatepathproperty-->
-    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" Version="1.7.11" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" Version="1.7.11"
+      GeneratePathProperty="true" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
     <PackageReference Include="NLog" Version="5.2.8" />
     <PackageReference Include="NSwag.MSBuild" Version="14.0.3">
@@ -63,32 +75,67 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Octokit" Version="9.1.2" />
-    <PackageReference Include="Vestris.ResourceLib" Version="2.1.0" />
-    <PackageReference Include="WiX" Version="3.14.0" />
     <PackageReference Include="YamlDotNet" Version="15.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.Deployment.WindowsInstaller">
-      <HintPath>$(PkgWiX)\tools\sdk\Microsoft.Deployment.WindowsInstaller.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Deployment.WindowsInstaller.Linq">
-      <HintPath>$(PkgWiX)\tools\sdk\Microsoft.Deployment.WindowsInstaller.Linq.dll</HintPath>
-    </Reference>
+    <None Condition="'$(IsWindows)'=='true' And '$(IsX64)'=='true'"
+      Include="$(MSBuildThisFileDirectory)\Common\Msi\win-x64\msi_ffi.dll">
+      <Link>msi.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Condition="'$(IsWindows)'=='true' And '$(IsArm64)'=='true'"
+      Include="$(MSBuildThisFileDirectory)\Common\Msi\win-arm64\msi_ffi.dll">
+      <Link>msi.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Condition="'$(IsLinux)'=='true' And '$(IsX64)'=='true'"
+      Include="$(MSBuildThisFileDirectory)\Common\Msi\linux-x64\libmsi_ffi.so">
+      <Link>libmsi.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Condition="'$(IsLinux)'=='true' And '$(IsArm64)'=='true'"
+      Include="$(MSBuildThisFileDirectory)\Common\Msi\linux-arm64\libmsi_ffi.so">
+      <Link>libmsi.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Condition="'$(IsOSX)'=='true' And '$(IsX64)'=='true'"
+      Include="$(MSBuildThisFileDirectory)\Common\Msi\osx-x64/libmsi_ffi.dylib">
+      <Link>libmsi.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Condition="'$(IsOSX)'=='true' And '$(IsArm64)'=='true'"
+      Include="$(MSBuildThisFileDirectory)\Common\Msi\osx-arm64/libmsi_ffi.dylib">
+      <Link>libmsi.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.defaultLocale.1.6.0.json" ModelName="DefaultLocale" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.installer.1.6.0.json" ModelName="Installer" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.locale.1.6.0.json" ModelName="Locale" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.version.1.6.0.json" ModelName="Version" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.singleton.1.6.0.json" ModelName="Singleton" />
+    <SchemaFiles
+      Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.defaultLocale.1.6.0.json"
+      ModelName="DefaultLocale" />
+    <SchemaFiles
+      Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.installer.1.6.0.json"
+      ModelName="Installer" />
+    <SchemaFiles
+      Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.locale.1.6.0.json"
+      ModelName="Locale" />
+    <SchemaFiles
+      Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.version.1.6.0.json"
+      ModelName="Version" />
+    <SchemaFiles
+      Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.singleton.1.6.0.json"
+      ModelName="Singleton" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(SchemaFiles)" Outputs="@(SchemaFiles -> '$(ProjectDir)Models\%(ModelName)ManifestModels.cs')">
-    <Message Importance="high" Text="Rebuilding: %(SchemaFiles.ModelName) because $(ProjectDir)Models\%(ModelName)ManifestModels.cs is older than %(FullPath)" />
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(SchemaFiles)"
+    Outputs="@(SchemaFiles -> '$(ProjectDir)Models\%(ModelName)ManifestModels.cs')">
+    <Message Importance="high"
+      Text="Rebuilding: %(SchemaFiles.ModelName) because $(ProjectDir)Models\%(ModelName)ManifestModels.cs is older than %(FullPath)" />
 
-    <Exec Command="$(NSwagExe) jsonschema2csclient /name:%(ModelName)Manifest /namespace:Microsoft.WingetCreateCore.Models.%(SchemaFiles.ModelName) /input:%(FullPath) /output:$(ProjectDir)Models\%(ModelName)ManifestModels.cs /InlineNamedArrays:true /RequiredPropertiesMustBeDefined:false /ArrayType:System.Collections.Generic.List /ArrayInstanceType:System.Collections.Generic.List" />
+    <Exec
+      Command="$(NSwagExe) jsonschema2csclient /name:%(ModelName)Manifest /namespace:Microsoft.WingetCreateCore.Models.%(SchemaFiles.ModelName) /input:%(FullPath) /output:$(ProjectDir)Models\%(ModelName)ManifestModels.cs /InlineNamedArrays:true /RequiredPropertiesMustBeDefined:false /ArrayType:System.Collections.Generic.List /ArrayInstanceType:System.Collections.Generic.List" />
   </Target>
 
 </Project>

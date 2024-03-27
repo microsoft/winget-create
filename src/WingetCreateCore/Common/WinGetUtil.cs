@@ -45,7 +45,7 @@ namespace Microsoft.WingetCreateCore.Common
             return comparisonResult;
 #endif
 
-            // Since WinGetUtil.dll is not available on non-Windows platforms, we will a simple version comparison.
+            // Since WinGetUtil.dll is not available on non-Windows platforms, we will do a simple version comparison.
             // First, try to parse the versions SemVer. If it fails, we will use string comparison.
             return Version.TryParse(versionA, out Version versionAObj) && Version.TryParse(versionB, out Version versionBObj)
                 ? versionAObj.CompareTo(versionBObj)

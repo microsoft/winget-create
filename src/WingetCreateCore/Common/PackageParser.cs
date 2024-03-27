@@ -12,21 +12,23 @@ namespace Microsoft.WingetCreateCore
     using System.Linq;
     using System.Net.Http;
     using System.Security.Cryptography;
+    using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Xml;
-    using Microsoft.Deployment.WindowsInstaller.Linq;
+    using AsmResolver.PE;
+    using AsmResolver.PE.Win32Resources;
     using Microsoft.Msix.Utils;
     using Microsoft.Msix.Utils.AppxPackaging;
     using Microsoft.Msix.Utils.AppxPackagingInterop;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Common.Exceptions;
+    using Microsoft.WingetCreateCore.Common.Msi;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Version;
     using Newtonsoft.Json;
-    using Vestris.ResourceLib;
 
     /// <summary>
     /// Provides functionality for a parsing and extracting relevant metadata from a given package.
@@ -725,51 +727,36 @@ namespace Microsoft.WingetCreateCore
         {
             try
             {
-                ManifestResource rc = new ManifestResource();
                 InstallerType? installerTypeEnum;
-                try
-                {
-                    rc.LoadFrom(path);
-                    string installerType = rc.Manifest.DocumentElement
-                        .GetElementsByTagName("description")
-                        .Cast<XmlNode>()
-                        .FirstOrDefault()?
-                        .InnerText?
-                        .Split(' ').First()
-                        .ToLowerInvariant();
+                var manifest = PEImage.FromFile(path).Resources
+                .GetDirectory(ResourceType.Manifest)
+                .GetDirectory(ResourceType.Cursor)
+                .GetData(1033);
+                var manifestXml = new XmlDocument();
+                manifestXml.LoadXml(Encoding.UTF8.GetString(manifest.CreateReader().ReadToEnd()));
+                string installerType = manifestXml.DocumentElement
+                    .GetElementsByTagName("description")
+                    .Cast<XmlNode>()
+                    .FirstOrDefault()?
+                    .InnerText?
+                    .Split(' ').First()
+                    .ToLowerInvariant();
 
-                    if (installerType.EqualsIC("wix"))
-                    {
-                        // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
-                        installerTypeEnum = InstallerType.Burn;
-                    }
-                    else if (KnownInstallerResourceNames.Contains(installerType))
-                    {
-                        // If it's a known exe installer type, set as appropriately
-                        installerTypeEnum = installerType.ToEnumOrDefault<InstallerType>();
-                    }
-                    else
-                    {
-                        installerTypeEnum = (baseInstaller.InstallerType == InstallerType.Portable ||
-                                baseInstaller.NestedInstallerType == NestedInstallerType.Portable) ?
-                                InstallerType.Portable : InstallerType.Exe;
-                    }
-                }
-                catch (Win32Exception err)
+                if (installerType.EqualsIC("wix"))
                 {
-                    if ((err.Message == "The specified resource type cannot be found in the image file."
-                        && err.NativeErrorCode == 1813) ||
-                        (err.Message == "The specified image file did not contain a resource section."
-                        && err.NativeErrorCode == 1812))
-                    {
-                        installerTypeEnum = (baseInstaller.InstallerType == InstallerType.Portable ||
-                                baseInstaller.NestedInstallerType == NestedInstallerType.Portable) ?
-                                InstallerType.Portable : InstallerType.Exe;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
+                    installerTypeEnum = InstallerType.Burn;
+                }
+                else if (KnownInstallerResourceNames.Contains(installerType))
+                {
+                    // If it's a known exe installer type, set as appropriately
+                    installerTypeEnum = installerType.ToEnumOrDefault<InstallerType>();
+                }
+                else
+                {
+                    installerTypeEnum = (baseInstaller.InstallerType == InstallerType.Portable ||
+                            baseInstaller.NestedInstallerType == NestedInstallerType.Portable) ?
+                            InstallerType.Portable : InstallerType.Exe;
                 }
 
                 SetInstallerType(baseInstaller, installerTypeEnum.Value);
@@ -780,24 +767,10 @@ namespace Microsoft.WingetCreateCore
 
                 return true;
             }
-            catch (Win32Exception)
+            catch (Exception ex) when (ex is BadImageFormatException || ex is KeyNotFoundException)
             {
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Checks if a MSI Installer database was generated by WiX, based on common characteristics.
-        /// </summary>
-        /// <param name="installer">A MSI Installer database.</param>
-        /// <returns>A boolean.</returns>
-        private static bool IsWix(QDatabase installer)
-        {
-            return
-                installer.Tables.AsEnumerable().Any(table => table.Name.ToLower().Contains("wix")) ||
-                installer.Properties.AsEnumerable().Any(property => property.Property.ToLower().Contains("wix") || property.Value.ToLower().Contains("wix")) ||
-                installer.SummaryInfo.CreatingApp.ToLower().Contains("wix") ||
-                installer.SummaryInfo.CreatingApp.ToLower().Contains("windows installer xml");
         }
 
         private static bool ParseMsi(string path, Installer baseInstaller, Manifests manifests, List<Installer> newInstallers)
@@ -806,47 +779,47 @@ namespace Microsoft.WingetCreateCore
 
             try
             {
-                using (var database = new QDatabase(path, Deployment.WindowsInstaller.DatabaseOpenMode.ReadOnly))
+                Msi msiInfo = new Msi(path);
+                Msi.MsiTable propertyTable = msiInfo.Tables.Where(table => table.Name == "Property").First();
+
+                bool isWix = msiInfo.Information.TableNames.Any(table_name => table_name.ToLower().Contains("wix")) ||
+                    propertyTable.Rows.Any(row => row[0].ToLower().Contains("wix") || row[1].ToLower().Contains("wix")) ||
+                    msiInfo.Information.CreatingApplication.ToLower().Contains("wix") ||
+                    msiInfo.Information.CreatingApplication.ToLower().Contains("windows installer xml");
+
+                SetInstallerType(baseInstaller, isWix ? InstallerType.Wix : InstallerType.Msi);
+
+                if (defaultLocaleManifest != null)
                 {
-                    InstallerType installerType = IsWix(database)
-                            ? InstallerType.Wix
-                            : InstallerType.Msi;
-                    SetInstallerType(baseInstaller, installerType);
+                    defaultLocaleManifest.PackageVersion ??= propertyTable.Rows.FirstOrDefault(row => row[0] == "ProductVersion")?[1];
+                    defaultLocaleManifest.PackageName ??= propertyTable.Rows.FirstOrDefault(row => row[0] == "ProductName")?[1];
+                    defaultLocaleManifest.Publisher ??= propertyTable.Rows.FirstOrDefault(row => row[0] == "Manufacturer")?[1];
+                }
 
-                    var properties = database.Properties.ToList();
+                baseInstaller.ProductCode = propertyTable.Rows.FirstOrDefault(row => row[0] == "ProductCode")?[1];
 
-                    if (defaultLocaleManifest != null)
+                string archString = msiInfo.Information.Architecture;
+
+                archString = archString.EqualsIC("Intel") ? "x86" :
+                    archString.EqualsIC("Intel64") ? "x64" :
+                    archString.EqualsIC("Arm64") ? "Arm64" :
+                    archString.EqualsIC("Arm") ? "Arm" : archString;
+
+                baseInstaller.Architecture = archString.ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
+
+                if (baseInstaller.InstallerLocale == null)
+                {
+                    string languageString = propertyTable.Rows.FirstOrDefault(row => row[0] == "ProductLanguage")?[1];
+
+                    if (int.TryParse(languageString, out int lcid))
                     {
-                        defaultLocaleManifest.PackageVersion ??= properties.FirstOrDefault(p => p.Property == "ProductVersion")?.Value;
-                        defaultLocaleManifest.PackageName ??= properties.FirstOrDefault(p => p.Property == "ProductName")?.Value;
-                        defaultLocaleManifest.Publisher ??= properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value;
-                    }
-
-                    baseInstaller.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
-
-                    string archString = database.SummaryInfo.Template.Split(';').First();
-
-                    archString = archString.EqualsIC("Intel") ? "x86" :
-                        archString.EqualsIC("Intel64") ? "x64" :
-                        archString.EqualsIC("Arm64") ? "Arm64" :
-                        archString.EqualsIC("Arm") ? "Arm" : archString;
-
-                    baseInstaller.Architecture = archString.ToEnumOrDefault<Architecture>() ?? Architecture.Neutral;
-
-                    if (baseInstaller.InstallerLocale == null)
-                    {
-                        string languageString = properties.FirstOrDefault(p => p.Property == "ProductLanguage")?.Value;
-
-                        if (int.TryParse(languageString, out int lcid))
+                        try
                         {
-                            try
-                            {
-                                baseInstaller.InstallerLocale = new CultureInfo(lcid).Name;
-                            }
-                            catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is CultureNotFoundException)
-                            {
-                                // If the lcid value is invalid, do nothing.
-                            }
+                            baseInstaller.InstallerLocale = new CultureInfo(lcid).Name;
+                        }
+                        catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is CultureNotFoundException)
+                        {
+                            // If the lcid value is invalid, do nothing.
                         }
                     }
                 }
@@ -855,9 +828,9 @@ namespace Microsoft.WingetCreateCore
 
                 return true;
             }
-            catch (Deployment.WindowsInstaller.InstallerException)
+            catch
             {
-                // Binary wasn't an MSI, skip
+                // Binary isn't a valid MSI or wasn't an MSI, skip
                 return false;
             }
         }
