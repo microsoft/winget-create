@@ -7,6 +7,10 @@ on:
       - .github/workflows/nightly.yml
       - src/*
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -14,7 +18,7 @@ jobs:
   delete-old-release:
     runs-on: ubuntu-latest
     steps:
-      - run: gh release delete nightly -y --cleanup-tag || true
+      - run: gh release delete nightly -y --cleanup-tag --repo ${{ github.repository }} || true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
