@@ -5,7 +5,7 @@ on:
     branches: main
     paths:
       - .github/workflows/nightly.yml
-      - src/*
+      - src/**
   workflow_dispatch:
 
 concurrency:
