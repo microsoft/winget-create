@@ -24,10 +24,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
     needs: delete-old-release
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: pwsh
     strategy:
       matrix:
         include:
@@ -49,6 +45,10 @@ jobs:
           - os: macos-latest
             dotnet-runtime: osx-arm64
             rust-target: aarch64-apple-darwin
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: pwsh
     steps:
       - uses: actions/checkout@v4
         with:
