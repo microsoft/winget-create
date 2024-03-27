@@ -51,7 +51,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: patch-1 # TODO: Remove this line just before merging PR at microsoft/winget-create
           submodules: true
           lfs: true
           persist-credentials: false
