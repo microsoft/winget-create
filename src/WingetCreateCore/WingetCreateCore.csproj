@@ -151,7 +151,7 @@
 		  Text="Rebuilding: %(SchemaFiles.ModelName) because $(ProjectDir)Models\%(ModelName)ManifestModels.cs is older than %(FullPath)" />
 
 		<Exec
-		  Command="$(NSwagExe) jsonschema2csclient /name:%(ModelName)Manifest /namespace:Microsoft.WingetCreateCore.Models.%(SchemaFiles.ModelName) /input:%(FullPath) /output:$(ProjectDir)Models\%(ModelName)ManifestModels.cs /InlineNamedArrays:true /RequiredPropertiesMustBeDefined:false /ArrayType:System.Collections.Generic.List /ArrayInstanceType:System.Collections.Generic.List" />
+		  Command="$(NSwagExe_Net80) jsonschema2csclient /name:%(ModelName)Manifest /namespace:Microsoft.WingetCreateCore.Models.%(SchemaFiles.ModelName) /input:%(FullPath) /output:$(ProjectDir)Models\%(ModelName)ManifestModels.cs /InlineNamedArrays:true /RequiredPropertiesMustBeDefined:false /ArrayType:System.Collections.Generic.List /ArrayInstanceType:System.Collections.Generic.List" />
 	</Target>
 
 </Project>
