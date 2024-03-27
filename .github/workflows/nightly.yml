@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/nightly.yml
       - src/*
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}
