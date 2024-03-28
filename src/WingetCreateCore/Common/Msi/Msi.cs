@@ -16,11 +16,6 @@ namespace Microsoft.WingetCreateCore.Common.Msi
 
   public class Msi
   {
-#pragma warning disable SA1401 // Fields should be private
-    public MsiInformation Information;
-    public MsiTable[] Tables;
-#pragma warning restore SA1401 // Fields should be private
-
     public unsafe Msi(string path)
     {
       fixed (byte* pathPtr = Encoding.UTF8.GetBytes(path))
@@ -59,6 +54,10 @@ namespace Microsoft.WingetCreateCore.Common.Msi
         }
       }
     }
+
+    public MsiInformation Information { get; }
+
+    public MsiTable[] Tables { get; }
 
     [DllImport("msi", ExactSpelling = true)]
     private static unsafe extern MsiInformationFfi get_information(byte* path);
