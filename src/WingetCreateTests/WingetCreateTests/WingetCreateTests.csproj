@@ -1,10 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Platforms>x64;ARM64</Platforms>
+	</PropertyGroup>
+
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <IsWindows Condition="$(RuntimeIdentifier.StartsWith('win'))">true</IsWindows>
+    <IsOSX Condition="$(RuntimeIdentifier.StartsWith('osx'))">true</IsOSX>
+    <IsLinux Condition="$(RuntimeIdentifier.StartsWith('linux'))">true</IsLinux>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' == ''">
+    <IsWindows
+      Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'=='true'"
+    >true</IsWindows>
+    <IsOSX
+      Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'=='true'"
+    >true</IsOSX>
+    <IsLinux
+      Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'=='true'"
+    >true</IsLinux>
+  </PropertyGroup>
+
   <PropertyGroup>
-    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-    <IsPackable>false</IsPackable>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Platforms>x64;x86</Platforms>
+    <DefineConstant Condition="'$(IsWindows)'=='true'">Windows</DefineConstant>
+    <DefineConstant Condition="'$(IsLinux)'=='true' Or '$(IsOSX)'=='true'">Unix</DefineConstant>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsLinux)'=='true' Or '$(IsOSX)'=='true'">
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,13 +67,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.locale.en-GB.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.installer.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.locale.en-US.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.FullJsonSingleton1_1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -154,7 +184,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\WingetCreateE2E.Json.ExeTest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -184,19 +214,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\WingetCreateE2E.Yaml.ExeTest.yaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\WingetCreateE2E.Yaml.MsiTest.yaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.TestApp.yaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.MultipleInstallerApp.yaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\WingetCreateTestZipInstaller.zip">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>

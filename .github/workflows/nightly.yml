@@ -1,0 +1,85 @@
+﻿name: Nightly Build 🌙🛠️
+
+on:
+  push:
+    branches: main
+    paths:
+      - .github/workflows/nightly.yml
+      - src/**
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  delete-old-release:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh release delete nightly -y --cleanup-tag --repo ${{ github.repository }} || true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    needs: delete-old-release
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            dotnet-runtime: win-x64
+            rust-target: x86_64-pc-windows-msvc
+          - os: windows-latest
+            dotnet-runtime: win-arm64
+            rust-target: aarch64-pc-windows-msvc
+          - os: ubuntu-latest
+            dotnet-runtime: linux-x64
+            rust-target: x86_64-unknown-linux-gnu
+          - os: ubuntu-latest
+            dotnet-runtime: linux-arm64
+            rust-target: aarch64-unknown-linux-gnu
+          - os: macos-latest
+            dotnet-runtime: osx-x64
+            rust-target: x86_64-apple-darwin
+          - os: macos-latest
+            dotnet-runtime: osx-arm64
+            rust-target: aarch64-apple-darwin
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          lfs: true
+          persist-credentials: false
+
+      - uses: moonrepo/setup-rust@v1
+        with:
+          bins: cross
+          channel: stable
+          targets: ${{ matrix.rust-target }}
+          cache: false
+
+      - run: cross build --release --target ${{ matrix.rust-target }}
+        working-directory: src/WingetCreateCore/Common/Msi/rust-msi
+
+      - run: dotnet publish ./WingetCreateCLI.csproj -c Release -r ${{ matrix.dotnet-runtime }} --output ./output
+        working-directory: src/WingetCreateCLI
+
+      - name: Create zip archive 🤐
+        run: |
+          New-Item -ItemType Directory -Path ./final -Force
+          Compress-Archive -Path ./output/* -DestinationPath ./final/wingetcreate-$('${{ matrix.dotnet-runtime }}'.Replace('osx','macos')).zip
+        working-directory: src/WingetCreateCLI
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Nightly release 🌙
+          tag_name: nightly
+          draft: false
+          files: src/WingetCreateCLI/final/*.zip
+          fail_on_unmatched_files: true
+          token: ${{ secrets.GITHUB_TOKEN }}
