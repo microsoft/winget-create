@@ -51,6 +51,11 @@ namespace Microsoft.WingetCreateTests
         public const string TestZipInstaller = "WingetCreateTestZipInstaller.zip";
 
         /// <summary>
+        /// File name of the archive containing multiple installers.
+        /// </summary>
+        public const string TestZipMultipleNestedInstallers = "WingetCreateTestMultipleNestedInstallers.zip";
+
+        /// <summary>
         /// Format argument to be used for YAML submissions.
         /// </summary>
         public const ManifestFormat YamlManifestFormat = ManifestFormat.Yaml;
