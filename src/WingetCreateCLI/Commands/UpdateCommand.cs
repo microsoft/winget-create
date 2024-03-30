@@ -863,6 +863,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 string url = Prompt.Input<string>(Resources.NewInstallerUrl_Message, null, null, new[] { FieldValidation.ValidateProperty(newInstaller, nameof(Installer.InstallerUrl)) });
 
                 string packageFile = await DownloadPackageFile(url);
+                string archivePath = null;
 
                 if (string.IsNullOrEmpty(packageFile))
                 {
@@ -871,6 +872,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 if (packageFile.IsZipFile())
                 {
+                    archivePath = packageFile;
                     string extractDirectory = ExtractArchiveAndRetrieveDirectoryPath(packageFile);
                     bool isRelativePathNull = false;
 
@@ -893,7 +895,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     packageFile = Path.Combine(extractDirectory, installer.NestedInstallerFiles.First().RelativeFilePath);
                 }
 
-                if (!PackageParser.ParsePackageAndUpdateInstallerNode(installer, packageFile, url))
+                if (!PackageParser.ParsePackageAndUpdateInstallerNode(installer, packageFile, url, archivePath))
                 {
                     Logger.ErrorLocalized(nameof(Resources.PackageParsing_Error), url);
                     Console.WriteLine();
