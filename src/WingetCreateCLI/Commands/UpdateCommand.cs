@@ -812,6 +812,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 manifests.InstallerManifest.Installers = originalManifest.CloneInstallers();
                 await this.UpdateInstallersInteractively(manifests.InstallerManifest.Installers);
                 ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
+                ResetVersionSpecificFields(manifests);
                 DisplayManifestPreview(manifests);
                 ValidateManifestsInTempDir(manifests);
             }
