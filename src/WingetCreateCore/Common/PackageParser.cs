@@ -277,15 +277,22 @@ namespace Microsoft.WingetCreateCore
         /// Parses the package for relevant metadata and and updates the metadata of the provided installer node.
         /// </summary>
         /// <param name="installer">Installer node.</param>
-        /// <param name="path">Path to package file.</param>
+        /// <param name="filePath">Path to package file.</param>
         /// <param name="url">Installer url.</param>
+        /// <param name="archivePath">Path to archive file containing the installer. Required if the installer type is Zip.</param>
         /// <returns>Boolean indicating whether the package parse was successful.</returns>
-        public static bool ParsePackageAndUpdateInstallerNode(Installer installer, string path, string url)
+        public static bool ParsePackageAndUpdateInstallerNode(Installer installer, string filePath, string url, string archivePath = null)
         {
+            // Guard clause to ensure that the archivePath is provided if the installer type is Zip.
+            if (installer.InstallerType == InstallerType.Zip && string.IsNullOrEmpty(archivePath))
+            {
+                return false;
+            }
+
             List<Installer> newInstallers = new List<Installer>();
-            bool parseResult = ParseExeInstallerType(path, installer, newInstallers) ||
-                ParseMsix(path, installer, null, newInstallers) ||
-                ParseMsi(path, installer, null, newInstallers);
+            bool parseResult = ParseExeInstallerType(filePath, installer, newInstallers) ||
+                ParseMsix(filePath, installer, null, newInstallers) ||
+                ParseMsi(filePath, installer, null, newInstallers);
 
             if (!parseResult || !newInstallers.Any())
             {
@@ -302,11 +309,11 @@ namespace Microsoft.WingetCreateCore
             else
             {
                 // For a single installer, detect the architecture. If no architecture is detected, default to architecture from existing manifest.
-                newInstaller.Architecture = GetArchFromUrl(url) ?? GetMachineType(path)?.ToString().ToEnumOrDefault<Architecture>() ?? installer.Architecture;
+                newInstaller.Architecture = GetArchFromUrl(url) ?? GetMachineType(filePath)?.ToString().ToEnumOrDefault<Architecture>() ?? installer.Architecture;
             }
 
             newInstaller.InstallerUrl = url;
-            newInstaller.InstallerSha256 = GetFileHash(path);
+            newInstaller.InstallerSha256 = string.IsNullOrEmpty(archivePath) ? GetFileHash(filePath) : GetFileHash(archivePath);
             UpdateInstallerMetadata(installer, newInstallers.First());
             return true;
         }
