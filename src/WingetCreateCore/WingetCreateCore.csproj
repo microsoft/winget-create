@@ -34,7 +34,7 @@
     </PackageReference>
     <PackageReference Include="Octokit" Version="9.1.2" />
     <PackageReference Include="Vestris.ResourceLib" Version="2.1.0" />
-    <PackageReference Include="WiX" Version="3.14.0" />
+    <PackageReference Include="WiX" Version="3.14.1" />
     <PackageReference Include="YamlDotNet" Version="15.1.1" />
   </ItemGroup>
 
