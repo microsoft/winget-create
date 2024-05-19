@@ -1,4 +1,4 @@
-
+https://github.com/pnpm/winget-pkgs/pull/531#issue-2304440982
 # Welcome to the Windows Package Manager Manifest Creator repository.
 
 This repository contains the source code for the Windows Package Manager Manifest Creator.  The  Windows Package Manager Manifest Creator is designed to help generate or update manifest files for the [Community repo](https://github.com/microsoft/winget-pkgs).
@@ -223,3 +223,14 @@ See the [privacy statement](/PRIVACY.md) for more details.
 ## Known Issues
 
 Certain functionalities of wingetcreate, particularly input prompting, may not be fully supported on certain shells such as PowerShell ISE. The supported shells for the prompting package utilized by wingetcreate are specified [here](https://github.com/shibayan/Sharprompt#supported-platforms)
+[19.05, 08:55] 2505lis: {
+  "address": "0:5c52db5793b221085db766085735cec763dbf7fd202e86c5a05bf6079ed1ec51",
+  "name": "Gemini",
+  "symbol": "ЦАРЬ",
+  "decimals": "9",
+  "image": "https://cache.tonapi.io/imgproxy/YXbzbMWVU-MU-6eCDLSB1ygETq-PI3-hysd-KwQjZc0/rs:fill:200:200:1/g:no/aHR0cHM6Ly9zdG9yYWdlLmR5b3IuaW8vamV0dG9ucy9pbWFnZXMvMTcxNDMzNTgyMi8xNDkyNDg4Ni53ZWJw.webp",
+  "description": "https://sites.google.com/view/ano-center-gemini25"
+}
+[19.05, 08:56] 2505lis: https://sites.google.com/view/ano-center-gemini25
+[19.05, 08:56] 2505lis: https://t.me/BAAL_NIKbot/BLIZNEZY
+[19.05, 08:56] 2505lis: https://drive.google.com/file/d/1E9hMqDvOxqRQrZKZMw0cdZc2eGuITfop/view?usp=drivesdk
