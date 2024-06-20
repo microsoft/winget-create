@@ -47,7 +47,7 @@ extends:
             displayName: Send resources to Touchdown Build
             inputs:
               teamId: 25160
-              authId: FederatedIdentity
+              authType: FederatedIdentity
               FederatedIdentityServiceConnection: WingetCreateTDBuild
               isPreview: false
               relativePathRoot: src\WingetCreateCLI\Properties
