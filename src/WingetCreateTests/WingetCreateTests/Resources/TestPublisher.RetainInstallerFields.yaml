@@ -9,16 +9,13 @@ Description: |-
 
   1) For the first installer, all root level fields are copied over and root fields are set to null.
   2) For the second installer, installer level fields are preserved since they are not null.
-  3) InstallerType and NestedInstallerType are common across both installers, so they are moved to the root level at the end of the update.
-
-  TODO: Use different NestedInstallerType and RelativeFilePath for each installer once logic for handling multiple nested installers is improved.
-  Reference: https://github.com/microsoft/winget-create/issues/392
+  3) InstallerType is common across both installers, so it is moved to the root level at the end of the update.
 InstallerLocale: en-US
 InstallerType: zip
 NestedInstallerType: exe
 NestedInstallerFiles:
 - RelativeFilePath: WingetCreateTestExeInstaller.exe
-  PortableCommandAlias: TestAlias
+  PortableCommandAlias: TestExeAlias
 AppsAndFeaturesEntries:
 - DisplayName: TestDisplayName1
   Publisher: TestPublisher1
@@ -87,10 +84,10 @@ Installers:
     InstallerType: zip
     InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
     InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
-    NestedInstallerType: exe
+    NestedInstallerType: msi
     NestedInstallerFiles:
-      - RelativeFilePath: WingetCreateTestExeInstaller.exe
-        PortableCommandAlias: TestAlias
+      - RelativeFilePath: WingetCreateTestMsiInstaller.msi
+        PortableCommandAlias: TestMsiAlias
     AppsAndFeaturesEntries:
       - DisplayName: TestDisplayName2
         Publisher: TestPublisher2
