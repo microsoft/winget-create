@@ -1,19 +1,23 @@
-﻿PackageIdentifier: TestPublisher.ArchAndScopeOverride
+﻿PackageIdentifier: TestPublisher.SingleInstallerWithMultipleDisplayVersions
 PackageVersion: 0.1.2
-PackageName: Arch and Scope override test
+PackageName: Test for a single installer with multiple display versions
 Publisher: Test publisher
 License: MIT
-ShortDescription: A manifest used to test the update command when overriding the architecture and scope of the provided installers.
+ShortDescription: A manifest used to test whether multiple display versions for a single installer warning is shown
 InstallerLocale: en-US
 Installers:
-  - Architecture: arm
+  - Architecture: x64
     InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
-    Scope: user
     InstallerType: exe
+    AppsAndFeaturesEntries:
+    - DisplayVersion: 1.0.0
+    - DisplayVersion: 2.0.0
+    - DisplayVersion: 3.0.0
     InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
-  - Architecture: arm
+  - Architecture: x86
     InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
-    Scope: machine
+    AppsAndFeaturesEntries:
+    - DisplayVersion: 2.0.0
     InstallerType: exe
     InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
 PackageLocale: en-US
