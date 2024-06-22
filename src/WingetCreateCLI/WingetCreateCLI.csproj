@@ -1,41 +1,55 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
-    <AssemblyName>WingetCreateCLI</AssemblyName>
-    <RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
-    <Version>1.6</Version>
-    <Platforms>x64;x86</Platforms>
-    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<AssemblyName>WingetCreateCLI</AssemblyName>
+		<RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
+		<Version>1.6</Version>
+		<Platforms>x64;ARM64</Platforms>
+		<RuntimeIdentifiers>win-x64;win-arm64;linux-x64;linux-arm64;osx-arm64</RuntimeIdentifiers>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DefineConstants>TELEMETRYEVENTSOURCE_PUBLIC</DefineConstants>
+		<SignAssembly>true</SignAssembly>
+		<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+		<SelfContained>false</SelfContained>
+		<PublishSingleFile>true</PublishSingleFile>
 
-  <ItemGroup>
-    <AdditionalFiles Include="..\stylecop.json" />
-  </ItemGroup>
+		<IsWindows Condition="$(RuntimeIdentifier.StartsWith('win')) Or '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'=='true'">true</IsWindows>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="DesktopBridge.Helpers" Version="1.2.2" />
-    <PackageReference Include="NSwag.MSBuild" Version="14.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Sharprompt" Version="2.4.5" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(IsWindows)'=='true'">
+		<TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\WingetCreateCore\WingetCreateCore.csproj" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(IsWindows)'!='true'">
+		<TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="..\stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Condition="'$(IsWindows)'=='true'" Include="DesktopBridge.Helpers"
+      Version="1.2.2" />
+		<PackageReference Include="NSwag.MSBuild" Version="14.0.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Sharprompt" Version="2.4.5" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+    <PackageReference Condition="'$(IsWindows)'=='true'"
+      Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\WingetCreateCore\WingetCreateCore.csproj" />
+	</ItemGroup>
 
   <!--This is to workaround a similar issue as to what's
   described at https://github.com/dotnet/runtime/issues/3807. When the wapproj is published, the native
@@ -49,68 +63,47 @@
 
   This modifies the inputs to GenerateBuildDependencyFile to remove Wingetutil.pdb from the deps.json file when it's generated.
   -->
-  <Target Name="StripNativePDBFromDepsJson" BeforeTargets="GenerateBuildDependencyFile">
-    <ItemGroup>
+	<Target Name="StripNativePDBFromDepsJson" BeforeTargets="GenerateBuildDependencyFile">
+		<ItemGroup>
       <RuntimeTargetsCopyLocalItems Remove="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeTargetsCopyLocalItems.Extension)' == '.pdb' AND %(RuntimeTargetsCopyLocalItems.NuGetPackageId) == 'Microsoft.WindowsPackageManager.Utils'" />
       <NativeCopyLocalItems Remove="@(NativeCopyLocalItems)" Condition="'%(NativeCopyLocalItems.Extension)' == '.pdb' AND %(NativeCopyLocalItems.NuGetPackageId) == 'Microsoft.WindowsPackageManager.Utils'" />
-    </ItemGroup>
-  </Target>
+		</ItemGroup>
+	</Target>
 
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DependentUpon>Resources.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+	</ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
     <!-- The localized resources are dropped in \Localization\Resources as part of the patch file from TouchDown. We can't simply Include them, as they must appear to be under the
          Properties directory to be properly included. We can fake this by using the <Link> tag which includes them virtually under specified directory -->
-    <EmbeddedResource Include="..\..\Localization\Resources\**\*.resx" LinkBase="Properties">
-      <Link>%(LinkBase)\%(Filename)%(Extension)</Link>
-      <Visible>false</Visible>
-    </EmbeddedResource>
+		<EmbeddedResource Include="..\..\Localization\Resources\**\*.resx" LinkBase="Properties">
+			<Link>%(LinkBase)\%(Filename)%(Extension)</Link>
+			<Visible>false</Visible>
+		</EmbeddedResource>
 
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-    
-  <!--Include VCLib binary dependencies-->  
-  <ItemGroup Condition="'$(SelfContained)' == true">
-    <None Update="msvcp140.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="vcruntime140.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="vcruntime140_1.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>   
-  </ItemGroup>    
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+	</ItemGroup>
 
-  <ItemGroup>
-      <SettingSchema Include="$(ProjectDir)\Schemas\settings.schema.0.1.json" ModelName="Settings" />
-  </ItemGroup>
+	<ItemGroup>
+		<SettingSchema Include="$(ProjectDir)\Schemas\settings.schema.0.1.json" ModelName="Settings" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Models\" />
+	</ItemGroup>
 
   <!--Generate settings manifest-->
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(SettingSchema)" Outputs="@(SettingSchema -> '$(ProjectDir)Models\%(ModelName)Model.cs')">
       <Message Importance="high" Text="Rebuilding: %(SettingSchema.ModelName) because $(ProjectDir)Models\%(ModelName)Model.cs is older than %(FullPath)" />
 
-      <Exec Command="$(NSwagExe) jsonschema2csclient /name:%(ModelName)Manifest /namespace:Microsoft.WingetCreateCLI.Models.%(SettingSchema.ModelName) /input:%(FullPath) /output:$(ProjectDir)Models\%(ModelName)Model.cs /InlineNamedArrays:true /RequiredPropertiesMustBeDefined:false /ArrayType:System.Collections.Generic.List /ArrayInstanceType:System.Collections.Generic.List" />
-  </Target>
-
-    <!-- Workaround for https://github.com/dotnet/msbuild/issues/5981, will no longer be necessary in msbuild v16.10.0-preview-21181-07+ -->
-  <Target Name="FixAL1703Warning" BeforeTargets="GenerateSatelliteAssemblies" Condition="'$(PlatformTarget)' == 'x64'">
-    <Message Text="Adjusting SDK tools directory to use x64 version of AL.EXE" />
-    <PropertyGroup>
-      <SdkToolsPathMaybeWithx64Architecture>$(TargetFrameworkSDKToolsDirectory)$(PlatformTarget)\</SdkToolsPathMaybeWithx64Architecture>
-    </PropertyGroup>
-  </Target>
+    <Exec Command="$(NSwagExe_Net80) jsonschema2csclient /name:%(ModelName)Manifest /namespace:Microsoft.WingetCreateCLI.Models.%(SettingSchema.ModelName) /input:%(FullPath) /output:$(ProjectDir)Models\%(ModelName)Model.cs /InlineNamedArrays:true /RequiredPropertiesMustBeDefined:false /ArrayType:System.Collections.Generic.List /ArrayInstanceType:System.Collections.Generic.List" />
+	</Target>
 </Project>

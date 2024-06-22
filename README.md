@@ -72,14 +72,14 @@ You can also check out this [episode of Open at Microsoft](https://learn.microso
 
 ### Using the standalone exe:
 
-The latest version of the standalone exe can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview, both of these require [.NET Runtime 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) to be installed on the build machine. To install this on your build machine in your pipeline, you can include the following dotnet task:
+The latest version of the standalone exe can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview, both of these require [.NET Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to be installed on the build machine. To install this on your build machine in your pipeline, you can include the following dotnet task:
 
 ```yaml
       - task: UseDotNet@2
         displayName: 'Install .NET Runtime'
         inputs:
           packageType: sdk
-          version: '6.x'
+          version: '8.x'
           installationPath: '$(ProgramFiles)\dotnet'
 ```
 
@@ -87,7 +87,7 @@ Or you can utilize a PowerShell task and run the following script.
 
 ```PowerShell
     Invoke-WebRequest https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
-    .\dotnet-install.ps1 -Runtime dotnet -Architecture x64 -Version 6.0.13 -InstallDir $env:ProgramFiles\dotnet
+    .\dotnet-install.ps1 -Runtime dotnet -Architecture x64 -Version 8 -InstallDir $env:ProgramFiles\dotnet
 ```
 
 > [!IMPORTANT]
@@ -158,11 +158,11 @@ You can install the prerequisites in one of two ways:
 * The following workloads:
    * .NET Desktop Development
    * Universal Windows Platform Development
-* Windows 11 SDK (10.0.22000.0) (Tools -> Get Tools and Features -> Individual Components)
+* Windows 11 SDK (10.0.22621.0) (Tools -> Get Tools and Features -> Individual Components)
 
 ### Building
 
-Open `winget-create\src\WingetCreateCLI.sln` in Visual Studio and build. We currently only build using the solution; command line methods of building a VS solution should work as well.
+Open `winget-create\src\WingetCreateCLI.sln` in Visual Studio and build. We currently only build using the solution; command-line methods of building a VS solution should work as well.
 
 ## Testing the client
 
@@ -181,7 +181,7 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
        *  Direct link to GitHub [Personal Access Tokens page](https://github.com/settings/tokens).
    * `GitHubAppPrivateKey`: Leave blank, this is only used by the build server.
 
-* Set the solution wide runsettings file for the tests
+* Set the solution-wide runsettings file for the tests
     * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
 > [!CAUTION]
