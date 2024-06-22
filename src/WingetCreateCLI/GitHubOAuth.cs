@@ -6,7 +6,9 @@ namespace Microsoft.WingetCreateCLI
     using System;
     using System.ComponentModel;
     using System.IO;
+#if WINDOWS
     using System.Security.Cryptography;
+#endif
     using System.Text;
     using System.Text.Json;
     using System.Text.Json.Serialization;
@@ -50,7 +52,10 @@ namespace Microsoft.WingetCreateCLI
             if (File.Exists(TokenFile))
             {
                 var protectedBytes = File.ReadAllBytes(TokenFile);
-                var bytes = ProtectedData.Unprotect(protectedBytes, EntropyBytes, DataProtectionScope.CurrentUser);
+                var bytes = protectedBytes;
+#if WINDOWS
+                bytes = ProtectedData.Unprotect(protectedBytes, EntropyBytes, DataProtectionScope.CurrentUser);
+#endif
                 return Encoding.UTF8.GetString(bytes);
             }
             else
@@ -65,7 +70,10 @@ namespace Microsoft.WingetCreateCLI
         /// <param name="token">Token to be cached.</param>
         public static void WriteTokenCache(string token)
         {
-            var bytes = ProtectedData.Protect(Encoding.UTF8.GetBytes(token), EntropyBytes, DataProtectionScope.CurrentUser);
+            var bytes = Encoding.UTF8.GetBytes(token);
+#if WINDOWS
+            bytes = ProtectedData.Protect(Encoding.UTF8.GetBytes(token), EntropyBytes, DataProtectionScope.CurrentUser);
+#endif
             File.WriteAllBytes(TokenFile, bytes);
         }
 
