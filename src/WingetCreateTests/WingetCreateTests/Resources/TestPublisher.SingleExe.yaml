@@ -11,7 +11,7 @@ Installers:
     InstallerType: exe
     InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
     ProductCode: FakeProductCode
-    PackageFamilyName: FakePackageFamilyName
+    PackageFamilyName: Fake.PackageFamilyName_8wekyb3d8bbwe
     Platform:
     - Windows.Desktop
 PackageLocale: en-US

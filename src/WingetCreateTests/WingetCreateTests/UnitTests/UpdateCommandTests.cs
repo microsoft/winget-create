@@ -67,18 +67,22 @@ namespace Microsoft.WingetCreateUnitTests
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task UpdateCommandGitHubManifestTest()
+        public async Task UpdateAndVerifyManifestsCreated()
         {
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+
+            string packageIdentifier = "TestPublisher.SingleExe";
             string version = "1.2.3.4";
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.TestPackageIdentifier, version, this.tempPath, null);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(packageIdentifier, version, this.tempPath, new[] { $"{installerUrl}" });
             var updatedManifests = await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent);
             ClassicAssert.IsTrue(updatedManifests, "Command should have succeeded");
 
-            string manifestDir = Utils.GetAppManifestDirPath(TestConstants.TestPackageIdentifier, version);
+            string manifestDir = Utils.GetAppManifestDirPath(packageIdentifier, version);
             var updatedManifestContents = Directory.GetFiles(Path.Combine(this.tempPath, manifestDir)).Select(f => File.ReadAllText(f));
             ClassicAssert.IsTrue(updatedManifestContents.Any(), "Updated manifests were not created successfully");
             Manifests manifestsToValidate = Serialization.DeserializeManifestContents(updatedManifestContents);
-            ClassicAssert.AreEqual(version, manifestsToValidate.VersionManifest.PackageVersion, $"Failed to update version of {TestConstants.TestPackageIdentifier}");
+            ClassicAssert.AreEqual(version, manifestsToValidate.VersionManifest.PackageVersion, $"Failed to update version of {packageIdentifier}");
         }
 
         /// <summary>
