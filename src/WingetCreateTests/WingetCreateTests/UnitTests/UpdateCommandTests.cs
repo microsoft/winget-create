@@ -602,7 +602,7 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
             var updatedInstallerManifest = updatedManifests.InstallerManifest;
             ClassicAssert.AreEqual("FakeProductCode", updatedInstallerManifest.ProductCode, "Existing value for ProductCode was overwritten.");
-            ClassicAssert.AreEqual("FakePackageFamilyName", updatedInstallerManifest.PackageFamilyName, "Existing value for PackageFamilyName was overwritten.");
+            ClassicAssert.AreEqual("Fake.PackageFamilyName_8wekyb3d8bbwe", updatedInstallerManifest.PackageFamilyName, "Existing value for PackageFamilyName was overwritten.");
             ClassicAssert.IsNotNull(updatedInstallerManifest.Platform, "Existing value for Platform was overwritten.;");
         }
 
