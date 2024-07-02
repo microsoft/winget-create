@@ -189,9 +189,6 @@
     <None Update="Resources\WingetCreateE2E.Yaml.MsiTest.yaml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\TestPublisher.TestApp.yaml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Resources\TestPublisher.MultipleInstallerApp.yaml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
