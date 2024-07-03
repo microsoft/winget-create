@@ -43,12 +43,12 @@ extends:
           variables:
             skipComponentGovernanceDetection: true
           steps:
-          - task: MicrosoftTDBuild.tdbuild-task.tdbuild-task.TouchdownBuildTask@1
+          - task: TouchdownBuildTask@4
             displayName: Send resources to Touchdown Build
             inputs:
               teamId: 25160
-              authId: cd9fc0c7-0aaa-461f-a098-6c97c3b1cfb1
-              authKey: $(LocServiceKey)
+              authType: FederatedIdentity
+              FederatedIdentityServiceConnection: WingetCreateTDBuild
               isPreview: false
               relativePathRoot: src\WingetCreateCLI\Properties
               resourceFilePath: "*.resx"

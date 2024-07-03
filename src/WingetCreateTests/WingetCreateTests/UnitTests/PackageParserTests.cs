@@ -3,8 +3,10 @@
 
 namespace Microsoft.WingetCreateUnitTests
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using AutoMapper;
     using Microsoft.WingetCreateCore;
@@ -157,11 +159,45 @@ namespace Microsoft.WingetCreateUnitTests
             WingetCreateCore.Models.Singleton.Installer initialInstaller = initialManifests.SingletonManifest.Installers.First();
             Installer installer = ConvertSingletonInstaller(initialInstaller);
 
-            PackageParser.ParsePackageAndUpdateInstallerNode(installer, testMsiInstallerPath, installer.InstallerUrl);
+            bool result = PackageParser.ParsePackageAndUpdateInstallerNode(installer, testMsiInstallerPath, installer.InstallerUrl);
+            ClassicAssert.IsTrue(result, "ParsePackageAndUpdateInstallerNode should return true.");
             ClassicAssert.AreEqual(InstallerType.Msi, installer.InstallerType, "InstallerType should be updated.");
             ClassicAssert.AreEqual(initialInstaller.Architecture.ToEnumAttributeValue(), installer.Architecture.ToEnumAttributeValue(), "Architecture should not change.");
             ClassicAssert.AreNotEqual(initialInstaller.InstallerSha256, installer.InstallerSha256, "InstallerSha256 should be updated.");
             ClassicAssert.AreEqual("{E2650EFC-DCD3-4FAA-BBAC-FD1812B03A61}", installer.ProductCode, "ProductCode should be updated");
+        }
+
+        /// <summary>
+        /// Validates that the ParsePackageAndUpdateInstallerNode function works as expected for a zip installer.
+        /// </summary>
+        [Test]
+        public void ParseAndUpdateZipInstaller()
+        {
+            var testZipInstaller = TestUtils.MockDownloadFile(TestConstants.TestZipInstaller);
+            Assert.That(testZipInstaller, Is.Not.Null.And.Not.Empty);
+            string extractDirectory = Path.Combine(PackageParser.InstallerDownloadPath, Path.GetFileNameWithoutExtension(testZipInstaller));
+
+            try
+            {
+                ZipFile.ExtractToDirectory(testZipInstaller, extractDirectory, true);
+            }
+            catch (Exception e)
+            {
+                ClassicAssert.Fail($"Failed to extract the zip file: {e.Message}");
+            }
+
+            List<string> initialManifestContent = TestUtils.GetInitialManifestContent($"TestPublisher.ZipWithExe.yaml");
+            Manifests initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            WingetCreateCore.Models.Singleton.Installer initialInstaller = initialManifests.SingletonManifest.Installers.First();
+            Installer installer = ConvertSingletonInstaller(initialInstaller);
+            string nestedInstallerPath = Path.Combine(extractDirectory, installer.NestedInstallerFiles.First().RelativeFilePath);
+
+            bool result = PackageParser.ParsePackageAndUpdateInstallerNode(installer, nestedInstallerPath, installer.InstallerUrl, testZipInstaller);
+            ClassicAssert.IsTrue(result, "ParsePackageAndUpdateInstallerNode should return true.");
+            ClassicAssert.AreEqual(InstallerType.Zip, installer.InstallerType, "InstallerType should not change");
+            ClassicAssert.AreEqual(initialInstaller.Architecture.ToEnumAttributeValue(), installer.Architecture.ToEnumAttributeValue(), "Architecture should not change.");
+            ClassicAssert.AreNotEqual(initialInstaller.InstallerSha256, installer.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.AreEqual(installer.InstallerSha256, PackageParser.GetFileHash(testZipInstaller), "InstallSha256 should match the hash of the zip file");
         }
 
         /// <summary>
@@ -175,6 +211,7 @@ namespace Microsoft.WingetCreateUnitTests
             {
                 cfg.AllowNullCollections = true;
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
             });
