@@ -390,12 +390,14 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task UpdateFailsWithMultipleDisplayVersions()
         {
             string installerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            string displayVersion1 = "3.4";
+            string displayVersion2 = "1.2";
             (UpdateCommand badCommand, var manifests) =
-                GetUpdateCommandAndManifestData("TestPublisher.ScopeOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|3.4|1.2" });
+                GetUpdateCommandAndManifestData("TestPublisher.ScopeOverride", "1.2.3.4", this.tempPath, new[] { $"{installerUrl}|{displayVersion1}|{displayVersion2}" });
             var failedUpdateManifests = await RunUpdateCommand(badCommand, manifests);
             ClassicAssert.IsNull(failedUpdateManifests, "Command should have failed due to multiple display versions specified for a single installer.");
             string result = this.sw.ToString();
-            Assert.That(result, Does.Contain(Resources.MultipleDisplayVersion_Error), "Failed to show multiple display version error.");
+            Assert.That(result, Does.Contain(string.Format(Resources.UnableToParseArgument_Error, displayVersion2)), "Failed to show parsing error due to multiple string overrides.");
         }
 
         /// <summary>

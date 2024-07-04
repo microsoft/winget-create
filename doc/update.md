@@ -39,29 +39,26 @@ e.g.,
 The following additional arguments can be provided with the installer URL(s):
 
 #### Format
+
 `'<InstallerUrl>|<Argument1>|<Argument2>...'`
 
 #### Override Architecture
-`'<InstallerUrl>|<InstallerArchitecture>'`
 
 Winget-Create will attempt to determine the architecture of the installer package by performing a regex string match to identify the possible architecture in the installer url. If no match is found, Winget-Create will resort to obtaining the architecture from the downloaded installer. If Winget-Create fails to detect the architecture from the binary or the detected architecture does not match an architecture in the existing manifest, Winget-Create will fail to generate the manifest. In this case, you can explicitly provide the intended architecture and override the detected architecture using the following format:
 
 `'<InstallerUrl>|<InstallerArchitecture>'`
 
 #### Override Scope
-`'<InstallerUrl>|<InstallerScope>'`
 
 In case there are multiple installers with the same architecture, it may mean the same installer is available for multiple scopes. In this case, you can explicitly provide the installer scope in the update command using the following following argument format:
 
 `'<InstallerUrl>|<InstallerScope>'`
 
 #### Display Version
-`'<InstallerUrl>|<DisplayVersion>'`
 
 In some cases, the publisher of the package may use a different marketing version than the actual version written to Apps & Features. In this case, the manifest will contain `DisplayVersion` field. You can update the `DisplayVersion` field using the `--display-version` CLI arg if all installers use the same display version. If the display version differs for each installer, you can use following argument format:
 
 `'<InstallerUrl>|<DisplayVersion>'`
-
 
 ## Usage Examples
 

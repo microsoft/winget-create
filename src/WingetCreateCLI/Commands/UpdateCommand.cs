@@ -825,18 +825,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                         }
 
                         // If value is not a convertible enum, it is assumed to be a display version.
-                        else if (!string.IsNullOrEmpty(argumentString))
+                        else if (!string.IsNullOrEmpty(argumentString) && !displayVersionPresent)
                         {
-                            if (displayVersionPresent)
-                            {
-                                Logger.ErrorLocalized(nameof(Resources.MultipleDisplayVersion_Error));
-                                return null;
-                            }
-                            else
-                            {
-                                displayVersionPresent = true;
-                                installerMetadata.DisplayVersion = argumentString;
-                            }
+                            displayVersionPresent = true;
+                            installerMetadata.DisplayVersion = argumentString;
                         }
                         else
                         {

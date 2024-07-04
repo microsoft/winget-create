@@ -455,7 +455,8 @@ namespace Microsoft.WingetCreateCore
 
             if (existingInstaller.AppsAndFeaturesEntries != null && newInstaller.AppsAndFeaturesEntries != null)
             {
-                // New installer will always have a single entry in AppsAndFeaturesEntries
+                // When --display-version is provided, AppsAndFeaturesEntries for the new installer will not be null
+                // and will contain a single entry.
                 string newDisplayVersion = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
 
                 // Set DisplayVersion for each new installer if it exists in the corresponding existing installer.

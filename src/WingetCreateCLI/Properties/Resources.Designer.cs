@@ -1852,15 +1852,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiple display versions detected. Only one version can be specified in the installer URL..
-        /// </summary>
-        public static string MultipleDisplayVersion_Error {
-            get {
-                return ResourceManager.GetString("MultipleDisplayVersion_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Updating a manifest is only supported with the same number of installer URLs..
         /// </summary>
         public static string MultipleInstallerUpdateDiscrepancy_Error {

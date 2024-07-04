@@ -1363,9 +1363,6 @@
   <data name="DisplayVersion_HelpText" xml:space="preserve">
     <value>Version to be used when updating the display version field. Version provided in the installer URL arguments will take precendence over this value.</value>
   </data>
-  <data name="MultipleDisplayVersion_Error" xml:space="preserve">
-    <value>Multiple display versions detected. Only one version can be specified in the installer URL.</value>
-  </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>Using display version '{0}' for {1}</value>
     <comment>{0} - will be replaced with the display version provided in the installer URL

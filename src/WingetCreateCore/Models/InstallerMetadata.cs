@@ -47,7 +47,7 @@ namespace Microsoft.WingetCreateCore.Models
         public Scope? OverrideScope { get; set; }
 
         /// <summary>
-        /// Gets or sets the display version specified as a CLI arg or an installer argument.
+        /// Gets or sets the display version specified as a CLI arg or an installer url argument.
         /// </summary>
         public string DisplayVersion { get; set; }
 
