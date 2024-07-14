@@ -36,6 +36,11 @@ namespace Microsoft.WingetCreateTests
         public const string TestExeInstaller = "WingetCreateTestExeInstaller.exe";
 
         /// <summary>
+        /// File name of the test portable installer.
+        /// </summary>
+        public const string TestPortableInstaller = "WingetCreateTestPortableInstaller.exe";
+
+        /// <summary>
         /// File name of the test MSI installer.
         /// </summary>
         public const string TestMsiInstaller = "WingetCreateTestMsiInstaller.msi";
@@ -49,11 +54,6 @@ namespace Microsoft.WingetCreateTests
         /// File name of the test ZIP installer.
         /// </summary>
         public const string TestZipInstaller = "WingetCreateTestZipInstaller.zip";
-
-        /// <summary>
-        /// File name of the archive containing multiple installers.
-        /// </summary>
-        public const string TestZipMultipleNestedInstallers = "WingetCreateTestMultipleNestedInstallers.zip";
 
         /// <summary>
         /// Format argument to be used for YAML submissions.

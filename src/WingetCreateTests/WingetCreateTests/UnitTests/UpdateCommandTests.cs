@@ -987,12 +987,25 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateZipWithMultipleNestedInstallers()
         {
-            TestUtils.InitializeMockDownloads(TestConstants.TestZipMultipleNestedInstallers);
+            // Create copies of test exe installer to be used as portable installers
+            List<string> portableFilePaths = TestUtils.CreateResourceCopy(TestConstants.TestExeInstaller, 4, TestConstants.TestPortableInstaller);
 
-            string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipMultipleNestedInstallers}";
+            // Add the generated portable installers to the test zip installer
+            TestUtils.AddFilesToZip(TestConstants.TestZipInstaller, portableFilePaths);
+
+            // Delete cached zip installer from other test runs so that the modified zip installer is downloaded
+            TestUtils.DeleteCachedFiles(new List<string> { TestConstants.TestPortableInstaller });
+
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.ZipMultipleNestedInstallers", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86", $"{installerUrl}|arm", $"{installerUrl}|arm64|user", $"{installerUrl}|arm64|machine" });
 
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+
+            // Perform test clean up before any assertions
+            portableFilePaths.ForEach(File.Delete);
+            TestUtils.RemoveFilesFromZip(TestConstants.TestZipInstaller, portableFilePaths.Select(Path.GetFileName).ToList());
+
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
 
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
