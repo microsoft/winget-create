@@ -45,6 +45,12 @@
     <None Update="Resources\Multifile.Json.MsixTest\Multifile.Json.MsixTest.locale.en-US.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\TestPublisher.SingleInstallerWithMultipleDisplayVersions.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TestPublisher.UpdateDisplayVersion.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\TestPublisher.ZipMultipleNestedInstallers.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -81,7 +87,7 @@
     <None Update="Resources\TestPublisher.FullYamlSingleton1_5.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\TestPublisher.ArchAndScopeOverride.yaml">
+    <None Update="Resources\TestPublisher.AllUrlArguments.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.ScopeOverride.yaml">
