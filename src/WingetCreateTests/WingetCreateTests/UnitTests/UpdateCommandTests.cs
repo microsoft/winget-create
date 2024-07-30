@@ -1163,7 +1163,7 @@ namespace Microsoft.WingetCreateUnitTests
             TestUtils.AddFilesToZip(TestConstants.TestZipInstaller, portableFilePaths);
 
             // Delete cached zip installer from other test runs so that the modified zip installer is downloaded
-            TestUtils.DeleteCachedFiles(new List<string> { TestConstants.TestPortableInstaller });
+            TestUtils.DeleteCachedFiles(new List<string> { TestConstants.TestZipInstaller });
 
             TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
             string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";

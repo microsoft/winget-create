@@ -159,9 +159,9 @@ namespace Microsoft.WingetCreateTests
             List<string> copyPaths = new();
             for (int i = 0; i < numberOfCopies; i++)
             {
-                newResourcePath = PackageParser.GetNumericFilename(newResourcePath);
-                File.Copy(originalResourcePath, newResourcePath);
-                copyPaths.Add(newResourcePath);
+                string copyPath = PackageParser.GetNumericFilename(newResourcePath);
+                File.Copy(originalResourcePath, copyPath);
+                copyPaths.Add(copyPath);
             }
 
             return copyPaths;
