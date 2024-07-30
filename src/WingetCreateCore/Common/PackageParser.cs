@@ -216,6 +216,10 @@ namespace Microsoft.WingetCreateCore
                 {
                     parseFailedInstallerUrls.Add(installerMetadata.InstallerUrl);
                 }
+
+                // In case of multiple nested installers in the archive, we expect the new installers to have duplicates
+                // Remove these duplicates to avoid multiple matches.
+                installerMetadata.NewInstallers = installerMetadata.NewInstallers.Distinct().ToList();
             }
 
             int numOfNewInstallers = installerMetadataList.Sum(x => x.NewInstallers.Count);
@@ -262,6 +266,24 @@ namespace Microsoft.WingetCreateCore
                     // If a match is found, add match to dictionary and remove for list of existingInstallers
                     if (existingInstallerMatch != null)
                     {
+                        // Remove the nested installers from the new installer that are not present in the existing installer.
+                        if (newInstaller.NestedInstallerFiles != null && existingInstallerMatch.NestedInstallerFiles != null)
+                        {
+                            var matchedFiles = newInstaller.NestedInstallerFiles
+                                .Where(nif =>
+                                {
+                                    var fileName = Path.GetFileName(nif.RelativeFilePath);
+
+                                    // If the flow reaches here, there's guaranteed to be a matching file name
+                                    // Any mismatches would've been detected earlier in the update flow.
+                                    return existingInstallerMatch.NestedInstallerFiles.Any(eif =>
+                                        Path.GetFileName(eif.RelativeFilePath) == fileName);
+                                })
+                                .ToList();
+
+                            newInstaller.NestedInstallerFiles = matchedFiles;
+                        }
+
                         installerMatchDict.Add(existingInstallerMatch, newInstaller);
                         existingInstallers.Remove(existingInstallerMatch);
                     }

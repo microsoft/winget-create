@@ -6,6 +6,7 @@ namespace Microsoft.WingetCreateTests
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -137,6 +138,80 @@ namespace Microsoft.WingetCreateTests
             SetMockHttpResponseContent(filename);
             string downloadedPath = PackageParser.DownloadFileAsync(url).Result;
             return downloadedPath;
+        }
+
+        /// <summary>
+        /// Creates copies of the specified resource file. If multiple copies are requested, the new files will be named with a numeric suffix.
+        /// </summary>
+        /// <param name="resource">Name of the resource file to copy.</param>
+        /// <param name="numberOfCopies">Number of copies to create.</param>
+        /// <param name="newResourceName">Optional new name for the copied resource file.</param>
+        /// <returns>List of paths to the newly created files.</returns>
+        public static List<string> CreateResourceCopy(string resource, int numberOfCopies = 1, string newResourceName = null)
+        {
+            string originalResourcePath = GetTestFile(resource);
+            string newResourcePath = originalResourcePath;
+            if (!string.IsNullOrEmpty(newResourceName))
+            {
+                newResourcePath = Path.Combine(Path.GetDirectoryName(originalResourcePath), newResourceName);
+            }
+
+            List<string> copyPaths = new();
+            for (int i = 0; i < numberOfCopies; i++)
+            {
+                string copyPath = PackageParser.GetNumericFilename(newResourcePath);
+                File.Copy(originalResourcePath, copyPath);
+                copyPaths.Add(copyPath);
+            }
+
+            return copyPaths;
+        }
+
+        /// <summary>
+        /// Adds files to an existing test zip archive.
+        /// </summary>
+        /// <param name="zipResourceName">Name of the zip resource file.</param>
+        /// <param name="filePaths">List of paths for files to be included in the zip archive.</param>
+        public static void AddFilesToZip(string zipResourceName, List<string> filePaths)
+        {
+            string zipPath = GetTestFile(zipResourceName);
+            using (ZipArchive zipArchive = ZipFile.Open(zipPath, ZipArchiveMode.Update))
+            {
+                foreach (string file in filePaths)
+                {
+                    var fileInfo = new FileInfo(file);
+                    zipArchive.CreateEntryFromFile(fileInfo.FullName, fileInfo.Name);
+                }
+            } // The zipArchive is automatically closed and disposed here
+        }
+
+        /// <summary>
+        /// Removes files from an existing test zip archive.
+        /// </summary>
+        /// <param name="zipResourceName">Name of the zip resource file.</param>
+        /// <param name="fileNames">List of file names to be removed from the zip archive.</param>
+        public static void RemoveFilesFromZip(string zipResourceName, List<string> fileNames)
+        {
+            string zipPath = GetTestFile(zipResourceName);
+            using (ZipArchive zipArchive = ZipFile.Open(zipPath, ZipArchiveMode.Update))
+            {
+                foreach (string fileName in fileNames)
+                {
+                    zipArchive.GetEntry(fileName)?.Delete();
+                }
+            } // ZipArchive is automatically closed and disposed here
+        }
+
+        /// <summary>
+        /// Delete test resources from cache directory.
+        /// </summary>
+        /// <param name="testFileNames">Name of the test files to delete.</param>
+        public static void DeleteCachedFiles(List<string> testFileNames)
+        {
+            foreach (string fileName in testFileNames)
+            {
+                File.Delete(Path.Combine(PackageParser.InstallerDownloadPath, fileName));
+            }
         }
     }
 }

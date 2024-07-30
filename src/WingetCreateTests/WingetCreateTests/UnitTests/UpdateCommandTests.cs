@@ -1150,6 +1150,96 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies that updating a zip package with multiple nested installer packages works as expected.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateZipWithMultipleNestedInstallers()
+        {
+            // Create copies of test exe installer to be used as portable installers
+            List<string> portableFilePaths = TestUtils.CreateResourceCopy(TestConstants.TestExeInstaller, 4, TestConstants.TestPortableInstaller);
+
+            // Add the generated portable installers to the test zip installer
+            TestUtils.AddFilesToZip(TestConstants.TestZipInstaller, portableFilePaths);
+
+            // Delete cached zip installer from other test runs so that the modified zip installer is downloaded
+            TestUtils.DeleteCachedFiles(new List<string> { TestConstants.TestZipInstaller });
+
+            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.ZipMultipleNestedInstallers", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86", $"{installerUrl}|arm", $"{installerUrl}|arm64|user", $"{installerUrl}|arm64|machine" });
+
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+
+            // Perform test clean up before any assertions
+            portableFilePaths.ForEach(File.Delete);
+            TestUtils.RemoveFilesFromZip(TestConstants.TestZipInstaller, portableFilePaths.Select(Path.GetFileName).ToList());
+
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var initialInstallers = initialManifests.SingletonManifest.Installers;
+            var initialFirstInstaller = initialInstallers[0];
+            var initialSecondInstaller = initialInstallers[1];
+            var initialThirdInstaller = initialInstallers[2];
+            var initialFourthInstaller = initialInstallers[3];
+            var initialFifthInstaller = initialInstallers[4];
+
+            var updatedInstallerManifest = updatedManifests.InstallerManifest;
+            var updatedFirstInstaller = updatedInstallerManifest.Installers[0];
+            var updatedSecondInstaller = updatedInstallerManifest.Installers[1];
+            var updatedThirdInstaller = updatedInstallerManifest.Installers[2];
+            var updatedFourthInstaller = updatedInstallerManifest.Installers[3];
+            var updatedFifthInstaller = updatedInstallerManifest.Installers[4];
+
+            ClassicAssert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType should at the root level should be ZIP");
+
+            ClassicAssert.AreEqual(NestedInstallerType.Portable, updatedFirstInstaller.NestedInstallerType, "Nested installer type should be portable");
+            ClassicAssert.IsTrue(updatedFirstInstaller.NestedInstallerFiles.Count == 4, "NestedInstallerFiles list should contain four members");
+            ClassicAssert.IsTrue(initialFirstInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedFirstInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            ClassicAssert.IsTrue(initialFirstInstaller.NestedInstallerFiles[0].PortableCommandAlias == updatedFirstInstaller.NestedInstallerFiles[0].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+            ClassicAssert.IsTrue(initialFirstInstaller.NestedInstallerFiles[1].RelativeFilePath == updatedFirstInstaller.NestedInstallerFiles[1].RelativeFilePath, "RelativeFilePath should be preserved.");
+            ClassicAssert.IsTrue(initialFirstInstaller.NestedInstallerFiles[1].PortableCommandAlias == updatedFirstInstaller.NestedInstallerFiles[1].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+            ClassicAssert.IsTrue(initialFirstInstaller.NestedInstallerFiles[2].RelativeFilePath == updatedFirstInstaller.NestedInstallerFiles[2].RelativeFilePath, "RelativeFilePath should be preserved.");
+            ClassicAssert.IsTrue(initialFirstInstaller.NestedInstallerFiles[2].PortableCommandAlias == updatedFirstInstaller.NestedInstallerFiles[2].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+            ClassicAssert.IsTrue(initialFirstInstaller.NestedInstallerFiles[3].RelativeFilePath == updatedFirstInstaller.NestedInstallerFiles[3].RelativeFilePath, "RelativeFilePath should be preserved.");
+            ClassicAssert.IsTrue(initialFirstInstaller.NestedInstallerFiles[3].PortableCommandAlias == updatedFirstInstaller.NestedInstallerFiles[3].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+
+            // 2nd installer
+            ClassicAssert.AreEqual(NestedInstallerType.Portable, updatedSecondInstaller.NestedInstallerType, "Nested installer type should be portable");
+            ClassicAssert.IsTrue(updatedSecondInstaller.NestedInstallerFiles.Count == 2, "NestedInstallerFiles list should contain two members");
+            ClassicAssert.IsTrue(initialSecondInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedSecondInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            ClassicAssert.IsTrue(initialSecondInstaller.NestedInstallerFiles[0].PortableCommandAlias == updatedSecondInstaller.NestedInstallerFiles[0].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+            ClassicAssert.IsTrue(initialSecondInstaller.NestedInstallerFiles[1].RelativeFilePath == updatedSecondInstaller.NestedInstallerFiles[1].RelativeFilePath, "RelativeFilePath should be preserved.");
+            ClassicAssert.IsTrue(initialSecondInstaller.NestedInstallerFiles[1].PortableCommandAlias == updatedSecondInstaller.NestedInstallerFiles[1].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+
+            // 3rd installer
+            ClassicAssert.AreEqual(NestedInstallerType.Portable, updatedThirdInstaller.NestedInstallerType, "Nested installer type should be portable");
+            ClassicAssert.IsTrue(updatedThirdInstaller.NestedInstallerFiles.Count == 1, "NestedInstallerFiles list should contain only one member");
+            ClassicAssert.IsTrue(initialThirdInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedThirdInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            ClassicAssert.IsTrue(initialThirdInstaller.NestedInstallerFiles[0].PortableCommandAlias == updatedThirdInstaller.NestedInstallerFiles[0].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+
+            // 4th installer
+            ClassicAssert.AreEqual(NestedInstallerType.Exe, updatedFourthInstaller.NestedInstallerType, "Nested installer type should be EXE");
+            ClassicAssert.IsTrue(updatedFourthInstaller.NestedInstallerFiles.Count == 1, "NestedInstallerFiles list should contain only one member");
+            ClassicAssert.IsTrue(initialFourthInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedFourthInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            ClassicAssert.IsTrue(initialFourthInstaller.NestedInstallerFiles[0].PortableCommandAlias == updatedFourthInstaller.NestedInstallerFiles[0].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+
+            // 5th installer
+            ClassicAssert.AreEqual(NestedInstallerType.Msi, updatedFifthInstaller.NestedInstallerType, "Nested installer type should be MSI");
+            ClassicAssert.IsTrue(updatedFifthInstaller.NestedInstallerFiles.Count == 1, "NestedInstallerFiles list should contain only one member");
+            ClassicAssert.IsTrue(initialFifthInstaller.NestedInstallerFiles[0].RelativeFilePath == updatedFifthInstaller.NestedInstallerFiles[0].RelativeFilePath, "RelativeFilePath should be preserved.");
+            ClassicAssert.IsTrue(initialFifthInstaller.NestedInstallerFiles[0].PortableCommandAlias == updatedFifthInstaller.NestedInstallerFiles[0].PortableCommandAlias, "PortableCommandAlias should be preserved.");
+
+            // Hashes should be updated
+            ClassicAssert.IsTrue(initialFirstInstaller.InstallerSha256 != updatedFirstInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.IsTrue(initialSecondInstaller.InstallerSha256 != updatedSecondInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.IsTrue(initialThirdInstaller.InstallerSha256 != updatedThirdInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.IsTrue(initialFourthInstaller.InstallerSha256 != updatedFourthInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.IsTrue(initialFifthInstaller.InstallerSha256 != updatedFifthInstaller.InstallerSha256, "InstallerSha256 should be updated");
+        }
+
+        /// <summary>
         /// Verifies that moving common installer fields to the root of the manifest works as expected.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
@@ -1396,8 +1486,6 @@ namespace Microsoft.WingetCreateUnitTests
         ///   1) For the first installer, all root level fields are copied over and root fields are set to null.
         ///   2) For the second installer, installer level fields are preserved since they are not null.
         ///   3) InstallerType, NestedInstallerType and NestedInstallerFiles are common across both installers, so they are moved to the root level at the end of the update.
-        ///   TODO: Use different NestedInstallerType and RelativeFilePath for each installer once logic for handling multiple nested installers is improved.
-        ///   Reference: https://github.com/microsoft/winget-create/issues/392.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
@@ -1423,6 +1511,9 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsTrue(firstInstaller.InstallLocationRequired == true, "InstallLocation for the first installer should be copied over from root");
             ClassicAssert.IsTrue(firstInstaller.RequireExplicitUpgrade == true, "RequireExplicitUpgrade for the first installer should be copied over from root");
             ClassicAssert.IsTrue(firstInstaller.DisplayInstallWarnings == true, "DisplayInstallWarnings for the first installer should be copied over from root");
+            ClassicAssert.IsNotNull(firstInstaller.NestedInstallerFiles, "NestedInstallerFiles for the first installer should not be null");
+            ClassicAssert.IsTrue(firstInstaller.NestedInstallerFiles[0].RelativeFilePath == "WingetCreateTestExeInstaller.exe", "RelativeFilePath for the first installer should be copied over from root");
+            ClassicAssert.IsTrue(firstInstaller.NestedInstallerFiles[0].PortableCommandAlias == "TestExeAlias", "PortableCommandAlias for the first installer should be copied over from root");
             ClassicAssert.IsNotNull(firstInstaller.InstallerSwitches, "InstallerSwitches for the first installer should not be null");
             ClassicAssert.IsTrue(firstInstaller.InstallerSwitches.Silent == "/silent1", "Silent installer switch for the first installer should be copied over from root");
             ClassicAssert.IsNotNull(firstInstaller.Dependencies, "Dependencies for the first installer should not be null");
@@ -1461,6 +1552,9 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsTrue(secondInstaller.InstallLocationRequired == false, "InstallLocation for the second installer should be preserved");
             ClassicAssert.IsTrue(secondInstaller.RequireExplicitUpgrade == false, "RequireExplicitUpgrade for the second installer should be preserved");
             ClassicAssert.IsTrue(secondInstaller.DisplayInstallWarnings == false, "DisplayInstallWarnings for the second installer should be preserved");
+            ClassicAssert.IsNotNull(secondInstaller.NestedInstallerFiles, "NestedInstallerFiles for the first installer should not be null");
+            ClassicAssert.IsTrue(secondInstaller.NestedInstallerFiles[0].RelativeFilePath == "WingetCreateTestMsiInstaller.msi", "RelativeFilePath for the second installer should be copied over from root");
+            ClassicAssert.IsTrue(secondInstaller.NestedInstallerFiles[0].PortableCommandAlias == "TestMsiAlias", "PortableCommandAlias for the second installer should be copied over from root");
             ClassicAssert.IsNotNull(secondInstaller.InstallerSwitches, "InstallerSwitches for the second installer should not be null");
             ClassicAssert.IsTrue(secondInstaller.InstallerSwitches.Silent == "/silent2", "Silent installer switch for the second installer should be preserved");
             ClassicAssert.IsNotNull(secondInstaller.Dependencies, "Dependencies for the second installer should not be null");
@@ -1491,6 +1585,8 @@ namespace Microsoft.WingetCreateUnitTests
 
             // Root fields should be null
             ClassicAssert.IsNull(updatedInstallerManifest.Scope, "Scope at the root level should be null");
+            ClassicAssert.IsNull(updatedInstallerManifest.NestedInstallerFiles, "NestedInstallerFiles at the root level should be null");
+            ClassicAssert.IsNull(updatedInstallerManifest.NestedInstallerType, "NestedInstallerType at the root level should be null");
             ClassicAssert.IsNull(updatedInstallerManifest.MinimumOSVersion, "MinimumOSVersion at the root level should be null");
             ClassicAssert.IsNull(updatedInstallerManifest.PackageFamilyName, "PackageFamilyName at the root level should be null");
             ClassicAssert.IsNull(updatedInstallerManifest.UpgradeBehavior, "UpgradeBehavior at the root level should be null");
@@ -1517,9 +1613,6 @@ namespace Microsoft.WingetCreateUnitTests
 
             // Fields that should be moved to root
             ClassicAssert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType at the root level should be ZIP");
-            ClassicAssert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType at the root level should be EXE");
-            ClassicAssert.IsNotNull(updatedInstallerManifest.NestedInstallerFiles, "NestedInstallerFiles at the root level should not be null");
-            ClassicAssert.IsTrue(updatedInstallerManifest.NestedInstallerFiles[0].PortableCommandAlias == "TestAlias", "PortableCommandAlias at the root level should be TestAlias");
         }
 
         /// <summary>
