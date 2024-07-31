@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Обнаружено несколько архитектур. Для переопределения можно указать только одну архитектуру.</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>Не удалось проанализировать указанное переопределение {0}.</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>Не удалось проанализировать указанный аргумент {0}.</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Переопределить архитектуру установщика</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>Обнаружено несколько областей. Для переопределения можно указать только один область.</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>Для следующего URL-адреса установщика указано слишком много переопределее: {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>Для следующего URL-адреса установщика указано слишком много аргументов: {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1342,10 +1342,33 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>Версия замены не может совпадать с версией отправки.</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>Указанный формат манифеста недопустим.</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>Формат выходных данных манифеста. По умолчанию используется "yaml".</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>Формат не поддерживается. Репозиторий Диспетчер пакетов Windows сообщества принимает только отправки манифеста "yaml".</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>Очистка кэшированного токена GitHub</value>
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>Сохраните новый токен GitHub в локальном кэше</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>Базовый манифест содержит параметр DisplayVersion, который не был обновлен. Используйте аргумент CLI --display-version или укажите версию в URL-адресе установщика.</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>Версия, используемая при обновлении поля отображаемой версии. Версия, указанная в аргументах URL-адреса установщика, будет принимать приоритет над этим значением.</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>Используется версия дисплея "{0}" для {1}</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>Обнаружен один установщик с несколькими версиями дисплея. Winget-Create обновит только первую версию DisplayVersion для заданного установщика.</value>
   </data>
 </root>
