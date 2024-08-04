@@ -2473,6 +2473,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date to be used when updating the release date field. Expected format is &quot;YYYY-MM-DD&quot;..
+        /// </summary>
+        public static string ReleaseDate_HelpText {
+            get {
+                return ResourceManager.GetString("ReleaseDate_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installer release date.
         /// </summary>
         public static string ReleaseDate_KeywordDescription {
@@ -2496,6 +2505,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ReleaseNotes_KeywordDescription {
             get {
                 return ResourceManager.GetString("ReleaseNotes_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL to be used when updating the release notes url field..
+        /// </summary>
+        public static string ReleaseNotesUrl_HelpText {
+            get {
+                return ResourceManager.GetString("ReleaseNotesUrl_HelpText", resourceCulture);
             }
         }
         

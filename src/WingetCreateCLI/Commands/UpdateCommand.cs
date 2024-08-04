@@ -74,6 +74,18 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string DisplayVersion { get; set; }
 
         /// <summary>
+        /// Gets or sets the release notes URL for the manifest.
+        /// </summary>
+        [Option("release-notes-url", Required = false, HelpText = "ReleaseNotesUrl_HelpText", ResourceType = typeof(Resources))]
+        public string ReleaseNotesUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the release date for the manifest.
+        /// </summary>
+        [Option("release-date", Required = false, HelpText = "ReleaseDate_HelpText", ResourceType = typeof(Resources))]
+        public DateTimeOffset? ReleaseDate { get; set; }
+
+        /// <summary>
         /// Gets or sets the outputPath where the generated manifest file should be saved to.
         /// </summary>
         [Option('o', "out", Required = false, HelpText = "OutputDirectory_HelpText", ResourceType = typeof(Resources))]
@@ -440,6 +452,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 PackageParser.UpdateInstallerNodesAsync(installerMetadataList, installerManifest);
                 DisplayArchitectureWarnings(installerMetadataList);
                 ResetVersionSpecificFields(manifests);
+                this.AddVersionSpecificMetadata(manifests);
                 ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
             }
             catch (InvalidOperationException)
@@ -711,6 +724,27 @@ namespace Microsoft.WingetCreateCLI.Commands
             return true;
         }
 
+        private void AddVersionSpecificMetadata(Manifests updatedManifests)
+        {
+            if (this.ReleaseDate != null)
+            {
+                switch (this.Format)
+                {
+                    case ManifestFormat.Yaml:
+                        updatedManifests.InstallerManifest.ReleaseDateTime = this.ReleaseDate.Value.ToString("yyyy-MM-dd");
+                        break;
+                    case ManifestFormat.Json:
+                        updatedManifests.InstallerManifest.ReleaseDate = this.ReleaseDate;
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(this.ReleaseNotesUrl))
+            {
+                updatedManifests.DefaultLocaleManifest.ReleaseNotesUrl = this.ReleaseNotesUrl;
+            }
+        }
+
         private string ObtainMatchingRelativeFilePath(string oldRelativeFilePath, string directory, string archiveName)
         {
             string fileName = Path.GetFileName(oldRelativeFilePath);
@@ -870,6 +904,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 await this.UpdateInstallersInteractively(manifests.InstallerManifest.Installers);
                 ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
                 ResetVersionSpecificFields(manifests);
+                this.AddVersionSpecificMetadata(manifests);
                 DisplayManifestPreview(manifests);
                 ValidateManifestsInTempDir(manifests);
             }

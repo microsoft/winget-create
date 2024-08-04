@@ -1371,4 +1371,10 @@
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>Single installer with multiple display versions detected. Winget-Create will only update the first DisplayVersion for a given installer.</value>
   </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>Date to be used when updating the release date field. Expected format is "YYYY-MM-DD".</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>URL to be used when updating the release notes url field.</value>
+  </data>
 </root>
