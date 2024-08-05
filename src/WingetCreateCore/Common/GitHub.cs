@@ -550,7 +550,8 @@ namespace Microsoft.WingetCreateCore.Common
                 }
 
                 // Tags
-                manifests.DefaultLocaleManifest.Tags ??= githubRepo.Topics?.ToList();
+                // 16 is the maximum number of tags allowed in the manifest
+                manifests.DefaultLocaleManifest.Tags ??= githubRepo.Topics?.Take(count: 16).ToList();
 
                 // ReleaseNotesUrl
                 if (string.IsNullOrEmpty(manifests.DefaultLocaleManifest.ReleaseNotesUrl))
