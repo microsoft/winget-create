@@ -452,6 +452,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                 PackageParser.UpdateInstallerNodesAsync(installerMetadataList, installerManifest);
                 DisplayArchitectureWarnings(installerMetadataList);
                 ResetVersionSpecificFields(manifests);
+                try
+                {
+                    Logger.InfoLocalized(nameof(Resources.PopulatingGitHubMetadata_Message));
+                    await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                }
+                catch (Octokit.ApiException)
+                {
+                    // Print a warning, but continue with the update.
+                    Logger.ErrorLocalized(nameof(Resources.CouldNotPopulateGitHubMetadata_Warning));
+                }
+
                 this.AddVersionSpecificMetadata(manifests);
                 ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
             }
@@ -904,6 +915,17 @@ namespace Microsoft.WingetCreateCLI.Commands
                 await this.UpdateInstallersInteractively(manifests.InstallerManifest.Installers);
                 ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
                 ResetVersionSpecificFields(manifests);
+                try
+                {
+                    Logger.InfoLocalized(nameof(Resources.PopulatingGitHubMetadata_Message));
+                    await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                }
+                catch (Octokit.ApiException)
+                {
+                    // Print a warning, but continue with the update.
+                    Logger.ErrorLocalized(nameof(Resources.CouldNotPopulateGitHubMetadata_Warning));
+                }
+
                 this.AddVersionSpecificMetadata(manifests);
                 DisplayManifestPreview(manifests);
                 ValidateManifestsInTempDir(manifests);

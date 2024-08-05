@@ -403,6 +403,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not populate manifest metadata through GitHub&apos;s API..
+        /// </summary>
+        public static string CouldNotPopulateGitHubMetadata_Warning {
+            get {
+                return ResourceManager.GetString("CouldNotPopulateGitHubMetadata_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Would you like to create another locale?.
         /// </summary>
         public static string CreateAnotherLocale_Message {
@@ -2298,6 +2307,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Platform_KeywordDescription {
             get {
                 return ResourceManager.GetString("Platform_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GitHub URL detected. The CLI will automatically fill some manifests fields..
+        /// </summary>
+        public static string PopulatingGitHubMetadata_Message {
+            get {
+                return ResourceManager.GetString("PopulatingGitHubMetadata_Message", resourceCulture);
             }
         }
         

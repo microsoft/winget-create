@@ -107,5 +107,51 @@ namespace Microsoft.WingetCreateUnitTests
             await this.gitHub.ClosePullRequest(pullRequest.Number);
             StringAssert.StartsWith(string.Format(GitHubPullRequestBaseUrl, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo), pullRequest.HtmlUrl, PullRequestFailedToGenerate);
         }
+
+        /// <summary>
+        /// Verifies that manifest metadata is automatically filled through GitHub's API if we have a GitHub Installer URL.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task ValidateAutoPopulatedManifestMetadata()
+        {
+            Manifests manifests = new Manifests
+            {
+                InstallerManifest = new(),
+                DefaultLocaleManifest = new(),
+                LocaleManifests = new(),
+                VersionManifest = new(),
+            };
+
+            manifests.InstallerManifest.Installers.Add(new()
+            {
+                InstallerUrl = "https://github.com/microsoft/PowerToys/releases/download/v0.82.1/PowerToysUserSetup-0.82.1-x64.exe",
+                InstallerSha256 = "C346622DD15FECA8184D9BAEAC73B80AB96007E6B12CAAD46A055FE44A5A3908",
+            });
+
+            await this.gitHub.PopulateGitHubMetadata(manifests, "yaml");
+            Assert.That(manifests.DefaultLocaleManifest.License, Is.EqualTo("MIT"), "Could not populate License field");
+            Assert.That(manifests.DefaultLocaleManifest.ShortDescription, Is.EqualTo("Windows system utilities to maximize productivity"), "Could not populate ShortDescription field");
+            Assert.That(manifests.DefaultLocaleManifest.PackageUrl, Is.EqualTo("https://github.com/microsoft/PowerToys"), "Could not populate PackageUrl field");
+            Assert.That(manifests.DefaultLocaleManifest.PublisherUrl, Is.EqualTo("https://github.com/microsoft"), "Could not populate PublisherUrl field");
+            Assert.That(manifests.DefaultLocaleManifest.PublisherSupportUrl, Is.EqualTo("https://github.com/microsoft/PowerToys/issues"), "Could not populate PublisherSupportUrl field");
+            Assert.That(manifests.DefaultLocaleManifest.ReleaseNotesUrl, Is.EqualTo("https://github.com/microsoft/PowerToys/releases/tag/v0.82.1"), "Could not populate ReleaseNotesUrl field");
+            Assert.That(manifests.InstallerManifest.ReleaseDateTime, Is.EqualTo("2024-07-12"), "Could not populate ReleaseDate field");
+
+            List<string> expectedTags = new()
+            {
+                "windows",
+                "color-picker",
+                "desktop",
+                "keyboard-manager",
+                "powertoys",
+                "fancyzones",
+                "microsoft-powertoys",
+                "powerrename",
+            };
+            Assert.That(manifests.DefaultLocaleManifest.Tags, Is.EquivalentTo(expectedTags), "Could not populate Tags field");
+            Assert.That(manifests.DefaultLocaleManifest.Documentations[0].DocumentLabel, Is.EqualTo("Wiki"), "Could not populate DocumentLabel field");
+            Assert.That(manifests.DefaultLocaleManifest.Documentations[0].DocumentUrl, Is.EqualTo("https://github.com/microsoft/PowerToys/wiki"), "Could not populate DocumentUrl field");
+        }
     }
 }
