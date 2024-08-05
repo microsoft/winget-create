@@ -238,7 +238,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                     try
                     {
                         Logger.InfoLocalized(nameof(Resources.PopulatingGitHubMetadata_Message));
-                        await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                        if (this.GitHubClient != null)
+                        {
+                            await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                        }
                     }
                     catch (Octokit.ApiException)
                     {
