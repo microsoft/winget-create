@@ -25,7 +25,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Locale;
     using Microsoft.WingetCreateCore.Models.Version;
-    using Octokit;
     using Sharprompt;
 
     /// <summary>
