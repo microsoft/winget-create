@@ -7,6 +7,9 @@ namespace Microsoft.WingetCreateUnitTests
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.WingetCreateCLI.Commands;
+    using Microsoft.WingetCreateCLI.Logging;
+    using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
@@ -41,6 +44,7 @@ namespace Microsoft.WingetCreateUnitTests
             this.gitHub = new GitHub(this.GitHubApiKey, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
             Serialization.ProducedBy = "WingetCreateUnitTests";
             Serialization.ManifestSerializer = new YamlSerializer();
+            Logger.Initialize();
         }
 
         /// <summary>
@@ -113,45 +117,89 @@ namespace Microsoft.WingetCreateUnitTests
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
-        public async Task ValidateAutoPopulatedManifestMetadata()
+        public async Task ValidateAutoPopulatedManifestMetadata_Yaml()
         {
-            Manifests manifests = new Manifests
+            var initialManifestContent = TestUtils.GetInitialMultifileManifestContent("Multifile.Yaml.GitHubAutoFillTest");
+            UpdateCommand command = new UpdateCommand
             {
-                InstallerManifest = new(),
-                DefaultLocaleManifest = new(),
-                LocaleManifests = new(),
-                VersionManifest = new(),
+                Id = "Multifile.Yaml.GitHubAutoFillTest",
+                Version = "1.2.3.4",
+                InstallerUrls = new[]
+                {
+                    "https://github.com/microsoft/winget-pkgs-submission-test/releases/download/v1.0.1/WingetCreateTestExeInstaller.exe",
+                },
+                Format = ManifestFormat.Yaml,
+                GitHubToken = this.GitHubApiKey,
             };
+            ClassicAssert.IsTrue(await command.LoadGitHubClient(), "Failed to create GitHub client");
+            Manifests initialManifests = command.DeserializeManifestContentAndApplyInitialUpdate(initialManifestContent);
+            Manifests updatedManifests = await command.UpdateManifestsAutonomously(initialManifests);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
 
-            manifests.InstallerManifest.Installers.Add(new()
-            {
-                InstallerUrl = "https://github.com/microsoft/PowerToys/releases/download/v0.82.1/PowerToysUserSetup-0.82.1-x64.exe",
-                InstallerSha256 = "C346622DD15FECA8184D9BAEAC73B80AB96007E6B12CAAD46A055FE44A5A3908",
-            });
+            Assert.That(updatedManifests.DefaultLocaleManifest.License, Is.EqualTo("MIT"), "Could not populate License field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.ShortDescription, Is.EqualTo("Mirror of winget-pkgs for testing submission"), "Could not populate ShortDescription field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.PackageUrl, Is.EqualTo("https://github.com/microsoft/winget-pkgs-submission-test"), "Could not populate PackageUrl field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.PublisherUrl, Is.EqualTo("https://github.com/microsoft"), "Could not populate PublisherUrl field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.PublisherSupportUrl, Is.EqualTo("https://github.com/microsoft/winget-pkgs-submission-test/issues"), "Could not populate PublisherSupportUrl field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.ReleaseNotesUrl, Is.EqualTo("https://github.com/microsoft/winget-pkgs-submission-test/releases/tag/v1.0.1"), "Could not populate ReleaseNotesUrl field");
 
-            await this.gitHub.PopulateGitHubMetadata(manifests, "yaml");
-            Assert.That(manifests.DefaultLocaleManifest.License, Is.EqualTo("MIT"), "Could not populate License field");
-            Assert.That(manifests.DefaultLocaleManifest.ShortDescription, Is.EqualTo("Windows system utilities to maximize productivity"), "Could not populate ShortDescription field");
-            Assert.That(manifests.DefaultLocaleManifest.PackageUrl, Is.EqualTo("https://github.com/microsoft/PowerToys"), "Could not populate PackageUrl field");
-            Assert.That(manifests.DefaultLocaleManifest.PublisherUrl, Is.EqualTo("https://github.com/microsoft"), "Could not populate PublisherUrl field");
-            Assert.That(manifests.DefaultLocaleManifest.PublisherSupportUrl, Is.EqualTo("https://github.com/microsoft/PowerToys/issues"), "Could not populate PublisherSupportUrl field");
-            Assert.That(manifests.DefaultLocaleManifest.ReleaseNotesUrl, Is.EqualTo("https://github.com/microsoft/PowerToys/releases/tag/v0.82.1"), "Could not populate ReleaseNotesUrl field");
-            Assert.That(manifests.InstallerManifest.ReleaseDateTime, Is.EqualTo("2024-07-12"), "Could not populate ReleaseDate field");
+            // ReleaseDateTime needs to be set a workaround as our YAML serializer has trouble with ReleaseDate field
+            Assert.That(updatedManifests.InstallerManifest.ReleaseDateTime, Is.EqualTo("2024-08-06"), "Could not populate ReleaseDateTime field");
 
             List<string> expectedTags = new()
             {
-                "windows",
-                "color-picker",
-                "desktop",
-                "keyboard-manager",
-                "powertoys",
-                "fancyzones",
-                "microsoft-powertoys",
-                "powerrename",
+                "winget-pkgs",
+                "winget-create",
+                "winget-pkgs-submission-test",
             };
-            Assert.That(manifests.DefaultLocaleManifest.Tags, Is.EquivalentTo(expectedTags), "Could not populate Tags field");
-            Assert.That(manifests.DefaultLocaleManifest.Documentations[0].DocumentLabel, Is.EqualTo("Wiki"), "Could not populate DocumentLabel field");
-            Assert.That(manifests.DefaultLocaleManifest.Documentations[0].DocumentUrl, Is.EqualTo("https://github.com/microsoft/PowerToys/wiki"), "Could not populate DocumentUrl field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.Tags, Is.EquivalentTo(expectedTags), "Could not populate Tags field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.Documentations[0].DocumentLabel, Is.EqualTo("Wiki"), "Could not populate DocumentLabel field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.Documentations[0].DocumentUrl, Is.EqualTo("https://github.com/microsoft/winget-pkgs-submission-test/wiki"), "Could not populate DocumentUrl field");
+        }
+
+        /// <summary>
+        /// Verifies that manifest metadata is automatically filled through GitHub's API if we have a GitHub Installer URL.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task ValidateAutoPopulatedManifestMetadata_Json()
+        {
+            var initialManifestContent = TestUtils.GetInitialMultifileManifestContent("Multifile.Json.GitHubAutoFillTest");
+            UpdateCommand command = new UpdateCommand
+            {
+                Id = "Multifile.Yaml.GitHubAutoFillTest",
+                Version = "1.2.3.4",
+                InstallerUrls = new[]
+                {
+                    "https://github.com/microsoft/winget-pkgs-submission-test/releases/download/v1.0.1/WingetCreateTestExeInstaller.exe",
+                },
+                Format = ManifestFormat.Json,
+                GitHubToken = this.GitHubApiKey,
+            };
+            ClassicAssert.IsTrue(await command.LoadGitHubClient(), "Failed to create GitHub client");
+            Manifests initialManifests = command.DeserializeManifestContentAndApplyInitialUpdate(initialManifestContent);
+            Manifests updatedManifests = await command.UpdateManifestsAutonomously(initialManifests);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            Assert.That(updatedManifests.DefaultLocaleManifest.License, Is.EqualTo("MIT"), "Could not populate License field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.ShortDescription, Is.EqualTo("Mirror of winget-pkgs for testing submission"), "Could not populate ShortDescription field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.PackageUrl, Is.EqualTo("https://github.com/microsoft/winget-pkgs-submission-test"), "Could not populate PackageUrl field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.PublisherUrl, Is.EqualTo("https://github.com/microsoft"), "Could not populate PublisherUrl field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.PublisherSupportUrl, Is.EqualTo("https://github.com/microsoft/winget-pkgs-submission-test/issues"), "Could not populate PublisherSupportUrl field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.ReleaseNotesUrl, Is.EqualTo("https://github.com/microsoft/winget-pkgs-submission-test/releases/tag/v1.0.1"), "Could not populate ReleaseNotesUrl field");
+
+            DateTimeOffset expectedReleaseDate = DateTimeOffset.Parse("2024-08-06 01:43:15+00:00");
+            Assert.That(updatedManifests.InstallerManifest.ReleaseDate, Is.EqualTo(expectedReleaseDate), "Could not populate ReleaseDateTime field");
+
+            List<string> expectedTags = new()
+            {
+                "winget-pkgs",
+                "winget-create",
+                "winget-pkgs-submission-test",
+            };
+            Assert.That(updatedManifests.DefaultLocaleManifest.Tags, Is.EquivalentTo(expectedTags), "Could not populate Tags field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.Documentations[0].DocumentLabel, Is.EqualTo("Wiki"), "Could not populate DocumentLabel field");
+            Assert.That(updatedManifests.DefaultLocaleManifest.Documentations[0].DocumentUrl, Is.EqualTo("https://github.com/microsoft/winget-pkgs-submission-test/wiki"), "Could not populate DocumentUrl field");
         }
     }
 }

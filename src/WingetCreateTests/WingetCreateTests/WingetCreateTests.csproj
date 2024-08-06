@@ -27,6 +27,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\Multifile.Json.GitHubAutoFillTest\Multifile.Json.GitHubAutoFillTest.installer.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.Json.GitHubAutoFillTest\Multifile.Json.GitHubAutoFillTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.Json.GitHubAutoFillTest\Multifile.Json.GitHubAutoFillTest.locale.en-US.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.Yaml.GitHubAutoFillTest\Multifile.Yaml.GitHubAutoFillTest.installer.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.Yaml.GitHubAutoFillTest\Multifile.Yaml.GitHubAutoFillTest.locale.en-US.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Multifile.Yaml.GitHubAutoFillTest\Multifile.Yaml.GitHubAutoFillTest.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Multifile.Yaml.MsixTest\Multifile.Yaml.MsixTest.locale.en-GB.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
