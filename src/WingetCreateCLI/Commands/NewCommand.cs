@@ -245,7 +245,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                     catch (Octokit.ApiException)
                     {
-                        // Print a warning, but continue with the update.
+                        // Print a warning, but continue with the command flow.
                         Logger.ErrorLocalized(nameof(Resources.CouldNotPopulateGitHubMetadata_Warning));
                     }
 
