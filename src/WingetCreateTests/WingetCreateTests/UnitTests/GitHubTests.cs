@@ -5,11 +5,13 @@ namespace Microsoft.WingetCreateUnitTests
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
+    using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
@@ -34,17 +36,38 @@ namespace Microsoft.WingetCreateUnitTests
         private const string TitleMismatch = "Pull request title does not match test title.";
 
         private GitHub gitHub;
+        private StringWriter sw;
 
         /// <summary>
         /// Setup for the GitHub.cs unit tests.
         /// </summary>
         [OneTimeSetUp]
-        public void Setup()
+        public void OneTimeSetup()
         {
             this.gitHub = new GitHub(this.GitHubApiKey, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
             Serialization.ProducedBy = "WingetCreateUnitTests";
             Serialization.ManifestSerializer = new YamlSerializer();
             Logger.Initialize();
+        }
+
+        /// <summary>
+        /// Setup method for each individual test.
+        /// </summary>
+        [SetUp]
+        public void Setup()
+        {
+            this.sw = new StringWriter();
+            Console.SetOut(this.sw);
+        }
+
+        /// <summary>
+        /// Teardown method for each individual test.
+        /// </summary>
+        [TearDown]
+        public void TearDown()
+        {
+            this.sw.Dispose();
+            PackageParser.SetHttpMessageHandler(null);
         }
 
         /// <summary>

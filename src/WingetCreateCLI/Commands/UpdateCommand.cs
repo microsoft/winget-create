@@ -25,6 +25,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Locale;
     using Microsoft.WingetCreateCore.Models.Version;
+    using Octokit;
     using Sharprompt;
 
     /// <summary>
@@ -164,6 +165,19 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 bool submitFlagMissing = !this.SubmitToGitHub && (!string.IsNullOrEmpty(this.PRTitle) || this.Replace);
+
+                if (!string.IsNullOrEmpty(this.ReleaseNotesUrl))
+                {
+                    Uri uriResult;
+                    bool isValid = Uri.TryCreate(this.ReleaseNotesUrl, UriKind.Absolute, out uriResult) &&
+                        (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+                    if (!isValid)
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.SentenceBadFormatConversionErrorOption), nameof(this.ReleaseNotesUrl));
+                        return false;
+                    }
+                }
 
                 if (submitFlagMissing)
                 {
