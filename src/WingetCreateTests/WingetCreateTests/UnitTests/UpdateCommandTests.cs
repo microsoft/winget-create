@@ -10,6 +10,7 @@ namespace Microsoft.WingetCreateUnitTests
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
+    using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
@@ -92,18 +93,33 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateAndVerifyUpdatedProperties()
         {
-            TestUtils.InitializeMockDownloads(TestConstants.TestMsiInstaller);
+            string packageId = TestConstants.YamlConstants.TestMultifileMsixPackageIdentifier;
             string version = "1.2.3.4";
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(TestConstants.YamlConstants.TestMsiPackageIdentifier, version, this.tempPath, null);
+            string installerUrl = $"https://fakedomain.com/{TestConstants.TestMsixInstaller}";
+            string releaseDateString = "2024-01-01";
+            TestUtils.InitializeMockDownloads(TestConstants.TestMsixInstaller);
+            var initialManifestContent = TestUtils.GetInitialMultifileManifestContent(packageId);
+            UpdateCommand command = new UpdateCommand
+            {
+                Id = packageId,
+                Version = version,
+                InstallerUrls = new[] { installerUrl },
+                SubmitToGitHub = false,
+                OutputDir = this.tempPath,
+                ReleaseDate = DateTimeOffset.Parse(releaseDateString),
+                ReleaseNotesUrl = "https://fakedomain.com/",
+                Format = ManifestFormat.Yaml,
+            };
 
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
-            var initialInstaller = initialManifests.SingletonManifest.Installers.First();
+            var initialInstaller = initialManifests.InstallerManifest.Installers.First();
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
             var updatedInstaller = updatedManifests.InstallerManifest.Installers.First();
             ClassicAssert.AreEqual(version, updatedManifests.VersionManifest.PackageVersion, "Version should be updated");
-            ClassicAssert.AreNotEqual(initialInstaller.ProductCode, updatedManifests.InstallerManifest.ProductCode, "ProductCode should be updated");
             ClassicAssert.AreNotEqual(initialInstaller.InstallerSha256, updatedInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.AreEqual(releaseDateString, updatedManifests.InstallerManifest.ReleaseDateTime, "ReleaseDate should be updated");
+            ClassicAssert.AreEqual(command.ReleaseNotesUrl, updatedManifests.DefaultLocaleManifest.ReleaseNotesUrl, "ReleaseNotesUrl should be updated");
         }
 
         /// <summary>

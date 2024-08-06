@@ -1,0 +1,9 @@
+﻿{
+  "PackageIdentifier": "Multifile.Json.GitHubAutoFillTest",
+  "PackageVersion": "1.2.3.4",
+  "PackageLocale": "en-US",
+  "Publisher": "Multifile",
+  "PackageName": "MsixTest",
+  "ManifestType": "defaultLocale",
+  "ManifestVersion": "1.0.0"
+}

@@ -7,9 +7,11 @@ namespace Microsoft.WingetCreateUnitTests
     using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using Microsoft.WingetCreateCLI.Properties;
+    using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Locale;
@@ -30,6 +32,28 @@ namespace Microsoft.WingetCreateUnitTests
             nameof(WingetCreateCore.Models.DefaultLocale.Agreement.Agreement1),
             nameof(WingetCreateCore.Models.Installer.Installer.ReleaseDate),
         };
+
+        private StringWriter sw;
+
+        /// <summary>
+        /// Setup method for each individual test.
+        /// </summary>
+        [SetUp]
+        public void Setup()
+        {
+            this.sw = new StringWriter();
+            Console.SetOut(this.sw);
+        }
+
+        /// <summary>
+        /// Teardown method for each individual test.
+        /// </summary>
+        [TearDown]
+        public void TearDown()
+        {
+            this.sw.Dispose();
+            PackageParser.SetHttpMessageHandler(null);
+        }
 
         /// <summary>
         /// Verifies that all localized strings exist for every property that exists
