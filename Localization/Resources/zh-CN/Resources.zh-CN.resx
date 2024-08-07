@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>检测到多个体系结构。只能为替代指定一个体系结构。</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>无法分析指定的替代 {0}。</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>无法分析指定的参数 {0}。</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>替代安装程序的体系结构</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>检测到多个作用域。只能为替代指定一个作用域。</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>为以下安装程序 URL 指定的替代太多： {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>为以下安装程序 URL 指定的参数太多： {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1342,10 +1342,33 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>替换版本不能等于提交版本。</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>提供的清单格式无效。</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>清单的输出格式。默认值为 “yaml”。</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>不支持格式。Windows 程序包管理器社区存储库仅接受 “yaml” 清单提交。</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>清除缓存的 GitHub 令牌</value>
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>在本地缓存中存储新的 GitHub 令牌</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>基清单包含尚未更新的 DisplayVersion。使用 --display-version CLI 参数或在安装程序 URL 中提供版本。</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>更新显示版本字段时要使用的版本。安装程序 URL 参数中提供的版本将优先于此值。</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>对 {0} 使用显示版本“{1}”</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>检测到具有多个显示版本的单个安装程序。Winget-Create 将仅更新给定安装程序的第一个 DisplayVersion。</value>
   </data>
 </root>

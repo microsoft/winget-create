@@ -162,10 +162,15 @@ extends:
                 packageType: sdk
                 version: '6.x'      
 
-            - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
-              displayName: "ESRP CodeSigning"
+            - task: EsrpCodeSigning@5
+              displayName: 'ESRP CodeSigning'
               inputs:
-                ConnectedServiceName: "PeetPackageEs2"
+                ConnectedServiceName: 'AppInstallerESRPCodeSigning'
+                AppRegistrationClientId: '32216f16-efc9-4013-9fae-c6a2c54a3fc0'
+                AppRegistrationTenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+                AuthAKVName: 'PeetDevOpsKeyVault'
+                AuthCertName: 'ESRPAuth'
+                AuthSignCertName: 'ESRPRequestSigning'
                 FolderPath: $(appxPackageDir)
                 Pattern: |
                   $(appxBundleFile)

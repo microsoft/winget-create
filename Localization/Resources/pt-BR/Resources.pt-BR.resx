@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Várias arquiteturas detectadas. Somente uma arquitetura pode ser especificada para uma substituição.</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>Não é possível analisar a substituição {0} especificada.</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>Não foi possível analisar o argumento especificado {0}.</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Substituir a arquitetura de um instalador</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>Vários escopos detectados. Apenas um escopo pode ser especificado para uma substituição.</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>Excesso de substituições especificadas para a seguinte URL do instalador: {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>Muitos argumentos especificados para a seguinte URL do instalador: {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1271,7 +1271,7 @@
     <value>Idioma e região inválidos. Insira uma tag de idioma válida.</value>
   </data>
   <data name="LocaleAlreadyExists_ErrorMessage" xml:space="preserve">
-    <value>O manifesto no idioma e região correspondentes aos dados locais inseridos "{0}" já existe. Use o comando update-locale para atualizar um manifesto de idioma e região existente.</value>
+    <value>O manifesto no idioma e região correspondentes aos dados locais inserido "{0}" já existe. Use o comando update-locale para atualizar um manifesto de idioma e região existente. </value>
     <comment>{0} - represents the input package locale string</comment>
   </data>
   <data name="NewLocaleCommand_Version_HelpText" xml:space="preserve">
@@ -1342,10 +1342,33 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>A versão de substituição não pode ser igual à versão de envio.</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>O formato de manifesto fornecido é inválido.</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>Formato de saída do manifesto. O padrão é "yaml".</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>Formato sem suporte. O Gerenciador de Pacotes do Windows Community aceita somente envios de manifesto "yaml".</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>Limpar o token GitHub armazenado em cache</value>
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>Armazene um novo token GitHub em seu cache local</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>O manifesto base contém DisplayVersion que não foi atualizado. Use --display-version CLI arg ou forneça a versão na URL do instalador.</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>Versão a ser usada ao atualizar o campo de versão de exibição. A versão fornecida nos argumentos da URL do instalador terá precedência sobre esse valor.</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>Usando a versão de exibição '{0}' para {1}</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>Instalador único com várias versões de exibição detectadas. Winget-Create atualizará apenas a primeira DisplayVersion de um determinado instalador.</value>
   </data>
 </root>

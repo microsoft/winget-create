@@ -36,6 +36,11 @@ namespace Microsoft.WingetCreateTests
         public const string TestExeInstaller = "WingetCreateTestExeInstaller.exe";
 
         /// <summary>
+        /// File name of the test portable installer.
+        /// </summary>
+        public const string TestPortableInstaller = "WingetCreateTestPortableInstaller.exe";
+
+        /// <summary>
         /// File name of the test MSI installer.
         /// </summary>
         public const string TestMsiInstaller = "WingetCreateTestMsiInstaller.msi";

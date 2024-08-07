@@ -1,0 +1,61 @@
+﻿PackageIdentifier: TestPublisher.MultipleNestedInstallers
+PackageVersion: 0.1.2
+PackageName: Test zip app
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used for testing whether multiple nested installers are handled correctly.
+Description: The zip archive contains extra nested installers that are intentionally left out in the manifest to test the behavior.
+Installers:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://fakedomain.com/WingetCreateTestMultipleNestedInstallers.zip
+  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: WingetCreateTestExeInstaller.exe
+    PortableCommandAlias: TestExeInstallerAlias
+  - RelativeFilePath: WingetCreateTestPortableInstaller.exe
+    PortableCommandAlias: TestPortableInstallerAlias
+  - RelativeFilePath: WingetCreateTestPortableInstaller (1).exe
+    PortableCommandAlias: TestPortableInstallerAlias1
+  - RelativeFilePath: WingetCreateTestPortableInstaller (2).exe
+    PortableCommandAlias: TestPortableInstallerAlias2
+- Architecture: x86
+  InstallerType: zip
+  InstallerUrl: https://fakedomain.com/WingetCreateTestMultipleNestedInstallers.zip
+  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: WingetCreateTestPortableInstaller.exe
+    PortableCommandAlias: TestPortableInstallerAlias
+  - RelativeFilePath: WingetCreateTestPortableInstaller (1).exe
+    PortableCommandAlias: TestPortableInstallerAlias1
+- Architecture: arm
+  InstallerType: zip
+  InstallerUrl: https://fakedomain.com/WingetCreateTestMultipleNestedInstallers.zip
+  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: WingetCreateTestPortableInstaller (2).exe
+    PortableCommandAlias: TestPortableInstallerAlias2
+- Architecture: arm64
+  InstallerType: zip
+  Scope: user
+  InstallerUrl: https://fakedomain.com/WingetCreateTestMultipleNestedInstallers.zip
+  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  NestedInstallerType: exe
+  NestedInstallerFiles:
+  - RelativeFilePath: WingetCreateTestExeInstaller.exe
+    PortableCommandAlias: TestExeInstallerAlias
+- Architecture: arm64
+  InstallerType: zip
+  Scope: machine
+  InstallerUrl: https://fakedomain.com/WingetCreateTestMultipleNestedInstallers.zip
+  InstallerSha256: 8A052767127A6E2058BAAE03B551A807777BB1B726650E2C7E92C3E92C8DF80D
+  NestedInstallerType: msi
+  NestedInstallerFiles:
+  - RelativeFilePath: WingetCreateTestMsiInstaller.msi
+    PortableCommandAlias: TestMsiInstallerAlias
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.6.0

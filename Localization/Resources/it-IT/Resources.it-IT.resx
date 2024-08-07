@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Sono state rilevate più architetture. È possibile specificare una sola architettura per un override.</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>Impossibile analizzare la sostituzione specificata {0}.</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>Impossibile analizzare l’argomento specificato {0}.</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Sostituire l'architettura di un programma di installazione</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>Rilevati più ambiti. È possibile specificare un solo ambito per un override.</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>Sono stati specificati troppi override per l'URL del programma di installazione seguente: {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>Troppi argomenti specificati per l'URL del programma di installazione seguente: {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1342,10 +1342,33 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>La versione di sostituzione non può essere uguale alla versione di invio.</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>Il formato del manifesto specificato non è valido.</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>Formato di output del manifesto. Il valore predefinito è "yaml".</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>Formato non supportato. Il repository della community Gestione pacchetti Windows accetta solo invii di manifesto "yaml".</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>Cancellare il token GitHub memorizzato nella cache</value>
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>Archivia un nuovo token GitHub nella cache locale</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>Il manifesto di base contiene displayVersion che non è stato aggiornato. Usare l'argomento dell'interfaccia della riga di comando --display-version o specificare la versione nell'URL del programma di installazione.</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>Versione da usare per l'aggiornamento del campo della versione visualizzata. La versione specificata negli argomenti dell'URL del programma di installazione richiederà la precedenza su questo valore.</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>Uso della versione visualizzata '{0}' per {1}</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>Rilevato programma di installazione singolo con più versioni di visualizzazione. Winget-Create aggiornerà solo il primo DisplayVersion per un programma di installazione specifico.</value>
   </data>
 </root>

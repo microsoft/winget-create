@@ -403,6 +403,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not populate manifest metadata through GitHub&apos;s API..
+        /// </summary>
+        public static string CouldNotPopulateGitHubMetadata_Warning {
+            get {
+                return ResourceManager.GetString("CouldNotPopulateGitHubMetadata_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Would you like to create another locale?.
         /// </summary>
         public static string CreateAnotherLocale_Message {
@@ -2311,6 +2320,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GitHub URL detected. The CLI will automatically fill some manifests fields..
+        /// </summary>
+        public static string PopulatingGitHubMetadata_Message {
+            get {
+                return ResourceManager.GetString("PopulatingGitHubMetadata_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The command alias to be used for calling the nested portable package.
         /// </summary>
         public static string PortableCommandAlias_KeywordDescription {
@@ -2482,6 +2500,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date to be used when updating the release date field. Expected format is &quot;YYYY-MM-DD&quot;..
+        /// </summary>
+        public static string ReleaseDate_HelpText {
+            get {
+                return ResourceManager.GetString("ReleaseDate_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installer release date.
         /// </summary>
         public static string ReleaseDate_KeywordDescription {
@@ -2505,6 +2532,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ReleaseNotes_KeywordDescription {
             get {
                 return ResourceManager.GetString("ReleaseNotes_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL to be used when updating the release notes url field..
+        /// </summary>
+        public static string ReleaseNotesUrl_HelpText {
+            get {
+                return ResourceManager.GetString("ReleaseNotesUrl_HelpText", resourceCulture);
             }
         }
         
