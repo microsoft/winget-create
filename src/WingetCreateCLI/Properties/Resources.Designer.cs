@@ -601,7 +601,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version to be used when updating the display version field. Version provided in the installer URL arguments will take precendence over this value..
+        ///   Looks up a localized string similar to Version to be used when updating the display version field. Version provided in the installer URL arguments will take precedence over this value..
         /// </summary>
         public static string DisplayVersion_HelpText {
             get {
