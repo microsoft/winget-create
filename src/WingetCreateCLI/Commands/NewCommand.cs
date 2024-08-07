@@ -237,10 +237,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                     ShiftRootFieldsToInstallerLevel(manifests.InstallerManifest);
                     try
                     {
-                        Logger.InfoLocalized(nameof(Resources.PopulatingGitHubMetadata_Message));
                         if (this.GitHubClient != null)
                         {
-                            await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                            bool populated = await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                            if (populated)
+                            {
+                                Logger.InfoLocalized(nameof(Resources.PopulatingGitHubMetadata_Message));
+                            }
                         }
                     }
                     catch (Octokit.ApiException)
