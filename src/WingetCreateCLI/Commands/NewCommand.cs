@@ -235,6 +235,23 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
 
                     ShiftRootFieldsToInstallerLevel(manifests.InstallerManifest);
+                    try
+                    {
+                        if (this.GitHubClient != null)
+                        {
+                            bool populated = await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                            if (populated)
+                            {
+                                Logger.InfoLocalized(nameof(Resources.PopulatingGitHubMetadata_Message));
+                            }
+                        }
+                    }
+                    catch (Octokit.ApiException)
+                    {
+                        // Print a warning, but continue with the command flow.
+                        Logger.ErrorLocalized(nameof(Resources.CouldNotPopulateGitHubMetadata_Warning));
+                    }
+
                     PromptManifestProperties(manifests);
                     MergeNestedInstallerFilesIfApplicable(manifests.InstallerManifest);
                     ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);

@@ -1,0 +1,10 @@
+﻿PackageIdentifier: Multifile.Yaml.GitHubAutoFillTest
+PackageVersion: 1.2.3.4
+PackageLocale: en-US
+Publisher: Multifile
+PackageName: MsixTest
+# Will be auto-filled through GitHub's API
+# License: MIT
+# ShortDescription: Testing metadata auto-fill through GitHub's API
+ManifestType: defaultLocale
+ManifestVersion: 1.0.0
