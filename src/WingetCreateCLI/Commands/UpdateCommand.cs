@@ -656,9 +656,11 @@ namespace Microsoft.WingetCreateCLI.Commands
             defaultLocaleManifest.ReleaseNotesUrl = null;
 
             installerManifest.ReleaseDateTime = null;
+            installerManifest.ReleaseDate = null;
             foreach (var installer in installerManifest.Installers)
             {
                 installer.ReleaseDateTime = null;
+                installer.ReleaseDate = null;
             }
 
             foreach (LocaleManifest localeManifest in localeManifests)

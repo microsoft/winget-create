@@ -929,7 +929,7 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task UpdateFullJsonSingletonVersion1_1()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_1", null, this.tempPath, null, fileExtension: ".json");
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_1", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
@@ -942,7 +942,7 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task UpdateFullJsonSingletonVersion1_2()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_2", null, this.tempPath, null, fileExtension: ".json");
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_2", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
@@ -955,7 +955,7 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task UpdateFullJsonSingletonVersion1_4()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_4", null, this.tempPath, null, fileExtension: ".json");
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_4", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
@@ -968,17 +968,17 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task UpdateFullJsonSingletonVersion1_5()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_5", null, this.tempPath, null, fileExtension: ".json");
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_5", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
 
         /// <summary>
-        /// Ensures that version specific fields are reset after an update.
+        /// Ensures that version specific fields are reset after an update when using YAML manifests.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         [Test]
-        public async Task UpdateResetsVersionSpecificFields()
+        public async Task UpdateResetsVersionSpecificFields_Yaml()
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_1", null, this.tempPath, null);
@@ -989,8 +989,34 @@ namespace Microsoft.WingetCreateUnitTests
             DefaultLocaleManifest updatedDefaultLocaleManifest = updatedManifests.DefaultLocaleManifest;
             var updatedInstaller = updatedInstallerManifest.Installers.First();
 
-            ClassicAssert.IsNull(updatedInstaller.ReleaseDateTime, "ReleaseDate should be null.");
-            ClassicAssert.IsNull(updatedInstallerManifest.ReleaseDateTime, "ReleaseDate should be null.");
+            ClassicAssert.IsNull(updatedInstaller.ReleaseDateTime, "ReleaseDateTime at installer level should be null.");
+            ClassicAssert.IsNull(updatedInstaller.ReleaseDate, "ReleaseDate at installer level should be null.");
+            ClassicAssert.IsNull(updatedInstallerManifest.ReleaseDateTime, "ReleaseDateTime at root level should be null.");
+            ClassicAssert.IsNull(updatedInstallerManifest.ReleaseDate, "ReleaseDate at root level should be null.");
+            ClassicAssert.IsNull(updatedDefaultLocaleManifest.ReleaseNotes, "ReleaseNotes should be null.");
+            ClassicAssert.IsNull(updatedDefaultLocaleManifest.ReleaseNotesUrl, "ReleaseNotesUrl should be null.");
+        }
+
+        /// <summary>
+        /// Ensures that version specific fields are reset after an update when using JSON manifests.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateResetsVersionSpecificFields_Json()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_1", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+
+            InstallerManifest updatedInstallerManifest = updatedManifests.InstallerManifest;
+            DefaultLocaleManifest updatedDefaultLocaleManifest = updatedManifests.DefaultLocaleManifest;
+            var updatedInstaller = updatedInstallerManifest.Installers.First();
+
+            ClassicAssert.IsNull(updatedInstaller.ReleaseDateTime, "ReleaseDateTime at installer level should be null.");
+            ClassicAssert.IsNull(updatedInstaller.ReleaseDate, "ReleaseDate at installer level should be null.");
+            ClassicAssert.IsNull(updatedInstallerManifest.ReleaseDateTime, "ReleaseDateTime at root level should be null.");
+            ClassicAssert.IsNull(updatedInstallerManifest.ReleaseDate, "ReleaseDate at root level should be null.");
             ClassicAssert.IsNull(updatedDefaultLocaleManifest.ReleaseNotes, "ReleaseNotes should be null.");
             ClassicAssert.IsNull(updatedDefaultLocaleManifest.ReleaseNotesUrl, "ReleaseNotesUrl should be null.");
         }
@@ -1646,13 +1672,15 @@ namespace Microsoft.WingetCreateUnitTests
             Assert.That(result, Does.Contain(string.Format(Resources.NestedInstallerFileNotFound_Error, "fakeRelativeFilePath.exe")), "Failed to show warning for invalid relative file path.");
         }
 
-        private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls, bool isMultifile = false, string fileExtension = ".yaml")
+        private static (UpdateCommand UpdateCommand, List<string> InitialManifestContent) GetUpdateCommandAndManifestData(string id, string version, string outputDir, IEnumerable<string> installerUrls, bool isMultifile = false, ManifestFormat manifestFormat = ManifestFormat.Yaml)
         {
+            string fileExtension = (manifestFormat == ManifestFormat.Yaml) ? ".yaml" : ".json";
             var updateCommand = new UpdateCommand
             {
                 Id = id,
                 Version = version,
                 OutputDir = outputDir,
+                Format = manifestFormat,
             };
 
             if (installerUrls != null)
