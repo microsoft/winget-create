@@ -1374,8 +1374,8 @@
   <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
     <value>Could not populate manifest metadata through GitHub's API.</value>
   </data>
-  <data name="PopulatingGitHubMetadata_Message" xml:space="preserve">
-    <value>GitHub URL detected. The CLI will automatically fill some manifests fields.</value>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>GitHub URL detected. The CLI has automatically filled some manifest fields.</value>
   </data>
   <data name="ReleaseDate_HelpText" xml:space="preserve">
     <value>Date to be used when updating the release date field. Expected format is "YYYY-MM-DD".</value>
