@@ -2311,7 +2311,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GitHub URL detected. The CLI has automatically filled some manifests fields..
+        ///   Looks up a localized string similar to GitHub URL detected. The CLI has automatically filled some manifest fields..
         /// </summary>
         public static string PopulatedGitHubMetadata_Message {
             get {
