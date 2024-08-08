@@ -242,7 +242,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                             bool populated = await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
                             if (populated)
                             {
-                                Logger.InfoLocalized(nameof(Resources.PopulatingGitHubMetadata_Message));
+                                Logger.InfoLocalized(nameof(Resources.PopulatedGitHubMetadata_Message));
                             }
                         }
                     }
