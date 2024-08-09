@@ -1,0 +1,92 @@
+﻿name: Nightly Build 🌙🛠️
+
+on:
+  push:
+    branches: main
+    paths:
+      - .github/workflows/nightly.yml
+      - src/**
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            dotnet-runtime: win-x64
+            rust-target: x86_64-pc-windows-msvc
+          - os: windows-latest
+            dotnet-runtime: win-arm64
+            rust-target: aarch64-pc-windows-msvc
+          - os: ubuntu-latest
+            dotnet-runtime: linux-x64
+            rust-target: x86_64-unknown-linux-gnu
+          - os: ubuntu-latest
+            dotnet-runtime: linux-arm64
+            rust-target: aarch64-unknown-linux-gnu
+          - os: macos-latest
+            dotnet-runtime: osx-arm64
+            rust-target: aarch64-apple-darwin
+            bin-suffix: macos-arm64
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+          lfs: true
+          persist-credentials: false
+
+      - uses: moonrepo/setup-rust@v1
+        with:
+          channel: stable
+          targets: ${{ matrix.rust-target }}
+          cache: false
+
+      - if: matrix.rust-target == 'aarch64-unknown-linux-gnu'
+        run: |
+          sudo sed -i -e 's/deb mirror/deb [arch=amd64] mirror/g' /etc/apt/sources.list
+          echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list.d/arm64.list
+          echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list.d/arm64.list
+          echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list.d/arm64.list
+          echo "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list.d/arm64.list
+          sudo dpkg --add-architecture arm64
+          sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - run: CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER="aarch64-linux-gnu-gcc" cargo build -r --target ${{ matrix.rust-target }}
+        working-directory: src/WingetCreateCore/Common/Msi/rust-msi
+
+      - run: dotnet publish ./WingetCreateCLI.csproj -c Release -r ${{ matrix.dotnet-runtime }} --output ./output
+        working-directory: src/WingetCreateCLI
+
+      - if: matrix.os != 'windows-latest'
+        run: mv src/WingetCreateCLI/output/WingetCreateCLI ./wingetcreate-${{ matrix.bin-suffix || matrix.dotnet-runtime }}
+
+      - if: matrix.os == 'windows-latest'
+        run: mv src/WingetCreateCLI/output/WingetCreateCLI.exe ./wingetcreate-${{ matrix.dotnet-runtime }}.exe
+
+      - name: Delete old release 🗑️
+        run: |
+          gh api repos/$GITHUB_REPOSITORY/git/refs/tags/nightly | jq -r '.object.sha' | grep -q $GITHUB_SHA && exit 0
+          gh release delete nightly -y --cleanup-tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Nightly release 🌙
+          tag_name: nightly
+          draft: false
+          files: wingetcreate-*
+          fail_on_unmatched_files: true
+          token: ${{ secrets.GITHUB_TOKEN }}
