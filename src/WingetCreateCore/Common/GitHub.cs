@@ -236,14 +236,16 @@ namespace Microsoft.WingetCreateCore.Common
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be populated with GitHub metadata.</param>
         /// <param name="serializerFormat">The output format of the manifest serializer.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task PopulateGitHubMetadata(Manifests manifests, string serializerFormat)
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. The task result is a boolean indicating whether metadata was successfully populated.</returns>
+        public async Task<bool> PopulateGitHubMetadata(Manifests manifests, string serializerFormat)
         {
             // Only populate metadata if we have a valid GitHub token.
             if (this.github.Credentials.AuthenticationType != AuthenticationType.Anonymous)
             {
-                await GitHubManifestMetadata.PopulateManifestMetadata(manifests, serializerFormat, this.github);
+                return await GitHubManifestMetadata.PopulateManifestMetadata(manifests, serializerFormat, this.github);
             }
+
+            return false;
         }
 
         /// <summary>
@@ -499,7 +501,7 @@ namespace Microsoft.WingetCreateCore.Common
 
         private static class GitHubManifestMetadata
         {
-            public static async Task PopulateManifestMetadata(Manifests manifests, string serializerFormat, GitHubClient client)
+            public static async Task<bool> PopulateManifestMetadata(Manifests manifests, string serializerFormat, GitHubClient client)
             {
                 // Get owner and repo from the installer manifest
                 GitHubUrlMetadata? metadata = GetMetadataFromGitHubUrl(manifests.InstallerManifest);
@@ -507,7 +509,7 @@ namespace Microsoft.WingetCreateCore.Common
                 if (metadata == null)
                 {
                     // Could not populate GitHub metadata.
-                    return;
+                    return false;
                 }
 
                 string owner = metadata.Value.Owner;
@@ -574,6 +576,8 @@ namespace Microsoft.WingetCreateCore.Common
                         },
                     };
                 }
+
+                return true;
             }
 
             private static void SetReleaseDate(Manifests manifests, string serializerFormat, Release githubRelease)

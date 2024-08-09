@@ -46,6 +46,21 @@ By typing **ENTER** you will accept the string, and the wizard will move on.
 
 ![new command PackageIdentifier](./images/create-packageidentifier.png)
 
+### Auto-filling manifest fields
+
+If the installer URLs come from a GitHub release, the CLI can automatically fill in missing manifest metadata. A valid GitHub token must be provided using the `--token` argument to use this feature.
+The new command flow may automatically fill in the following fields:
+
+- `License` - The license from the GitHub repository.
+- `ShortDescription` - The description from the GitHub repository.
+- `ReleaseDate` - The publish date of the release on GitHub.
+- `ReleaseNotesUrl` - The URL to the release notes on GitHub.
+- `PackageUrl` - The URL to the package GitHub repository.
+- `PublisherUrl` - The URL to the publisher's GitHub page.
+- `PublisherSupportUrl` - The URL to GitHub issues for the package repository.
+- `Tags` - The tags from the GitHub repository.
+- `Documentations` - If the GitHub repository has a wiki, the URL to the wiki will be added to the manifest.
+
 ### Remaining required fields
 
 Like the **PackageIdentifier** you will have the opportunity to accept or modify the remaining fields.
@@ -53,6 +68,7 @@ Like the **PackageIdentifier** you will have the opportunity to accept or modify
 ![new command default values](./images/create-defaults.png)
 
 ### Review Changes
+
 Once you have successfully filled in the details, fields, **Winget-Create** will display the results for you to review.
 
 ![new command review](./images/create-review.png)

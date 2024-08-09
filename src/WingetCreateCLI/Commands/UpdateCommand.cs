@@ -467,11 +467,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                 ResetVersionSpecificFields(manifests);
                 try
                 {
-                    Logger.InfoLocalized(nameof(Resources.PopulatingGitHubMetadata_Message));
-
                     if (this.GitHubClient != null)
                     {
-                        await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                        bool populated = await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                        if (populated)
+                        {
+                            Logger.InfoLocalized(nameof(Resources.PopulatedGitHubMetadata_Message));
+                        }
                     }
                 }
                 catch (Octokit.ApiException)
@@ -654,9 +656,11 @@ namespace Microsoft.WingetCreateCLI.Commands
             defaultLocaleManifest.ReleaseNotesUrl = null;
 
             installerManifest.ReleaseDateTime = null;
+            installerManifest.ReleaseDate = null;
             foreach (var installer in installerManifest.Installers)
             {
                 installer.ReleaseDateTime = null;
+                installer.ReleaseDate = null;
             }
 
             foreach (LocaleManifest localeManifest in localeManifests)
@@ -934,10 +938,13 @@ namespace Microsoft.WingetCreateCLI.Commands
                 ResetVersionSpecificFields(manifests);
                 try
                 {
-                    Logger.InfoLocalized(nameof(Resources.PopulatingGitHubMetadata_Message));
                     if (this.GitHubClient != null)
                     {
-                        await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                        bool populated = await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                        if (populated)
+                        {
+                            Logger.InfoLocalized(nameof(Resources.PopulatedGitHubMetadata_Message));
+                        }
                     }
                 }
                 catch (Octokit.ApiException)
