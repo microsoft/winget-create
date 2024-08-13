@@ -61,7 +61,6 @@ namespace Microsoft.WingetCreateUnitTests
             else if (!string.IsNullOrEmpty(gitHubAppPrivateKey))
             {
                 TestContext.Progress.WriteLine("Using GitHubAppPrivateKey value for tests");
-                TestContext.Progress.WriteLine(gitHubAppPrivateKey);
                 this.GitHubApiKey = await GitHub.GetGitHubAppInstallationAccessToken(gitHubAppPrivateKey, Constants.GitHubAppId, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
                 this.SubmitPRToFork = false;
             }
