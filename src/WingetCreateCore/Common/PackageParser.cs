@@ -653,16 +653,22 @@ namespace Microsoft.WingetCreateCore
                 archMatches.Add(Architecture.Arm);
             }
 
-            if (Regex.Match(url, "x64|winx?64|_64|64-?bit|ia64|amd64|x86(-|_)64", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, "x64|winx?64|_64|64-?bit|ia64|amd64", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.X64);
             }
 
-            if (Regex.Match(url, @"x86|win32|winx86|_86|32-?bit|ia32|i[3456]86|\b[3456]86\b", RegexOptions.IgnoreCase).Success)
+            // x86 must only be checked if the URL doesn't match an x86_64 like pattern, which is for x64
+            if (Regex.Match(url, "x86(-|_)x?64", RegexOptions.IgnoreCase).Success)
+            {
+                archMatches.Add(Architecture.X64);
+            }
+            else if (Regex.Match(url, @"x86|win32|winx86|_86|32-?bit|ia32|i[3456]86|\b[3456]86\b", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.X86);
             }
 
+            archMatches = archMatches.Distinct().ToList();
             return archMatches.Count == 1 ? archMatches.Single() : null;
         }
 
