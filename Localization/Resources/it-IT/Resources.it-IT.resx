@@ -1361,7 +1361,7 @@
     <value>Il manifesto di base contiene displayVersion che non è stato aggiornato. Usare l'argomento dell'interfaccia della riga di comando --display-version o specificare la versione nell'URL del programma di installazione.</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>Versione da usare per l'aggiornamento del campo della versione visualizzata. La versione specificata negli argomenti dell'URL del programma di installazione richiederà la precedenza su questo valore.</value>
+    <value>Versione da usare per l'aggiornamento del campo della versione visualizzata. La versione specificata negli argomenti dell'URL del programma di installazione avrà la precedenza su questo valore.</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>Uso della versione visualizzata '{0}' per {1}</value>
@@ -1370,5 +1370,17 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>Rilevato programma di installazione singolo con più versioni di visualizzazione. Winget-Create aggiornerà solo il primo DisplayVersion per un programma di installazione specifico.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>Non è stato possibile popolare i metadati del manifesto tramite l'API di GitHub.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>È stato rilevato un URL GitHub. L'interfaccia della riga di comando ha compilato automaticamente alcuni campi manifesto.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>Data da usare per l'aggiornamento del campo della data di rilascio. Il formato previsto è "AAAA-MM-GG".</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>L'URL da usare all'aggiornamento del campo dell'URL delle note sulla versione.</value>
   </data>
 </root>

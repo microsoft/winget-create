@@ -1361,7 +1361,7 @@
     <value>기본 매니페스트에 업데이트되지 않은 DisplayVersion이 포함되어 있습니다. --display-version CLI 인수를 사용하거나 설치 관리자 URL에 버전을 제공하세요.</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>표시 버전 필드를 업데이트할 때 사용할 버전입니다. 설치 관리자 URL 인수에 제공된 버전은 이 값보다 우선합니다.</value>
+    <value>디스플레이 버전 필드를 업데이트할 때 사용할 버전입니다. 설치 관리자 URL 인수에 제공한 버전이 이 값보다 우선합니다.</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>{1}에 '{0}' 디스플레이 버전 사용</value>
@@ -1370,5 +1370,17 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>여러 디스플레이 버전이 있는 단일 설치 관리자가 검색되었습니다. Winget-Create 지정된 설치 관리자의 첫 번째 DisplayVersion만 업데이트합니다.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>GitHub의 API를 통해 매니페스트 메타데이터를 채울 수 없습니다.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>GitHub URL이 검색되었습니다. CLI가 일부 매니페스트 필드를 자동으로 채웠습니다.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>릴리스 날짜 필드를 업데이트할 때 사용할 날짜입니다. 필요한 형식은 "YYYY-MM-DD"입니다.</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>릴리스 정보 URL 필드를 업데이트할 때 사용할 URL입니다.</value>
   </data>
 </root>

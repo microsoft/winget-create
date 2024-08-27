@@ -1361,7 +1361,7 @@
     <value>基本マニフェストに、更新されていない DisplayVersion が含まれています。--display-version CLI 引数を使用するか、インストーラー URL にバージョンを指定してください。</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>表示バージョン フィールドの更新時に使用するバージョンです。インストーラーの URL 引数に指定されたバージョンは、この値に対して事前に設定されます。</value>
+    <value>表示バージョン フィールドの更新時に使用するバージョン。インストーラーの URL 引数に指定されたバージョンがこの値より優先されます。</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>表示バージョン '{0}' を {1} に使用しています</value>
@@ -1370,5 +1370,17 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>複数の表示バージョンを持つ単一インストーラーが検出されました。Winget-Create は、指定されたインストーラーの最初の DisplayVersion のみを更新します。</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>GitHub の API を使用してマニフェスト メタデータを事前設定できませんでした。</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>GitHub URL が検出されました。CLI は、一部のマニフェスト フィールドに自動的に入力しました。</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>リリース日フィールドを更新するときに使用する日付。必要な形式は "YYYY-MM-DD" です。</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>リリース ノートの URL フィールドを更新するときに使用する URL。</value>
   </data>
 </root>
