@@ -1361,7 +1361,7 @@
     <value>Базовый манифест содержит параметр DisplayVersion, который не был обновлен. Используйте аргумент CLI --display-version или укажите версию в URL-адресе установщика.</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>Версия, используемая при обновлении поля отображаемой версии. Версия, указанная в аргументах URL-адреса установщика, будет принимать приоритет над этим значением.</value>
+    <value>Версия, которая будет использоваться при обновлении поля отображаемой версии. Версия, указанная в аргументах URL-адреса установщика, будет иметь приоритет над этим значением.</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>Используется версия дисплея "{0}" для {1}</value>
@@ -1370,5 +1370,17 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>Обнаружен один установщик с несколькими версиями дисплея. Winget-Create обновит только первую версию DisplayVersion для заданного установщика.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>Не удалось заполнить метаданные манифеста через API GitHub.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>Обнаружен URL-адрес GitHub. CLI автоматически заполнил некоторые поля манифеста.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>Дата для использования при обновлении поля даты выпуска. Ожидаемый формат: "ГГГГ-ММ-ДД".</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>URL-адрес, используемый при обновлении поля URL-адреса заметок о выпуске.</value>
   </data>
 </root>

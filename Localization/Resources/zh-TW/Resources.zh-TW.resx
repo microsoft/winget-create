@@ -1361,7 +1361,7 @@
     <value>基底指令清單包含尚未更新的 DisplayVersion。使用 --display-version CLI 自變數，或在安裝程式 URL 中提供版本。</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>更新顯示版本欄位時所要使用的版本。安裝程式 URL 自變數中提供的版本將優先於此值。</value>
+    <value>更新顯示版本欄位時所使用的版本。安裝程式 URL 引數中提供的版本將優先於此值。</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>使用 {1} 的顯示版本 '{0}'</value>
@@ -1370,5 +1370,17 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>偵測到具有多個顯示版本的單一安裝程式。Winget-Create 只會更新指定安裝程式的第一個 DisplayVersion。</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>無法透過 GitHub 的 API，填入指令清單中繼資料。</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>已偵測到 GitHub URL。CLI 已自動填入部分資訊清單欄位。</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>更新發行日期欄位時所要使用的資料。預期的格式為「YYYY-MM-DD」。。</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>更新版本資訊 URL 欄位時所要使用的 URL。</value>
   </data>
 </root>

@@ -1361,7 +1361,7 @@
     <value>Le manifeste de base contient DisplayVersion qui n’a pas été mis à jour. Utilisez l’argument CLI --display-version ou fournissez la version dans l’URL du programme d’installation.</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>Version à utiliser lors de la mise à jour du champ de version d’affichage. La version fournie dans les arguments de l’URL du programme d’installation prévaut sur cette valeur.</value>
+    <value>Version à utiliser lors de la mise à jour du champ de version d’affichage. La version fournie dans les arguments de l'URL du programme d'installation aura la priorité sur cette valeur.</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>Utilisation de la version d’affichage « {0} » pour {1}</value>
@@ -1370,5 +1370,17 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>Programme d’installation unique avec plusieurs versions d’affichage détectées. Winget-Create met uniquement à jour le premier DisplayVersion pour un programme d’installation donné.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>Il est impossible de remplir les métadonnées du manifeste via l’API de GitHub.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>L’URL GitHub a été détectée. L’interface CLI a automatiquement rempli certains champs du manifeste.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>Date à utiliser lors de la mise à jour du champ date de publication. Le format attendu est « AAAA-MM-JJ ».</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>URL à utiliser lors de la mise à jour du champ URL des notes de publication.</value>
   </data>
 </root>

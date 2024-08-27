@@ -1361,7 +1361,7 @@
     <value>El manifiesto base contiene DisplayVersion que no se ha actualizado. Use el argumento de la CLI --display-version o proporcione la versión en la dirección URL del instalador.</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>Versión que se usará al actualizar el campo de versión para mostrar. La versión proporcionada en los argumentos de la dirección URL del instalador tendrá una precendencia sobre este valor.</value>
+    <value>Versión que se usará al actualizar el campo de versión para mostrar. La versión proporcionada en los argumentos de dirección URL del instalador tendrá prioridad sobre este valor.</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>Usando la versión para mostrar '{0}' para {1}</value>
@@ -1370,5 +1370,17 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>Se ha detectado un instalador único con varias versiones de visualización. Winget-Create solo actualizará la primera DisplayVersion de un instalador determinado.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>No se pudieron rellenar los metadatos del manifiesto a través de la API de GitHub.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>Dirección URL de GitHub detectada. La CLI ha rellenado automáticamente algunos campos del manifiesto.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>Fecha que se usará al actualizar el campo de fecha de lanzamiento. El formato esperado es "AAAA-MM-DD".</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>Dirección URL que se usará al actualizar el campo de dirección URL de las notas de la versión.</value>
   </data>
 </root>
