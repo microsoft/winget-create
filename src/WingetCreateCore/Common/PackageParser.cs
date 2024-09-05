@@ -477,21 +477,36 @@ namespace Microsoft.WingetCreateCore
 
             if (existingInstaller.AppsAndFeaturesEntries != null && newInstaller.AppsAndFeaturesEntries != null)
             {
-                // When --display-version is provided, AppsAndFeaturesEntries for the new installer will not be null
-                // and will contain a single entry.
-                string newDisplayVersion = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
-
-                // Set DisplayVersion for each new installer if it exists in the corresponding existing installer.
                 foreach (var existingAppsAndFeaturesEntry in existingInstaller.AppsAndFeaturesEntries)
                 {
-                    if (existingAppsAndFeaturesEntry.DisplayVersion != null)
+                    if (existingAppsAndFeaturesEntry.DisplayName != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayName != null)
                     {
-                        existingAppsAndFeaturesEntry.DisplayVersion = newDisplayVersion ?? existingAppsAndFeaturesEntry.DisplayVersion;
-
-                        // Break on first match to avoid setting DisplayVersion for all entries.
-                        // We do not support updating multiple DisplayVersions under the same installer.
-                        break;
+                        existingAppsAndFeaturesEntry.DisplayName = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayName;
                     }
+
+                    if (existingAppsAndFeaturesEntry.DisplayVersion != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion != null)
+                    {
+                        existingAppsAndFeaturesEntry.DisplayVersion = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+                    }
+
+                    if (existingAppsAndFeaturesEntry.Publisher != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().Publisher != null)
+                    {
+                        existingAppsAndFeaturesEntry.Publisher = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().Publisher;
+                    }
+
+                    if (existingAppsAndFeaturesEntry.ProductCode != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().ProductCode != null)
+                    {
+                        existingAppsAndFeaturesEntry.ProductCode = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().ProductCode;
+                    }
+
+                    if (existingAppsAndFeaturesEntry.UpgradeCode != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().UpgradeCode != null)
+                    {
+                        existingAppsAndFeaturesEntry.UpgradeCode = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().UpgradeCode;
+                    }
+
+                    // Break on first match to avoid setting DisplayVersion for all entries.
+                    // We do not support updating multiple DisplayVersions under the same installer.
+                    break;
                 }
             }
         }
@@ -891,6 +906,17 @@ namespace Microsoft.WingetCreateCore
                     }
 
                     baseInstaller.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
+                    baseInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
+                    {
+                        new AppsAndFeaturesEntry
+                        {
+                            DisplayName = properties.FirstOrDefault(p => p.Property == "ProductName")?.Value,
+                            DisplayVersion = properties.FirstOrDefault(p => p.Property == "ProductVersion")?.Value,
+                            Publisher = properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value,
+                            ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value,
+                            UpgradeCode = properties.FirstOrDefault(p => p.Property == "UpgradeCode")?.Value,
+                        },
+                    };
 
                     string archString = database.SummaryInfo.Template.Split(';').First();
 
