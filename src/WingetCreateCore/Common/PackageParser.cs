@@ -245,13 +245,20 @@ namespace Microsoft.WingetCreateCore
                     // Update DisplayVersion for each AppsAndFeaturesEntry
                     if (!string.IsNullOrEmpty(installerUpdate.DisplayVersion))
                     {
-                        newInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
+                        if (newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion != null)
                         {
-                            new AppsAndFeaturesEntry
+                            newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion = installerUpdate.DisplayVersion;
+                        }
+                        else
+                        {
+                            newInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
                             {
-                                DisplayVersion = installerUpdate.DisplayVersion,
-                            },
-                        };
+                                new AppsAndFeaturesEntry
+                                {
+                                    DisplayVersion = installerUpdate.DisplayVersion,
+                                },
+                            };
+                        }
                     }
 
                     // if the installerUpdate does not have a binary or url architecture specified, then just use what is specified in the installer.
