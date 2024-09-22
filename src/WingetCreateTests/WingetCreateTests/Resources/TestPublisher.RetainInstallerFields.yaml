@@ -17,11 +17,7 @@ NestedInstallerFiles:
 - RelativeFilePath: WingetCreateTestExeInstaller.exe
   PortableCommandAlias: TestExeAlias
 AppsAndFeaturesEntries:
-- DisplayName: TestDisplayName1
-  Publisher: TestPublisher1
-  DisplayVersion: 1.0.1
-  ProductCode: TestProductCode1
-  UpgradeCode: TestUpgradeCode1
+- DisplayVersion: 1.0.1
   InstallerType: msi
 InstallerSwitches:
   Silent: /silent1
@@ -89,11 +85,7 @@ Installers:
       - RelativeFilePath: WingetCreateTestMsiInstaller.msi
         PortableCommandAlias: TestMsiAlias
     AppsAndFeaturesEntries:
-      - DisplayName: TestDisplayName2
-        Publisher: TestPublisher2
-        DisplayVersion: 1.0.2
-        ProductCode: TestProductCode2
-        UpgradeCode: TestUpgradeCode2
+      - DisplayVersion: 1.0.2
         InstallerType: exe
     InstallerSwitches:
       Silent: /silent2
