@@ -245,9 +245,9 @@ namespace Microsoft.WingetCreateCore
                     // Update DisplayVersion for each AppsAndFeaturesEntry
                     if (!string.IsNullOrEmpty(installerUpdate.DisplayVersion))
                     {
-                        if (newInstaller.AppsAndFeaturesEntries != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion != null)
+                        if (newInstaller.AppsAndFeaturesEntries != null)
                         {
-                            newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion = installerUpdate.DisplayVersion;
+                            newInstaller.AppsAndFeaturesEntries[0].DisplayVersion = installerUpdate.DisplayVersion;
                         }
                         else
                         {
