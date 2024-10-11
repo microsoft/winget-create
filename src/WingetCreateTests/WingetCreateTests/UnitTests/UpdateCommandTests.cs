@@ -1535,7 +1535,7 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
             string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.RetainInstallerFields", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86" });
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.RetainInstallerFields", null, this.tempPath, new[] { $"{installerUrl}|x64|1.0.1", $"{installerUrl}|x86|1.0.2" });
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
 
@@ -1561,7 +1561,7 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsNotNull(firstInstaller.Dependencies, "Dependencies for the first installer should not be null");
             ClassicAssert.IsTrue(firstInstaller.Dependencies.PackageDependencies[0].PackageIdentifier == "TestPackageDependency1", "PackageDependencies PackageIdentifier for the first installer should be copied over from root");
             ClassicAssert.IsNotNull(firstInstaller.AppsAndFeaturesEntries, "AppsAndFeaturesEntries for the first installer should not be null");
-            ClassicAssert.IsTrue(firstInstaller.AppsAndFeaturesEntries[0].ProductCode == "TestProductCode1", "AppsAndFeaturesEntries ProductCode for the first installer should be copied over from root");
+            ClassicAssert.IsTrue(firstInstaller.AppsAndFeaturesEntries[0].DisplayVersion == "1.0.1", "AppsAndFeaturesEntries DisplayVersion for the first installer should be copied over from root");
             ClassicAssert.IsNotNull(firstInstaller.Platform, "Platform for the first installer should not be null");
             ClassicAssert.IsTrue(firstInstaller.Platform[0] == Platform.Windows_Desktop, "Platform for the first installer should be copied over from root");
             ClassicAssert.IsNotNull(firstInstaller.ExpectedReturnCodes, "ExpectedReturnCodes for the first installer should not be null");
@@ -1602,7 +1602,7 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsNotNull(secondInstaller.Dependencies, "Dependencies for the second installer should not be null");
             ClassicAssert.IsTrue(secondInstaller.Dependencies.PackageDependencies[0].PackageIdentifier == "TestPackageDependency2", "PackageDependencies PackageIdentifier for the second installer should be preserved");
             ClassicAssert.IsNotNull(secondInstaller.AppsAndFeaturesEntries, "AppsAndFeaturesEntries for the second installer should not be null");
-            ClassicAssert.IsTrue(secondInstaller.AppsAndFeaturesEntries[0].ProductCode == "TestProductCode2", "AppsAndFeaturesEntries ProductCode for the second installer should be preserved");
+            ClassicAssert.IsTrue(secondInstaller.AppsAndFeaturesEntries[0].DisplayVersion == "1.0.2", "AppsAndFeaturesEntries DisplayVersion for the second installer should be preserved");
             ClassicAssert.IsNotNull(secondInstaller.Platform, "Platform for the second installer should not be null");
             ClassicAssert.IsTrue(secondInstaller.Platform[0] == Platform.Windows_Universal, "Platform for the second installer should be preserved");
             ClassicAssert.IsNotNull(secondInstaller.ExpectedReturnCodes, "ExpectedReturnCodes for the second installer should not be null");
