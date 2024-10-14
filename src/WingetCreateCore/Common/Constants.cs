@@ -67,5 +67,10 @@ namespace Microsoft.WingetCreateCore.Common
         /// The url path to the manifest documentation site.
         /// </summary>
         public const string ManifestDocumentationUrl = "https://aka.ms/winget-manifest-schema";
+
+        /// <summary>
+        /// Manifest validation unavailable on unix platforms.
+        /// </summary>
+        public const string ManifestValidationUnavailable = "skipped";
     }
 }
