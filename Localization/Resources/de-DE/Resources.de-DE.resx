@@ -1361,7 +1361,7 @@
     <value>Das Basismanifest enthält DisplayVersion, die nicht aktualisiert wurde. Verwenden Sie das Argument "--display-version CLI", oder geben Sie die Version in der Installer-URL an.</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>Version, die beim Aktualisieren des Felds für die Anzeigeversion verwendet werden soll. Die in den Installer-URL-Argumenten angegebene Version wird von diesem Wert abhängig.</value>
+    <value>Version, die beim Aktualisieren des Anzeigeversionsfelds verwendet werden soll. Die in den URL-Argumenten des Installationsprogramms angegebene Version hat Vorrang vor diesem Wert.</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>Verwenden der Anzeigeversion „{0}“ für {1}</value>
@@ -1370,5 +1370,17 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>Einzelnes Installationsprogramm mit mehreren Anzeigeversionen erkannt. Winget-Create aktualisiert nur die erste DisplayVersion für einen bestimmten Installer.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>Manifestmetadaten konnten nicht über die GitHub-API aufgefüllt werden.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>GitHub URL erkannt. Die CLI hat einige Manifestfelder automatisch ausgefüllt.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>Datum, das beim Aktualisieren des Veröffentlichungsdatumsfelds verwendet werden soll. Das erwartete Format ist "JJJJ-MM-TT".</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>Beim Aktualisieren des URL-Felds der Versionshinweise zu verwendende URL.</value>
   </data>
 </root>

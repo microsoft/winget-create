@@ -1361,7 +1361,7 @@
     <value>基清单包含尚未更新的 DisplayVersion。使用 --display-version CLI 参数或在安装程序 URL 中提供版本。</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>更新显示版本字段时要使用的版本。安装程序 URL 参数中提供的版本将优先于此值。</value>
+    <value>更新显示版本字段时要使用的版本。安装程序 URL 参数中提供的版本优先于此值。</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>对 {0} 使用显示版本“{1}”</value>
@@ -1370,5 +1370,17 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>检测到具有多个显示版本的单个安装程序。Winget-Create 将仅更新给定安装程序的第一个 DisplayVersion。</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>无法通过 GitHub 的 API 填充清单元数据。</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>检测到 GitHub URL。CLI 已自动填充某些清单字段。</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>更新发布日期字段时要使用的日期。预期格式为“YYYY-MM-DD”。</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>更新发行说明 URL 字段时要使用的 URL。</value>
   </data>
 </root>
