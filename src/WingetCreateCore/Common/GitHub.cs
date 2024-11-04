@@ -56,15 +56,7 @@ namespace Microsoft.WingetCreateCore.Common
         /// <returns>GitHub app installation access token to use for GitHub operations.</returns>
         public static async Task<string> GetGitHubAppInstallationAccessToken(string gitHubAppPrivateKeyPem, int gitHubAppId, string wingetRepoOwner, string wingetRepo)
         {
-            string jwtToken = string.Empty;
-            try
-            {
-                jwtToken = GetJwtToken(gitHubAppPrivateKeyPem, gitHubAppId);
-            }
-            catch (Exception)
-            {
-                throw new ArgumentException($"failed to get token: {gitHubAppPrivateKeyPem}");
-            }
+            string jwtToken = GetJwtToken(gitHubAppPrivateKeyPem, gitHubAppId);
 
             var github = new GitHubClient(new ProductHeaderValue(UserAgentName));
             github.Credentials = new Credentials(jwtToken, AuthenticationType.Bearer);
