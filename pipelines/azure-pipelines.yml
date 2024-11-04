@@ -165,7 +165,7 @@ extends:
                 condition: not(eq(variables['Build.Reason'], 'PullRequest'))
                 continueOnError: "true"
 
-              - task: VSTest@2
+              - task: VSTest@3
                 displayName: Run Tests
                 inputs:
                   testSelector: "testAssemblies"
