@@ -128,6 +128,14 @@ extends:
                     /p:UapAppxPackageBuildMode=SideloadOnly
                     /p:AppxPackageSigningEnabled=false'
 
+              - task: VSTest@2
+                displayName: Run Tests
+                inputs:
+                  testSelector: "testAssemblies"
+                  testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\$(targetFramework)\WingetCreateTests.dll'
+                  runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
+                  overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'                    
+
               - task: 1ES.PublishPipelineArtifact@1
                 inputs:
                   targetPath: $(wingetCreatePackageDir)
@@ -164,11 +172,3 @@ extends:
                 displayName: "Trigger build warning if NOTICE.txt file needs to be modified."
                 condition: not(eq(variables['Build.Reason'], 'PullRequest'))
                 continueOnError: "true"
-
-              - task: VSTest@2
-                displayName: Run Tests
-                inputs:
-                  testSelector: "testAssemblies"
-                  testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\$(targetFramework)\WingetCreateTests.dll'
-                  runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
-                  overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'
