@@ -922,6 +922,45 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Ensures that all fields from the YAML Singleton v1.6 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullYamlSingletonVersion1_6()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_6", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the YAML Singleton v1.7 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullYamlSingletonVersion1_7()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_7", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the YAML Singleton v1.9 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullYamlSingletonVersion1_9()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_9", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
         /// Ensures that all fields from the JSON Singleton v1.1 manifest can be deserialized and updated correctly.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
@@ -969,6 +1008,45 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_5", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the Singleton JSON v1.6 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullJsonSingletonVersion1_6()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_6", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the Singleton JSON v1.7 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullJsonSingletonVersion1_7()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_7", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the Singleton JSON v1.9 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullJsonSingletonVersion1_9()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_9", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }
@@ -1323,6 +1401,10 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsNotNull(updatedInstallerManifest.InstallerSuccessCodes, "InstallerSuccessCodes at the root level should not be null");
             ClassicAssert.IsNotNull(updatedInstallerManifest.UnsupportedArguments, "UnsupportedArguments at the root level should not be null");
             ClassicAssert.IsNotNull(updatedInstallerManifest.InstallationMetadata, "InstallationMetadata at the root level should not be null");
+            ClassicAssert.IsTrue(updatedInstallerManifest.DownloadCommandProhibited == true, "DownloadCommandProhibited at the root level should be true");
+            ClassicAssert.IsNotNull(updatedInstallerManifest.RepairBehavior, "RepairBehavior at the root level should not be null");
+            ClassicAssert.IsTrue(updatedInstallerManifest.ArchiveBinariesDependOnPath == true, "ArchiveBinariesDependOnPath at the root level should be true");
+
             foreach (var installer in updatedInstallerManifest.Installers)
             {
                 ClassicAssert.IsNull(installer.InstallerType, "InstallerType at the installer level should be null");
@@ -1352,6 +1434,9 @@ namespace Microsoft.WingetCreateUnitTests
                 ClassicAssert.IsNull(installer.InstallerSuccessCodes, "InstallerSuccessCodes at the installer level should be null");
                 ClassicAssert.IsNull(installer.UnsupportedArguments, "UnsupportedArguments at the installer level should be null");
                 ClassicAssert.IsNull(installer.InstallationMetadata, "InstallationMetadata at the installer level should be null");
+                ClassicAssert.IsNull(installer.DownloadCommandProhibited, "DownloadCommandProhibited at the installer level should be null");
+                ClassicAssert.IsNull(installer.RepairBehavior, "RepairBehavior at the installer level should be null");
+                ClassicAssert.IsNull(installer.ArchiveBinariesDependOnPath, "ArchiveBinariesDependOnPath at the installer level should be null");
             }
         }
 
@@ -1398,6 +1483,9 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsNull(updatedInstallerManifest.InstallerSuccessCodes, "InstallerSuccessCodes at the root level should be null");
             ClassicAssert.IsNull(updatedInstallerManifest.UnsupportedArguments, "UnsupportedArguments at the root level should be null");
             ClassicAssert.IsNull(updatedInstallerManifest.InstallationMetadata, "InstallationMetadata at the root level should be null");
+            ClassicAssert.IsNull(updatedInstallerManifest.DownloadCommandProhibited, "DownloadCommandProhibited at the root level should be null");
+            ClassicAssert.IsNull(updatedInstallerManifest.RepairBehavior, "RepairBehavior at the root level should be null");
+            ClassicAssert.IsNull(updatedInstallerManifest.ArchiveBinariesDependOnPath, "ArchiveBinariesDependOnPath at the root level should be null");
 
             foreach (var installer in updatedInstallerManifest.Installers)
             {
@@ -1428,6 +1516,9 @@ namespace Microsoft.WingetCreateUnitTests
                 ClassicAssert.IsNotNull(installer.InstallerSuccessCodes, "InstallerSuccessCodes at the installer level should not be null");
                 ClassicAssert.IsNotNull(installer.UnsupportedArguments, "UnsupportedArguments at the installer level should not be null");
                 ClassicAssert.IsNotNull(installer.InstallationMetadata, "InstallationMetadata at the installer level should not be null");
+                ClassicAssert.IsNotNull(installer.DownloadCommandProhibited, "DownloadCommandProhibited at the installer level should not be null");
+                ClassicAssert.IsNotNull(installer.RepairBehavior, "RepairBehavior at the installer level should not be null");
+                ClassicAssert.IsNotNull(installer.ArchiveBinariesDependOnPath, "ArchiveBinariesDependOnPath at the installer level should not be null");
             }
         }
 

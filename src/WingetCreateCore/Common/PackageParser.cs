@@ -19,7 +19,6 @@ namespace Microsoft.WingetCreateCore
     using Microsoft.Msix.Utils;
     using Microsoft.Msix.Utils.AppxPackaging;
     using Microsoft.Msix.Utils.AppxPackagingInterop;
-    using Microsoft.Msix.Utils.Logger;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
