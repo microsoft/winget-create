@@ -34,7 +34,7 @@ variables:
   buildPlatform: "x64"
 
   # Target framework
-  targetFramework: "net6.0-windows10.0.22000.0"
+  targetFramework: "net8.0-windows10.0.22000.0"
 
 resources:
   repositories:
