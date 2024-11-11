@@ -223,6 +223,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Indicates whether the install location should be added directly to the PATH environment variable. Only applies to an archive containing portable packages..
+        /// </summary>
+        public static string ArchiveBinariesDependOnPath_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ArchiveBinariesDependOnPath_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Too many arguments specified for the following installer URL: {0}.
         /// </summary>
         public static string ArgumentLimitExceeded_Error {
@@ -2559,6 +2568,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string RemoveLastItem_MenuItem {
             get {
                 return ResourceManager.GetString("RemoveLastItem_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value passed to the installer, ModifyPath ARP command, or uninstaller ARP command for a repair.
+        /// </summary>
+        public static string Repair_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Repair_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The repair method.
+        /// </summary>
+        public static string RepairBehavior_KeywordDescription {
+            get {
+                return ResourceManager.GetString("RepairBehavior_KeywordDescription", resourceCulture);
             }
         }
         
