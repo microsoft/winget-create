@@ -1383,4 +1383,13 @@
   <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
     <value>URL-адрес, используемый при обновлении поля URL-адреса заметок о выпуске.</value>
   </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>Метод восстановления</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>Значение, переданное установщику, команде ModifyPath ARP или команде uninstaller ARP для восстановления</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>Указывает, следует ли добавлять расположение установки непосредственно к переменной среды PATH. Применяется только к архиву, содержащему переносимые пакеты.</value>
+  </data>
 </root>

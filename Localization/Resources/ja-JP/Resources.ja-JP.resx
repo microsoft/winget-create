@@ -1383,4 +1383,13 @@
   <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
     <value>リリース ノートの URL フィールドを更新するときに使用する URL。</value>
   </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>修復メソッド</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>修復のためにインストーラー、ModifyPath ARP コマンド、またはアンインストーラー ARP コマンドに渡される値</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>インストール場所を PATH 環境変数に直接追加するかどうかを示します。移植可能なパッケージを含むアーカイブにのみ適用されます。</value>
+  </data>
 </root>

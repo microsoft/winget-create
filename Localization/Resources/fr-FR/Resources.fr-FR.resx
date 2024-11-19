@@ -1383,4 +1383,13 @@
   <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
     <value>URL à utiliser lors de la mise à jour du champ URL des notes de publication.</value>
   </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>La méthode de réparation</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>La valeur transmise au programme d'installation, à la commande ARP ModifyPath ou à la commande ARP du programme de désinstallation pour une réparation</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>Indique si l’emplacement d’installation doit être ajouté directement à la variable d’environnement PATH. S’applique uniquement à une archive contenant des packages portables.</value>
+  </data>
 </root>
