@@ -1383,4 +1383,13 @@
   <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
     <value>릴리스 정보 URL 필드를 업데이트할 때 사용할 URL입니다.</value>
   </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>복구 방법</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>복구를 위해 설치 관리자, ModifyPath ARP 명령 또는 제거 ARP 명령에 전달되는 값입니다.</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>설치 위치를 PATH 환경 변수에 직접 추가할지 여부를 나타냅니다. 휴대용 패키지가 포함된 보관 파일에만 적용됩니다.</value>
+  </data>
 </root>

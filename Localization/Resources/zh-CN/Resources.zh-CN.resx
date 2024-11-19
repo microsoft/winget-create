@@ -1383,4 +1383,13 @@
   <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
     <value>更新发行说明 URL 字段时要使用的 URL。</value>
   </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>修复方法</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>传递给安装程序、ModifyPath ARP 命令或卸载程序 ARP 命令以进行修复的值</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>指示安装位置是否应直接添加到 PATH 环境变量。仅适用于包含便携包的存档。</value>
+  </data>
 </root>
