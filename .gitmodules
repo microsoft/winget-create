@@ -1,0 +1,6 @@
+[submodule "src/WingetCreateCore/Common/Msi/rust-msi"]
+  path = src/WingetCreateCore/Common/Msi/rust-msi\
+	# TODO: Switch to mdsteele/rust-msi once the PR is merged
+	# https://github.com/mdsteele/rust-msi/pull/18
+  url = https://github.com/vedantmgoyal9/rust-msi
+  shallow = true

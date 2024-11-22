@@ -8,6 +8,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using CommandLine;
     using Microsoft.WingetCreateCLI.Logging;
@@ -50,7 +51,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                     else
                     {
-                        this.DisplayParsingErrors(settingsFileErrors, UserSettings.SettingsJsonPath);
+                        DisplayParsingErrors(settingsFileErrors, UserSettings.SettingsJsonPath);
                     }
                 }
 
@@ -60,11 +61,11 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                     if (!isBackupValid)
                     {
-                        this.DisplayParsingErrors(backupFileErrors, UserSettings.SettingsBackupJsonPath);
+                        DisplayParsingErrors(backupFileErrors, UserSettings.SettingsBackupJsonPath);
                     }
                 }
 
-                return Task.FromResult(commandEvent.IsSuccessful = this.OpenJsonFile(UserSettings.SettingsJsonPath));
+                return Task.FromResult(commandEvent.IsSuccessful = OpenJsonFile(UserSettings.SettingsJsonPath));
             }
             finally
             {
@@ -72,7 +73,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private void DisplayParsingErrors(List<string> errors, string path)
+        private static void DisplayParsingErrors(List<string> errors, string path)
         {
             Logger.WarnLocalized(nameof(Resources.ErrorParsingSettingsFile_Message), Path.GetFileName(path));
 
@@ -83,7 +84,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private bool OpenJsonFile(string path)
+        private static bool OpenJsonFile(string path)
         {
             if (!File.Exists(path))
             {
@@ -92,7 +93,23 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = path });
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = path });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", path);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", path);
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException();
+                }
+
                 return true;
             }
             catch (Win32Exception e)

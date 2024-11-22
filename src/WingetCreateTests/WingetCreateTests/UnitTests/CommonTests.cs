@@ -5,6 +5,7 @@ namespace Microsoft.WingetCreateUnitTests
 {
     using System;
     using System.IO;
+    using System.Runtime.InteropServices;
     using Microsoft.WingetCreateCLI;
     using NUnit.Framework;
     using NUnit.Framework.Legacy;
@@ -20,14 +21,14 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void VerifyPathSubstitutions()
         {
-            string examplePath = "\\foo\\bar\\baz";
+            string examplePath = "\\foo\\bar\\baz".Replace("\\", Path.DirectorySeparatorChar.ToString());
             string path1 = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + examplePath;
             string path2 = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + examplePath;
             string path3 = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar) + examplePath;
 
-            string substitutedPath1 = "%USERPROFILE%" + examplePath;
-            string substitutedPath2 = "%LOCALAPPDATA%" + examplePath;
-            string substitutedPath3 = "%TEMP%" + examplePath;
+            string substitutedPath1 = (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "%USERPROFILE%" : "~") + examplePath;
+            string substitutedPath2 = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "%LOCALAPPDATA%" + examplePath : path2;
+            string substitutedPath3 = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "%TEMP%" + examplePath : path3;
 
             ClassicAssert.AreEqual(substitutedPath1, Common.GetPathForDisplay(path1, true), "The path does not contain the expected substitutions.");
             ClassicAssert.AreEqual(path1, Common.GetPathForDisplay(path1, false), "The path should not contain any substitutions.");

@@ -1,7 +1,6 @@
-
 # Welcome to the Windows Package Manager Manifest Creator repository.
 
-This repository contains the source code for the Windows Package Manager Manifest Creator.  The  Windows Package Manager Manifest Creator is designed to help generate or update manifest files for the [Community repo](https://github.com/microsoft/winget-pkgs).
+This repository contains the source code for the Windows Package Manager Manifest Creator. The Windows Package Manager Manifest Creator is designed to help generate or update manifest files for the [Community repo](https://github.com/microsoft/winget-pkgs).
 
 ## Overview
 
@@ -15,7 +14,7 @@ For your convenience, **WingetCreate** can be acquired a number of ways.
 
 ### Install from the github repo
 
-The **Windows Package Manager Manifest Creator** is available for download from the [winget-create](https://github.com/microsoft/winget-create/releases) repository.  To install the package, simply click the the MSIX file in your browser.  Once it has downloaded, click open.
+The **Windows Package Manager Manifest Creator** is available for download from the [winget-create](https://github.com/microsoft/winget-create/releases) repository. To install the package, simply click the the MSIX file in your browser. Once it has downloaded, click open.
 
 ### Install with Windows Package Manager
 
@@ -43,19 +42,19 @@ choco install wingetcreate
 
 **WingetCreate** has the following commands:
 
-| Command  | Description |
-| -------  | ----------- |
-| [New](doc/new.md)      | Command for creating a new manifest from scratch |
-| [Update](doc/update.md)  | Command for updating an existing manifest |
-| [New-Locale](doc/new-locale.md)  | Command for creating a new locale for an existing manifest |
-| [Update-Locale](doc/update-locale.md)  | Command for updating a locale for an existing manifest |
-| [Submit](doc/submit.md)  | Command for submitting an existing PR  |
-| [Show](doc/show.md)      | Command for displaying existing manifests  |
-| [Token](doc/token.md)   | Command for managing cached GitHub personal access tokens |
-| [Settings](doc/settings.md) | Command for editing the settings file configurations |
-| [Cache](doc/cache.md) | Command for managing downloaded installers stored in cache
-| [Info](doc/info.md)      | Displays information about the client |
-| [-?](doc/help.md)      | Displays command line help |
+| Command                               | Description                                                |
+| ------------------------------------- | ---------------------------------------------------------- |
+| [New](doc/new.md)                     | Command for creating a new manifest from scratch           |
+| [Update](doc/update.md)               | Command for updating an existing manifest                  |
+| [New-Locale](doc/new-locale.md)       | Command for creating a new locale for an existing manifest |
+| [Update-Locale](doc/update-locale.md) | Command for updating a locale for an existing manifest     |
+| [Submit](doc/submit.md)               | Command for submitting an existing PR                      |
+| [Show](doc/show.md)                   | Command for displaying existing manifests                  |
+| [Token](doc/token.md)                 | Command for managing cached GitHub personal access tokens  |
+| [Settings](doc/settings.md)           | Command for editing the settings file configurations       |
+| [Cache](doc/cache.md)                 | Command for managing downloaded installers stored in cache |
+| [Info](doc/info.md)                   | Displays information about the client                      |
+| [-?](doc/help.md)                     | Displays command line help                                 |
 
 Click on the individual commands to learn more.
 
@@ -72,22 +71,22 @@ You can also check out this [episode of Open at Microsoft](https://learn.microso
 
 ### Using the standalone exe:
 
-The latest version of the standalone exe can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview, both of these require [.NET Runtime 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0) to be installed on the build machine. To install this on your build machine in your pipeline, you can include the following dotnet task:
+The latest version of the standalone exe can be found at https://aka.ms/wingetcreate/latest, and the latest preview version can be found at https://aka.ms/wingetcreate/preview, both of these require [.NET Runtime 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) to be installed on the build machine. To install this on your build machine in your pipeline, you can include the following dotnet task:
 
 ```yaml
-      - task: UseDotNet@2
-        displayName: 'Install .NET Runtime'
-        inputs:
-          packageType: sdk
-          version: '6.x'
-          installationPath: '$(ProgramFiles)\dotnet'
+- task: UseDotNet@2
+  displayName: 'Install .NET Runtime'
+  inputs:
+    packageType: sdk
+    version: '8.x'
+    installationPath: '$(ProgramFiles)\dotnet'
 ```
 
 Or you can utilize a PowerShell task and run the following script.
 
 ```PowerShell
     Invoke-WebRequest https://dot.net/v1/dotnet-install.ps1 -OutFile dotnet-install.ps1
-    .\dotnet-install.ps1 -Runtime dotnet -Architecture x64 -Version 6.0.13 -InstallDir $env:ProgramFiles\dotnet
+    .\dotnet-install.ps1 -Runtime dotnet -Architecture x64 -Version 8 -InstallDir $env:ProgramFiles\dotnet
 ```
 
 > [!IMPORTANT]
@@ -109,14 +108,14 @@ Windows Server 2022 now supports App Execution Aliases, which means the alias `w
 
 ```yaml
 - powershell: |
-        # Download and install C++ Runtime framework package.
-        iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile $(vcLibsBundleFile)
-        Add-AppxPackage $(vcLibsBundleFile)
+    # Download and install C++ Runtime framework package.
+    iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile $(vcLibsBundleFile)
+    Add-AppxPackage $(vcLibsBundleFile)
 
-        # Download Winget-Create msixbundle, install, and execute update.
-        iwr https://aka.ms/wingetcreate/latest/msixbundle -OutFile $(appxBundleFile)
-        Add-AppxPackage $(appxBundleFile)
-        wingetcreate update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit
+    # Download Winget-Create msixbundle, install, and execute update.
+    iwr https://aka.ms/wingetcreate/latest/msixbundle -OutFile $(appxBundleFile)
+    Add-AppxPackage $(appxBundleFile)
+    wingetcreate update Microsoft.WingetCreate -u $(packageUrl) -v $(manifestVersion) -t $(GITHUB_PAT) --submit
 ```
 
 The CLI also supports creating or updating manifests with multiple installer URLs. You can either create new manifests with multiple installer nodes using the [New Command](doc/new.md) or update existing manifests with multiple installer URLs using the [Update Command](doc/update.md).
@@ -141,28 +140,30 @@ You can install the prerequisites in one of two ways:
 
 1. Clone the repository
 2. Configure your system
-   * Please use the [configuration file](.configurations/configuration.dsc.yaml). This can be applied by either:
-     * [Dev Home](https://github.com/microsoft/devhome)'s machine configuration tool
-     * WinGet configuration. If you have WinGet version [v1.6.2631 or later](https://github.com/microsoft/winget-cli/releases), run `winget configure .configurations/configuration.dsc.yaml` in an elevated shell from the project root so relative paths resolve correctly
-   * Alternatively, if you already are running the minimum OS version, have Visual Studio installed, and have developer mode enabled, you may configure your Visual Studio directly via the .vsconfig file. To do this:
-     * Open the Visual Studio Installer, select “More” on your product card and then "Import configuration"
-     * Specify the .vsconfig file at the root of the repo and select “Review Details”
+   - Please use the [configuration file](.configurations/configuration.dsc.yaml). This can be applied by either:
+     - [Dev Home](https://github.com/microsoft/devhome)'s machine configuration tool
+     - WinGet configuration. If you have WinGet version [v1.6.2631 or later](https://github.com/microsoft/winget-cli/releases), run `winget configure .configurations/configuration.dsc.yaml` in an elevated shell from the project root so relative paths resolve correctly
+   - Alternatively, if you already are running the minimum OS version, have Visual Studio installed, and have developer mode enabled, you may configure your Visual Studio directly via the .vsconfig file. To do this:
+     - Open the Visual Studio Installer, select “More” on your product card and then "Import configuration"
+     - Specify the .vsconfig file at the root of the repo and select “Review Details”
 
 #### Manual set up
 
-* Windows 10 1709 (16299) or later
-* [Developer mode enabled](https://docs.microsoft.com/windows/uwp/get-started/enable-your-device-for-development) (optional)
-* [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)
-   * Or use winget to install it ;) (although you may need to adjust the workloads via Tools -> Get Tools and Features...)
-* [Git Large File Storage (LFS)](https://git-lfs.github.com/)
-* The following workloads:
-   * .NET Desktop Development
-   * Universal Windows Platform Development
-* Windows 11 SDK (10.0.22000.0) (Tools -> Get Tools and Features -> Individual Components)
+- Windows 10 1709 (16299) or later
+- [Developer mode enabled](https://docs.microsoft.com/windows/uwp/get-started/enable-your-device-for-development)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)
+  - Or use winget to install it ;) (although you may need to adjust the workloads via Tools -> Get Tools and Features...)
+- [Git Large File Storage (LFS)](https://git-lfs.github.com/)
+- The following VS workloads, individual components and extensions:
+  - .NET Desktop Development (Workload)
+  - Windows application development (Workload)
+  - MSVC - VS2022 C++ ARM64/ARM64EC build tools (Latest) (Individual component)
+  - Windows 11 SDK (10.0.26100.0) (Individual component)
+  - Microsoft Visual Studio Installer Projects 2022 (Extension)
 
 ### Building
 
-Open `winget-create\src\WingetCreateCLI.sln` in Visual Studio and build. We currently only build using the solution; command line methods of building a VS solution should work as well.
+Open `winget-create\src\WingetCreateCLI.sln` in Visual Studio and build. We currently only build using the solution; command-line methods of building a VS solution should work as well.
 
 ## Testing the client
 
@@ -172,24 +173,25 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 
 ### Testing Prerequisites
 
-* Fork the [winget-pkgs-submission-test repository](https://github.com/microsoft/winget-pkgs-submission-test)
-* Fill out the test parameters in the `WingetCreateTests/Test.runsettings` file
-    *  `WingetPkgsTestRepoOwner`: The repository owner of the winget-pkgs-submission-test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
-    *  `WingetPkgsTestRepo`: The winget-pkgs test repository. (winget-pkgs-submission-test)
-    *  `GitHubApiKey`: GitHub personal access token for testing.
-       *  Instructions on [how to generate your own GitHubApiKey](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
-       *  Direct link to GitHub [Personal Access Tokens page](https://github.com/settings/tokens).
-   * `GitHubAppPrivateKey`: Leave blank, this is only used by the build server.
+- Fork the [winget-pkgs-submission-test repository](https://github.com/microsoft/winget-pkgs-submission-test)
+- Fill out the test parameters in the `WingetCreateTests/Test.runsettings` file
 
-* Set the solution wide runsettings file for the tests
-    * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
+  - `WingetPkgsTestRepoOwner`: The repository owner of the winget-pkgs-submission-test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
+  - `WingetPkgsTestRepo`: The winget-pkgs test repository. (winget-pkgs-submission-test)
+  - `GitHubApiKey`: GitHub personal access token for testing.
+    - Instructions on [how to generate your own GitHubApiKey](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
+    - Direct link to GitHub [Personal Access Tokens page](https://github.com/settings/tokens).
+  - `GitHubAppPrivateKey`: Leave blank, this is only used by the build server.
+
+- Set the solution-wide runsettings file for the tests
+  - Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
 > [!CAUTION]
 > You should treat your access token like a password. To avoid exposing your PAT, be sure to reset changes to the `WingetCreateTests/Test.runsettings` file before committing your changes. You can also use the command `git update-index --skip-worktree src/WingetCreateTests/WingetCreateTests/Test.runsettings` command to untrack changes to the file and prevent it from being committed.
 
 ## Contributing
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
 the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com. More
 information is available in our [CONTRIBUTING.md](/CONTRIBUTING.md) file.

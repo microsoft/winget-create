@@ -49,7 +49,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Program name of the app.
         /// </summary>
-        protected const string ProgramApplicationAlias = "wingetcreate.exe";
+        protected const string ProgramApplicationAlias = "wingetcreate";
 
         /// <summary>
         /// Dictionary to store paths to downloaded installers from a given URL.
@@ -388,15 +388,20 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <returns>Bool indicating the validity of the manifest file. </returns>
         protected static bool ValidateManifest(string manifestPath)
         {
-            (bool success, string message) = WinGetUtil.ValidateManifest(manifestPath);
+            (bool result, string message) = WinGetUtil.ValidateManifest(manifestPath);
 
-            if (success)
+            if (result)
             {
-                Logger.InfoLocalized(nameof(Resources.ManifestValidationSucceeded_Message), success);
+                Logger.InfoLocalized(nameof(Resources.ManifestValidationSucceeded_Message), result);
+            }
+            else if (message == Constants.ManifestValidationUnavailable)
+            {
+                Logger.ErrorLocalized(nameof(Resources.ManifestValidationSucceeded_Message), message);
+                Logger.WarnLocalized(nameof(Resources.ManifestValidationUnavailableOnUnix_Message));
             }
             else
             {
-                Logger.ErrorLocalized(nameof(Resources.ManifestValidationSucceeded_Message), success);
+                Logger.ErrorLocalized(nameof(Resources.ManifestValidationSucceeded_Message), result);
                 Logger.Error(message);
                 return false;
             }

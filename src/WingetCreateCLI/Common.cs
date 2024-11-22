@@ -5,7 +5,10 @@ namespace Microsoft.WingetCreateCLI
 {
     using System;
     using System.IO;
+    using System.Runtime.InteropServices;
+#if WINDOWS
     using Windows.Storage;
+#endif
 
     /// <summary>
     /// Helper class containing common functionality for the CLI.
@@ -14,14 +17,18 @@ namespace Microsoft.WingetCreateCLI
     {
         private const string ModuleName = "WindowsPackageManagerManifestCreator";
         private const string UserProfileEnvironmentVariable = "%USERPROFILE%";
+        private const string UserHomeDirectoryShortcutUnix = "~";
         private const string LocalAppDataEnvironmentVariable = "%LOCALAPPDATA%";
         private const string TempEnvironmentVariable = "%TEMP%";
 
         private static readonly Lazy<string> AppStatePathLazy = new(() =>
         {
-            string path = IsRunningAsUwp()
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".wingetcreate");
+#if WINDOWS
+            path = IsRunningAsUwp()
                 ? ApplicationData.Current.LocalFolder.Path
                 : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", ModuleName);
+#endif
             Directory.CreateDirectory(path);
             return path;
         });
@@ -81,26 +88,32 @@ namespace Microsoft.WingetCreateCLI
             string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string tempPath = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar);
 
-            if (path.StartsWith(tempPath, StringComparison.OrdinalIgnoreCase))
+            path = path.Replace("\\", Path.DirectorySeparatorChar.ToString());
+
+            if (path.StartsWith(tempPath, StringComparison.OrdinalIgnoreCase) && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return path.Replace(tempPath, TempEnvironmentVariable, StringComparison.OrdinalIgnoreCase);
             }
-            else if (path.StartsWith(localAppDataPath, StringComparison.OrdinalIgnoreCase))
+            else if (path.StartsWith(localAppDataPath, StringComparison.OrdinalIgnoreCase) && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return path.Replace(localAppDataPath, LocalAppDataEnvironmentVariable, StringComparison.OrdinalIgnoreCase);
             }
-            else if (path.StartsWith(userProfilePath, StringComparison.OrdinalIgnoreCase))
+            else if (path.StartsWith(userProfilePath, StringComparison.OrdinalIgnoreCase) && !path.StartsWith(localAppDataPath, StringComparison.OrdinalIgnoreCase))
             {
-                return path.Replace(userProfilePath, UserProfileEnvironmentVariable, StringComparison.OrdinalIgnoreCase);
+                return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                    ? path.Replace(userProfilePath, UserProfileEnvironmentVariable, StringComparison.OrdinalIgnoreCase)
+                    : path.Replace(userProfilePath, UserHomeDirectoryShortcutUnix, StringComparison.OrdinalIgnoreCase);
             }
 
             return path;
         }
 
+#if WINDOWS
         private static bool IsRunningAsUwp()
         {
             DesktopBridge.Helpers helpers = new DesktopBridge.Helpers();
             return helpers.IsRunningAsUwp();
         }
+#endif
     }
 }
