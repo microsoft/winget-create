@@ -4,13 +4,13 @@
     <VisualStudioVersion>15.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|x86">
+    <ProjectConfiguration Include="Debug|ARM64">
       <Configuration>Debug</Configuration>
-      <Platform>x86</Platform>
+      <Platform>ARM64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x86">
+    <ProjectConfiguration Include="Release|ARM64">
       <Configuration>Release</Configuration>
-      <Platform>x86</Platform>
+      <Platform>ARM64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -27,12 +27,12 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>ac37dfd2-1332-4282-b373-8dcf8bb4e3ba</ProjectGuid>
-    <TargetPlatformVersion>10.0.22000.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.26100.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <EntryPointProjectUniqueName>..\WingetCreateCLI\WingetCreateCLI.csproj</EntryPointProjectUniqueName>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>arm64|x64</AppxBundlePlatforms>
     <AppxBundle>Always</AppxBundle>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
@@ -47,7 +47,7 @@
     <ProjectReference Include="..\WingetCreateCLI\WingetCreateCLI.csproj">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
       <PublishProfile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Properties\PublishProfiles\x64ReleasePublishProfile.pubxml</PublishProfile>
-      <PublishProfile Condition="'$(Configuration)|$(Platform)'=='Release|x86'">Properties\PublishProfiles\x86ReleasePublishProfile.pubxml</PublishProfile>
+      <PublishProfile Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">Properties\PublishProfiles\arm64ReleasePublishProfile.pubxml</PublishProfile>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

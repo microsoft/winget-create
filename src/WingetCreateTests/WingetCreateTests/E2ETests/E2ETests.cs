@@ -5,6 +5,7 @@ namespace Microsoft.WingetCreateE2ETests
 {
     using System;
     using System.IO;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
@@ -117,7 +118,15 @@ namespace Microsoft.WingetCreateE2ETests
 
             string pathToValidate = Path.Combine(Directory.GetCurrentDirectory(), Utils.GetAppManifestDirPath(packageId, PackageVersion));
             (bool success, string message) = WinGetUtil.ValidateManifest(pathToValidate);
-            ClassicAssert.IsTrue(success, message);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                ClassicAssert.IsTrue(success, "Manifest validation is expected to succeed on Windows");
+            }
+            else
+            {
+                ClassicAssert.IsFalse(success, "Manifest validation is skipped on non-Windows platforms");
+                ClassicAssert.AreEqual(Constants.ManifestValidationUnavailable, message);
+            }
 
             await this.gitHub.ClosePullRequest(updateCommand.PullRequestNumber);
         }

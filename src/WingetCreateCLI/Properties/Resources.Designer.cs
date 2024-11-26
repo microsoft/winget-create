@@ -1778,6 +1778,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
                 return ResourceManager.GetString("ManifestValidationSucceeded_Message", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Manifest validation is not available on Linux/macOS platforms.
+        /// </summary>
+        public static string ManifestValidationUnavailableOnUnix_Message {
+            get {
+                return ResourceManager.GetString("ManifestValidationUnavailableOnUnix_Message", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to The manifest syntax version.
