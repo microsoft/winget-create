@@ -583,7 +583,7 @@
     <value>Telemetry Settings</value>
   </data>
   <data name="ManifestValidationUnavailableOnUnix_Message" xml:space="preserve">
-    <value>Manifest validation is not available on Linux/macOS platforms.</value>
+    <value>Manifest validation is only available on Windows.</value>
   </data>
   <data name="UnexpectedErrorLoadSettings_Message" xml:space="preserve">
     <value>Unexpected error while loading settings. Please verify your settings by running the settings command.</value>

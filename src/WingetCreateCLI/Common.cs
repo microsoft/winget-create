@@ -88,7 +88,7 @@ namespace Microsoft.WingetCreateCLI
             string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string tempPath = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar);
 
-            path = path.Replace("\\", Path.DirectorySeparatorChar.ToString());
+            path = Path.GetFullPath(path);
 
             if (path.StartsWith(tempPath, StringComparison.OrdinalIgnoreCase) && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {

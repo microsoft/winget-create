@@ -36,9 +36,7 @@ namespace Microsoft.WingetCreateCore.Common
         /// <summary>
         /// Gets metadata of APPX/MSIX package or bundle.
         /// </summary>
-#pragma warning disable SA1401 // Fields should be private
-        public Metadata Information;
-#pragma warning restore SA1401 // Fields should be private
+        public Metadata Information { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MsixOrAppxPackage"/> class.
