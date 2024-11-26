@@ -28,7 +28,7 @@ namespace Microsoft.WingetCreateCLI
                 ? ApplicationData.Current.LocalFolder.Path
                 : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Microsoft", ModuleName);
 #else
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".wingetcreate");
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config", "wingetcreate");
 #endif
             Directory.CreateDirectory(path);
             return path;
