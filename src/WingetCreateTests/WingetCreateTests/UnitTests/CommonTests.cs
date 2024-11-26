@@ -21,13 +21,15 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public void VerifyPathSubstitutions()
         {
+            // Replace with the directory separator character for the current platform (e.g. '/' on Unix, '\' on Windows).
             string examplePath = "\\foo\\bar\\baz".Replace("\\", Path.DirectorySeparatorChar.ToString());
-            string path1 = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + examplePath;
+            string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string path1 = userProfilePath + examplePath;
             string path2 = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + examplePath;
             string path3 = Path.GetTempPath().TrimEnd(Path.DirectorySeparatorChar) + examplePath;
 
             string substitutedPath1 = (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "%USERPROFILE%" : "~") + examplePath;
-            string substitutedPath2 = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "%LOCALAPPDATA%" + examplePath : path2;
+            string substitutedPath2 = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "%LOCALAPPDATA%" + examplePath : path2.Replace(userProfilePath, "~");
             string substitutedPath3 = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "%TEMP%" + examplePath : path3;
 
             ClassicAssert.AreEqual(substitutedPath1, Common.GetPathForDisplay(path1, true), "The path does not contain the expected substitutions.");

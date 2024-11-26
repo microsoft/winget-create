@@ -75,10 +75,10 @@ The latest version of the standalone exe can be found at https://aka.ms/wingetcr
 
 ```yaml
 - task: UseDotNet@2
-  displayName: 'Install .NET Runtime'
+  displayName: "Install .NET Runtime"
   inputs:
     packageType: sdk
-    version: '8.x'
+    version: "8.x"
     installationPath: '$(ProgramFiles)\dotnet'
 ```
 

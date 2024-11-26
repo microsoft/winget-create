@@ -91,32 +91,32 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return false;
             }
 
-            try
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                try
                 {
                     Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = path });
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                catch (Win32Exception e)
                 {
-                    Process.Start("xdg-open", path);
+                    Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
+                    return false;
                 }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    Process.Start("open", path);
-                }
-                else
-                {
-                    throw new PlatformNotSupportedException();
-                }
-
-                return true;
             }
-            catch (Win32Exception e)
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Logger.ErrorLocalized(nameof(Resources.Error_Prefix), e.Message);
-                return false;
+                Process.Start("xdg-open", path);
             }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                Process.Start("open", path);
+            }
+            else
+            {
+                throw new PlatformNotSupportedException();
+            }
+
+            return true;
         }
     }
 }

@@ -809,23 +809,13 @@ namespace Microsoft.WingetCreateCore
             {
                 InstallerType? installerTypeEnum;
                 var directory = PEImage.FromFile(path).Resources
-                .GetDirectory(ResourceType.Manifest)
-                .GetDirectory(ResourceType.Cursor);
+                    .GetDirectory(ResourceType.Manifest)
+                    .GetDirectory(ResourceType.Cursor);
                 var data = directory.GetData(directory.Entries.First().Id);
-                var xmlBytes = data.CreateReader().ReadToEnd().ToList();
-
-                // workaround to fix System.Xml.XmlException (Data at the root level is invalid. Line 1, position 1)
-                // https://stackoverflow.com/questions/17947238/why-data-at-the-root-level-is-invalid-line-1-position-1-for-xml-document
-                foreach (byte singleByte in Encoding.UTF8.GetPreamble())
-                {
-                    if (xmlBytes.IndexOf(singleByte) != -1)
-                    {
-                        xmlBytes.RemoveAt(xmlBytes.IndexOf(singleByte));
-                    }
-                }
-
                 var manifestXml = new XmlDocument();
-                manifestXml.LoadXml(Encoding.UTF8.GetString(xmlBytes.ToArray()));
+
+                // The first character is not a valid XML character, so we skip it.
+                manifestXml.LoadXml(data.CreateReader().ReadUtf8String().ToString()[1..]);
                 string installerType = manifestXml.DocumentElement
                     .GetElementsByTagName("description")
                     .Cast<XmlNode>()
