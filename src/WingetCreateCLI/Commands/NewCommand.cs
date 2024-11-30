@@ -255,7 +255,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     PromptManifestProperties(manifests);
                     MergeNestedInstallerFilesIfApplicable(manifests.InstallerManifest);
                     ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
-                    RemoveEmptyStringFieldsInManifests(manifests);
+                    RemoveEmptyStringAndListFieldsInManifests(manifests);
                     DisplayManifestPreview(manifests);
                     isManifestValid = ValidateManifestsInTempDir(manifests);
                 }

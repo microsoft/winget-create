@@ -164,7 +164,7 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
-        /// Verifies that any fields with empty string values are replaced with null so that they do not appear in the manifest output.
+        /// Verifies that any fields with empty string and list values are replaced with null so that they do not appear in the manifest output.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [Test]
@@ -181,12 +181,31 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsTrue(updatedManifestContents.Any(), "Updated manifests were not created successfully");
 
             Manifests updatedManifests = Serialization.DeserializeManifestContents(updatedManifestContents);
+
+            // Empty string fields are removed
             ClassicAssert.IsNull(updatedManifests.DefaultLocaleManifest.PrivacyUrl, "PrivacyUrl should be null.");
             ClassicAssert.IsNull(updatedManifests.DefaultLocaleManifest.Author, "Author should be null.");
-
             var firstInstaller = updatedManifests.InstallerManifest.Installers.First();
             ClassicAssert.IsNull(firstInstaller.ProductCode, "ProductCode should be null.");
             ClassicAssert.IsNull(firstInstaller.PackageFamilyName, "ProductCode should be null.");
+
+            // Empty list fields are removed
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.Platform, "Platform should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.InstallModes, "InstallModes should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.FileExtensions, "FileExtensions should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.Commands, "Commands should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.AppsAndFeaturesEntries, "AppsAndFeaturesEntries should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.Protocols, "Protocols should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.Capabilities, "Capabilities should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.UnsupportedArguments, "UnsupportedArguments should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.UnsupportedOSArchitectures, "UnsupportedOSArchitectures should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.RestrictedCapabilities, "RestrictedCapabilities should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.NestedInstallerFiles, "NestedInstallerFiles should be null.");
+            ClassicAssert.IsNull(updatedManifests.InstallerManifest.ExpectedReturnCodes, "ExpectedReturnCodes should be null.");
+            ClassicAssert.IsNull(updatedManifests.DefaultLocaleManifest.Tags, "Tags should be null.");
+            ClassicAssert.IsNull(updatedManifests.DefaultLocaleManifest.Agreements, "Agreements should be null.");
+            ClassicAssert.IsNull(updatedManifests.DefaultLocaleManifest.Documentations, "Documentations should be null.");
+            ClassicAssert.IsNull(updatedManifests.DefaultLocaleManifest.Icons, "Icons should be null.");
         }
 
         /// <summary>
