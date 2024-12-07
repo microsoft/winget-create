@@ -386,8 +386,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                 }
 
-                PromptForPortableAliasIfApplicable(installer);
-
+                PromptForPortableFieldsIfApplicable(installer);
                 foreach (var requiredProperty in requiredInstallerProperties)
                 {
                     var currentValue = requiredProperty.GetValue(installer);
@@ -447,7 +446,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void PromptForPortableAliasIfApplicable(Installer installer)
+        private static void PromptForPortableFieldsIfApplicable(Installer installer)
         {
             if (installer.InstallerType == InstallerType.Portable)
             {
@@ -467,6 +466,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (!string.IsNullOrEmpty(portableCommandAlias))
                 {
                     installer.NestedInstallerFiles.First().PortableCommandAlias = portableCommandAlias.Trim();
+                }
+
+                // No need to set explicitly in else case as WinGet CLI defaults to using false
+                if (Prompt.Confirm(Resources.ConfirmZippedBinary_Message))
+                {
+                    installer.ArchiveBinariesDependOnPath = true;
                 }
             }
         }
