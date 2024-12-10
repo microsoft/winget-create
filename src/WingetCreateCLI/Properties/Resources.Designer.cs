@@ -394,6 +394,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Does this executable depend on DLLs or any other files present in the zip archive?.
+        /// </summary>
+        public static string ConfirmZippedBinary_Message {
+            get {
+                return ResourceManager.GetString("ConfirmZippedBinary_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package copyright.
         /// </summary>
         public static string Copyright_KeywordDescription {
