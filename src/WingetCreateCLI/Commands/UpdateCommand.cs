@@ -263,7 +263,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return false;
             }
 
-            RemoveEmptyStringFieldsInManifests(updatedManifests);
+            RemoveEmptyStringAndListFieldsInManifests(updatedManifests);
             ShiftInstallerFieldsToRootLevel(updatedManifests.InstallerManifest);
             DisplayManifestPreview(updatedManifests);
 
