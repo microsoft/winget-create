@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_EC00637427584C7AB0F79A482C711EFD"
+        "MsmKey" = "8:_D60286F3493A473D9422AF58A76C74B4"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -79,6 +79,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -686,9 +694,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_EC00637427584C7AB0F79A482C711EFD"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D60286F3493A473D9422AF58A76C74B4"
             {
-            "SourcePath" = "8:..\\WingetCreateTestExeInstaller\\obj\\Debug\\apphost.exe"
+            "SourcePath" = "8:..\\WingetCreateTestExeInstaller\\obj\\ARM64\\Release\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8B529A5A2AFA41A9A16673642F74D5C8"
@@ -708,7 +716,7 @@
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:PublishItems"
-            "OutputProjectGuid" = "8:{D61EDBD2-637B-4B5A-848E-2B1A505BE883}"
+            "OutputProjectGuid" = "8:{B7B1E135-E27C-4189-9C12-95BC387EF130}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
