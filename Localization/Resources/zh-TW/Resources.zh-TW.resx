@@ -1392,4 +1392,7 @@
   <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
     <value>指出安裝位置是否應直接新增至PATH環境變數。僅適用於包含可攜式封裝的封存。</value>
   </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>此可執行檔是否相依於 DLL 或 ZIP 封存中存在的任何其他檔案？</value>
+  </data>
 </root>

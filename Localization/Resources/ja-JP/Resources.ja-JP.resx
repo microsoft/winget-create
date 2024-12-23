@@ -1392,4 +1392,7 @@
   <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
     <value>インストール場所を PATH 環境変数に直接追加するかどうかを示します。移植可能なパッケージを含むアーカイブにのみ適用されます。</value>
   </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>この実行可能ファイルは DLL または zip アーカイブに存在する他のファイルに依存しますか?</value>
+  </data>
 </root>

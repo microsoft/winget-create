@@ -1392,4 +1392,7 @@
   <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
     <value>Указывает, следует ли добавлять расположение установки непосредственно к переменной среды PATH. Применяется только к архиву, содержащему переносимые пакеты.</value>
   </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>Этот исполняемый файл зависит от DLL-библиотек или других файлов, которые находятся в ZIP-архиве?</value>
+  </data>
 </root>
