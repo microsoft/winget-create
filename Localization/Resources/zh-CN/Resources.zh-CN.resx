@@ -1392,4 +1392,7 @@
   <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
     <value>指示安装位置是否应直接添加到 PATH 环境变量。仅适用于包含便携包的存档。</value>
   </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>此可执行文件是否依赖于 dLL 或 zip 存档中存在的任何其他文件?</value>
+  </data>
 </root>

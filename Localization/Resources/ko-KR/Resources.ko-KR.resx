@@ -1392,4 +1392,7 @@
   <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
     <value>설치 위치를 PATH 환경 변수에 직접 추가할지 여부를 나타냅니다. 휴대용 패키지가 포함된 보관 파일에만 적용됩니다.</value>
   </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>이 실행 파일은 DLL 또는 zip 보관 파일에 있는 다른 파일에 따라 달라지나요?</value>
+  </data>
 </root>

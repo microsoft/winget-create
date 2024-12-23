@@ -1392,4 +1392,7 @@
   <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
     <value>Indica se il percorso di installazione deve essere aggiunto direttamente alla variabile di ambiente PATH. Si applica solo a un archivio contenente pacchetti portabili.</value>
   </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>L'eseguibile dipende dalle DLL o da altri file presenti nell'archivio ZIP?</value>
+  </data>
 </root>

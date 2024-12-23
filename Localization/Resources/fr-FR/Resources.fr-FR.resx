@@ -1392,4 +1392,7 @@
   <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
     <value>Indique si l’emplacement d’installation doit être ajouté directement à la variable d’environnement PATH. S’applique uniquement à une archive contenant des packages portables.</value>
   </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>Cet exécutable dépend-il de DLL ou d’autres fichiers présents dans l’archive zip ?</value>
+  </data>
 </root>
