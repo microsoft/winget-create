@@ -477,7 +477,7 @@ namespace Microsoft.WingetCreateCLI
                 var installerTuple = string.Join(" | ", new[]
                     {
                         installer.Architecture.ToEnumAttributeValue(),
-                        installer.InstallerType.ToEnumAttributeValue(),
+                        installer.InstallerType?.ToEnumAttributeValue(),
                         installer.Scope?.ToEnumAttributeValue(),
                         installer.InstallerLocale,
                         installer.InstallerUrl,
