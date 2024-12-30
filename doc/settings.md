@@ -74,3 +74,31 @@ The `anonymizePaths` setting controls whether the paths of files and directories
         "anonymizePaths": true
     }
 ```
+
+## Manifest
+
+The `Manifest` settings control the behavior of the Winget-Create CLI when creating a manifest.
+
+### format
+
+The `format` setting specifies the format of the manifest file that will be created. By default, this is set to `yaml`. The other supported format is `json`. The `--format` argument provided inline with the command will take precedence over this setting.
+
+```json
+    "Manifest": {
+        "format": "yaml"
+    }
+```
+
+## PullRequest
+
+The `PullRequest` settings control the behavior of the Winget-Create CLI when creating a pull request on the Windows Package Manager repository.
+
+### openInBrowser
+
+```json
+    "PullRequest": {
+        "openInBrowser": false
+    },
+```
+
+If set to false, the `PullRequest.openInBrowser` setting will prevent the Winget-Create CLI from opening the pull request in the default browser after creating it. By default, this is set to true. The `--no-open` argument provided inline with the command will take precedence over this setting.

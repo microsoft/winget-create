@@ -1395,4 +1395,7 @@
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>Does this executable depend on DLLs or any other files present in the zip archive?</value>
   </data>
+  <data name="NoOpenPRInBrowser_HelpText" xml:space="preserve">
+    <value>Boolean value that controls whether the pull request should not be open in the browser on submission. Default is false.</value>
+  </data>
 </root>

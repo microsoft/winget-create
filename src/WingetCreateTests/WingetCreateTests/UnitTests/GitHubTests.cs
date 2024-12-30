@@ -103,7 +103,7 @@ namespace Microsoft.WingetCreateUnitTests
             manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(latestManifest.First());
             Assert.That(manifests.SingletonManifest.PackageIdentifier, Is.EqualTo(TestConstants.TestPackageIdentifier), FailedToRetrieveManifestFromId);
 
-            PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, TestConstants.TestPRTitle);
+            Octokit.PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, TestConstants.TestPRTitle);
             Assert.That(TestConstants.TestPRTitle, Is.EqualTo(pullRequest.Title), TitleMismatch);
             await this.gitHub.ClosePullRequest(pullRequest.Number);
             StringAssert.StartsWith(string.Format(GitHubPullRequestBaseUrl, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo), pullRequest.HtmlUrl, PullRequestFailedToGenerate);
@@ -121,7 +121,7 @@ namespace Microsoft.WingetCreateUnitTests
             Manifests manifests = Serialization.DeserializeManifestContents(manifestContents);
             Assert.That(manifests.SingletonManifest.PackageIdentifier, Is.EqualTo(packageId), FailedToRetrieveManifestFromId);
 
-            PullRequest pullRequest = new();
+            Octokit.PullRequest pullRequest = new();
             try
             {
                 pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork);
