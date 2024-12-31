@@ -195,6 +195,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 try
                 {
                     PackageParser.ParsePackages(installerUpdateList, manifests);
+
+                    // The CLI parses ARP entries uses them in update flow to update existing AppsAndFeaturesEntries in the manifest.
+                    // AppsAndFeaturesEntries should not be set for a new package as they may cause more harm than good.
+                    RemoveARPEntries(manifests.InstallerManifest);
                     DisplayArchitectureWarnings(installerUpdateList);
                 }
                 catch (IOException iOException) when (iOException.HResult == -2147024671)
@@ -505,6 +509,15 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 // Add the installer with the merged nested installer files back to the manifest
                 installerManifest.Installers.Add(installerToMergeInto);
+            }
+        }
+
+        private static void RemoveARPEntries(InstallerManifest installerManifest)
+        {
+            installerManifest.AppsAndFeaturesEntries = null;
+            foreach (var installer in installerManifest.Installers)
+            {
+                installer.AppsAndFeaturesEntries = null;
             }
         }
 
