@@ -2122,6 +2122,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boolean value that controls whether the pull request should not be open in the browser on submission. Default is false..
+        /// </summary>
+        public static string NoOpenPRInBrowser_HelpText {
+            get {
+                return ResourceManager.GetString("NoOpenPRInBrowser_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No token provided, submission to GitHub skipped..
         /// </summary>
         public static string NoTokenProvided_Message {

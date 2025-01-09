@@ -133,6 +133,20 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the pull request should be opened automatically in the browser on submission.
+        /// </summary>
+        public static bool OpenPRInBrowser
+        {
+            get => Settings.PullRequest.OpenInBrowser;
+
+            set
+            {
+                Settings.PullRequest.OpenInBrowser = value;
+                SaveSettings();
+            }
+        }
+
         private static SettingsManifest Settings { get; set; }
 
         /// <summary>

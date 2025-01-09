@@ -128,6 +128,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the PR should be opened automatically in the browser.
+        /// </summary>
+        [Option('n', "no-open", Required = false, HelpText = "NoOpenPRInBrowser_HelpText", ResourceType = typeof(Resources))]
+        public bool NoOpenPRInBrowser { get => !this.OpenPRInBrowser; set => this.OpenPRInBrowser = !value; }
+
+        /// <summary>
         /// Gets or sets the new value(s) used to update the manifest installer elements.
         /// </summary>
         [Option('u', "urls", Required = false, HelpText = "InstallerUrl_HelpText", ResourceType = typeof(Resources))]
@@ -163,7 +169,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                bool submitFlagMissing = !this.SubmitToGitHub && (!string.IsNullOrEmpty(this.PRTitle) || this.Replace);
+                bool submitFlagMissing = !this.SubmitToGitHub && (
+                    !string.IsNullOrEmpty(this.PRTitle) ||
+                    this.Replace ||
+                    this.NoOpenPRInBrowser);
 
                 if (!string.IsNullOrEmpty(this.ReleaseNotesUrl))
                 {

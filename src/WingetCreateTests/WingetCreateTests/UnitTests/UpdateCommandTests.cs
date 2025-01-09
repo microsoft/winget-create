@@ -318,6 +318,38 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verify that update command warns if submit arguments are provided without submit flag being set.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
+        [Test]
+        public async Task UpdateChecksMissingSubmitFlagWithNoOpenPR()
+        {
+            string packageId = "TestPublisher.TestPackageId";
+            string version = "1.2.3.4";
+
+            UpdateCommand command = new UpdateCommand
+            {
+                Id = packageId,
+                Version = version,
+                InstallerUrls = new[] { "https://fakedomain.com/fakeinstaller.exe" },
+                SubmitToGitHub = false,
+                NoOpenPRInBrowser = true,
+            };
+
+            try
+            {
+                await command.Execute();
+            }
+            catch (Exception)
+            {
+                // Expected exception
+            }
+
+            string result = this.sw.ToString();
+            Assert.That(result, Does.Contain(Resources.SubmitFlagMissing_Warning), "Submit flag missing warning should be shown");
+        }
+
+        /// <summary>
         /// Since some installers are incorrectly labeled on the manifest, resort to using the installer URL to find matches.
         /// This unit test uses a msi installer that is not an arm64 installer, but because the installer URL includes "arm64", it should find a match.
         /// </summary>

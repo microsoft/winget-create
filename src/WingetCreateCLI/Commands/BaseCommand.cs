@@ -99,7 +99,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets or sets a value indicating whether or not to automatically open the PR webpage in the browser after creation.
         /// </summary>
-        public bool OpenPRInBrowser { get; set; } = true;
+        public bool OpenPRInBrowser { get; set; } = UserSettings.OpenPRInBrowser;
 
         /// <summary>
         /// Gets the GitHubClient instance to use for interacting with GitHub from the CLI.
@@ -740,7 +740,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion);
+                Octokit.PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion);
                 this.PullRequestNumber = pullRequest.Number;
                 PullRequestEvent pullRequestEvent = new PullRequestEvent { IsSuccessful = true, PullRequestNumber = pullRequest.Number };
                 TelemetryManager.Log.WriteEvent(pullRequestEvent);

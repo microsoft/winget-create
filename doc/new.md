@@ -26,9 +26,10 @@ The following arguments are available:
 
 | Argument  | Description |
 |--------------|-------------|
-| **-o,--out** |  The output directory where the newly created manifests will be saved locally |
-| **-f,--format** |  Output format of the manifest. Default is "yaml". |
-| **-t,--token**  | GitHub personal access token used for direct submission to the Windows Package Manager repo |
+| **-o, --out** |  The output directory where the newly created manifests will be saved locally |
+| **-f, --format** |  Output format of the manifest. Default is "yaml". |
+| **-t, --token**  | GitHub personal access token used for direct submission to the Windows Package Manager repo |
+| **-n, --no-open** |  Boolean value that controls whether the pull request should not be open in the browser on submission. Default is false, meaning the PR will be opened in the browser. |
 | **-?, --help** |  Gets additional help on this command |
 
 ## Winget-Create New Command flow
