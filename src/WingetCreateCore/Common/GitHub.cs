@@ -487,7 +487,8 @@ namespace Microsoft.WingetCreateCore.Common
                 }
 
                 // Octokit .NET doesn't support sync fork endpoint, so we make a direct call to the GitHub API.
-                // https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#sync-a-fork-branch-with-the-upstream-repository
+                // Tracking issue for the request: https://github.com/octokit/octokit.net/issues/2989
+                // API reference: https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#sync-a-fork-branch-with-the-upstream-repository
                 HttpClient httpClient = new HttpClient();
 
                 // Headers
