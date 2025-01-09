@@ -7,7 +7,10 @@ namespace Microsoft.WingetCreateCore.Common
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net.Http;
     using System.Security.Cryptography;
+    using System.Text;
+    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using Jose;
     using Microsoft.WingetCreateCore.Common.Exceptions;
@@ -483,8 +486,23 @@ namespace Microsoft.WingetCreateCore.Common
                     throw new NonFastForwardException(commitsAheadBy);
                 }
 
-                var upstreamBranchReference = await this.github.Git.Reference.Get(upstream.Id, $"heads/{upstream.DefaultBranch}");
-                await this.github.Git.Reference.Update(forkedRepo.Id, $"heads/{forkedRepo.DefaultBranch}", new ReferenceUpdate(upstreamBranchReference.Object.Sha));
+                // Octokit .NET doesn't support sync fork endpoint, so we make a direct call to the GitHub API.
+                // https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#sync-a-fork-branch-with-the-upstream-repository
+                HttpClient httpClient = new HttpClient();
+
+                // Headers
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.github.Credentials.Password);
+                httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
+                httpClient.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+                httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(Constants.ProgramName);
+
+                // Payload
+                JsonObject jsonObject = new JsonObject { { "branch", forkedRepo.DefaultBranch } };
+                var content = new StringContent(jsonObject.ToString(), Encoding.UTF8, "application/json");
+
+                var url = $"https://api.github.com/repos/{forkedRepo.Owner.Login}/{forkedRepo.Name}/merge-upstream";
+                var response = await httpClient.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
             }
         }
 
