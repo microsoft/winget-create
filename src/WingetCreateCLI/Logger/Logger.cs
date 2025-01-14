@@ -10,7 +10,6 @@ namespace Microsoft.WingetCreateCLI.Logging
     using Microsoft.WingetCreateCore.Common;
     using NLog;
     using NLog.Conditions;
-    using NLog.Config;
     using NLog.Targets;
 
     /// <summary>
@@ -22,7 +21,7 @@ namespace Microsoft.WingetCreateCLI.Logging
 
         private static readonly FileTarget FileTarget = new()
         {
-            FileName = @$"{Path.Combine(Common.LocalAppStatePath, Constants.DiagnosticOutputDirectoryFolderName)}\WingetCreateLog-{DateTime.Now:yyyy-MM-dd-HH-mm.fff}.txt",
+            FileName = Path.Combine(Common.LocalAppStatePath, Constants.DiagnosticOutputDirectoryFolderName, $"WingetCreateLog-{DateTime.Now:yyyy-MM-dd-HH-mm.fff}.txt"),
 
             // Current layout example: 2021-01-01 08:30:59.0000|INFO|Microsoft.WingetCreateCLI.Commands.NewCommand.Execute|Log Message Example
             Layout = "${longdate}|${level:uppercase=true}|${callsite}|${message}",

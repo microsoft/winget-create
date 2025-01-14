@@ -136,6 +136,10 @@ namespace Microsoft.WingetCreateCore.Serializers
                 this.innerTypeDescriptor = innerTypeDescriptor;
             }
 
+            public override string GetEnumName(Type enumType, string name) => this.innerTypeDescriptor.GetEnumName(enumType, name);
+
+            public override string GetEnumValue(object enumValue) => this.innerTypeDescriptor.GetEnumValue(enumValue);
+
             /// <summary>
             /// Because certain properties were generated incorrectly, we needed to create custom fields for those properties.
             /// Therefore to resolve naming conflicts during deserialization, we prioritize fields that have the YamlMemberAttribute defined
@@ -182,7 +186,7 @@ namespace Microsoft.WingetCreateCore.Serializers
                 return type.IsEnum || ((u != null) && u.IsEnum);
             }
 
-            public object ReadYaml(IParser parser, Type type)
+            public object ReadYaml(IParser parser, Type type, ObjectDeserializer objectDeserializer)
             {
                 Type u = Nullable.GetUnderlyingType(type);
                 if (u != null)
@@ -202,7 +206,7 @@ namespace Microsoft.WingetCreateCore.Serializers
                 return Enum.Parse(type, serializableValues[parsedEnum.Value].Name);
             }
 
-            public void WriteYaml(IEmitter emitter, object value, Type type)
+            public void WriteYaml(IEmitter emitter, object value, Type type, ObjectSerializer objectSerializer)
             {
                 var enumMember = type.GetMember(value.ToString()).FirstOrDefault();
                 var yamlValue = enumMember?.GetCustomAttributes<EnumMemberAttribute>(true).Select(ema => ema.Value).FirstOrDefault() ?? value.ToString();
@@ -217,14 +221,14 @@ namespace Microsoft.WingetCreateCore.Serializers
             {
             }
 
-            public override bool EnterMapping(IPropertyDescriptor key, IObjectDescriptor value, IEmitter context)
+            public override bool EnterMapping(IPropertyDescriptor key, IObjectDescriptor value, IEmitter context, ObjectSerializer objectSerializer)
             {
                 if (key.Name == "AdditionalProperties")
                 {
                     return false;
                 }
 
-                return base.EnterMapping(key, value, context);
+                return base.EnterMapping(key, value, context, objectSerializer);
             }
         }
 
