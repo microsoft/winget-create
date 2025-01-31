@@ -167,7 +167,6 @@ extends:
                   /p:AppxPackageSigningEnabled=false'
 
             - task: onebranch.pipeline.signing@1
-              continueOnError: true
               displayName: 'CodeSigning'
               inputs:
                 command: 'sign'
