@@ -73,6 +73,9 @@ Installers:
           FileSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82
           FileType: launch
           InvocationParameter: "/arg"
+    DownloadCommandProhibited: true
+    RepairBehavior: modify
+    ArchiveBinariesDependOnPath: true
   - Architecture: x86
     InstallerType: zip
     InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
@@ -140,6 +143,9 @@ Installers:
           FileSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82
           FileType: launch
           InvocationParameter: "/arg"
+    DownloadCommandProhibited: true
+    RepairBehavior: modify
+    ArchiveBinariesDependOnPath: true
   - Architecture: arm
     InstallerType: zip
     InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
@@ -157,6 +163,7 @@ Installers:
     InstallerSwitches:
       Silent: /silent
       SilentWithProgress: /silentwithprogress
+      Repair: /repair
     Dependencies:
       PackageDependencies:
       - PackageIdentifier: TestPackageDependency
@@ -207,6 +214,9 @@ Installers:
           FileSha256: 69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82
           FileType: launch
           InvocationParameter: "/arg"
+    DownloadCommandProhibited: true
+    RepairBehavior: modify
+    ArchiveBinariesDependOnPath: true
 PackageLocale: en-US
 ManifestType: singleton
-ManifestVersion: 1.4.0
+ManifestVersion: 1.9.0

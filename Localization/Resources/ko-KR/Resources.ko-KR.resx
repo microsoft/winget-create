@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>여러 아키텍처가 검색되었습니다. 재정의를 위해 아키텍처를 하나만 지정할 수 있습니다.</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>지정된 재정의 {0}을(를) 구문 분석할 수 없습니다.</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>지정된 {0} 인수를 구문 분석할 수 없습니다.</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>설치 관리자의 아키텍처 재정의</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>여러 범위가 검색되었습니다. 재정의에는 scope 하나만 지정할 수 있습니다.</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>다음 설치 관리자 URL에 대해 너무 많은 재정의가 지정되었습니다. {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>다음 설치 관리자 URL에 대해 지정된 인수가 너무 많습니다. {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1342,10 +1342,57 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>바꾸기 버전은 전송 버전과 같을 수 없습니다.</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>제공된 매니페스트 형식이 잘못되었습니다.</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>매니페스트의 출력 형식입니다. 기본값은 "yaml"입니다.</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>지원되지 않는 형식입니다. Windows 패키지 관리자 커뮤니티 리포지토리는 "yaml" 매니페스트 제출만 허용합니다.</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>캐시된 GitHub 토큰 지우기</value>
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>로컬 캐시에 새 GitHub 토큰 저장</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>기본 매니페스트에 업데이트되지 않은 DisplayVersion이 포함되어 있습니다. --display-version CLI 인수를 사용하거나 설치 관리자 URL에 버전을 제공하세요.</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>디스플레이 버전 필드를 업데이트할 때 사용할 버전입니다. 설치 관리자 URL 인수에 제공한 버전이 이 값보다 우선합니다.</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>{1}에 '{0}' 디스플레이 버전 사용</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>여러 디스플레이 버전이 있는 단일 설치 관리자가 검색되었습니다. Winget-Create 지정된 설치 관리자의 첫 번째 DisplayVersion만 업데이트합니다.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>GitHub의 API를 통해 매니페스트 메타데이터를 채울 수 없습니다.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>GitHub URL이 검색되었습니다. CLI가 일부 매니페스트 필드를 자동으로 채웠습니다.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>릴리스 날짜 필드를 업데이트할 때 사용할 날짜입니다. 필요한 형식은 "YYYY-MM-DD"입니다.</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>릴리스 정보 URL 필드를 업데이트할 때 사용할 URL입니다.</value>
+  </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>복구 방법</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>복구를 위해 설치 관리자, ModifyPath ARP 명령 또는 제거 ARP 명령에 전달되는 값입니다.</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>설치 위치를 PATH 환경 변수에 직접 추가할지 여부를 나타냅니다. 휴대용 패키지가 포함된 보관 파일에만 적용됩니다.</value>
+  </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>이 실행 파일은 DLL 또는 zip 보관 파일에 있는 다른 파일에 따라 달라지나요?</value>
   </data>
 </root>

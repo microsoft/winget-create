@@ -19,7 +19,6 @@ namespace Microsoft.WingetCreateCore
     using Microsoft.Msix.Utils;
     using Microsoft.Msix.Utils.AppxPackaging;
     using Microsoft.Msix.Utils.AppxPackagingInterop;
-    using Microsoft.Msix.Utils.Logger;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
@@ -216,6 +215,10 @@ namespace Microsoft.WingetCreateCore
                 {
                     parseFailedInstallerUrls.Add(installerMetadata.InstallerUrl);
                 }
+
+                // In case of multiple nested installers in the archive, we expect the new installers to have duplicates
+                // Remove these duplicates to avoid multiple matches.
+                installerMetadata.NewInstallers = installerMetadata.NewInstallers.Distinct().ToList();
             }
 
             int numOfNewInstallers = installerMetadataList.Sum(x => x.NewInstallers.Count);
@@ -241,13 +244,20 @@ namespace Microsoft.WingetCreateCore
                     // Update DisplayVersion for each AppsAndFeaturesEntry
                     if (!string.IsNullOrEmpty(installerUpdate.DisplayVersion))
                     {
-                        newInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
+                        if (newInstaller.AppsAndFeaturesEntries != null)
                         {
-                            new AppsAndFeaturesEntry
+                            newInstaller.AppsAndFeaturesEntries[0].DisplayVersion = installerUpdate.DisplayVersion;
+                        }
+                        else
+                        {
+                            newInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
                             {
-                                DisplayVersion = installerUpdate.DisplayVersion,
-                            },
-                        };
+                                new AppsAndFeaturesEntry
+                                {
+                                    DisplayVersion = installerUpdate.DisplayVersion,
+                                },
+                            };
+                        }
                     }
 
                     // if the installerUpdate does not have a binary or url architecture specified, then just use what is specified in the installer.
@@ -262,6 +272,24 @@ namespace Microsoft.WingetCreateCore
                     // If a match is found, add match to dictionary and remove for list of existingInstallers
                     if (existingInstallerMatch != null)
                     {
+                        // Remove the nested installers from the new installer that are not present in the existing installer.
+                        if (newInstaller.NestedInstallerFiles != null && existingInstallerMatch.NestedInstallerFiles != null)
+                        {
+                            var matchedFiles = newInstaller.NestedInstallerFiles
+                                .Where(nif =>
+                                {
+                                    var fileName = Path.GetFileName(nif.RelativeFilePath);
+
+                                    // If the flow reaches here, there's guaranteed to be a matching file name
+                                    // Any mismatches would've been detected earlier in the update flow.
+                                    return existingInstallerMatch.NestedInstallerFiles.Any(eif =>
+                                        Path.GetFileName(eif.RelativeFilePath) == fileName);
+                                })
+                                .ToList();
+
+                            newInstaller.NestedInstallerFiles = matchedFiles;
+                        }
+
                         installerMatchDict.Add(existingInstallerMatch, newInstaller);
                         existingInstallers.Remove(existingInstallerMatch);
                     }
@@ -455,21 +483,36 @@ namespace Microsoft.WingetCreateCore
 
             if (existingInstaller.AppsAndFeaturesEntries != null && newInstaller.AppsAndFeaturesEntries != null)
             {
-                // When --display-version is provided, AppsAndFeaturesEntries for the new installer will not be null
-                // and will contain a single entry.
-                string newDisplayVersion = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
-
-                // Set DisplayVersion for each new installer if it exists in the corresponding existing installer.
                 foreach (var existingAppsAndFeaturesEntry in existingInstaller.AppsAndFeaturesEntries)
                 {
-                    if (existingAppsAndFeaturesEntry.DisplayVersion != null)
+                    if (existingAppsAndFeaturesEntry.DisplayName != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayName != null)
                     {
-                        existingAppsAndFeaturesEntry.DisplayVersion = newDisplayVersion ?? existingAppsAndFeaturesEntry.DisplayVersion;
-
-                        // Break on first match to avoid setting DisplayVersion for all entries.
-                        // We do not support updating multiple DisplayVersions under the same installer.
-                        break;
+                        existingAppsAndFeaturesEntry.DisplayName = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayName;
                     }
+
+                    if (existingAppsAndFeaturesEntry.DisplayVersion != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion != null)
+                    {
+                        existingAppsAndFeaturesEntry.DisplayVersion = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+                    }
+
+                    if (existingAppsAndFeaturesEntry.Publisher != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().Publisher != null)
+                    {
+                        existingAppsAndFeaturesEntry.Publisher = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().Publisher;
+                    }
+
+                    if (existingAppsAndFeaturesEntry.ProductCode != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().ProductCode != null)
+                    {
+                        existingAppsAndFeaturesEntry.ProductCode = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().ProductCode;
+                    }
+
+                    if (existingAppsAndFeaturesEntry.UpgradeCode != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().UpgradeCode != null)
+                    {
+                        existingAppsAndFeaturesEntry.UpgradeCode = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().UpgradeCode;
+                    }
+
+                    // Break on first match to avoid setting DisplayVersion for all entries.
+                    // We do not support updating multiple DisplayVersions under the same installer.
+                    break;
                 }
             }
         }
@@ -631,16 +674,22 @@ namespace Microsoft.WingetCreateCore
                 archMatches.Add(Architecture.Arm);
             }
 
-            if (Regex.Match(url, "x64|winx?64|_64|64-?bit|ia64|amd64|x86(-|_)64", RegexOptions.IgnoreCase).Success)
+            if (Regex.Match(url, "x64|winx?64|_64|64-?bit|ia64|amd64", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.X64);
             }
 
-            if (Regex.Match(url, @"x86|win32|winx86|_86|32-?bit|ia32|i[3456]86|\b[3456]86\b", RegexOptions.IgnoreCase).Success)
+            // x86 must only be checked if the URL doesn't match an x86_64 like pattern, which is for x64
+            if (Regex.Match(url, "x86(-|_)x?64", RegexOptions.IgnoreCase).Success)
+            {
+                archMatches.Add(Architecture.X64);
+            }
+            else if (Regex.Match(url, @"x86|win32|winx86|_86|32-?bit|ia32|i[3456]86|\b[3456]86\b", RegexOptions.IgnoreCase).Success)
             {
                 archMatches.Add(Architecture.X86);
             }
 
+            archMatches = archMatches.Distinct().ToList();
             return archMatches.Count == 1 ? archMatches.Single() : null;
         }
 
@@ -862,6 +911,17 @@ namespace Microsoft.WingetCreateCore
                     }
 
                     baseInstaller.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
+                    baseInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
+                    {
+                        new AppsAndFeaturesEntry
+                        {
+                            DisplayName = properties.FirstOrDefault(p => p.Property == "ProductName")?.Value,
+                            DisplayVersion = properties.FirstOrDefault(p => p.Property == "ProductVersion")?.Value,
+                            Publisher = properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value,
+                            ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value,
+                            UpgradeCode = properties.FirstOrDefault(p => p.Property == "UpgradeCode")?.Value,
+                        },
+                    };
 
                     string archString = database.SummaryInfo.Template.Split(';').First();
 

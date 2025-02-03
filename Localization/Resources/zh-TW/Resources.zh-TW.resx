@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>偵測到多個架構。只能為覆寫指定一個架構。</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>無法剖析指定的覆寫 {0}。</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>無法剖析指定的引數 {0}。</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>覆蓋安裝程式的架構</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>偵測到多個範圍。只能為覆寫指定一個範圍。</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>為下列安裝程式 URL 指定的覆寫太多： {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>為下列安裝程式 URL 指定的自變數太多： {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1342,10 +1342,57 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>取代版本不能等於提交版本。</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>提供的顯示格式無效。</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>指令清單的輸出格式。預設值為 「yaml」。</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>不支援格式。Windows 封裝管理員 社群存放庫只接受 「yaml」 指令清單提交。</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>清除已快取的 GitHub 權杖</value>
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>在您的本機快取中儲存新的 GitHub 權杖</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>基底指令清單包含尚未更新的 DisplayVersion。使用 --display-version CLI 自變數，或在安裝程式 URL 中提供版本。</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>更新顯示版本欄位時所使用的版本。安裝程式 URL 引數中提供的版本將優先於此值。</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>使用 {1} 的顯示版本 '{0}'</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>偵測到具有多個顯示版本的單一安裝程式。Winget-Create 只會更新指定安裝程式的第一個 DisplayVersion。</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>無法透過 GitHub 的 API，填入指令清單中繼資料。</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>已偵測到 GitHub URL。CLI 已自動填入部分資訊清單欄位。</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>更新發行日期欄位時所要使用的資料。預期的格式為「YYYY-MM-DD」。。</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>更新版本資訊 URL 欄位時所要使用的 URL。</value>
+  </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>修復方法</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>傳遞至安裝程式、ModifyPath ARP 命令或卸載 ARP 命令以進行修復的值</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>指出安裝位置是否應直接新增至PATH環境變數。僅適用於包含可攜式封裝的封存。</value>
+  </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>此可執行檔是否相依於 DLL 或 ZIP 封存中存在的任何其他檔案？</value>
   </data>
 </root>

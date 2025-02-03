@@ -5,7 +5,7 @@ The **update** command of the [Winget-Create](../README.md) tool is designed to 
 
 ## Usage
 
-`wingetcreate.exe update <id> [-u <urls>] [-v <version>] [-s] [-t <token>] [-o <output directory>] [-p <pull request title>] [-r] [<replace version>]`
+`wingetcreate.exe update <id> [-u <urls>] [-v <version>] [-s] [-t <token>] [-o <output directory>] [-p <pull request title>] [-r] [<replace version>] [-d <display version>] [--release-date <release date> ] [--release-notes-url <release notes url>] [--format <format>] [--interactive] [--help]`
 
 The **update** command can be called with the installer URL(s) that you wish to update the manifest with. **Please make sure that the number of installer URL(s) included matches the number of existing installer nodes in the manifest you are updating. Otherwise, the command will fail.** This is to ensure that we can deterministically update each installer node with the correct matching installer url provided.
 
@@ -33,6 +33,19 @@ In case there are multiple installers with the same architecture, it may mean th
 e.g.,
 
 `wingetcreate update <PackageIdentifier> --urls '<InstallerUrl1>|x64|user' '<InstallerUrl1>|x64|machine' '<InstallerUrl2>|x86|user' '<InstallerUrl2>|x86|machine'`
+
+### Auto-filling manifest fields
+
+If the installer URLs come from a GitHub release, the CLI can automatically fill in missing manifest metadata. A valid GitHub token must be provided using the `--token` argument to use this feature.
+The update flow may automatically fill in the following fields:
+
+- `ReleaseDate` - The publish date of the release on GitHub.
+- `ReleaseNotesUrl` - The URL to the release notes on GitHub.
+- `PackageUrl` - The URL to the package GitHub repository.
+- `PublisherUrl` - The URL to the publisher's GitHub page.
+- `PublisherSupportUrl` - The URL to GitHub issues for the package repository.
+- `Tags` - The tags from the GitHub repository.
+- `Documentations` - If the GitHub repository has a wiki, the URL to the wiki will be added to the manifest.
 
 ### Installer URL arguments
 
@@ -94,16 +107,19 @@ The following arguments are available:
 
 | Argument  | Description |
 |--------------|-------------|
-| **id** |  Required. Package identifier used to lookup the existing manifest on the Windows Package Manager repo.
-| **-u, --urls** |  Installer Url(s) used to extract relevant metadata for generating a manifest
-| **-v, --version** |  Version to be used when updating the package version field.
-| **-i, --interactive** |  Boolean value for making the update command interactive. If true, the tool will prompt the user for input. Default is false.
-| **-o, --out** |  The output directory where the newly created manifests will be saved locally
-| **-s, --submit** |  Boolean value for submitting to the Windows Package Manager repo. If true, updated manifest will be submitted directly using the provided GitHub Token
-| **-r, --replace** |  Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false.
-| **-p, --prtitle** |  The title of the pull request submitted to GitHub.
+| **id** |  Required. Package identifier used to lookup the existing manifest on the Windows Package Manager repo. |
+| **-u, --urls** |  Installer Url(s) used to extract relevant metadata for generating a manifest |
+| **-v, --version** |  Version to be used when updating the package version field. |
+| **-d, --display-version** | Version to be used when updating the display version field. Version provided in the installer URL arguments will take precedence over this value. |
+| **--release-notes-url** |  URL to be used when updating the release notes url field. |
+| **--release-date** |  Date to be used when updating the release date field. Expected format is "YYYY-MM-DD". |
+| **-o, --out** |  The output directory where the newly created manifests will be saved locally |
+| **-p, --prtitle** |  The title of the pull request submitted to GitHub. |
+| **-s, --submit** |  Boolean value for submitting to the Windows Package Manager repo. If true, updated manifest will be submitted directly using the provided GitHub Token |
+| **-r, --replace** |  Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false. |
+| **-i, --interactive** |  Boolean value for making the update command interactive. If true, the tool will prompt the user for input. Default is false. |
 | **-f,--format** |  Output format of the manifest. Default is "yaml". |
-| **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
+| **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials. |
 | **-?, --help** |  Gets additional help on this command. |
 
 ## Submit

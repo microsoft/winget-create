@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>複数のアーキテクチャが検出されました。オーバーライドに指定できるアーキテクチャは 1 つだけです。</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>指定されたオーバーライド {0} を解析できません。</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>指定された引数 {0} を解析できません。</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>インストーラーのアーキテクチャをオーバーライドする</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>複数のスコープが検出されました。オーバーライドに指定できるスコープは 1 つだけです。</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>次のインストーラー URL に指定されたオーバーライドが多すぎます: {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>次のインストーラー URL に指定された引数が多すぎます: {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1342,10 +1342,57 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>置換バージョンを送信バージョンと同じにすることはできません。</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>指定されたマニフェスト形式が無効です。</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>マニフェストの出力形式。既定値は "yaml" です。</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>形式がサポートされていません。Windows パッケージ マネージャー コミュニティ リポジトリは、"yaml" マニフェストの送信のみを受け付けています。</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>キャッシュされた GitHub トークンをクリアします</value>
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>新しい GitHub トークンをローカル キャッシュに保存する</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>基本マニフェストに、更新されていない DisplayVersion が含まれています。--display-version CLI 引数を使用するか、インストーラー URL にバージョンを指定してください。</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>表示バージョン フィールドの更新時に使用するバージョン。インストーラーの URL 引数に指定されたバージョンがこの値より優先されます。</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>表示バージョン '{0}' を {1} に使用しています</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>複数の表示バージョンを持つ単一インストーラーが検出されました。Winget-Create は、指定されたインストーラーの最初の DisplayVersion のみを更新します。</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>GitHub の API を使用してマニフェスト メタデータを事前設定できませんでした。</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>GitHub URL が検出されました。CLI は、一部のマニフェスト フィールドに自動的に入力しました。</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>リリース日フィールドを更新するときに使用する日付。必要な形式は "YYYY-MM-DD" です。</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>リリース ノートの URL フィールドを更新するときに使用する URL。</value>
+  </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>修復メソッド</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>修復のためにインストーラー、ModifyPath ARP コマンド、またはアンインストーラー ARP コマンドに渡される値</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>インストール場所を PATH 環境変数に直接追加するかどうかを示します。移植可能なパッケージを含むアーカイブにのみ適用されます。</value>
+  </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>この実行可能ファイルは DLL または zip アーカイブに存在する他のファイルに依存しますか?</value>
   </data>
 </root>

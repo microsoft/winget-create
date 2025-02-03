@@ -424,19 +424,19 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Removes fields with empty string values from all manifests.
         /// </summary>
         /// <param name="manifests">Wrapper object containing the manifest object models.</param>
-        protected static void RemoveEmptyStringFieldsInManifests(Manifests manifests)
+        protected static void RemoveEmptyStringAndListFieldsInManifests(Manifests manifests)
         {
-            RemoveEmptyStringFields(manifests.InstallerManifest);
-            RemoveEmptyStringFields(manifests.DefaultLocaleManifest);
+            RemoveEmptyStringAndListFields(manifests.InstallerManifest);
+            RemoveEmptyStringAndListFields(manifests.DefaultLocaleManifest);
 
             foreach (var localeManifest in manifests.LocaleManifests)
             {
-                RemoveEmptyStringFields(localeManifest);
+                RemoveEmptyStringAndListFields(localeManifest);
             }
 
             foreach (var installer in manifests.InstallerManifest.Installers)
             {
-                RemoveEmptyStringFields(installer);
+                RemoveEmptyStringAndListFields(installer);
             }
         }
 
@@ -824,17 +824,28 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Removes fields with empty string values from a given object.
+        /// Removes fields with empty string and list values from a given object.
         /// </summary>
         /// <param name="obj">Object to remove empty string fields from.</param>
-        private static void RemoveEmptyStringFields(object obj)
+        private static void RemoveEmptyStringAndListFields(object obj)
         {
             var stringProperties = obj.GetType().GetProperties()
                 .Where(p => p.PropertyType == typeof(string));
+            var listProperties = obj.GetType().GetProperties()
+                .Where(p => p.PropertyType.IsGenericType &&
+                            p.PropertyType.GetGenericTypeDefinition() == typeof(List<>));
 
             foreach (var prop in stringProperties)
             {
                 if ((string)prop.GetValue(obj) == string.Empty)
+                {
+                    prop.SetValue(obj, null);
+                }
+            }
+
+            foreach (var prop in listProperties)
+            {
+                if (prop.GetValue(obj) is IList list && list.Count == 0)
                 {
                     prop.SetValue(obj, null);
                 }

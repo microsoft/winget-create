@@ -223,6 +223,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Indicates whether the install location should be added directly to the PATH environment variable. Only applies to an archive containing portable packages..
+        /// </summary>
+        public static string ArchiveBinariesDependOnPath_KeywordDescription {
+            get {
+                return ResourceManager.GetString("ArchiveBinariesDependOnPath_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Too many arguments specified for the following installer URL: {0}.
         /// </summary>
         public static string ArgumentLimitExceeded_Error {
@@ -385,6 +394,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Does this executable depend on DLLs or any other files present in the zip archive?.
+        /// </summary>
+        public static string ConfirmZippedBinary_Message {
+            get {
+                return ResourceManager.GetString("ConfirmZippedBinary_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package copyright.
         /// </summary>
         public static string Copyright_KeywordDescription {
@@ -399,6 +417,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string CopyrightUrl_KeywordDescription {
             get {
                 return ResourceManager.GetString("CopyrightUrl_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not populate manifest metadata through GitHub&apos;s API..
+        /// </summary>
+        public static string CouldNotPopulateGitHubMetadata_Warning {
+            get {
+                return ResourceManager.GetString("CouldNotPopulateGitHubMetadata_Warning", resourceCulture);
             }
         }
         
@@ -592,7 +619,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version to be used when updating the display version field. Version provided in the installer URL arguments will take precendence over this value..
+        ///   Looks up a localized string similar to Version to be used when updating the display version field. Version provided in the installer URL arguments will take precedence over this value..
         /// </summary>
         public static string DisplayVersion_HelpText {
             get {
@@ -2302,6 +2329,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GitHub URL detected. The CLI has automatically filled some manifest fields..
+        /// </summary>
+        public static string PopulatedGitHubMetadata_Message {
+            get {
+                return ResourceManager.GetString("PopulatedGitHubMetadata_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The command alias to be used for calling the nested portable package.
         /// </summary>
         public static string PortableCommandAlias_KeywordDescription {
@@ -2473,6 +2509,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date to be used when updating the release date field. Expected format is &quot;YYYY-MM-DD&quot;..
+        /// </summary>
+        public static string ReleaseDate_HelpText {
+            get {
+                return ResourceManager.GetString("ReleaseDate_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installer release date.
         /// </summary>
         public static string ReleaseDate_KeywordDescription {
@@ -2500,6 +2545,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to URL to be used when updating the release notes url field..
+        /// </summary>
+        public static string ReleaseNotesUrl_HelpText {
+            get {
+                return ResourceManager.GetString("ReleaseNotesUrl_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package release notes url.
         /// </summary>
         public static string ReleaseNotesUrl_KeywordDescription {
@@ -2523,6 +2577,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string RemoveLastItem_MenuItem {
             get {
                 return ResourceManager.GetString("RemoveLastItem_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value passed to the installer, ModifyPath ARP command, or uninstaller ARP command for a repair.
+        /// </summary>
+        public static string Repair_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Repair_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The repair method.
+        /// </summary>
+        public static string RepairBehavior_KeywordDescription {
+            get {
+                return ResourceManager.GetString("RepairBehavior_KeywordDescription", resourceCulture);
             }
         }
         

@@ -1361,7 +1361,7 @@
     <value>Base manifest contains DisplayVersion that has not been updated. Use --display-version CLI arg or provide the version in the installer URL.</value>
   </data>
   <data name="DisplayVersion_HelpText" xml:space="preserve">
-    <value>Version to be used when updating the display version field. Version provided in the installer URL arguments will take precendence over this value.</value>
+    <value>Version to be used when updating the display version field. Version provided in the installer URL arguments will take precedence over this value.</value>
   </data>
   <data name="UsingDisplayVersion_Message" xml:space="preserve">
     <value>Using display version '{0}' for {1}</value>
@@ -1370,5 +1370,29 @@
   </data>
   <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
     <value>Single installer with multiple display versions detected. Winget-Create will only update the first DisplayVersion for a given installer.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>Could not populate manifest metadata through GitHub's API.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>GitHub URL detected. The CLI has automatically filled some manifest fields.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>Date to be used when updating the release date field. Expected format is "YYYY-MM-DD".</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>URL to be used when updating the release notes url field.</value>
+  </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>The repair method</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>The value passed to the installer, ModifyPath ARP command, or uninstaller ARP command for a repair</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>Indicates whether the install location should be added directly to the PATH environment variable. Only applies to an archive containing portable packages.</value>
+  </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>Does this executable depend on DLLs or any other files present in the zip archive?</value>
   </data>
 </root>

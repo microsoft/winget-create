@@ -4,7 +4,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <RootNamespace>Microsoft.WingetCreateCore</RootNamespace>
-    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
     <Platforms>x86;x64</Platforms>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.CorrelationVector" Version="1.0.42" />
     <PackageReference Include="Microsoft.Msix.Utils" Version="2.1.1" />
     <!--https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#generatepathproperty-->
-    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" Version="1.7.11" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" Version="1.9.25180" GeneratePathProperty="true" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
     <PackageReference Include="NLog" Version="5.2.8" />
     <PackageReference Include="NSwag.MSBuild" Version="14.0.3">
@@ -27,7 +27,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Polly" Version="8.3.0" />
-    <PackageReference Include="RestSharp" Version="110.2.0" />
+    <PackageReference Include="RestSharp" Version="112.0.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -48,11 +48,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.defaultLocale.1.6.0.json" ModelName="DefaultLocale" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.installer.1.6.0.json" ModelName="Installer" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.locale.1.6.0.json" ModelName="Locale" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.version.1.6.0.json" ModelName="Version" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.6.0\manifest.singleton.1.6.0.json" ModelName="Singleton" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.9.0\manifest.defaultLocale.1.9.0.json" ModelName="DefaultLocale" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.9.0\manifest.installer.1.9.0.json" ModelName="Installer" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.9.0\manifest.locale.1.9.0.json" ModelName="Locale" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.9.0\manifest.version.1.9.0.json" ModelName="Version" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.9.0\manifest.singleton.1.9.0.json" ModelName="Singleton" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(SchemaFiles)" Outputs="@(SchemaFiles -> '$(ProjectDir)Models\%(ModelName)ManifestModels.cs')">

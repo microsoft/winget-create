@@ -195,6 +195,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 try
                 {
                     PackageParser.ParsePackages(installerUpdateList, manifests);
+
+                    // The CLI parses ARP entries uses them in update flow to update existing AppsAndFeaturesEntries in the manifest.
+                    // AppsAndFeaturesEntries should not be set for a new package as they may cause more harm than good.
+                    RemoveARPEntries(manifests.InstallerManifest);
                     DisplayArchitectureWarnings(installerUpdateList);
                 }
                 catch (IOException iOException) when (iOException.HResult == -2147024671)
@@ -235,10 +239,27 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
 
                     ShiftRootFieldsToInstallerLevel(manifests.InstallerManifest);
+                    try
+                    {
+                        if (this.GitHubClient != null)
+                        {
+                            bool populated = await this.GitHubClient.PopulateGitHubMetadata(manifests, this.Format.ToString());
+                            if (populated)
+                            {
+                                Logger.InfoLocalized(nameof(Resources.PopulatedGitHubMetadata_Message));
+                            }
+                        }
+                    }
+                    catch (Octokit.ApiException)
+                    {
+                        // Print a warning, but continue with the command flow.
+                        Logger.ErrorLocalized(nameof(Resources.CouldNotPopulateGitHubMetadata_Warning));
+                    }
+
                     PromptManifestProperties(manifests);
                     MergeNestedInstallerFilesIfApplicable(manifests.InstallerManifest);
                     ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
-                    RemoveEmptyStringFieldsInManifests(manifests);
+                    RemoveEmptyStringAndListFieldsInManifests(manifests);
                     DisplayManifestPreview(manifests);
                     isManifestValid = ValidateManifestsInTempDir(manifests);
                 }
@@ -369,8 +390,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     }
                 }
 
-                PromptForPortableAliasIfApplicable(installer);
-
+                PromptForPortableFieldsIfApplicable(installer);
                 foreach (var requiredProperty in requiredInstallerProperties)
                 {
                     var currentValue = requiredProperty.GetValue(installer);
@@ -430,7 +450,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             }
         }
 
-        private static void PromptForPortableAliasIfApplicable(Installer installer)
+        private static void PromptForPortableFieldsIfApplicable(Installer installer)
         {
             if (installer.InstallerType == InstallerType.Portable)
             {
@@ -450,6 +470,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                 if (!string.IsNullOrEmpty(portableCommandAlias))
                 {
                     installer.NestedInstallerFiles.First().PortableCommandAlias = portableCommandAlias.Trim();
+                }
+
+                // No need to set explicitly in else case as WinGet CLI defaults to using false
+                if (Prompt.Confirm(Resources.ConfirmZippedBinary_Message))
+                {
+                    installer.ArchiveBinariesDependOnPath = true;
                 }
             }
         }
@@ -483,6 +509,15 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 // Add the installer with the merged nested installer files back to the manifest
                 installerManifest.Installers.Add(installerToMergeInto);
+            }
+        }
+
+        private static void RemoveARPEntries(InstallerManifest installerManifest)
+        {
+            installerManifest.AppsAndFeaturesEntries = null;
+            foreach (var installer in installerManifest.Installers)
+            {
+                installer.AppsAndFeaturesEntries = null;
             }
         }
 

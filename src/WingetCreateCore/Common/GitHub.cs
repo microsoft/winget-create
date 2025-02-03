@@ -7,11 +7,16 @@ namespace Microsoft.WingetCreateCore.Common
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net.Http;
     using System.Security.Cryptography;
+    using System.Text;
+    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using Jose;
     using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
+    using Microsoft.WingetCreateCore.Models.DefaultLocale;
+    using Microsoft.WingetCreateCore.Models.Installer;
     using Octokit;
     using Polly;
 
@@ -227,6 +232,23 @@ namespace Microsoft.WingetCreateCore.Common
         {
             string path = Constants.WingetManifestRoot + '/' + $"{char.ToLowerInvariant(packageId[0])}";
             return await this.FindPackageIdRecursive(packageId.Split('.'), path, string.Empty, 0);
+        }
+
+        /// <summary>
+        /// Uses the GitHub API to retrieve and populate metadata for manifests in the provided <see cref="Manifests"/> object.
+        /// </summary>
+        /// <param name="manifests">Wrapper object for manifest object models to be populated with GitHub metadata.</param>
+        /// <param name="serializerFormat">The output format of the manifest serializer.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation. The task result is a boolean indicating whether metadata was successfully populated.</returns>
+        public async Task<bool> PopulateGitHubMetadata(Manifests manifests, string serializerFormat)
+        {
+            // Only populate metadata if we have a valid GitHub token.
+            if (this.github.Credentials.AuthenticationType != AuthenticationType.Anonymous)
+            {
+                return await GitHubManifestMetadata.PopulateManifestMetadata(manifests, serializerFormat, this.github);
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -464,8 +486,24 @@ namespace Microsoft.WingetCreateCore.Common
                     throw new NonFastForwardException(commitsAheadBy);
                 }
 
-                var upstreamBranchReference = await this.github.Git.Reference.Get(upstream.Id, $"heads/{upstream.DefaultBranch}");
-                await this.github.Git.Reference.Update(forkedRepo.Id, $"heads/{forkedRepo.DefaultBranch}", new ReferenceUpdate(upstreamBranchReference.Object.Sha));
+                // Octokit .NET doesn't support sync fork endpoint, so we make a direct call to the GitHub API.
+                // Tracking issue for the request: https://github.com/octokit/octokit.net/issues/2989
+                // API reference: https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#sync-a-fork-branch-with-the-upstream-repository
+                HttpClient httpClient = new HttpClient();
+
+                // Headers
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.github.Credentials.Password);
+                httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
+                httpClient.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+                httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(Constants.ProgramName);
+
+                // Payload
+                JsonObject jsonObject = new JsonObject { { "branch", forkedRepo.DefaultBranch } };
+                var content = new StringContent(jsonObject.ToString(), Encoding.UTF8, "application/json");
+
+                var url = $"https://api.github.com/repos/{forkedRepo.Owner.Login}/{forkedRepo.Name}/merge-upstream";
+                var response = await httpClient.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
             }
         }
 
@@ -478,6 +516,138 @@ namespace Microsoft.WingetCreateCore.Common
                 string newBranchNameHeads = $"heads/{pullRequest.Head.Ref}";
                 await this.github.Git.Reference.Delete(this.wingetRepoOwner, this.wingetRepo, newBranchNameHeads);
             }
+        }
+
+        private static class GitHubManifestMetadata
+        {
+            public static async Task<bool> PopulateManifestMetadata(Manifests manifests, string serializerFormat, GitHubClient client)
+            {
+                // Get owner and repo from the installer manifest
+                GitHubUrlMetadata? metadata = GetMetadataFromGitHubUrl(manifests.InstallerManifest);
+
+                if (metadata == null)
+                {
+                    // Could not populate GitHub metadata.
+                    return false;
+                }
+
+                string owner = metadata.Value.Owner;
+                string repo = metadata.Value.Repo;
+                string tag = metadata.Value.ReleaseTag;
+
+                var githubRepo = await client.Repository.Get(owner, repo);
+                var githubRelease = await client.Repository.Release.Get(owner, repo, tag);
+
+                // License
+                if (string.IsNullOrEmpty(manifests.DefaultLocaleManifest.License))
+                {
+                    // License will only ever be empty in new command flow
+                    manifests.DefaultLocaleManifest.License = githubRepo.License?.SpdxId ?? githubRepo.License?.Name;
+                }
+
+                // ShortDescription
+                if (string.IsNullOrEmpty(manifests.DefaultLocaleManifest.ShortDescription))
+                {
+                    // ShortDescription will only ever be empty in new command flow
+                    manifests.DefaultLocaleManifest.ShortDescription = githubRepo.Description;
+                }
+
+                // PackageUrl
+                if (string.IsNullOrEmpty(manifests.DefaultLocaleManifest.PackageUrl))
+                {
+                    manifests.DefaultLocaleManifest.PackageUrl = githubRepo.HtmlUrl;
+                }
+
+                // PublisherUrl
+                if (string.IsNullOrEmpty(manifests.DefaultLocaleManifest.PublisherUrl))
+                {
+                    manifests.DefaultLocaleManifest.PublisherUrl = githubRepo.Owner.HtmlUrl;
+                }
+
+                // PublisherSupportUrl
+                if (string.IsNullOrEmpty(manifests.DefaultLocaleManifest.PublisherSupportUrl) && githubRepo.HasIssues)
+                {
+                    manifests.DefaultLocaleManifest.PublisherSupportUrl = $"{githubRepo.HtmlUrl}/issues";
+                }
+
+                // Tags
+                // 16 is the maximum number of tags allowed in the manifest
+                manifests.DefaultLocaleManifest.Tags ??= githubRepo.Topics?.Take(count: 16).ToList();
+
+                // ReleaseNotesUrl
+                if (string.IsNullOrEmpty(manifests.DefaultLocaleManifest.ReleaseNotesUrl))
+                {
+                    manifests.DefaultLocaleManifest.ReleaseNotesUrl = githubRelease.HtmlUrl;
+                }
+
+                // ReleaseDate
+                SetReleaseDate(manifests, serializerFormat, githubRelease);
+
+                // Documentations
+                if (manifests.DefaultLocaleManifest.Documentations == null && githubRepo.HasWiki)
+                {
+                    manifests.DefaultLocaleManifest.Documentations = new List<Documentation>
+                    {
+                        new()
+                        {
+                            DocumentLabel = "Wiki",
+                            DocumentUrl = $"{githubRepo.HtmlUrl}/wiki",
+                        },
+                    };
+                }
+
+                return true;
+            }
+
+            private static void SetReleaseDate(Manifests manifests, string serializerFormat, Release githubRelease)
+            {
+                DateTimeOffset? releaseDate = githubRelease.PublishedAt;
+                if (releaseDate == null)
+                {
+                    return;
+                }
+
+                switch (serializerFormat.ToLower())
+                {
+                    case "yaml":
+                        manifests.InstallerManifest.ReleaseDateTime = releaseDate.Value.ToString("yyyy-MM-dd");
+                        break;
+                    case "json":
+                        manifests.InstallerManifest.ReleaseDate = releaseDate;
+                        break;
+                }
+            }
+
+            private static GitHubUrlMetadata? GetMetadataFromGitHubUrl(InstallerManifest installerManifest)
+            {
+                // Get all GitHub URLs from the installer manifest
+                List<string> gitHubUrls = installerManifest.Installers
+                    .Where(x => x.InstallerUrl.StartsWith("https://github.com/", StringComparison.OrdinalIgnoreCase))
+                    .Select(x => x.InstallerUrl)
+                    .ToList();
+
+                if (gitHubUrls.Count != installerManifest.Installers.Count)
+                {
+                    // No GitHub URLs found OR not all manifest InstallerUrls are GitHub URLs.
+                    return null;
+                }
+
+                string domainTrimmed = gitHubUrls.First().Replace("https://github.com/", string.Empty);
+                string[] parts = domainTrimmed.Split("/");
+                string owner = parts[0];
+                string repo = parts[1];
+                string tag = domainTrimmed.Replace($"{owner}/{repo}/releases/download/", string.Empty).Split("/")[0];
+
+                // Check if all GitHub URLs have the same owner, repo and tag
+                if (gitHubUrls.Any(x => !x.StartsWith($"https://github.com/{owner}/{repo}/releases/download/{tag}", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return null;
+                }
+
+                return new GitHubUrlMetadata(owner, repo, tag);
+            }
+
+            private record struct GitHubUrlMetadata(string Owner, string Repo, string ReleaseTag);
         }
     }
 }

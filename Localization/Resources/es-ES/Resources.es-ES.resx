@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Se detectaron varias arquitecturas. Solo se puede especificar una arquitectura para una invalidación.</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>No se puede analizar la invalidación especificada {0}.</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>No se puede analizar el argumento especificado {0}.</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Invalidar la arquitectura de un instalador</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>Se detectaron varios ámbitos. Solo se puede especificar un ámbito para una invalidación.</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>Se especificaron demasiadas invalidaciones para la siguiente dirección URL del instalador: {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>Se especificaron demasiados argumentos para la siguiente dirección URL del instalador: {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1342,10 +1342,57 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>La versión de reemplazo no puede ser igual a la versión de envío.</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>El formato de manifiesto proporcionado no es válido.</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>Formato de salida del manifiesto. El valor predeterminado es "yaml".</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>Formato no admitido. El repositorio de Administrador de paquetes de Windows Community solo acepta envíos de manifiestos "yaml".</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>Borrar el token de GitHub en caché</value>
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>Almacenar un nuevo token de GitHub en la memoria caché local</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>El manifiesto base contiene DisplayVersion que no se ha actualizado. Use el argumento de la CLI --display-version o proporcione la versión en la dirección URL del instalador.</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>Versión que se usará al actualizar el campo de versión para mostrar. La versión proporcionada en los argumentos de dirección URL del instalador tendrá prioridad sobre este valor.</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>Usando la versión para mostrar '{0}' para {1}</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>Se ha detectado un instalador único con varias versiones de visualización. Winget-Create solo actualizará la primera DisplayVersion de un instalador determinado.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>No se pudieron rellenar los metadatos del manifiesto a través de la API de GitHub.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>Dirección URL de GitHub detectada. La CLI ha rellenado automáticamente algunos campos del manifiesto.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>Fecha que se usará al actualizar el campo de fecha de lanzamiento. El formato esperado es "AAAA-MM-DD".</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>Dirección URL que se usará al actualizar el campo de dirección URL de las notas de la versión.</value>
+  </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>El método de reparación</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>Valor pasado al instalador, al comando ARP ModifyPath o al comando ARP del desinstalador para una reparación.</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>Indica si la ubicación de instalación se debe agregar directamente a la variable de entorno PATH. Solo se aplica a un archivo que contenga paquetes portátiles.</value>
+  </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>¿Este ejecutable depende de archivos DLL o de otros archivos presentes en el archivo zip?</value>
   </data>
 </root>

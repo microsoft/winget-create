@@ -803,9 +803,9 @@
   <data name="MultipleArchitectureOverride_Error" xml:space="preserve">
     <value>Plusieurs architectures ont été détectées. Une seule architecture peut être spécifiée pour un remplacement.</value>
   </data>
-  <data name="UnableToParseOverride_Error" xml:space="preserve">
-    <value>Impossible d'analyser la dérogation spécifiée {0}</value>
-    <comment>{0} - represents the override string that failed to parse.</comment>
+  <data name="UnableToParseArgument_Error" xml:space="preserve">
+    <value>Impossible d’analyser l’argument spécifié {0}.</value>
+    <comment>{0} - represents the url argument that failed to parse.</comment>
   </data>
   <data name="Example_UpdateCommand_OverrideArchitecture" xml:space="preserve">
     <value>Remplacer l’architecture d’un programme d’installation</value>
@@ -995,8 +995,8 @@
   <data name="MultipleScopeOverride_Error" xml:space="preserve">
     <value>Plusieurs champs d'application détectés. Un seul champ d'application peut être spécifié pour un remplacement.</value>
   </data>
-  <data name="OverrideLimitExceeded_Error" xml:space="preserve">
-    <value>Trop de remplacements spécifiés pour l’URL de programme d’installation suivante : {0}</value>
+  <data name="ArgumentLimitExceeded_Error" xml:space="preserve">
+    <value>Trop d’arguments spécifiés pour l’URL du programme d’installation suivante : {0}</value>
     <comment>{0} - represents the installer URL argument that the user is providing. The installer URL can be modified by appending '|scope|architecture' to override the detected values for that particular installer.</comment>
   </data>
   <data name="OverridingScope_Warning" xml:space="preserve">
@@ -1342,10 +1342,57 @@
   <data name="ReplaceVersionEqualsSubmitVersion_ErrorMessage" xml:space="preserve">
     <value>La version de remplacement ne peut pas être égale à la version d’envoi.</value>
   </data>
+  <data name="InvalidManifestFormat_ErrorMessage" xml:space="preserve">
+    <value>Le format de manifeste fourni n’est pas valide.</value>
+  </data>
+  <data name="ManifestFormat_HelpText" xml:space="preserve">
+    <value>Format de sortie du manifeste. La valeur par défaut est « yaml ».</value>
+  </data>
+  <data name="FormatNotSupportedForDefaultRepo_Error" xml:space="preserve">
+    <value>Format non pris en charge. Le dépôt de la communauté Gestionnaire de package Windows accepte uniquement les soumissions de manifeste « yaml ».</value>
+  </data>
   <data name="Example_TokenCommand_ClearExistingToken" xml:space="preserve">
     <value>Effacer le jeton GitHub mis en cache</value>
   </data>
   <data name="Example_TokenCommand_StoreNewToken" xml:space="preserve">
     <value>Stockez un nouveau jeton GitHub dans votre cache local</value>
+  </data>
+  <data name="UnchangedDisplayVersion_Warning" xml:space="preserve">
+    <value>Le manifeste de base contient DisplayVersion qui n’a pas été mis à jour. Utilisez l’argument CLI --display-version ou fournissez la version dans l’URL du programme d’installation.</value>
+  </data>
+  <data name="DisplayVersion_HelpText" xml:space="preserve">
+    <value>Version à utiliser lors de la mise à jour du champ de version d’affichage. La version fournie dans les arguments de l'URL du programme d'installation aura la priorité sur cette valeur.</value>
+  </data>
+  <data name="UsingDisplayVersion_Message" xml:space="preserve">
+    <value>Utilisation de la version d’affichage « {0} » pour {1}</value>
+    <comment>{0} - will be replaced with the display version provided in the installer URL
+{1} - will be replaced by the installer URL</comment>
+  </data>
+  <data name="InstallerWithMultipleDisplayVersions_Warning" xml:space="preserve">
+    <value>Programme d’installation unique avec plusieurs versions d’affichage détectées. Winget-Create met uniquement à jour le premier DisplayVersion pour un programme d’installation donné.</value>
+  </data>
+  <data name="CouldNotPopulateGitHubMetadata_Warning" xml:space="preserve">
+    <value>Il est impossible de remplir les métadonnées du manifeste via l’API de GitHub.</value>
+  </data>
+  <data name="PopulatedGitHubMetadata_Message" xml:space="preserve">
+    <value>L’URL GitHub a été détectée. L’interface CLI a automatiquement rempli certains champs du manifeste.</value>
+  </data>
+  <data name="ReleaseDate_HelpText" xml:space="preserve">
+    <value>Date à utiliser lors de la mise à jour du champ date de publication. Le format attendu est « AAAA-MM-JJ ».</value>
+  </data>
+  <data name="ReleaseNotesUrl_HelpText" xml:space="preserve">
+    <value>URL à utiliser lors de la mise à jour du champ URL des notes de publication.</value>
+  </data>
+  <data name="RepairBehavior_KeywordDescription" xml:space="preserve">
+    <value>La méthode de réparation</value>
+  </data>
+  <data name="Repair_KeywordDescription" xml:space="preserve">
+    <value>La valeur transmise au programme d'installation, à la commande ARP ModifyPath ou à la commande ARP du programme de désinstallation pour une réparation</value>
+  </data>
+  <data name="ArchiveBinariesDependOnPath_KeywordDescription" xml:space="preserve">
+    <value>Indique si l’emplacement d’installation doit être ajouté directement à la variable d’environnement PATH. S’applique uniquement à une archive contenant des packages portables.</value>
+  </data>
+  <data name="ConfirmZippedBinary_Message" xml:space="preserve">
+    <value>Cet exécutable dépend-il de DLL ou d’autres fichiers présents dans l’archive zip ?</value>
   </data>
 </root>
