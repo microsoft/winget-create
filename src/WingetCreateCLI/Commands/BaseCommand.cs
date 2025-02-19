@@ -126,9 +126,9 @@ namespace Microsoft.WingetCreateCLI.Commands
             if (string.IsNullOrEmpty(this.GitHubToken))
             {
                 Logger.Trace("No token parameter, reading cached token");
-                this.GitHubToken = GitHubOAuth.ReadTokenCache();
-                if (string.IsNullOrEmpty(this.GitHubToken))
+                if (GitHubOAuth.TryReadTokenCache(out var token))
                 {
+                    this.GitHubToken = token;
                     if (requireToken)
                     {
                         Logger.Trace("No token found in cache, launching OAuth flow");
