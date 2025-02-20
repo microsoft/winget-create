@@ -54,7 +54,7 @@ namespace Microsoft.WingetCreateUnitTests
         public async Task TokenClearAndReadFromEnvironmentVariable()
         {
             await this.ExecuteTokenClearCommand();
-            ClassicAssert.IsFalse(TokenHelper.TryRead(out var _), "Token cache shouldn't exist before running Token --clear command");
+            ClassicAssert.IsFalse(TokenHelper.TryRead(out var _), "Token cache shouldn't exist");
 
             Environment.SetEnvironmentVariable(TokenEnvironmentVariable, "MockToken");
             ClassicAssert.IsTrue(TokenHelper.TryRead(out var _), "Token cache should exist after setting environment variable");
@@ -68,7 +68,7 @@ namespace Microsoft.WingetCreateUnitTests
         {
             await this.ExecuteTokenStoreCommand();
             await this.ExecuteTokenClearCommand();
-            ClassicAssert.IsFalse(TokenHelper.TryRead(out var _), "Token cache shouldn't exist before running Token --clear command");
+            ClassicAssert.IsFalse(TokenHelper.TryRead(out var _), "Token cache shouldn't exist after running Token --clear command");
         }
 
         /// <summary>
