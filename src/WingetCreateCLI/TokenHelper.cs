@@ -80,13 +80,19 @@ namespace Microsoft.WingetCreateCLI
         /// <returns>True if the token was read, false otherwise.</returns>
         private static unsafe bool TryReadFromCredentialManager(out string token)
         {
-            PInvoke.CredRead(CredTargetName, CRED_TYPE.CRED_TYPE_GENERIC, out CREDENTIALW* credentialObject);
-            if (credentialObject != null)
+            if (PInvoke.CredRead(CredTargetName, CRED_TYPE.CRED_TYPE_GENERIC, out CREDENTIALW* credentialObject) && credentialObject != null)
             {
-                var accessTokenInBytes = new byte[credentialObject->CredentialBlobSize];
-                Marshal.Copy((IntPtr)credentialObject->CredentialBlob, accessTokenInBytes, 0, accessTokenInBytes.Length);
-                token = Encoding.Unicode.GetString(accessTokenInBytes);
-                return true;
+                try
+                {
+                    var accessTokenInBytes = new byte[credentialObject->CredentialBlobSize];
+                    Marshal.Copy((IntPtr)credentialObject->CredentialBlob, accessTokenInBytes, 0, accessTokenInBytes.Length);
+                    token = Encoding.Unicode.GetString(accessTokenInBytes);
+                    return true;
+                }
+                finally
+                {
+                    PInvoke.CredFree(credentialObject);
+                }
             }
 
             token = null;
