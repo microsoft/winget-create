@@ -7,6 +7,13 @@ Instructions on setting up GitHub Token for Winget-Create can be found [here](..
 
 ## Usage
 
+> [!WARNING] 
+> Using the `--token` argument may result in the token being logged.  
+> 
+> For local development, it is recommended to go through the OAuth flow by omitting the `--token` argument.  
+>   
+> For CI/CD scenarios, it is recommended to use the 'WINGET_CREATE_GITHUB_TOKEN' environment variable to store the token.
+
 `wingetcreate.exe token [\<options>]`
 
 ### Store a new GitHub token in your local cache
