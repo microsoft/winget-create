@@ -4,8 +4,11 @@
 namespace Microsoft.WingetCreateCLI
 {
     using System;
+    using System.IO;
     using System.Runtime.InteropServices;
+    using System.Security.Cryptography;
     using System.Text;
+    using Microsoft.WingetCreateCLI.Logging;
     using Windows.Win32;
     using Windows.Win32.Foundation;
     using Windows.Win32.Security.Credentials;
@@ -22,6 +25,10 @@ namespace Microsoft.WingetCreateCLI
         // Environment variable
         private const string TokenEnvironmentVariable = "WINGET_CREATE_GITHUB_TOKEN";
 
+        // File (legacy cache)
+        private static readonly string TokenFile = Path.Combine(Common.LocalAppStatePath, "tokenCache.bin");
+        private static readonly byte[] EntropyBytes = Encoding.UTF8.GetBytes(TokenFile);
+
         /// <summary>
         /// Deletes the token.
         /// </summary>
@@ -36,7 +43,10 @@ namespace Microsoft.WingetCreateCLI
         /// </summary>
         /// <param name="token">Output token.</param>
         /// <returns>True if the token was read, false otherwise.</returns>
-        public static unsafe bool TryRead(out string token) => TryReadFromEnvironmentVariable(out token) || TryReadFromCredentialManager(out token);
+        public static unsafe bool TryRead(out string token) =>
+            TryReadFromEnvironmentVariable(out token) ||
+            TryReadFromCredentialManager(out token) ||
+            TryReadFromFileAndMigrate(out token);
 
         /// <summary>
         /// Writes the token.
@@ -110,6 +120,51 @@ namespace Microsoft.WingetCreateCLI
             if (!string.IsNullOrEmpty(envToken))
             {
                 token = envToken;
+                return true;
+            }
+
+            token = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to read the token from the file and migrate it to the Windows credentials manager.
+        /// </summary>
+        /// <param name="token">Output token.</param>
+        /// <returns>True if the token was read, false otherwise.</returns>
+        private static bool TryReadFromFileAndMigrate(out string token)
+        {
+            try
+            {
+                if (TryReadFromFile(out token))
+                {
+                    // Migrate to Windows credentials manager
+                    Write(token);
+                    File.Delete(TokenFile);
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Trace($"Failed to migrate token from file to Windows credentials manager. Message: {e.Message}");
+            }
+
+            token = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to read the token from the file.
+        /// </summary>
+        /// <param name="token">Output token.</param>
+        /// <returns>True if the token was read, false otherwise.</returns>
+        private static bool TryReadFromFile(out string token)
+        {
+            if (File.Exists(TokenFile))
+            {
+                var protectedBytes = File.ReadAllBytes(TokenFile);
+                var bytes = ProtectedData.Unprotect(protectedBytes, EntropyBytes, DataProtectionScope.CurrentUser);
+                token = Encoding.UTF8.GetString(bytes);
                 return true;
             }
 
