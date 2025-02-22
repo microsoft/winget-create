@@ -19,7 +19,7 @@ namespace Microsoft.WingetCreateCLI
     public static class TokenHelper
     {
         // Windows credentials manager
-        private const string CredTargetName = "git:https://aka.ms/winget-create";
+        private const string CredTargetName = "winget-create:GitHub [repo]";
         private const string CredUserName = "Personal Access Token";
 
         // Environment variable
