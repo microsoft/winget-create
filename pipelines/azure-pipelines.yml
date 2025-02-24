@@ -134,7 +134,9 @@ extends:
                   testSelector: "testAssemblies"
                   testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\$(targetFramework)\WingetCreateTests.dll'
                   runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
-                  overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test -GitHubAppPrivateKey "$(GitHubApp_PrivateKey)"'                    
+                  overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test'
+                env:
+                  WINGET_CREATE_APP_KEY: $(GitHubApp_PrivateKey)
 
               - task: 1ES.PublishPipelineArtifact@1
                 inputs:

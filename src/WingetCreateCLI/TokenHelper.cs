@@ -140,13 +140,12 @@ namespace Microsoft.WingetCreateCLI
                 {
                     // Migrate to Windows credentials manager
                     Write(token);
-                    File.Delete(TokenFile);
                     return true;
                 }
             }
-            catch (Exception e)
+            finally
             {
-                Logger.Trace($"Failed to migrate token from file to Windows credentials manager. Message: {e.Message}");
+                CleanUpLegacyTokenFile();
             }
 
             token = null;
@@ -162,14 +161,39 @@ namespace Microsoft.WingetCreateCLI
         {
             if (File.Exists(TokenFile))
             {
-                var protectedBytes = File.ReadAllBytes(TokenFile);
-                var bytes = ProtectedData.Unprotect(protectedBytes, EntropyBytes, DataProtectionScope.CurrentUser);
-                token = Encoding.UTF8.GetString(bytes);
-                return true;
+                try
+                {
+                    var protectedBytes = File.ReadAllBytes(TokenFile);
+                    var bytes = ProtectedData.Unprotect(protectedBytes, EntropyBytes, DataProtectionScope.CurrentUser);
+                    token = Encoding.UTF8.GetString(bytes);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Logger.Trace($"Failed to read token from file. Message: {e.Message}");
+                }
             }
 
             token = null;
             return false;
+        }
+
+        /// <summary>
+        /// Cleans up the legacy token file.
+        /// </summary>
+        private static void CleanUpLegacyTokenFile()
+        {
+            if (File.Exists(TokenFile))
+            {
+                try
+                {
+                    File.Delete(TokenFile);
+                }
+                catch (Exception e)
+                {
+                    Logger.Trace($"Failed to delete token file. Message: {e.Message}");
+                }
+            }
         }
     }
 }
