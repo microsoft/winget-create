@@ -176,16 +176,13 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 * Fill out the test parameters in the `WingetCreateTests/Test.runsettings` file
     *  `WingetPkgsTestRepoOwner`: The repository owner of the winget-pkgs-submission-test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
     *  `WingetPkgsTestRepo`: The winget-pkgs test repository. (winget-pkgs-submission-test)
-    *  `GitHubApiKey`: GitHub personal access token for testing.
-       *  Instructions on [how to generate your own GitHubApiKey](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
-       *  Direct link to GitHub [Personal Access Tokens page](https://github.com/settings/tokens).
-   * `GitHubAppPrivateKey`: Leave blank, this is only used by the build server.
 
 * Set the solution wide runsettings file for the tests
     * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
-> [!CAUTION]
-> You should treat your access token like a password. To avoid exposing your PAT, be sure to reset changes to the `WingetCreateTests/Test.runsettings` file before committing your changes. You can also use the command `git update-index --skip-worktree src/WingetCreateTests/WingetCreateTests/Test.runsettings` command to untrack changes to the file and prevent it from being committed.
+* Set up your github token:
+    * __[Recommended]__ Run 'wingetcreate token -s` to go through the Github authentication flow
+    * Or create a personal access token with the `repo` permission and set it as an environment variable `WINGET_CREATE_GITHUB_TOKEN`. _(This option is more convenient for CI/CD pipelines.)_
 
 ## Contributing
 
