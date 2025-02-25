@@ -37,8 +37,7 @@ choco install wingetcreate
 
 ## Build status
 
-[![Build Status](https://dev.azure.com/ms/winget-create/_apis/build/status/microsoft.winget-create?branchName=main&label=winget-create)](https://dev.azure.com/ms/winget-create/_build/latest?definitionId=459&branchName=main)
-
+[![Build Status](https://microsoft.visualstudio.com/Apps/_apis/build/status%2FADEX%2Fwinget-create%20Release?repoName=microsoft%2Fwinget-create&branchName=main)](https://microsoft.visualstudio.com/Apps/_build/latest?definitionId=64953&repoName=microsoft%2Fwinget-create&branchName=main)
 ## Using Windows Package Manager Manifest Creator
 
 **WingetCreate** has the following commands:
@@ -181,7 +180,7 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
     * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
 * Set up your github token:
-    * __[Recommended]__ Run 'wingetcreate token -s` to go through the Github authentication flow
+    * __[Recommended]__ Run `wingetcreate token -s` to go through the Github authentication flow
     * Or create a personal access token with the `repo` permission and set it as an environment variable `WINGET_CREATE_GITHUB_TOKEN`. _(This option is more convenient for CI/CD pipelines.)_
 
 ## Contributing
