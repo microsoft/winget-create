@@ -140,9 +140,7 @@ You can install the prerequisites in one of two ways:
 
 1. Clone the repository
 2. Configure your system
-   * Please use the [configuration file](.configurations/configuration.dsc.yaml). This can be applied by either:
-     * [Dev Home](https://github.com/microsoft/devhome)'s machine configuration tool
-     * WinGet configuration. If you have WinGet version [v1.6.2631 or later](https://github.com/microsoft/winget-cli/releases), run `winget configure .configurations/configuration.dsc.yaml` in an elevated shell from the project root so relative paths resolve correctly
+   * Configure your system using the [configuration file](.config/configuration.winget). To run the configuration, use `winget configure .config/configuration.winget` from the project root or you can double-click the file directly from the file explorer.
    * Alternatively, if you already are running the minimum OS version, have Visual Studio installed, and have developer mode enabled, you may configure your Visual Studio directly via the .vsconfig file. To do this:
      * Open the Visual Studio Installer, select “More” on your product card and then "Import configuration"
      * Specify the .vsconfig file at the root of the repo and select “Review Details”
