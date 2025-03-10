@@ -1,123 +1,249 @@
+param ( $verbose )
 # This script is a prototype for quickly creating DSC files.
 
+function workloads (){
+  $list=@("Microsoft.VisualStudio.Workload.VisualStudioExtension","Microsoft.VisualStudio.Workload.CoreEditor",
+  "Microsoft.VisualStudio.Workload.Azure",  "Microsoft.VisualStudio.Workload.Data",   "Microsoft.VisualStudio.Workload.DataScience",
+  "Microsoft.VisualStudio.Workload.ManagedDesktop",   "Microsoft.VisualStudio.Workload.ManagedGame",   "Microsoft.VisualStudio.Workload.NativeCrossPlat",
+  "Microsoft.VisualStudio.Workload.NativeDesktop",   "Microsoft.VisualStudio.Workload.NativeGame",   "Microsoft.VisualStudio.Workload.NativeMobile",
+  "Microsoft.VisualStudio.Workload.NetCrossPlat",
+  "Microsoft.VisualStudio.Workload.NetWeb",
+  "Microsoft.VisualStudio.Workload.Node",
+  "Microsoft.VisualStudio.Workload.Office",
+  "Microsoft.VisualStudio.Workload.Python",
+  "Microsoft.VisualStudio.Workload.Universal",
+  "Microsoft.VisualStudio.Workload.VisualStudioExtension")
+
+  $Index=1
+  $returnvalue=@()
+  foreach ($workload in $list)
+  {
+      $packageDetails = "[$($Index)] $($workload)  "
+      Write-Host $packageDetails
+
+      $Index++
+  }
+    $selection=$null
+   
+    Write-host Type in workload or workloads wanted by entering the index number or numbers.
+    write-host   "If you want all, simply type all."
+    while (-not($selection))
+    {
+      $selection = [string](Read-Host "Selection")
+      
+    }
+    if ($selection -eq "all")
+    {
+        return $selection
+    } else 
+    {
+      $listoptions=@($selection.split(" "))
+   
+      foreach ($value in $listoptions){
+          
+           $vcounter=1
+          foreach($entry in $list )
+          {
+              if ($value -eq $vcounter )
+              {
+                $returnvalue+=($entry)
+              }
+              $vcounter++
+          }
+          
+      }
+      return $returnvalue
+    }
+    
+
+}
+
+function writeworkloads($name, $dependson)
+{
+
+  $unit = @{"resource" = "Microsoft.VisualStudio.DSC/VSComponents"; 
+   ;"id" = $name;  "directives" = @{"description" = "Install required VS Workloads (Universal)"; 
+   "allowPrerelease" = $true; }; "settings" = @{"productId" = $name; 
+   "channelId" =  "VisualStudio.17.Release"; "components" = @($name)};"dependsOn" = @($dependson)}
+ 
+   return $unit
+}
+
+
+
+
 #Powershell 7 Required
-if ($(Get-Host).version.major -lt 7) {
-  Write-Host 'This script requires powershell 7. You can update powershell by typing winget install Microsoft.Powershell.' -ForegroundColor red
-  Exit(1)
+
+
+if (($verbose -eq "-v") -or ($verbose -eq "--verbose")) { $verbose = "true"}
+
+
+$hostdata=host
+write-host Powershell Version: $hostdata.version.major
+if ($hostdata.version.major -lt 7) {
+  Write-host "This script requires powershell 7. You can update powershell by typing winget install Microsoft.Powershell." -ForegroundColor red
+  [Environment]::Exit(1) 
 }
 
-# Create a custom exception type for our dependency management
-class UnmetDependencyException : Exception {
-  UnmetDependencyException([string] $message) : base($message) {}
-  UnmetDependencyException([string] $message, [Exception] $exception) : base($message, $exception) {}
-}
+#Set output encoding to UTF-8
+$OutputEncoding = [ System.Text.Encoding]::UTF8   
 
-# Ensure the Winget PowerShell modules are installed
-if (-not(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
-  try {
-    Install-Module Microsoft.Winget.Client
+if ($null -eq (Get-InstalledModule -Name Microsoft.Winget.Client))
+{
+  try {  Install-Module Microsoft.Winget.Client
   } catch {
-    # If there was an exception while installing, pass it as an InternalException for further debugging
-    throw [UnmetDependencyException]::new("'Microsoft.Winget.Client' was not installed successfully", $_.Exception)
-  } finally {
-    # Check to be sure it acutally installed
-    if (-not(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
-      throw [UnmetDependencyException]::new("`Microsoft.Winget.Client` was not found. Check that you have installed the Windows Package Manager modules correctly.")
-    }
+  #Pass the exception 
+  throw [System.Net.WebException]::new("Error retrieving powershell module: Microsoft.Winget.Client. Check that you have installed the Windows Package Manager modules correctly.", $_.Exception)
+  #bugbug is this good enough?
   }
 }
 
-# Ensure the powershell-yaml module is installed
-if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
+if ($null -eq (Get-InstalledModule -Name powershell-yaml))
+{
   try {
-    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-    Install-Module -Name powershell-yaml -Force -Repository PSGallery -Scope CurrentUser
+    Install-Module powershell-yaml
   } catch {
-    # If there was an exception while installing, pass it as an InternalException for further debugging
-    throw [UnmetDependencyException]::new("'powershell-yaml' was not installed successfully", $_.Exception)
-  } finally {
-    # Check to be sure it acutally installed
-    if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
-      throw [UnmetDependencyException]::new("`powershell-yaml` was not found. Check that you have installed the module correctly.")
-    }
+  #Pass the exception 
+  throw [System.Net.WebException]::new("Error retrieving powershell module: powershell-yaml. Check that you have installed the Windows Package Manager modules correctly.", $_.Exception)
+  #bugbug is this good enough?
   }
 }
+
 
 [System.Collections.ArrayList]$finalPackages = @()
-$configurationVersion = '0.2.0'
-$Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
-$DSCHeader = "# yaml-language-server: `$schema=https://aka.ms/configuration-dsc-schema/$($configurationVersion -Replace '\.0$','')"
+$configurationVersion = "0.2.0" 
 
-do {
-  $findResult = Find-WinGetPackage $(Read-Host 'What is the Winget ID, or name of the package you want to add to the configuration file?')
+$continue = $true
+do
+{
+  $appId = Read-Host "What is the Winget ID, or name of the package you want to add to the configuration file?"
+  $findResult = Find-WinGetPackage $appId
   
-  if ($findResult.count -ne 0) {
-    # Assign an index to each package
-    $findResult | ForEach-Object { $script:i = 1 } { Add-Member -InputObject $_ -NotePropertyName Index -NotePropertyValue $i; $i++ }
-    $findResult | Select-Object -Property Index, Name, Id, Version | Format-Table | Out-Host
+  if ($findResult.count -ne 0)
+  {
+    $Index=1
+    foreach ($package in $findResult)
+    {
+        $packageDetails = "[$($Index)] $($package.Name) | $($package.Id) | $($package.Version)"
+        Write-Host $packageDetails
+        $index++
+    }
 
+    $selection = -1
     $packageSelected = $false
-    while (-not($packageSelected)) {
-      Write-Host
-      # Prompt user for selection string
-      $selection = (Read-Host 'Select a package by Index, Name, or Id. Press enter to continue or skip')
-      $selectedPackage = $null
-      # If user didn't enter any selection string, set no package as selected and continue
-      if ( [string]::IsNullOrWhiteSpace($selection) ) {
-        $packageSelected = $true
-      } elseif ( $selection -in $findResult.Id ) {
-        # If the user entered a string which matches the Id, select that package
-        $selectedPackage = $findResult.Where({ $_.Id -eq $selection })
-        $packageSelected = $true
-      } elseif ( $selection -in $findResult.Name ) {
-        # If the user entered a string which matches the Name, select that package
-        # Because names could conflict, take the first item in the list to avoid error
-        $selectedPackage = $findResult.Where({ $_.Name -eq $selection }) | Select-Object -First 1
-        $packageSelected = $true
-      } else {
-        # If the name and ID didn't match, try selecting by index
-        # This needs to be a try-catch to handle converting strings to integers
-        try {
-          $selectedPackage = $findResult.Where({ $_.Index -eq [int]$selection })
-          # If the user selects an index out of range, don't set no package as selected. Instead, allow for correcting the index
-          # If the intent is to select no package, the user will be able to skip after being notified the index is out of range
-          if ($selectedPackage) {
-            $packageSelected = $true
-          } else {
-            Write-Host 'Index out of range, please try again'
-          }
-        } catch {
-          Write-Host 'Invalid entry, please try again'
-        }
+    while (-not($packageSelected))
+    {
+      write-host
+      # TODO: We should capture against bad value. "string"
+      # TODO: We should allow user to skip.  Maybe hit S or X.
+      $selection = [int](Read-Host "Input the number of the package you want to select")
+      if (($selection -gt $findResult.count) -or ($selection -lt 1))
+      {
+        Write-Host "Selection is out of range, try again."
+      }
+      else
+      {
+        $packageSelected = $true 
       }
     }
 
-    # If a package was selected, add it to the package list; Otherwise, continue
-    if ($selectedPackage) {
-      $unit = @{'resource' = 'Microsoft.WinGet.DSC/WinGetPackage'; 'directives' = @{'description' = $selectedPackage.Name; 'allowPrerelease' = $true; }; 'settings' = @{'id' = $selectedPackage.Id; 'source' = $selectedPackage.Source } }
-      [void]$finalPackages.Add($unit)
-      Write-Host "Added $($selectedPackage.Name)" -ForegroundColor Blue
+    $selectedPackage = $findResult[$selection - 1] 
+
+    #Specify Source 
+    #Winget currently has 2 sources. If the ID contains a period, we will assume winget.
+    #otherwise it is the MSSTORE.  We are not accounting for private REPOs at this time.
+    If ($selectedPackage.Id -like "*.*") {
+      $source="winget"
+    } else {
+      $source="msstore"
+    }
+ 
+    $unit = @{"resource" = "Microsoft.WinGet.DSC/WinGetPackage"; "id" = $selectedPackage.Id; "directives" = @{"description" = $selectedPackage.Name; "allowPrerelease" = $true; }; "settings" = @{"id" = $selectedPackage.Id; "source"=$source }}
+    $tempvar = $finalPackages.Add($unit)
+    write-host Added  $selectedPackage.Name -ForegroundColor blue
+    if ($verbose -eq "true"){
+  	$yaml=ConvertTo-Yaml @{"properties"= @{"resources"=$unit; "configurationVersion"= $configurationVersion}} 
+	  Write-Host $yaml
+    }
+     
+    if ($selectedPackage.Name -like "*visual studio*")
+    {
+      $yn=Read-Host "Noticed that you installed Visual Studio. Would you like to add workloads? [y/n]"
+      if ($yn -eq "y") 
+      {
+        $workloads = workloads 
+
+
+        foreach ($wk in $workloads)
+          {
+            write-host Adding workload $wk -ForegroundColor blue 
+            
+            $ret=writeworkloads $wk   $selectedPackage.Id;
+
+            $tempvar = $finalPackages.Add($ret)
+            if ($verbose -eq "true"){
+              $yaml=ConvertTo-Yaml @{"properties"= @{"resources"=$ret; "configurationVersion"= $configurationVersion}} 
+
+            }
+
+          }
+      }
     }
   
-  } else {
-    Write-Host 'No package found matching input criteria.' -ForegroundColor DarkYellow
   }
-}  while ($(Read-Host 'Would you like to add another package? [y/n]') -eq 'y')
+  else
+  {
+    Write-Host "No package found matching input criteria." -ForegroundColor DarkYellow
+  }
+}  while ($(Read-Host "Would you like to add another package? [y/n]") -eq 'y')
 
 Write-Host
-$fileName = Read-Host 'Name of the configuration file (without extension)'
+ 
+if((Read-Host "Would you like to turn on DevMode? [y/n]") -eq 'y')
+{
+
+    $unit = @{"resource" = "Microsoft.Windows.Developer/DeveloperMode"; "id" = "Enable"; "directives" = @{"description" = "Enable Developer Mode"; "allowPrerelease" = $true; }; "settings" = @{"Ensure" = "Present" }}
+    $tempvar = $finalPackages.Add($unit)
+
+    write-host DevMode added -ForegroundColor blue
+}
+
+if((Read-Host "Would you like to add environment variables? [y/n]") -eq 'y')
+{
+  $c=0
+  do{
+    $c++
+
+    $var = (Read-Host ("Enter the variable name"))
+     
+    $newvar = 'Expand-Archive -LiteralPath $env:' + $var
+
+    $idName="Environment"+ $c
+    $unit = @{"resource" = "xPSDesiredStateConfiguration/xScript"; "id" = $idName; "directives" = @{"description" = "Sets Environement variables"; "allowPrerelease" = $true; }; "settings" = @{"SetScript" = $newvar }}
+    $tempvar = $finalPackages.Add($unit)
+ 
+    write-host Variable $var added -ForegroundColor blue
+    
+  }  while ($(Read-Host "Would you like to add environment variables? [y/n]") -eq 'y')
+
+}
+
+
+
+Write-host
+$fileName = Read-Host "Name of the configuration file (without extension)"
 $filePath = Join-Path -Path (Get-Location) -ChildPath "$($fileName).winget"
 
-$rawYaml = ConvertTo-Yaml @{'properties' = @{'resources' = $finalPackages; 'configurationVersion' = $configurationVersion } }
-[System.IO.File]::WriteAllLines($filePath, @($DSCHeader, '', $rawYaml.trim()), $Utf8NoBomEncoding)
+ConvertTo-Yaml @{"properties"= @{"resources"=$finalPackages; "configurationVersion"= $configurationVersion}} -OutFile $filePath -Force
 
 Write-Host
-Write-Host 'Testing resulting file...' -ForegroundColor yellow
+Write-Host Testing resulting file.  -ForegroundColor yellow
 (&winget configure --help) > $null
 
 if ($LASTEXITCODE -eq 0) {
   winget configure validate --file $filePath
-} else {
+}
+else {
   Write-Host "'winget configure' is not available, skipping validation." -ForegroundColor Yellow
 }
 
