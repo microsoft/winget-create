@@ -1,7 +1,85 @@
+param ( $verbose )
 # This script is a prototype for quickly creating DSC files.
 
+function workloads (){
+  $list=@("Microsoft.VisualStudio.Workload.VisualStudioExtension","Microsoft.VisualStudio.Workload.CoreEditor",
+  "Microsoft.VisualStudio.Workload.Azure",  "Microsoft.VisualStudio.Workload.Data",   "Microsoft.VisualStudio.Workload.DataScience",
+  "Microsoft.VisualStudio.Workload.ManagedDesktop",   "Microsoft.VisualStudio.Workload.ManagedGame",   "Microsoft.VisualStudio.Workload.NativeCrossPlat",
+  "Microsoft.VisualStudio.Workload.NativeDesktop",   "Microsoft.VisualStudio.Workload.NativeGame",   "Microsoft.VisualStudio.Workload.NativeMobile",
+  "Microsoft.VisualStudio.Workload.NetCrossPlat",
+  "Microsoft.VisualStudio.Workload.NetWeb",
+  "Microsoft.VisualStudio.Workload.Node",
+  "Microsoft.VisualStudio.Workload.Office",
+  "Microsoft.VisualStudio.Workload.Python",
+  "Microsoft.VisualStudio.Workload.Universal",
+  "Microsoft.VisualStudio.Workload.VisualStudioExtension")
+
+  $Index=1
+  $returnvalue=@()
+  foreach ($workload in $list)
+  {
+      $packageDetails = "[$($Index)] $($workload)  "
+      Write-Host $packageDetails
+
+      $Index++
+  }
+    $selection=$null
+   
+    Write-host Type in workload or workloads wanted by entering the index number or numbers.
+    write-host   "If you want all, simply type all."
+    while (-not($selection))
+    {
+      $selection = [string](Read-Host "Selection")
+      
+    }
+    if ($selection -eq "all")
+    {
+        return $selection
+    } else 
+    {
+      $listoptions=@($selection.split(" "))
+   
+      foreach ($value in $listoptions){
+          
+           $vcounter=1
+          foreach($entry in $list )
+          {
+              if ($value -eq $vcounter )
+              {
+                $returnvalue+=($entry)
+              }
+              $vcounter++
+          }
+          
+      }
+      return $returnvalue
+    }
+    
+
+}
+
+function writeworkloads($name, $dependson)
+{
+
+  $unit = @{"resource" = "Microsoft.VisualStudio.DSC/VSComponents"; 
+   ;"id" = $name;  "directives" = @{"description" = "Install required VS Workloads (Universal)"; 
+   "allowPrerelease" = $true; }; "settings" = @{"productId" = $name; 
+   "channelId" =  "VisualStudio.17.Release"; "components" = @($name)};"dependsOn" = @($dependson)}
+ 
+   return $unit
+}
+
+
+
+
 #Powershell 7 Required
+
+
+if (($verbose -eq "-v") -or ($verbose -eq "--verbose")) { $verbose = "true"}
+
+
 $hostdata=host
+write-host Powershell Version: $hostdata.version.major
 if ($hostdata.version.major -lt 7) {
   Write-host "This script requires powershell 7. You can update powershell by typing winget install Microsoft.Powershell." -ForegroundColor red
   [Environment]::Exit(1) 
@@ -30,6 +108,7 @@ if ($null -eq (Get-InstalledModule -Name powershell-yaml))
   #bugbug is this good enough?
   }
 }
+
 
 [System.Collections.ArrayList]$finalPackages = @()
 $configurationVersion = "0.2.0" 
@@ -79,10 +158,37 @@ do
       $source="msstore"
     }
  
-    $unit = @{"resource" = "Microsoft.WinGet.DSC/WinGetPackage"; "directives" = @{"description" = $selectedPackage.Name; "allowPrerelease" = $true; }; "settings" = @{"id" = $selectedPackage.Id; "source"=$source }}
+    $unit = @{"resource" = "Microsoft.WinGet.DSC/WinGetPackage"; "id" = $selectedPackage.Id; "directives" = @{"description" = $selectedPackage.Name; "allowPrerelease" = $true; }; "settings" = @{"id" = $selectedPackage.Id; "source"=$source }}
     $tempvar = $finalPackages.Add($unit)
     write-host Added  $selectedPackage.Name -ForegroundColor blue
- 
+    if ($verbose -eq "true"){
+  	$yaml=ConvertTo-Yaml @{"properties"= @{"resources"=$unit; "configurationVersion"= $configurationVersion}} 
+	  Write-Host $yaml
+    }
+     
+    if ($selectedPackage.Name -like "*visual studio*")
+    {
+      $yn=Read-Host "Noticed that you installed Visual Studio. Would you like to add workloads? [y/n]"
+      if ($yn -eq "y") 
+      {
+        $workloads = workloads 
+
+
+        foreach ($wk in $workloads)
+          {
+            write-host Adding workload $wk -ForegroundColor blue 
+            
+            $ret=writeworkloads $wk   $selectedPackage.Id;
+
+            $tempvar = $finalPackages.Add($ret)
+            if ($verbose -eq "true"){
+              $yaml=ConvertTo-Yaml @{"properties"= @{"resources"=$ret; "configurationVersion"= $configurationVersion}} 
+
+            }
+
+          }
+      }
+    }
   
   }
   else
@@ -90,6 +196,39 @@ do
     Write-Host "No package found matching input criteria." -ForegroundColor DarkYellow
   }
 }  while ($(Read-Host "Would you like to add another package? [y/n]") -eq 'y')
+
+Write-Host
+ 
+if((Read-Host "Would you like to turn on DevMode? [y/n]") -eq 'y')
+{
+
+    $unit = @{"resource" = "Microsoft.Windows.Developer/DeveloperMode"; "id" = "Enable"; "directives" = @{"description" = "Enable Developer Mode"; "allowPrerelease" = $true; }; "settings" = @{"Ensure" = "Present" }}
+    $tempvar = $finalPackages.Add($unit)
+
+    write-host DevMode added -ForegroundColor blue
+}
+
+if((Read-Host "Would you like to add environment variables? [y/n]") -eq 'y')
+{
+  $c=0
+  do{
+    $c++
+
+    $var = (Read-Host ("Enter the variable name"))
+     
+    $newvar = 'Expand-Archive -LiteralPath $env:' + $var
+
+    $idName="Environment"+ $c
+    $unit = @{"resource" = "xPSDesiredStateConfiguration/xScript"; "id" = $idName; "directives" = @{"description" = "Sets Environement variables"; "allowPrerelease" = $true; }; "settings" = @{"SetScript" = $newvar }}
+    $tempvar = $finalPackages.Add($unit)
+ 
+    write-host Variable $var added -ForegroundColor blue
+    
+  }  while ($(Read-Host "Would you like to add environment variables? [y/n]") -eq 'y')
+
+}
+
+
 
 Write-host
 $fileName = Read-Host "Name of the configuration file (without extension)"
