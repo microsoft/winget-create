@@ -778,6 +778,24 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Logger.ErrorLocalized(nameof(Resources.SyncForkWithUpstream_Message));
                     return false;
                 }
+                else if (e is BranchMergeConflictException)
+                {
+                    // While attempting to sync fork through the GitHub API, a branch merge conflict was detected.
+                    // The user will need to manually resolve the conflict.
+                    Logger.ErrorLocalized(nameof(Resources.BranchMergeConflict_Message));
+                    return false;
+                }
+                else if (e is GenericSyncFailureException)
+                {
+                    // While attempting to sync fork through the GitHub API, a generic sync failure occurred.
+                    Logger.ErrorLocalized(nameof(Resources.SyncForkFailed_Message));
+                    return false;
+                }
+                else if (e is HttpRequestException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.NetworkConnectionFailure_Message));
+                    return false;
+                }
                 else
                 {
                     throw;

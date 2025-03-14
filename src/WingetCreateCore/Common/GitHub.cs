@@ -488,8 +488,10 @@ namespace Microsoft.WingetCreateCore.Common
 
                 // Octokit .NET doesn't support sync fork endpoint, so we make a direct call to the GitHub API.
                 // Tracking issue for the request: https://github.com/octokit/octokit.net/issues/2989
-                // API reference: https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#sync-a-fork-branch-with-the-upstream-repository
                 HttpClient httpClient = new HttpClient();
+
+                // API reference: https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#sync-a-fork-branch-with-the-upstream-repository
+                var url = $"https://api.github.com/repos/{forkedRepo.Owner.Login}/{forkedRepo.Name}/merge-upstream";
 
                 // Headers
                 httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.github.Credentials.Password);
@@ -501,8 +503,21 @@ namespace Microsoft.WingetCreateCore.Common
                 JsonObject jsonObject = new JsonObject { { "branch", forkedRepo.DefaultBranch } };
                 var content = new StringContent(jsonObject.ToString(), Encoding.UTF8, "application/json");
 
-                var url = $"https://api.github.com/repos/{forkedRepo.Owner.Login}/{forkedRepo.Name}/merge-upstream";
                 var response = await httpClient.PostAsync(url, content);
+
+                // 409 status code
+                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+                {
+                    throw new BranchMergeConflictException();
+                }
+
+                // 422 status code
+                if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                {
+                    throw new GenericSyncFailureException();
+                }
+
+                // The API doesn't document another error code. If this fails, a generic HttpRequestException is thrown.
                 response.EnsureSuccessStatusCode();
             }
         }
