@@ -268,7 +268,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The forked repository could not be synced with the upstream commits due to a merge conflict..
+        ///   Looks up a localized string similar to The forked repository could not be synced with the upstream commits due to a merge conflict. Resolve conflicts manually and try again..
         /// </summary>
         public static string BranchMergeConflict_Message {
             get {

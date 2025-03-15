@@ -1404,6 +1404,6 @@ Warning: Using this argument may result in the token being logged. Consider an a
     <value>The forked repository could not be synced with the upstream commits. Sync your fork manually and try again.</value>
   </data>
   <data name="BranchMergeConflict_Message" xml:space="preserve">
-    <value>The forked repository could not be synced with the upstream commits due to a merge conflict.</value>
+    <value>The forked repository could not be synced with the upstream commits due to a merge conflict. Resolve conflicts manually and try again.</value>
   </data>
 </root>
