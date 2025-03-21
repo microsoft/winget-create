@@ -119,7 +119,7 @@ The following arguments are available:
 | **-r, --replace** |  Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false. |
 | **-i, --interactive** |  Boolean value for making the update command interactive. If true, the tool will prompt the user for input. Default is false. |
 | **-f,--format** |  Output format of the manifest. Default is "yaml". |
-| **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials. |
+| **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials. <br/>⚠️ _Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token._ |
 | **-?, --help** |  Gets additional help on this command. |
 
 ## Submit

@@ -37,8 +37,7 @@ choco install wingetcreate
 
 ## Build status
 
-[![Build Status](https://dev.azure.com/ms/winget-create/_apis/build/status/microsoft.winget-create?branchName=main&label=winget-create)](https://dev.azure.com/ms/winget-create/_build/latest?definitionId=459&branchName=main)
-
+[![Build Status](https://microsoft.visualstudio.com/Apps/_apis/build/status%2FADEX%2Fwinget-create%20Release?repoName=microsoft%2Fwinget-create&branchName=main)](https://microsoft.visualstudio.com/Apps/_build/latest?definitionId=64953&repoName=microsoft%2Fwinget-create&branchName=main)
 ## Using Windows Package Manager Manifest Creator
 
 **WingetCreate** has the following commands:
@@ -141,9 +140,7 @@ You can install the prerequisites in one of two ways:
 
 1. Clone the repository
 2. Configure your system
-   * Please use the [configuration file](.configurations/configuration.dsc.yaml). This can be applied by either:
-     * [Dev Home](https://github.com/microsoft/devhome)'s machine configuration tool
-     * WinGet configuration. If you have WinGet version [v1.6.2631 or later](https://github.com/microsoft/winget-cli/releases), run `winget configure .configurations/configuration.dsc.yaml` in an elevated shell from the project root so relative paths resolve correctly
+   * Configure your system using the [configuration file](.config/configuration.winget). To run the configuration, use `winget configure .config/configuration.winget` from the project root or you can double-click the file directly from the file explorer.
    * Alternatively, if you already are running the minimum OS version, have Visual Studio installed, and have developer mode enabled, you may configure your Visual Studio directly via the .vsconfig file. To do this:
      * Open the Visual Studio Installer, select “More” on your product card and then "Import configuration"
      * Specify the .vsconfig file at the root of the repo and select “Review Details”
@@ -176,16 +173,13 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 * Fill out the test parameters in the `WingetCreateTests/Test.runsettings` file
     *  `WingetPkgsTestRepoOwner`: The repository owner of the winget-pkgs-submission-test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
     *  `WingetPkgsTestRepo`: The winget-pkgs test repository. (winget-pkgs-submission-test)
-    *  `GitHubApiKey`: GitHub personal access token for testing.
-       *  Instructions on [how to generate your own GitHubApiKey](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
-       *  Direct link to GitHub [Personal Access Tokens page](https://github.com/settings/tokens).
-   * `GitHubAppPrivateKey`: Leave blank, this is only used by the build server.
 
 * Set the solution wide runsettings file for the tests
     * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
-> [!CAUTION]
-> You should treat your access token like a password. To avoid exposing your PAT, be sure to reset changes to the `WingetCreateTests/Test.runsettings` file before committing your changes. You can also use the command `git update-index --skip-worktree src/WingetCreateTests/WingetCreateTests/Test.runsettings` command to untrack changes to the file and prevent it from being committed.
+* Set up your github token:
+    * __[Recommended]__ Run `wingetcreate token -s` to go through the Github authentication flow
+    * Or create a personal access token with the `repo` permission and set it as an environment variable `WINGET_CREATE_GITHUB_TOKEN`. _(This option is more convenient for CI/CD pipelines.)_
 
 ## Contributing
 

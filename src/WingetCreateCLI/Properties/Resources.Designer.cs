@@ -268,6 +268,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The forked repository could not be synced with the upstream commits due to a merge conflict. Resolve conflicts manually and try again..
+        /// </summary>
+        public static string BranchMergeConflict_Message {
+            get {
+                return ResourceManager.GetString("BranchMergeConflict_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Web browser failed to launch: {0}.
         /// </summary>
         public static string BrowserFailedToLaunch_Error {
@@ -1150,11 +1159,22 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials..
+        ///   Looks up a localized string similar to GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
+        ///
+        ///Warning: Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token..
         /// </summary>
         public static string GitHubToken_HelpText {
             get {
                 return ResourceManager.GetString("GitHubToken_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: Using the --token argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token..
+        /// </summary>
+        public static string GitHubTokenWarning_Message {
+            get {
+                return ResourceManager.GetString("GitHubTokenWarning_Message", resourceCulture);
             }
         }
         
@@ -3180,6 +3200,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SwitchToUpdateLocaleFlow_Message {
             get {
                 return ResourceManager.GetString("SwitchToUpdateLocaleFlow_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The forked repository could not be synced with the upstream commits. Sync your fork manually and try again..
+        /// </summary>
+        public static string SyncForkFailed_Message {
+            get {
+                return ResourceManager.GetString("SyncForkFailed_Message", resourceCulture);
             }
         }
         
