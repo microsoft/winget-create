@@ -54,7 +54,7 @@ namespace Microsoft.WingetCreateE2ETests
         [TestCase(TestConstants.YamlConstants.TestPortablePackageIdentifier, TestConstants.YamlConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.YamlManifestFormat)]
         [TestCase(TestConstants.YamlConstants.TestZipPackageIdentifier, TestConstants.YamlConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.YamlManifestFormat)]
 
-        // JSON E2E Tests
+        // JSON E2E Tests. Skipped because of https://github.com/microsoft/winget-cli/issues/5336
         [TestCase(TestConstants.JsonConstants.TestExePackageIdentifier, TestConstants.JsonConstants.TestExeManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
         [TestCase(TestConstants.JsonConstants.TestMsiPackageIdentifier, TestConstants.JsonConstants.TestMsiManifest, TestConstants.TestMsiInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
         [TestCase(TestConstants.JsonConstants.TestMultifileMsixPackageIdentifier, TestConstants.JsonConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
