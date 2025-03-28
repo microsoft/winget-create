@@ -55,11 +55,11 @@ namespace Microsoft.WingetCreateE2ETests
         [TestCase(TestConstants.YamlConstants.TestZipPackageIdentifier, TestConstants.YamlConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.YamlManifestFormat)]
 
         // JSON E2E Tests
-        [TestCase(TestConstants.JsonConstants.TestExePackageIdentifier, TestConstants.JsonConstants.TestExeManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat)]
-        [TestCase(TestConstants.JsonConstants.TestMsiPackageIdentifier, TestConstants.JsonConstants.TestMsiManifest, TestConstants.TestMsiInstaller, TestConstants.JsonManifestFormat)]
-        [TestCase(TestConstants.JsonConstants.TestMultifileMsixPackageIdentifier, TestConstants.JsonConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller, TestConstants.JsonManifestFormat)]
-        [TestCase(TestConstants.JsonConstants.TestPortablePackageIdentifier, TestConstants.JsonConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat)]
-        [TestCase(TestConstants.JsonConstants.TestZipPackageIdentifier, TestConstants.JsonConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.JsonManifestFormat)]
+        [TestCase(TestConstants.JsonConstants.TestExePackageIdentifier, TestConstants.JsonConstants.TestExeManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
+        [TestCase(TestConstants.JsonConstants.TestMsiPackageIdentifier, TestConstants.JsonConstants.TestMsiManifest, TestConstants.TestMsiInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
+        [TestCase(TestConstants.JsonConstants.TestMultifileMsixPackageIdentifier, TestConstants.JsonConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
+        [TestCase(TestConstants.JsonConstants.TestPortablePackageIdentifier, TestConstants.JsonConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
+        [TestCase(TestConstants.JsonConstants.TestZipPackageIdentifier, TestConstants.JsonConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
 
         public async Task SubmitAndUpdateInstaller(string packageId, string manifestName, string installerName, ManifestFormat format)
         {

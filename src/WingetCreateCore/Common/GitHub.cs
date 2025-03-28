@@ -19,6 +19,7 @@ namespace Microsoft.WingetCreateCore.Common
     using Microsoft.WingetCreateCore.Models.Installer;
     using Octokit;
     using Polly;
+    using AuthenticationType = Octokit.AuthenticationType;
 
     /// <summary>
     /// Provides functionality for interacting a user's GitHub account.

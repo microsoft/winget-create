@@ -241,6 +241,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authentication information for Entra Id secured private sources.
+        /// </summary>
+        public static string Authentication_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Authentication_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type of authentication to use for Entra Id authentication.
+        /// </summary>
+        public static string AuthenticationType_KeywordDescription {
+            get {
+                return ResourceManager.GetString("AuthenticationType_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package author.
         /// </summary>
         public static string Author_KeywordDescription {
@@ -1827,6 +1845,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Information required for Entra Id authentication in private sources.
+        /// </summary>
+        public static string MicrosoftEntraIdAuthenticationInfo_KeywordDescription {
+            get {
+                return ResourceManager.GetString("MicrosoftEntraIdAuthenticationInfo_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installer minimum operating system version.
         /// </summary>
         public static string MinimumOSVersion_KeywordDescription {
@@ -2687,6 +2714,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string ResolveMatchingConflicts_Message {
             get {
                 return ResourceManager.GetString("ResolveMatchingConflicts_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The resource to use for Microsoft Entra Id authentication.
+        /// </summary>
+        public static string Resource_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Resource_KeywordDescription", resourceCulture);
             }
         }
         
