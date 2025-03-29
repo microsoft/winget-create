@@ -64,6 +64,12 @@ namespace Microsoft.WingetCreateCLI
                 return args.Any() ? 1 : 0;
             }
 
+            // If the user has provided a token via the command line, warn them that it may be logged
+            if (!string.IsNullOrEmpty(command.GitHubToken))
+            {
+                Logger.WarnLocalized(nameof(Resources.GitHubTokenWarning_Message));
+            }
+
             bool commandHandlesToken = command is not CacheCommand and not InfoCommand and not SettingsCommand;
 
             // Do not load github client for commands that do not deal with a GitHub token.

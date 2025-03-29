@@ -237,7 +237,9 @@
     <value>GitHub login failed.</value>
   </data>
   <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.</value>
+    <value>GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
+
+Warning: Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token.</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Windows Package Manager Manifest Creator v{0}</value>
@@ -652,6 +654,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>Token was invalid. Please generate a new GitHub token and try again.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Warning: Using the --token argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the '-t' flag or store one using the 'token --store' command.</value>
@@ -1394,5 +1399,11 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>Does this executable depend on DLLs or any other files present in the zip archive?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>The forked repository could not be synced with the upstream commits. Sync your fork manually and try again.</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>The forked repository could not be synced with the upstream commits due to a merge conflict. Resolve conflicts manually and try again.</value>
   </data>
 </root>

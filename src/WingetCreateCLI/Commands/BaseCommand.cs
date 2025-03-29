@@ -126,22 +126,19 @@ namespace Microsoft.WingetCreateCLI.Commands
             if (string.IsNullOrEmpty(this.GitHubToken))
             {
                 Logger.Trace("No token parameter, reading cached token");
-                this.GitHubToken = GitHubOAuth.ReadTokenCache();
-                if (string.IsNullOrEmpty(this.GitHubToken))
+                if (GitHubOAuth.TryReadTokenCache(out var token))
                 {
-                    if (requireToken)
-                    {
-                        Logger.Trace("No token found in cache, launching OAuth flow");
-                        if (!await this.GetTokenFromOAuth())
-                        {
-                            Logger.Trace("Failed to obtain token from OAuth flow.");
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
+                    this.GitHubToken = token;
                     isCacheToken = true;
+                }
+                else if (requireToken)
+                {
+                    Logger.Trace("No token found in cache, launching OAuth flow");
+                    if (!await this.GetTokenFromOAuth())
+                    {
+                        Logger.Trace("Failed to obtain token from OAuth flow.");
+                        return false;
+                    }
                 }
             }
 
@@ -779,6 +776,24 @@ namespace Microsoft.WingetCreateCLI.Commands
                     // This exception can occur if the client is unable to create a reference due to being behind by too many commits.
                     // The user will need to manually update their master branch of their winget-pkgs fork.
                     Logger.ErrorLocalized(nameof(Resources.SyncForkWithUpstream_Message));
+                    return false;
+                }
+                else if (e is BranchMergeConflictException)
+                {
+                    // While attempting to sync fork through the GitHub API, a branch merge conflict was detected.
+                    // The user will need to manually resolve the conflict.
+                    Logger.ErrorLocalized(nameof(Resources.BranchMergeConflict_Message));
+                    return false;
+                }
+                else if (e is GenericSyncFailureException)
+                {
+                    // While attempting to sync fork through the GitHub API, a generic sync failure occurred.
+                    Logger.ErrorLocalized(nameof(Resources.SyncForkFailed_Message));
+                    return false;
+                }
+                else if (e is HttpRequestException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.NetworkConnectionFailure_Message));
                     return false;
                 }
                 else
