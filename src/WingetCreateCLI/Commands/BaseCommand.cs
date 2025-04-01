@@ -389,6 +389,8 @@ namespace Microsoft.WingetCreateCLI.Commands
         {
             bool skipValidation = format != ManifestFormat.Yaml;
 
+            // Skip validation because of https://github.com/microsoft/winget-cli/issues/5336
+            // More discussion in the PR https://github.com/microsoft/winget-create/pull/593
             if (skipValidation)
             {
                 Logger.WarnLocalized(nameof(Resources.SkippingManifestValidation_Message));
