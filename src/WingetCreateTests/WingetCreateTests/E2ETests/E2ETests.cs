@@ -9,6 +9,7 @@ namespace Microsoft.WingetCreateE2ETests
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
+    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateTests;
@@ -27,6 +28,7 @@ namespace Microsoft.WingetCreateE2ETests
     {
         private const string PackageVersion = "1.2.3.4";
         private GitHub gitHub;
+        private StringWriter sw;
 
         /// <summary>
         /// One-time function that runs at the beginning of this test class.
@@ -37,6 +39,8 @@ namespace Microsoft.WingetCreateE2ETests
             Logger.Initialize();
             this.gitHub = new GitHub(this.GitHubApiKey, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
             TestUtils.InitializeMockDownload();
+            this.sw = new StringWriter();
+            Console.SetOut(this.sw);
         }
 
         /// <summary>
@@ -54,12 +58,12 @@ namespace Microsoft.WingetCreateE2ETests
         [TestCase(TestConstants.YamlConstants.TestPortablePackageIdentifier, TestConstants.YamlConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.YamlManifestFormat)]
         [TestCase(TestConstants.YamlConstants.TestZipPackageIdentifier, TestConstants.YamlConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.YamlManifestFormat)]
 
-        // JSON E2E Tests. Skipped because of https://github.com/microsoft/winget-cli/issues/5336
-        [TestCase(TestConstants.JsonConstants.TestExePackageIdentifier, TestConstants.JsonConstants.TestExeManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
-        [TestCase(TestConstants.JsonConstants.TestMsiPackageIdentifier, TestConstants.JsonConstants.TestMsiManifest, TestConstants.TestMsiInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
-        [TestCase(TestConstants.JsonConstants.TestMultifileMsixPackageIdentifier, TestConstants.JsonConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
-        [TestCase(TestConstants.JsonConstants.TestPortablePackageIdentifier, TestConstants.JsonConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
-        [TestCase(TestConstants.JsonConstants.TestZipPackageIdentifier, TestConstants.JsonConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.JsonManifestFormat, Ignore = "Fails WinGetUtil.WinGetValidateManifest in schema version 1.10.0+")]
+        // JSON E2E Tests
+        [TestCase(TestConstants.JsonConstants.TestExePackageIdentifier, TestConstants.JsonConstants.TestExeManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat)]
+        [TestCase(TestConstants.JsonConstants.TestMsiPackageIdentifier, TestConstants.JsonConstants.TestMsiManifest, TestConstants.TestMsiInstaller, TestConstants.JsonManifestFormat)]
+        [TestCase(TestConstants.JsonConstants.TestMultifileMsixPackageIdentifier, TestConstants.JsonConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller, TestConstants.JsonManifestFormat)]
+        [TestCase(TestConstants.JsonConstants.TestPortablePackageIdentifier, TestConstants.JsonConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat)]
+        [TestCase(TestConstants.JsonConstants.TestZipPackageIdentifier, TestConstants.JsonConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.JsonManifestFormat)]
 
         public async Task SubmitAndUpdateInstaller(string packageId, string manifestName, string installerName, ManifestFormat format)
         {
@@ -86,6 +90,10 @@ namespace Microsoft.WingetCreateE2ETests
                 OpenPRInBrowser = false,
             };
             ClassicAssert.IsTrue(await submitCommand.Execute(), "Command should have succeeded");
+            this.AssertValidationOutput(format);
+
+            // Clear output for the next command
+            this.sw.GetStringBuilder().Clear();
 
             var mergeRetryPolicy = Policy
                 .Handle<PullRequestNotMergeableException>()
@@ -115,11 +123,22 @@ namespace Microsoft.WingetCreateE2ETests
             ClassicAssert.IsTrue(await updateCommand.LoadGitHubClient(), "Failed to create GitHub client");
             ClassicAssert.IsTrue(await updateCommand.Execute(), "Command should execute successfully");
 
-            string pathToValidate = Path.Combine(Directory.GetCurrentDirectory(), Utils.GetAppManifestDirPath(packageId, PackageVersion));
-            (bool success, string message) = WinGetUtil.ValidateManifest(pathToValidate);
-            ClassicAssert.IsTrue(success, message);
-
+            // Since SubmitToGitHub is true, the command will first validate the manifest & then submit the PR
+            this.AssertValidationOutput(format);
             await this.gitHub.ClosePullRequest(updateCommand.PullRequestNumber);
+        }
+
+        private void AssertValidationOutput(ManifestFormat format)
+        {
+            string output = this.sw.ToString();
+            if (format == ManifestFormat.Yaml)
+            {
+                Assert.That(output, Does.Contain(string.Format(Resources.ManifestValidationSucceeded_Message, true)), "Manifest validation success message should be shown");
+            }
+            else
+            {
+                Assert.That(output, Does.Contain(Resources.SkippingManifestValidation_Message), "Skipping manifest validation message should be shown");
+            }
         }
     }
 }

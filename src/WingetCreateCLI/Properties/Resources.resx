@@ -1418,4 +1418,7 @@ Warning: Using this argument may result in the token being logged. Consider an a
   <data name="Authentication_KeywordDescription" xml:space="preserve">
     <value>Authentication information for Entra Id secured private sources</value>
   </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>Skipping manifest validation. The CLI can only validate YAML format. Validate output manually before submission.</value>
+  </data>
 </root>

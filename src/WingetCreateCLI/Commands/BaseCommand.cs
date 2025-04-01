@@ -216,8 +216,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Saves the manifests to a randomly generated directory in the %TEMP% folder and validates them, printing the results to console.
         /// </summary>
         /// <param name="manifests">Manifests object model.</param>
+        /// <param name="format">Format of the serialized manifest. </param>
         /// <returns>A boolean value indicating whether validation of the manifests was successful.</returns>
-        protected static bool ValidateManifestsInTempDir(Manifests manifests)
+        protected static bool ValidateManifestsInTempDir(Manifests manifests, ManifestFormat format)
         {
             string versionManifestFileName = Manifests.GetFileName(manifests.VersionManifest, Extension);
             string installerManifestFileName = Manifests.GetFileName(manifests.InstallerManifest, Extension);
@@ -236,7 +237,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 File.WriteAllText(Path.Combine(randomDirPath, localeManifestFileName), localeManifest.ToManifestString());
             }
 
-            bool result = ValidateManifest(randomDirPath);
+            bool result = ValidateManifest(randomDirPath, format);
             Directory.Delete(randomDirPath, true);
             return result;
         }
@@ -382,9 +383,18 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Utilizes WingetUtil to validate a specified manifest.
         /// </summary>
         /// <param name="manifestPath"> Path to the manifest file to be validated. </param>
+        /// <param name="format"> Format of the manifest file. </param>"
         /// <returns>Bool indicating the validity of the manifest file. </returns>
-        protected static bool ValidateManifest(string manifestPath)
+        protected static bool ValidateManifest(string manifestPath, ManifestFormat format)
         {
+            bool skipValidation = format != ManifestFormat.Yaml;
+
+            if (skipValidation)
+            {
+                Logger.WarnLocalized(nameof(Resources.SkippingManifestValidation_Message));
+                return true;
+            }
+
             (bool success, string message) = WinGetUtil.ValidateManifest(manifestPath);
 
             if (success)

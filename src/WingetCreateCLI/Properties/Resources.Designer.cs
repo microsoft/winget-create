@@ -3150,6 +3150,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skipping manifest validation. The CLI can only validate YAML format. Validate output manually before submission..
+        /// </summary>
+        public static string SkippingManifestValidation_Message {
+            get {
+                return ResourceManager.GetString("SkippingManifestValidation_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Skipping pull request submission....
         /// </summary>
         public static string SkippingPullRequest_Message {
