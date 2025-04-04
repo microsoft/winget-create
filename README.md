@@ -138,6 +138,11 @@ When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.
 
 - (Optional) Select the **delete_repo** scope permission if you want WingetCreate to automatically delete the forked repo that it created if the PR submission fails.
 
+> [!IMPORTANT]
+> We currently do not support fine-grained GitHub tokens as we do not have the support for it yet from the GitHub APIs. See <https://github.com/microsoft/winget-create/issues/595> for more details.
+>
+> Since we only support classic personal access tokens, we recommend creating a separate bot account to be used in a CI/CD pipeline. Follow the same steps above to create a PAT for the bot account and use that token in your automated pipelines.
+
 ## Building the client
 
 ### Prerequisites
