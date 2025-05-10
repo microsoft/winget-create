@@ -980,6 +980,19 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Ensures that all fields from the YAML Singleton v1.10 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullYamlSingletonVersion1_10()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullYamlSingleton1_10", null, this.tempPath, null);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
         /// Ensures that all fields from the JSON Singleton v1.1 manifest can be deserialized and updated correctly.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
@@ -1066,6 +1079,19 @@ namespace Microsoft.WingetCreateUnitTests
         {
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_9", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
+        }
+
+        /// <summary>
+        /// Ensures that all fields from the Singleton JSON v1.10 manifest can be deserialized and updated correctly.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateFullJsonSingletonVersion1_10()
+        {
+            TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
+            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.FullJsonSingleton1_10", null, this.tempPath, null, manifestFormat: ManifestFormat.Json);
             var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
         }

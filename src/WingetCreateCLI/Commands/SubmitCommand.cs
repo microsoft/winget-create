@@ -112,7 +112,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             string expandedPath = System.Environment.ExpandEnvironmentVariables(this.Path);
 
             // TODO: Remove singleton support.
-            if (File.Exists(expandedPath) && ValidateManifest(expandedPath))
+            if (File.Exists(expandedPath) && ValidateManifest(expandedPath, this.Format))
             {
                 Manifests manifests = new Manifests();
                 manifests.SingletonManifest = Serialization.DeserializeFromPath<SingletonManifest>(expandedPath);
@@ -124,7 +124,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
             }
-            else if (Directory.Exists(expandedPath) && ValidateManifest(expandedPath))
+            else if (Directory.Exists(expandedPath) && ValidateManifest(expandedPath, this.Format))
             {
                 List<string> manifestContents = Directory.GetFiles(expandedPath).Select(f => File.ReadAllText(f)).ToList();
                 Manifests manifests = Serialization.DeserializeManifestContents(manifestContents);

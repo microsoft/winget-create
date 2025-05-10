@@ -274,7 +274,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, this.OutputDir);
 
-            if (ValidateManifest(manifestDirectoryPath))
+            if (ValidateManifest(manifestDirectoryPath, this.Format))
             {
                 if (this.SubmitToGitHub)
                 {
@@ -617,6 +617,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Files, WingetCreateCore.Models.Installer.Files>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallationMetadata, WingetCreateCore.Models.Installer.InstallationMetadata>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Icon, WingetCreateCore.Models.DefaultLocale.Icon>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Authentication, WingetCreateCore.Models.Installer.Authentication>();
             });
             var mapper = config.CreateMapper();
 
@@ -686,7 +687,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             return newHashes.Except(oldHashes).Any();
         }
 
-        private static void DisplayManifestsAsMenuSelection(Manifests manifests)
+        private static void DisplayManifestsAsMenuSelection(Manifests manifests, ManifestFormat format)
         {
             Console.Clear();
             string versionFileName = Manifests.GetFileName(manifests.VersionManifest, Extension);
@@ -708,7 +709,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 selectionList.Add(Resources.Done_MenuItem);
-                ValidateManifestsInTempDir(manifests);
+                ValidateManifestsInTempDir(manifests, format);
                 var selectedItem = Prompt.Select(Resources.SelectManifestToEdit_Message, selectionList);
 
                 if (selectedItem == versionManifestMenuItem)
@@ -955,13 +956,13 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 this.AddVersionSpecificMetadata(manifests);
                 DisplayManifestPreview(manifests);
-                ValidateManifestsInTempDir(manifests);
+                ValidateManifestsInTempDir(manifests, this.Format);
             }
             while (Prompt.Confirm(Resources.DiscardUpdateAndStartOver_Message));
 
             if (Prompt.Confirm(Resources.EditManifests_Message))
             {
-                DisplayManifestsAsMenuSelection(manifests);
+                DisplayManifestsAsMenuSelection(manifests, this.Format);
             }
 
             if (!this.SubmitToGitHub)

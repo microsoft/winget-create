@@ -1,5 +1,5 @@
 ﻿{
-    "PackageIdentifier": "TestPublisher.FullJsonSingleton1_6",
+    "PackageIdentifier": "TestPublisher.FullJsonSingleton1_10",
     "PackageVersion": "0.1.2.3",
     "PackageLocale": "en-US",
     "DefaultLocale": "en-US",
@@ -8,7 +8,7 @@
     "PublisherSupportUrl": "https://fakeTestUrl.com",
     "PrivacyUrl": "https://fakeTestUrl.com",
     "Author": "fakeAuthor",
-    "PackageName": "Full Singleton 1.6 Test",
+    "PackageName": "Full Singleton 1.10 Test",
     "PackageUrl": "https://fakeTestUrl.com",
     "License": "MIT",
     "LicenseUrl": "https://fakeTestUrl.com",
@@ -62,7 +62,8 @@
         ],
         "InstallerSwitches": {
           "Silent": "/s",
-          "Upgrade": "/u"
+          "Upgrade": "/u",
+          "Repair": "/r"
         },
         "InstallerSuccessCodes": [
           1
@@ -146,9 +147,11 @@
             }
           ]
         },
-        "DownloadCommandProhibited": true
+        "DownloadCommandProhibited": true,
+        "RepairBehavior": "modify",
+        "ArchiveBinariesDependOnPath": true
       }
     ],
     "ManifestType": "singleton",
-    "ManifestVersion": "1.6.0"
+    "ManifestVersion": "1.10.0"
 }

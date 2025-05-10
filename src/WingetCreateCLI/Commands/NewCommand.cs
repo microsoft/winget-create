@@ -261,7 +261,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
                     RemoveEmptyStringAndListFieldsInManifests(manifests);
                     DisplayManifestPreview(manifests);
-                    isManifestValid = ValidateManifestsInTempDir(manifests);
+                    isManifestValid = ValidateManifestsInTempDir(manifests, this.Format);
                 }
                 while (Prompt.Confirm(Resources.ConfirmManifestCreation_Message));
 

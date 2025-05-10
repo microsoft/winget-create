@@ -84,7 +84,8 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         /// <summary>
         /// The url of the hosted icon file
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("IconUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("IconUrl", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(2048)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
         public string IconUrl { get; set; }
@@ -558,6 +559,39 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
 
     }
 
+    /// <summary>
+    /// The authentication requirement for downloading the installer.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
+    public partial class Authentication
+    {
+        /// <summary>
+        /// The authentication type
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("AuthenticationType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public AuthenticationType AuthenticationType { get; set; }
+
+        /// <summary>
+        /// The Microsoft Entra Id authentication info
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("MicrosoftEntraIdAuthenticationInfo", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public MicrosoftEntraIdAuthenticationInfo MicrosoftEntraIdAuthenticationInfo { get; set; }
+
+
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Installer
     {
@@ -716,6 +750,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("ArchiveBinariesDependOnPath", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? ArchiveBinariesDependOnPath { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("Authentication", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Authentication Authentication { get; set; }
+
 
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
@@ -730,7 +767,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     }
 
     /// <summary>
-    /// A representation of a single-file manifest representing an app in the OWC. v1.9.0
+    /// A representation of a single-file manifest representing an app in the OWC. v1.10.0
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class SingletonManifest
@@ -1039,6 +1076,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("ArchiveBinariesDependOnPath", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool? ArchiveBinariesDependOnPath { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("Authentication", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public Authentication Authentication { get; set; }
+
         [Newtonsoft.Json.JsonProperty("Installers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(1)]
@@ -1058,7 +1098,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.9.0";
+        public string ManifestVersion { get; set; } = "1.10.0";
 
 
 
@@ -1262,6 +1302,54 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
+    public enum AuthenticationType
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"none")]
+        None = 0,
+
+
+        [System.Runtime.Serialization.EnumMember(Value = @"microsoftEntraId")]
+        MicrosoftEntraId = 1,
+
+
+        [System.Runtime.Serialization.EnumMember(Value = @"microsoftEntraIdForAzureBlobStorage")]
+        MicrosoftEntraIdForAzureBlobStorage = 2,
+
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
+    public partial class MicrosoftEntraIdAuthenticationInfo
+    {
+        /// <summary>
+        /// The resource value for Microsoft Entra Id authentication.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("Resource", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(512, MinimumLength = 1)]
+        public string Resource { get; set; }
+
+        /// <summary>
+        /// The scope value for Microsoft Entra Id authentication.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("Scope", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(512, MinimumLength = 1)]
+        public string Scope { get; set; }
+
+
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public enum Platform
     {
 
@@ -1335,6 +1423,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         public long InstallerReturnCode { get; set; }
 
         [Newtonsoft.Json.JsonProperty("ReturnResponse", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public ExpectedReturnCodeReturnResponse ReturnResponse { get; set; }
 
