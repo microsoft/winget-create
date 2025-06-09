@@ -200,7 +200,7 @@ extends:
             - task: GitHubRelease@1
               displayName: Create GitHub release
               inputs:
-                gitHubConnection: github
+                gitHubConnection: "Github winget-create"
                 repositoryName: $(Build.Repository.Name)
                 tagSource: userSpecifiedTag
                 tag: v$(version)
