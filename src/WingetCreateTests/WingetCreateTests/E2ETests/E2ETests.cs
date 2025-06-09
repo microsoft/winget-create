@@ -9,6 +9,7 @@ namespace Microsoft.WingetCreateE2ETests
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
+    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateTests;
@@ -27,6 +28,7 @@ namespace Microsoft.WingetCreateE2ETests
     {
         private const string PackageVersion = "1.2.3.4";
         private GitHub gitHub;
+        private StringWriter sw;
 
         /// <summary>
         /// One-time function that runs at the beginning of this test class.
@@ -37,6 +39,8 @@ namespace Microsoft.WingetCreateE2ETests
             Logger.Initialize();
             this.gitHub = new GitHub(this.GitHubApiKey, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
             TestUtils.InitializeMockDownload();
+            this.sw = new StringWriter();
+            Console.SetOut(this.sw);
         }
 
         /// <summary>
@@ -86,6 +90,10 @@ namespace Microsoft.WingetCreateE2ETests
                 OpenPRInBrowser = false,
             };
             ClassicAssert.IsTrue(await submitCommand.Execute(), "Command should have succeeded");
+            this.AssertValidationOutput(format);
+
+            // Clear output for the next command
+            this.sw.GetStringBuilder().Clear();
 
             var mergeRetryPolicy = Policy
                 .Handle<PullRequestNotMergeableException>()
@@ -115,11 +123,22 @@ namespace Microsoft.WingetCreateE2ETests
             ClassicAssert.IsTrue(await updateCommand.LoadGitHubClient(), "Failed to create GitHub client");
             ClassicAssert.IsTrue(await updateCommand.Execute(), "Command should execute successfully");
 
-            string pathToValidate = Path.Combine(Directory.GetCurrentDirectory(), Utils.GetAppManifestDirPath(packageId, PackageVersion));
-            (bool success, string message) = WinGetUtil.ValidateManifest(pathToValidate);
-            ClassicAssert.IsTrue(success, message);
-
+            // Since SubmitToGitHub is true, the command will first validate the manifest & then submit the PR
+            this.AssertValidationOutput(format);
             await this.gitHub.ClosePullRequest(updateCommand.PullRequestNumber);
+        }
+
+        private void AssertValidationOutput(ManifestFormat format)
+        {
+            string output = this.sw.ToString();
+            if (format == ManifestFormat.Yaml)
+            {
+                Assert.That(output, Does.Contain(string.Format(Resources.ManifestValidationSucceeded_Message, true)), "Manifest validation success message should be shown");
+            }
+            else
+            {
+                Assert.That(output, Does.Contain(Resources.SkippingManifestValidation_Message), "Skipping manifest validation message should be shown");
+            }
         }
     }
 }

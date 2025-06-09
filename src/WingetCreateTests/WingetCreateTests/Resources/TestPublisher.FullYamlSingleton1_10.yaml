@@ -1,4 +1,4 @@
-﻿PackageIdentifier: TestPublisher.FullYamlSingleton1_9
+﻿PackageIdentifier: TestPublisher.FullYamlSingleton1_10
 PackageVersion: 0.1.2.3
 PackageLocale: en-US
 DefaultLocale: en-US
@@ -7,14 +7,14 @@ PublisherUrl: https://fakeTestUrl.com
 PublisherSupportUrl: https://fakeTestUrl.com
 PrivacyUrl: https://fakeTestUrl.com
 Author: fakeAuthor
-PackageName: Full Singleton 1.9 Test
+PackageName: Full Singleton 1.10 Test
 PackageUrl: https://fakeTestUrl.com
 License: MIT
 LicenseUrl: https://fakeTestUrl.com
 Copyright: fakeCopyright
 CopyrightUrl: https://fakeTestUrl.com
-ShortDescription: A manifest used to verify that all fields from a full singleton manifest can be deserialized and updated.
-Description: A manifest used to verify that all fields from a full singleton manifest can be deserialized and updated.
+ShortDescription: A manifest used to verify that all fields from a full 1.1 singleton manifest can be deserialized and updated.
+Description: A manifest used to verify that all fields from a full 1.1 singleton manifest can be deserialized and updated.
 Moniker: testMoniker
 Tags:
 - testSingleton
@@ -105,5 +105,12 @@ Installers:
   DownloadCommandProhibited: true
   RepairBehavior: modify
   ArchiveBinariesDependOnPath: true
+#   `winget validate` fails if this field is used as it requires verified publisher feature
+#   Uncomment when verified publisher feature is implemented
+#   Authentication:
+#     AuthenticationType: microsoftEntraId
+#     MicrosoftEntraIdAuthenticationInfo:
+#       Scope: DefaultScope
+#       Resource: DefaultResource
 ManifestType: singleton
-ManifestVersion: 1.9.0
+ManifestVersion: 1.10.0

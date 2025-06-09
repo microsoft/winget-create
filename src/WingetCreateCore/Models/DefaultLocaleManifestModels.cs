@@ -84,7 +84,8 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
         /// <summary>
         /// The url of the hosted icon file
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("IconUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonProperty("IconUrl", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(2048)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
         public string IconUrl { get; set; }
@@ -132,7 +133,7 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
     }
 
     /// <summary>
-    /// A representation of a multiple-file manifest representing a default app metadata in the OWC. v1.9.0
+    /// A representation of a multiple-file manifest representing a default app metadata in the OWC. v1.10.0
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class DefaultLocaleManifest
@@ -334,7 +335,7 @@ namespace Microsoft.WingetCreateCore.Models.DefaultLocale
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.9.0";
+        public string ManifestVersion { get; set; } = "1.10.0";
 
 
 
