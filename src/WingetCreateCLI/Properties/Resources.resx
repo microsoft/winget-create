@@ -246,6 +246,9 @@ Warning: Using this argument may result in the token being logged. Consider an a
 
 Warning: Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token.</value>
   </data>
+  <data name="Testing_2" xml:space="preserve">
+    <value>Hello world</value>
+  </data>
   <data name="Heading" xml:space="preserve">
     <value>Windows Package Manager Manifest Creator v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>

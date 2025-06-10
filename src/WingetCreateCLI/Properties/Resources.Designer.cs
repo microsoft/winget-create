@@ -3287,6 +3287,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hello world.
+        /// </summary>
+        public static string Testing_2 {
+            get {
+                return ResourceManager.GetString("Testing_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Third Party Notices.
         /// </summary>
         public static string ThirdPartyNotices_Heading {
