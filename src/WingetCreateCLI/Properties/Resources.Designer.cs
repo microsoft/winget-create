@@ -3276,6 +3276,17 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
+        ///
+        ///Warning: Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token..
+        /// </summary>
+        public static string Testing {
+            get {
+                return ResourceManager.GetString("Testing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Third Party Notices.
         /// </summary>
         public static string ThirdPartyNotices_Heading {
