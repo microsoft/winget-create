@@ -52,6 +52,7 @@ namespace Microsoft.WingetCreateCLI
                 typeof(CacheCommand),
                 typeof(ShowCommand),
                 typeof(InfoCommand),
+                typeof(DscCommand),
             };
             var parserResult = myParser.ParseArguments(args, types);
 
@@ -70,10 +71,8 @@ namespace Microsoft.WingetCreateCLI
                 Logger.WarnLocalized(nameof(Resources.GitHubTokenWarning_Message));
             }
 
-            bool commandHandlesToken = command is not CacheCommand and not InfoCommand and not SettingsCommand;
-
             // Do not load github client for commands that do not deal with a GitHub token.
-            if (commandHandlesToken)
+            if (command.RequiresGitHubToken)
             {
                 if (await command.LoadGitHubClient())
                 {

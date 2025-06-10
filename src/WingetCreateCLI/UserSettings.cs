@@ -231,5 +231,10 @@ namespace Microsoft.WingetCreateCLI
                 };
             }
         }
+
+        public static string ToJson()
+        {
+            return JsonConvert.SerializeObject(Settings, Formatting.None);
+        }
     }
 }
