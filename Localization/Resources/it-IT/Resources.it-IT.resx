@@ -236,9 +236,6 @@
   <data name="GitHubLoginFail_Error" xml:space="preserve">
     <value>Accesso a GitHub non riuscito.</value>
   </data>
-  <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Token di accesso personale GitHub usato per l'invio diretto a Windows Gestione pacchetti reamo. Se non viene specificato alcun token, lo strumento richiederà le credenziali di accesso GitHub.</value>
-  </data>
   <data name="Heading" xml:space="preserve">
     <value>Autore del manifesto di Gestione pacchetti Windows v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
@@ -652,6 +649,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>Il token non è valido. Generare un nuovo token GitHub e riprovare.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Avviso: se si utilizza l'argomento --token, il token potrebbe essere registrato. Considera un approccio alternativo https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>Limite di velocità GitHub superato. Per estendere il limite di velocità, specificare il token GitHub con il flag '-t' o archiviarne uno usando il comando 'token --store'.</value>
@@ -1394,5 +1394,8 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>L'eseguibile dipende dalle DLL o da altri file presenti nell'archivio ZIP?</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>Non è stato possibile sincronizzare il repository con fork con i commit upstream a causa di un conflitto di merge. Risolvere i conflitti manualmente e riprovare.</value>
   </data>
 </root>

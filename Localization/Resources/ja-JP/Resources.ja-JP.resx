@@ -236,9 +236,6 @@
   <data name="GitHubLoginFail_Error" xml:space="preserve">
     <value>GitHub ログインに失敗しました。</value>
   </data>
-  <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Windows パッケージマネージャーのリポジトリへの直接送信に使用される GitHub personal アクセストークン。トークンが指定されていない場合は、GitHub ログイン資格情報の入力を求めるツールが表示されます。</value>
-  </data>
   <data name="Heading" xml:space="preserve">
     <value>Windows パッケージ マネージャー マニフェスト作成者 v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
@@ -652,6 +649,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>トークンが無効でした。新しい GitHub トークンを生成して、もう一度お試しください。</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>警告: --token 引数を使用すると、トークンがログに記録される可能性があります。別の方法を検討 https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>GitHub API のレート制限を超えました。レート制限を延長するには、GitHub トークンに "-t" フラグを指定するか、"token --store" コマンドを使用して GitHub トークンを格納します。</value>
@@ -1394,5 +1394,11 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>この実行可能ファイルは DLL または zip アーカイブに存在する他のファイルに依存しますか?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>フォークされたリポジトリをアップストリーム コミットと同期できませんでした。フォークを手動で同期してから、もう一度お試しください。</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>マージの競合が原因で、フォークされたリポジトリをアップストリーム コミットと同期できませんでした。競合を手動で解決してから、もう一度お試しください。</value>
   </data>
 </root>

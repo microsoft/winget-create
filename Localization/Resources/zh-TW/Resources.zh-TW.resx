@@ -236,9 +236,6 @@
   <data name="GitHubLoginFail_Error" xml:space="preserve">
     <value>GitHub 登入失敗。</value>
   </data>
-  <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>GitHub 個人存取權杖，用於直接提交至 Windows 封裝管理員存放庫。如果未提供權杖，工具會提示您輸入 GitHub 登入認證。</value>
-  </data>
   <data name="Heading" xml:space="preserve">
     <value>Windows 封裝管理員資訊清單建立者 v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
@@ -652,6 +649,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>權杖無效。請產生新的 GitHub 權杖，然後再試一次。</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>警告： 使用 --token 自變數可能會導致標記被記錄。請考慮替代方法 https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>已超過 GitHub API 速率限制。若要擴充您的速率限制，請提供具 '-t' 旗標的 GitHub 權杖，或使用 'token --store'命令儲存。</value>
@@ -1394,5 +1394,11 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>此可執行檔是否相依於 DLL 或 ZIP 封存中存在的任何其他檔案？</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>分叉存放庫無法與上游認可同步。手動同步您的分叉，然後再試一次。</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>分叉存放庫因為合併衝突而無法與上游認可同步。請手動解決衝突，然後再試一次。</value>
   </data>
 </root>

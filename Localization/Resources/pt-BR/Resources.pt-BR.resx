@@ -236,9 +236,6 @@
   <data name="GitHubLoginFail_Error" xml:space="preserve">
     <value>Falha no logon do GitHub.</value>
   </data>
-  <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Token de acesso pessoal do GitHub usado para envio direto ao repositório do Gerenciador de pacotes do Windows. Se nenhum token for fornecido, a ferramenta solicitará as credenciais de logon do GitHub.</value>
-  </data>
   <data name="Heading" xml:space="preserve">
     <value>Criador de Manifesto do Gerenciador de Pacotes do Windows v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
@@ -652,6 +649,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>O token era inválido. Gere um novo token do GitHub e tente novamente.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Aviso: o uso do argumento --token pode fazer com que o token seja registrado em log. Considere uma abordagem alternativa https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>O limite de taxa da API do GitHub foi excedido. Para estender seu limite de taxa, forneça seu token do GitHub com o sinalizador '-t' ou armazene um usando o comando 'token --store'.</value>
@@ -1394,5 +1394,11 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>Este executável depende de DLLs ou de outros arquivos presentes no arquivo zip?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>Não foi possível sincronizar o repositório bifurcado com as upstream configurações. Sincronize o garfo manualmente e tente novamente.</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>Não foi possível sincronizar o repositório bifurcado com as confirmações upstream dados devido a um conflito de merge. Resolva os conflitos manualmente e tente novamente.</value>
   </data>
 </root>
