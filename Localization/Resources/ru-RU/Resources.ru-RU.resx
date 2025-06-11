@@ -236,9 +236,6 @@
   <data name="GitHubLoginFail_Error" xml:space="preserve">
     <value>Сбой входа в GitHub.</value>
   </data>
-  <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Токен личного доступа GitHub, используемый для прямой отправки в репозиторий диспетчера пакетов Windows. Если токен не предоставлен, инструмент запросит учетные данные для входа в GitHub.</value>
-  </data>
   <data name="Heading" xml:space="preserve">
     <value>Средство создания манифестов Диспетчера пакетов Windows версии {0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
@@ -1394,5 +1391,8 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>Этот исполняемый файл зависит от DLL-библиотек или других файлов, которые находятся в ZIP-архиве?</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>Не удалось синхронизировать вилку репозитория с вышестоящий из-за ошибки конфликт слияния. Устраните конфликты вручную и повторите попытку.</value>
   </data>
 </root>

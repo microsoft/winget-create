@@ -236,9 +236,6 @@
   <data name="GitHubLoginFail_Error" xml:space="preserve">
     <value>Échec de la connexion GitHub.</value>
   </data>
-  <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Le jeton d’accès GitHub personnel utilisé pour l’envoi direct au référentiel du Gestionnaire de package Windows. Si aucun jeton n’est indiqué, l’outil demande des informations d’identification de connexion GitHub.</value>
-  </data>
   <data name="Heading" xml:space="preserve">
     <value>Créateur de manifeste du Gestionnaire de package Windows v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
@@ -652,6 +649,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>Le jeton n’était pas valide. Veuillez générez un nouveau jeton GitHub et réessayez.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Avertissement : l’utilisation de l’argument --token peut entraîner la journalisation du jeton. Envisagez une autre approche https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>Limite de débit de l’API GitHub dépassée. Pour étendre votre limite de débit, fournissez le « -t » à votre jeton GitHub. marquer ou stocker un à l’aide du « jeton --store » commande.</value>
@@ -1394,5 +1394,8 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>Cet exécutable dépend-il de DLL ou d’autres fichiers présents dans l’archive zip ?</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>Le dépôt fourchu n’a pas pu être synchronisé avec les validations de amont en raison d’un conflit de fusion. Résolvez les conflits manuellement et réessayez.</value>
   </data>
 </root>

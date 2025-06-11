@@ -236,9 +236,6 @@
   <data name="GitHubLoginFail_Error" xml:space="preserve">
     <value>Error de inicio de sesión de GitHub.</value>
   </data>
-  <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Token de acceso personal de GitHub usado para el envío directo al repositorio del administrador de paquetes de Windows. Si no se proporciona ningún token, la herramienta le pedirá credenciales de inicio de sesión de GitHub.</value>
-  </data>
   <data name="Heading" xml:space="preserve">
     <value>Creador de manifiesto de Administrador de paquetes de Windows v{0}</value>
     <comment>{0} will be replaced with program's semantic version number</comment>
@@ -652,6 +649,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>El token no era válido. Genere un nuevo token de GitHub y vuelva a intentarlo.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Advertencia: el uso del argumento --token puede dar lugar a que se registre el token. Considere la posibilidad de usar un enfoque alternativo https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>Se superó el límite de velocidad de api de GitHub. Para ampliar el límite de velocidad, proporcione el token de GitHub con la marca "-t" o almacene uno mediante el comando "token --store".</value>
@@ -1394,5 +1394,11 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>¿Este ejecutable depende de archivos DLL o de otros archivos presentes en el archivo zip?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>No se pudo sincronizar el repositorio bifurcado con las confirmaciones ascendentes. Sincronice la bifurcación manualmente e inténtelo de nuevo.</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>No se pudo sincronizar el repositorio bifurcado con las confirmaciones ascendentes debido a un conflicto de fusión mediante combinación. Resuelva los conflictos manualmente e inténtelo de nuevo.</value>
   </data>
 </root>
