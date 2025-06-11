@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
 using Microsoft.WingetCreateCLI.Commands.DscCommands;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 /// <summary>

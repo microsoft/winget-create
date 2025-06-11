@@ -3,6 +3,8 @@
 
 namespace Microsoft.WingetCreateCLI.Commands.DscCommands;
 
+using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 /// <summary>
@@ -33,4 +35,13 @@ public abstract class BaseDscCommand
     /// </summary>
     /// <param name="input">Input for the Export command.</param>
     public abstract void Export(JToken input);
+
+    /// <summary>
+    /// Writes a JSON output line to the console.
+    /// </summary>
+    /// <param name="token">The JSON token to be written.</param>
+    protected void WriteJsonOutputLine(JToken token)
+    {
+        Console.WriteLine(token.ToString(Formatting.None));
+    }
 }
