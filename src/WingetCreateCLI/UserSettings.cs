@@ -5,11 +5,13 @@ namespace Microsoft.WingetCreateCLI
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     /// <summary>
     /// UserSettings configuration class for WingetCreate.
@@ -186,10 +188,26 @@ namespace Microsoft.WingetCreateCLI
         /// <summary>
         /// Saves the current settings configurations to the settings.json file.
         /// </summary>
-        public static void SaveSettings()
+        /// <param name="settings">Optional settings manifest to save. If null, the current settings will be saved.</param>
+        public static void SaveSettings(SettingsManifest settings = null)
         {
+            if (settings != null)
+            {
+                Settings = settings;
+            }
+
+            Debug.Assert(Settings != null, "Settings should not be null when saving settings.");
             string output = JsonConvert.SerializeObject(Settings, Formatting.Indented);
             File.WriteAllText(SettingsJsonPath, output);
+        }
+
+        /// <summary>
+        /// Gets the current settings as a Json object.
+        /// </summary>
+        /// <returns>A Json object representing the current settings.</returns>
+        public static JObject ToJson()
+        {
+            return JObject.FromObject(Settings);
         }
 
         /// <summary>
