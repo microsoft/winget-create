@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 using CommandLine;
 using Microsoft.WingetCreateCLI.Commands.DscCommands;
 using Microsoft.WingetCreateCLI.Logging;
+using Microsoft.WingetCreateCLI.Properties;
 using Newtonsoft.Json.Linq;
 
 /// <summary>
 /// Command for managin the application using dsc v3.
 /// </summary>
-[Verb("dsc", HelpText = "Manage the application using dsc v3.")]
+[Verb("dsc", HelpText = "DscCommand_HelpText", ResourceType = typeof(Resources))]
 public class DscCommand : BaseCommand
 {
     /// <inheritdoc/>
@@ -30,31 +31,31 @@ public class DscCommand : BaseCommand
     /// <summary>
     /// Gets or sets the input for the dsc Get operation.
     /// </summary>
-    [Option('g', "get", SetName = "GetMethod", HelpText = "Command for the Get flow.")]
+    [Option('g', "get", SetName = "GetMethod", HelpText = "DscGet_HelpText", ResourceType = typeof(Resources))]
     public string Get { get; set; }
 
     /// <summary>
     /// Gets or sets the input for the dsc Set operation.
     /// </summary>
-    [Option('s', "set", SetName = "SetMethod", HelpText = "Command for the Set flow.")]
+    [Option('s', "set", SetName = "SetMethod", HelpText = "DscSet_HelpText", ResourceType = typeof(Resources))]
     public string Set { get; set; }
 
     /// <summary>
     /// Gets or sets the input for the dsc Test operation.
     /// </summary>
-    [Option('t', "test", SetName = "TestMethod", HelpText = "Command for the Test flow.")]
+    [Option('t', "test", SetName = "TestMethod", HelpText = "DscTest_HelpText", ResourceType = typeof(Resources))]
     public string Test { get; set; }
 
     /// <summary>
     /// Gets or sets the input for the dsc Export operation.
     /// </summary>
-    [Option('e', "export", SetName = "ExportMethod", HelpText = "Command for the Export flow.")]
+    [Option('e', "export", SetName = "ExportMethod", HelpText = "DscExport_HelpText", ResourceType = typeof(Resources))]
     public string Export { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether to execute the schema command.
     /// </summary>
-    [Option("schema", SetName = "SchemaMethod", HelpText = "Command for the Schema flow.")]
+    [Option("schema", SetName = "SchemaMethod", HelpText = "DscSchema_HelpText", ResourceType = typeof(Resources))]
     public bool Schema { get; set; }
 
     /// <summary>
@@ -71,7 +72,7 @@ public class DscCommand : BaseCommand
 
         if (dscCommand == null)
         {
-            Logger.Error($"Unknown DSC resource {argCommandName}");
+            Logger.ErrorLocalized(Resources.DscResourceNotFound_Message, argCommandName);
             return false;
         }
 
@@ -84,7 +85,7 @@ public class DscCommand : BaseCommand
             return true;
         }
 
-        Logger.Error("No valid DSC command provided.");
+        Logger.ErrorLocalized(Resources.DscResourceOperationInvalid_Message);
         return false;
     }
 
@@ -98,10 +99,10 @@ public class DscCommand : BaseCommand
 
         try
         {
-            var input = this.GetJsonOrNull(arg);
+            var input = string.IsNullOrWhiteSpace(arg) ? null : JToken.Parse(arg);
             if (!op(input))
             {
-                Logger.Error($"Invalid input for {name} command.");
+                Logger.ErrorLocalized(Resources.DscResourceOperationFailed_Message);
                 return false;
             }
 
@@ -111,24 +112,6 @@ public class DscCommand : BaseCommand
         {
             Logger.Error(ex.Message);
             return false;
-        }
-    }
-
-    private JToken GetJsonOrNull(string json)
-    {
-        if (string.IsNullOrWhiteSpace(json))
-        {
-            return null;
-        }
-
-        try
-        {
-            return JToken.Parse(json);
-        }
-        catch (Exception ex)
-        {
-            Logger.Error(ex.Message);
-            return null;
         }
     }
 }

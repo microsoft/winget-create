@@ -1406,4 +1406,32 @@ Warning: Using this argument may result in the token being logged. Consider an a
   <data name="BranchMergeConflict_Message" xml:space="preserve">
     <value>The forked repository could not be synced with the upstream commits due to a merge conflict. Resolve conflicts manually and try again.</value>
   </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>DSC v3 resource commands.</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>Get the resource state</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>Set the resource state</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>Test the resource state</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>Export the resource configuration</value>
+  </data>
+  <data name="DscSchema_HelpText" xml:space="preserve">
+    <value>Execute the Schema command</value>
+  </data>
+  <data name="DscResourceNotFound_Message" xml:space="preserve">
+    <value>DSC resource not found: {0}</value>
+    <comment>{Locked='{0}'} {0} is replaced by the DSC resource name</comment>
+  </data>
+  <data name="DscResourceOperationInvalid_Message" xml:space="preserve">
+    <value>Invalid operation for the DSC resource</value>
+  </data>
+  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
+    <value>DSC resource operation failed</value>
+  </data>
 </root>
