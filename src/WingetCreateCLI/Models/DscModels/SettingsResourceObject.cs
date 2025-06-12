@@ -33,25 +33,28 @@ public class SettingsResourceObject : BaseResourceObject
     [JsonProperty("action", NullValueHandling = NullValueHandling.Ignore)]
     public string Action { get; set; }
 
-    /// <summary>
-    /// Creates a settings resource object with the specified settings and action.
-    /// </summary>
-    /// <param name="json">The JSON representation of the settings resource object.</param>
-    /// <returns>A settings resource object.</returns>
-    public static SettingsResourceObject FromJson(JToken json)
+    /// <inheritdoc/>
+    public override JObject GetProperties()
     {
-        return json.ToObject<SettingsResourceObject>();
+        var baseProperties = base.GetProperties();
+        baseProperties["settings"] = new JObject
+        {
+            ["description"] = "The settings.",
+            ["type"] = "object",
+        };
+        baseProperties["action"] = new JObject
+        {
+            ["default"] = ActionPartial,
+            ["description"] = "The action used to apply the settings.",
+            ["type"] = "string",
+            ["enum"] = new JArray(ActionFull, ActionPartial),
+        };
+        return baseProperties; ;
     }
 
-    /// <summary>
-    /// Converts the current object to a JSON representation.
-    /// </summary>
-    /// <returns>A Json object representing the current object.</returns>
-    public JObject ToJson()
+    /// <inheritdoc/>
+    public override JArray GetRequiredProperties()
     {
-        return JObject.FromObject(this, new JsonSerializer
-        {
-            NullValueHandling = NullValueHandling.Ignore,
-        });
+        return ["settings"];
     }
 }

@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCLI.Commands.DscCommands;
 
 using System;
+using Microsoft.WingetCreateCLI.Models.DscModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -12,6 +13,11 @@ using Newtonsoft.Json.Linq;
 /// </summary>
 public abstract class BaseDscCommand
 {
+    /// <summary>
+    /// Gets the name of the command used to access the DSC functionality.
+    /// </summary>
+    public virtual string CommandName { get; }
+
     /// <summary>
     /// DSC Get command.
     /// </summary>
@@ -35,6 +41,30 @@ public abstract class BaseDscCommand
     /// </summary>
     /// <param name="input">Input for the Export command.</param>
     public abstract void Export(JToken input);
+
+    /// <summary>
+    /// DSC Schema command.
+    /// </summary>
+    public abstract void Schema();
+
+    /// <summary>
+    /// Creates a Json schema for a DSC resource object.
+    /// </summary>
+    /// <returns>A Json object representing the schema.</returns>
+    protected JObject CreateSchema<T>()
+    where T : BaseResourceObject, new()
+    {
+        var resourceObject = new T();
+        return new JObject
+        {
+            ["$schema"] = "http://json-schema.org/draft-07/schema#",
+            ["title"] = this.CommandName,
+            ["type"] = "object",
+            ["properties"] = resourceObject.GetProperties(),
+            ["required"] = resourceObject.GetRequiredProperties(),
+            ["additionalProperties"] = false,
+        };
+    }
 
     /// <summary>
     /// Writes a JSON output line to the console.

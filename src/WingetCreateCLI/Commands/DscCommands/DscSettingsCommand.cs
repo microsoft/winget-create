@@ -11,10 +11,8 @@ using Newtonsoft.Json.Linq;
 /// </summary>
 public class DscSettingsCommand : BaseDscCommand
 {
-    /// <summary>
-    /// Represents the name of the command used to access settings functionality.
-    /// </summary>
-    public const string CommandName = "settings";
+    /// <inheritdoc/>
+    public override string CommandName => "settings";
 
     /// <inheritdoc/>
     public override void Get(JToken input)
@@ -61,5 +59,11 @@ public class DscSettingsCommand : BaseDscCommand
         data.Get();
 
         this.WriteJsonOutputLine(data.Output.ToJson());
+    }
+
+    /// <inheritdoc/>
+    public override void Schema()
+    {
+        this.WriteJsonOutputLine(this.CreateSchema<SettingsResourceObject>());
     }
 }

@@ -51,6 +51,12 @@ public class DscCommand : BaseCommand
     public string Export { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether to execute the schema command.
+    /// </summary>
+    [Option("schema", SetName = "SchemaMethod", HelpText = "Command for the Schema flow.")]
+    public bool Schema { get; set; }
+
+    /// <summary>
     /// Executes the dsc command flow.
     /// </summary>
     /// <returns>Boolean representing success or fail of the command.</returns>
@@ -58,7 +64,7 @@ public class DscCommand : BaseCommand
     {
         BaseDscCommand dscCommand;
         var dscScope = this.UnboundArgs.FirstOrDefault()?.ToLowerInvariant() ?? string.Empty;
-        if (dscScope == DscSettingsCommand.CommandName)
+        if (dscScope == "settings")
         {
             dscCommand = new DscSettingsCommand();
         }
@@ -84,6 +90,10 @@ public class DscCommand : BaseCommand
         else if (this.TryParse(this.Export, out input))
         {
             dscCommand.Export(input);
+        }
+        else if (this.Schema)
+        {
+            dscCommand.Schema();
         }
         else
         {
