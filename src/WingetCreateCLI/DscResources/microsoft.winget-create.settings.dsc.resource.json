@@ -39,7 +39,10 @@
         "args": [
             "dsc",
             "settings",
-            "--set"
+            {
+                "jsonInputArg": "--set",
+                "mandatory": true
+            }
         ]
     },
     "test": {
@@ -49,7 +52,10 @@
         "args": [
             "dsc",
             "settings",
-            "--test"
+            {
+                "jsonInputArg": "--test",
+                "mandatory": true
+            }
         ]
     },
     "tags": [
