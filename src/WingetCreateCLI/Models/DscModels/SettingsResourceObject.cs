@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateCLI.Models.DscModels;
 
+using Microsoft.WingetCreateCLI.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -39,13 +40,13 @@ public class SettingsResourceObject : BaseResourceObject
         var baseProperties = base.GetProperties();
         baseProperties["settings"] = new JObject
         {
-            ["description"] = "The settings.",
+            ["description"] = Resources.DscResourcePropertyDescriptionSettings,
             ["type"] = "object",
         };
         baseProperties["action"] = new JObject
         {
             ["default"] = ActionPartial,
-            ["description"] = "The action used to apply the settings.",
+            ["description"] = Resources.DscResourcePropertyDescriptionAction,
             ["type"] = "string",
             ["enum"] = new JArray(ActionFull, ActionPartial),
         };

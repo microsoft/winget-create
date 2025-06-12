@@ -745,7 +745,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Export the resource configuration.
+        ///   Looks up a localized string similar to Get all state instances.
         /// </summary>
         public static string DscExport_HelpText {
             get {
@@ -786,6 +786,33 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string DscResourceOperationInvalid_Message {
             get {
                 return ResourceManager.GetString("DscResourceOperationInvalid_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The action used to apply the settings..
+        /// </summary>
+        public static string DscResourcePropertyDescriptionAction {
+            get {
+                return ResourceManager.GetString("DscResourcePropertyDescriptionAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates whether an instance is in the desired state..
+        /// </summary>
+        public static string DscResourcePropertyDescriptionInDesiredState {
+            get {
+                return ResourceManager.GetString("DscResourcePropertyDescriptionInDesiredState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The settings content..
+        /// </summary>
+        public static string DscResourcePropertyDescriptionSettings {
+            get {
+                return ResourceManager.GetString("DscResourcePropertyDescriptionSettings", resourceCulture);
             }
         }
         

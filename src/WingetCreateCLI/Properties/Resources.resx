@@ -1419,7 +1419,7 @@ Warning: Using this argument may result in the token being logged. Consider an a
     <value>Test the resource state</value>
   </data>
   <data name="DscExport_HelpText" xml:space="preserve">
-    <value>Export the resource configuration</value>
+    <value>Get all state instances</value>
   </data>
   <data name="DscSchema_HelpText" xml:space="preserve">
     <value>Execute the Schema command</value>
@@ -1433,5 +1433,14 @@ Warning: Using this argument may result in the token being logged. Consider an a
   </data>
   <data name="DscResourceOperationFailed_Message" xml:space="preserve">
     <value>DSC resource operation failed</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
+    <value>Indicates whether an instance is in the desired state.</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionSettings" xml:space="preserve">
+    <value>The settings content.</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionAction" xml:space="preserve">
+    <value>The action used to apply the settings.</value>
   </data>
 </root>

@@ -3,6 +3,7 @@
 
 namespace Microsoft.WingetCreateCLI.Models.DscModels;
 
+using Microsoft.WingetCreateCLI.Properties;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -27,7 +28,7 @@ public abstract class BaseResourceObject
         {
             ["_inDesiredState"] = new JObject
             {
-                ["description"] = "Indicates whether an instance is in the desired state.",
+                ["description"] = Resources.DscResourcePropertyDescriptionInDesiredState,
                 ["type"] = "boolean",
             },
         };

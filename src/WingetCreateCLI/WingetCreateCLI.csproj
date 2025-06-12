@@ -97,9 +97,12 @@
 
   <ItemGroup>
     <SettingSchema Include="$(ProjectDir)\Schemas\settings.schema.0.1.json" ModelName="Settings" />
-  </ItemGroup>    
+  </ItemGroup>
 
-  
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
   <ItemGroup>
     <Content Include="$(ProjectDir)\DscResources\microsoft.winget-create.*.dsc.resource.json">
       <Link>%(Filename)%(Extension)</Link>
