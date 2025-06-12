@@ -81,7 +81,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
-    
+
   <!--Include VCLib binary dependencies-->  
   <ItemGroup Condition="'$(SelfContained)' == true">
     <None Update="msvcp140.dll">
@@ -96,7 +96,16 @@
   </ItemGroup>    
 
   <ItemGroup>
-      <SettingSchema Include="$(ProjectDir)\Schemas\settings.schema.0.1.json" ModelName="Settings" />
+    <SettingSchema Include="$(ProjectDir)\Schemas\settings.schema.0.1.json" ModelName="Settings" />
+  </ItemGroup>    
+
+  
+  <ItemGroup>
+    <Content Include="$(ProjectDir)\DscResources\microsoft.winget-create.*.dsc.resource.json">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <!--Generate settings manifest-->

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
 using Microsoft.WingetCreateCLI.Commands.DscCommands;
+using Microsoft.WingetCreateCLI.Logging;
 using Newtonsoft.Json.Linq;
 
 /// <summary>
@@ -62,66 +63,72 @@ public class DscCommand : BaseCommand
     /// <returns>Boolean representing success or fail of the command.</returns>
     public override async Task<bool> Execute()
     {
-        BaseDscCommand dscCommand;
-        var dscScope = this.UnboundArgs.FirstOrDefault()?.ToLowerInvariant() ?? string.Empty;
-        if (dscScope == "settings")
+        await Task.CompletedTask;
+
+        List<BaseDscCommand> dscCommands = [new DscSettingsCommand()];
+        var argCommandName = this.UnboundArgs.FirstOrDefault();
+        var dscCommand = dscCommands.FirstOrDefault(c => c.CommandName.Equals(argCommandName, StringComparison.OrdinalIgnoreCase));
+
+        if (dscCommand == null)
         {
-            dscCommand = new DscSettingsCommand();
-        }
-        else
-        {
-            Console.WriteLine($"Unknown DSC scope: {dscScope}");
+            Logger.Error($"Unknown DSC resource {argCommandName}");
             return false;
         }
 
-        JToken input;
-        if (this.TryParse(this.Get, out input))
+        if (this.HandleOperation("Get", this.Get, (input) => dscCommand.Get(input)) ||
+           this.HandleOperation("Set", this.Set, (input) => dscCommand.Set(input)) ||
+           this.HandleOperation("Test", this.Test, (input) => dscCommand.Test(input)) ||
+           this.HandleOperation("Export", this.Export, (input) => dscCommand.Export(input)) ||
+           (this.Schema && dscCommand.Schema()))
         {
-            dscCommand.Get(input);
-        }
-        else if (this.TryParse(this.Set, out input))
-        {
-            dscCommand.Set(input);
-        }
-        else if (this.TryParse(this.Test, out input))
-        {
-            dscCommand.Test(input);
-        }
-        else if (this.TryParse(this.Export, out input))
-        {
-            dscCommand.Export(input);
-        }
-        else if (this.Schema)
-        {
-            dscCommand.Schema();
-        }
-        else
-        {
-            Console.WriteLine("No valid DSC command provided. Use -g, -s, -t, or -e to specify a command.");
-            return false;
+            return true;
         }
 
-        return true;
+        Logger.Error("No valid DSC command provided.");
+        return false;
     }
 
-    private bool TryParse(string json, out JToken token)
+    private bool HandleOperation(string name, string arg, Func<JToken, bool> op)
     {
-        if (string.IsNullOrWhiteSpace(json))
+        if (arg == null)
         {
-            token = null;
+            // If no argument is provided, then we assume another operation is being requested.
             return false;
         }
 
         try
         {
-            token = JToken.Parse(json);
+            var input = this.GetJsonOrNull(arg);
+            if (!op(input))
+            {
+                Logger.Error($"Invalid input for {name} command.");
+                return false;
+            }
+
             return true;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error parsing JSON: {ex.Message}");
-            token = null;
+            Logger.Error(ex.Message);
             return false;
+        }
+    }
+
+    private JToken GetJsonOrNull(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return null;
+        }
+
+        try
+        {
+            return JToken.Parse(json);
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex.Message);
+            return null;
         }
     }
 }

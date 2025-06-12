@@ -15,14 +15,19 @@ public class DscSettingsCommand : BaseDscCommand
     public override string CommandName => "settings";
 
     /// <inheritdoc/>
-    public override void Get(JToken input)
+    public override bool Get(JToken input)
     {
-        this.Export(input);
+        return this.Export(input);
     }
 
     /// <inheritdoc/>
-    public override void Set(JToken input)
+    public override bool Set(JToken input)
     {
+        if (input == null)
+        {
+            return false;
+        }
+
         var data = new SettingsFunctionData(input);
         data.Get();
 
@@ -37,11 +42,17 @@ public class DscSettingsCommand : BaseDscCommand
 
         this.WriteJsonOutputLine(data.Output.ToJson());
         this.WriteJsonOutputLine(diff);
+        return true;
     }
 
     /// <inheritdoc/>
-    public override void Test(JToken input)
+    public override bool Test(JToken input)
     {
+        if ( input == null)
+        {
+            return false;
+        }
+
         var data = new SettingsFunctionData(input);
 
         data.Get();
@@ -49,21 +60,22 @@ public class DscSettingsCommand : BaseDscCommand
 
         this.WriteJsonOutputLine(data.Output.ToJson());
         this.WriteJsonOutputLine(data.DiffJson());
+        return true;
     }
 
     /// <inheritdoc/>
-    public override void Export(JToken input)
+    public override bool Export(JToken input)
     {
         var data = new SettingsFunctionData();
-
         data.Get();
-
         this.WriteJsonOutputLine(data.Output.ToJson());
+        return true;
     }
 
     /// <inheritdoc/>
-    public override void Schema()
+    public override bool Schema()
     {
         this.WriteJsonOutputLine(this.CreateSchema<SettingsResourceObject>());
+        return true;
     }
 }

@@ -1,0 +1,60 @@
+{
+    "$schema": "https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2024/04/bundled/resource/manifest.json",
+    "description": "Allows management of settings state via the DSC v3 command line interface protocol. See the help link for details.",
+    "export": {
+        "executable": "wingetcreate",
+        "input": "stdin",
+        "args": [
+            "dsc",
+            "settings",
+            "--export",
+            "'{}'"
+        ]
+    },
+    "get": {
+        "executable": "wingetcreate",
+        "input": "stdin",
+        "args": [
+            "dsc",
+            "settings",
+            "--get",
+            "'{}'"
+        ]
+    },
+    "schema": {
+        "command": {
+            "executable": "wingetcreate",
+            "args": [
+                "dsc",
+                "settings",
+                "--schema"
+            ]
+        }
+    },
+    "set": {
+        "executable": "wingetcreate",
+        "implementsPretest": true,
+        "return": "stateAndDiff",
+        "input": "stdin",
+        "args": [
+            "dsc",
+            "settings",
+            "--set"
+        ]
+    },
+    "test": {
+        "executable": "wingetcreate",
+        "return": "stateAndDiff",
+        "input": "stdin",
+        "args": [
+            "dsc",
+            "settings",
+            "--test"
+        ]
+    },
+    "tags": [
+        "WinGetCreate"
+    ],
+    "type": "Microsoft.WinGetCreate/Settings",
+    "version": "1.9.0"
+}

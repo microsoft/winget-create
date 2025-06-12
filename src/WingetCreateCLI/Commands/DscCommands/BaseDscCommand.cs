@@ -22,30 +22,35 @@ public abstract class BaseDscCommand
     /// DSC Get command.
     /// </summary>
     /// <param name="input">Input for the Get command.</param>
-    public abstract void Get(JToken input);
+    /// <returns>True if the command was successful; otherwise, false.</returns>
+    public abstract bool Get(JToken input);
 
     /// <summary>
     /// DSC Set command.
     /// </summary>
     /// <param name="input">Input for the Set command.</param>
-    public abstract void Set(JToken input);
+    /// <returns>True if the command was successful; otherwise, false.</returns>
+    public abstract bool Set(JToken input);
 
     /// <summary>
     /// DSC Test command.
     /// </summary>
     /// <param name="input">Input for the Test command.</param>
-    public abstract void Test(JToken input);
+    /// <returns>True if the command was successful; otherwise, false.</returns>
+    public abstract bool Test(JToken input);
 
     /// <summary>
     /// DSC Export command.
     /// </summary>
     /// <param name="input">Input for the Export command.</param>
-    public abstract void Export(JToken input);
+    /// <returns>True if the command was successful; otherwise, false.</returns>
+    public abstract bool Export(JToken input);
 
     /// <summary>
     /// DSC Schema command.
     /// </summary>
-    public abstract void Schema();
+    /// <returns>True if the command was successful; otherwise, false.</returns>
+    public abstract bool Schema();
 
     /// <summary>
     /// Creates a Json schema for a DSC resource object.
