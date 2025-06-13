@@ -35,7 +35,6 @@
         "executable": "wingetcreate",
         "implementsPretest": true,
         "return": "stateAndDiff",
-        "input": "stdin",
         "args": [
             "dsc",
             "settings",
@@ -48,7 +47,6 @@
     "test": {
         "executable": "wingetcreate",
         "return": "stateAndDiff",
-        "input": "stdin",
         "args": [
             "dsc",
             "settings",
