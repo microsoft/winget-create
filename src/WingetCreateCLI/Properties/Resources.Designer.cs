@@ -763,6 +763,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DSC resource is missing: {0}.
+        /// </summary>
+        public static string DscResourceMissing_Message {
+            get {
+                return ResourceManager.GetString("DscResourceMissing_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DSC resource not found: {0}.
         /// </summary>
         public static string DscResourceNotFound_Message {

@@ -1428,6 +1428,10 @@ Warning: Using this argument may result in the token being logged. Consider an a
     <value>DSC resource not found: {0}</value>
     <comment>{Locked='{0}'} {0} is replaced by the DSC resource name</comment>
   </data>
+  <data name="DscResourceMissing_Message" xml:space="preserve">
+    <value>DSC resource is missing: {0}</value>
+    <comment>{Locked='{0}'} {0} is replaced by the available DSC resource names</comment>
+  </data>
   <data name="DscResourceOperationInvalid_Message" xml:space="preserve">
     <value>Invalid operation for the DSC resource</value>
   </data>

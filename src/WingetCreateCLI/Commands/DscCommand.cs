@@ -68,11 +68,16 @@ public class DscCommand : BaseCommand
 
         List<BaseDscCommand> dscCommands = [new DscSettingsCommand()];
         var argCommandName = this.UnboundArgs.FirstOrDefault();
-        var dscCommand = dscCommands.FirstOrDefault(c => c.CommandName.Equals(argCommandName, StringComparison.OrdinalIgnoreCase));
+        if(string.IsNullOrWhiteSpace(argCommandName))
+        {
+            Logger.ErrorLocalized(nameof(Resources.DscResourceMissing_Message), string.Join(", ", dscCommands.Select(c => c.CommandName)));
+            return false;
+        }
 
+        var dscCommand = dscCommands.FirstOrDefault(c => c.CommandName.Equals(argCommandName, StringComparison.OrdinalIgnoreCase));
         if (dscCommand == null)
         {
-            Logger.ErrorLocalized(Resources.DscResourceNotFound_Message, argCommandName);
+            Logger.ErrorLocalized(nameof(Resources.DscResourceNotFound_Message), argCommandName);
             return false;
         }
 
@@ -85,7 +90,7 @@ public class DscCommand : BaseCommand
             return true;
         }
 
-        Logger.ErrorLocalized(Resources.DscResourceOperationInvalid_Message);
+        Logger.ErrorLocalized(nameof(Resources.DscResourceOperationInvalid_Message));
         return false;
     }
 
@@ -102,7 +107,7 @@ public class DscCommand : BaseCommand
             var input = string.IsNullOrWhiteSpace(arg) ? null : JToken.Parse(arg);
             if (!op(input))
             {
-                Logger.ErrorLocalized(Resources.DscResourceOperationFailed_Message);
+                Logger.ErrorLocalized(nameof(Resources.DscResourceOperationFailed_Message));
                 return false;
             }
 
