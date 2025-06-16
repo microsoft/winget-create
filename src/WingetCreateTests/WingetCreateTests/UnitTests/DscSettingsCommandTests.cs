@@ -248,6 +248,7 @@ public class DscSettingsCommandTests
             this.AssertStateAndSettingsAreEqual(this.DefaultSettings, stateAndDiff.State);
             Assert.That(stateAndDiff.Diff, Is.EqualTo(new List<string>() { "settings" }));
             this.AssertStateAction(stateAndDiff.State, isPartial);
+            Assert.That(stateAndDiff.State.InDesiredState, Is.False);
         }
 
         // Part 2: Now test settings repo owner only
@@ -262,6 +263,7 @@ public class DscSettingsCommandTests
             this.AssertStateAndSettingsAreEqual(this.DefaultSettings, stateAndDiff.State);
             Assert.That(stateAndDiff.Diff, Is.EqualTo(new List<string>() { "settings" }));
             this.AssertStateAction(stateAndDiff.State, isPartial);
+            Assert.That(stateAndDiff.State.InDesiredState, Is.False);
         }
     }
 
@@ -293,6 +295,7 @@ public class DscSettingsCommandTests
             this.AssertStateAndSettingsAreEqual(this.CurrentSettings, stateAndDiff.State);
             Assert.That(stateAndDiff.Diff, Is.Empty);
             this.AssertStateAction(stateAndDiff.State, isPartial);
+            Assert.That(stateAndDiff.State.InDesiredState, Is.True);
         }
 
         // Part 2: Now test settings repo owner only
@@ -310,6 +313,7 @@ public class DscSettingsCommandTests
             this.AssertStateAndSettingsAreEqual(this.CurrentSettings, stateAndDiff.State);
             Assert.That(stateAndDiff.Diff, Is.Empty);
             this.AssertStateAction(stateAndDiff.State, isPartial);
+            Assert.That(stateAndDiff.State.InDesiredState, Is.True);
         }
     }
 
