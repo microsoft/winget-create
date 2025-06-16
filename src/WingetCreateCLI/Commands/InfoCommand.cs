@@ -21,7 +21,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     public class InfoCommand : BaseCommand
     {
         /// <inheritdoc/>
-        public override bool RequiresGitHubToken => false;
+        public override bool AcceptsGitHubToken => false;
 
         /// <summary>
         /// Executes the info command flow.

@@ -736,7 +736,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DSC v3 resource commands..
+        ///   Looks up a localized string similar to DSC v3 resource commands.
         /// </summary>
         public static string DscCommand_HelpText {
             get {
@@ -772,7 +772,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The input for the {0} DSC operation is required..
+        ///   Looks up a localized string similar to The input for the {0} DSC operation is required.
         /// </summary>
         public static string DscInputRequired_Message {
             get {
@@ -817,7 +817,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The action used to apply the settings..
+        ///   Looks up a localized string similar to The action used to apply the settings.
         /// </summary>
         public static string DscResourcePropertyDescriptionAction {
             get {
@@ -826,7 +826,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Indicates whether an instance is in the desired state..
+        ///   Looks up a localized string similar to Indicates whether an instance is in the desired state.
         /// </summary>
         public static string DscResourcePropertyDescriptionInDesiredState {
             get {
@@ -835,7 +835,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The settings content..
+        ///   Looks up a localized string similar to The settings content.
         /// </summary>
         public static string DscResourcePropertyDescriptionSettings {
             get {

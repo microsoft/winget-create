@@ -39,7 +39,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         public bool Open { get; set; }
 
         /// <inheritdoc/>
-        public override bool RequiresGitHubToken => false;
+        public override bool AcceptsGitHubToken => false;
 
         /// <summary>
         /// Executes the cache command flow.

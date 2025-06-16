@@ -72,7 +72,7 @@ namespace Microsoft.WingetCreateCLI
             }
 
             // Do not load github client for commands that do not deal with a GitHub token.
-            if (command.RequiresGitHubToken)
+            if (command.AcceptsGitHubToken)
             {
                 if (await command.LoadGitHubClient())
                 {

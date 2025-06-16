@@ -23,7 +23,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     public class SettingsCommand : BaseCommand
     {
         /// <inheritdoc/>
-        public override bool RequiresGitHubToken => false;
+        public override bool AcceptsGitHubToken => false;
 
         /// <summary>
         /// Executes the token command flow.

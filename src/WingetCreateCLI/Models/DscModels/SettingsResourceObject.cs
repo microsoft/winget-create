@@ -50,7 +50,7 @@ public class SettingsResourceObject : BaseResourceObject
             ["type"] = "string",
             ["enum"] = new JArray(ActionFull, ActionPartial),
         };
-        return baseProperties; ;
+        return baseProperties;
     }
 
     /// <inheritdoc/>

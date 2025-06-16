@@ -20,7 +20,7 @@ using Newtonsoft.Json.Linq;
 public class DscCommand : BaseCommand
 {
     /// <inheritdoc/>
-    public override bool RequiresGitHubToken => false;
+    public override bool AcceptsGitHubToken => false;
 
     /// <summary>
     /// Gets or sets the name of the resource to be managed by the dsc command.
