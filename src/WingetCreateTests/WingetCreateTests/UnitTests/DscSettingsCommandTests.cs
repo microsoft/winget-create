@@ -124,12 +124,31 @@ public class DscSettingsCommandTests
 
         // Assert
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Output, Does.Contain(Resources.DscResourceOperationFailed_Message));
+        Assert.That(result.Output, Does.Contain(string.Format(Resources.DscInputRequired_Message, nameof(DscSettingsCommand.Set))));
+    }
+
+    /// <summary>
+    /// Tests the Test operation with an empty input.
+    /// </summary>
+    /// <returns>Async task.</returns>
+    [Test]
+    public async Task DscSettingsResource_TestEmpty_Fail()
+    {
+        // Arrange
+        var command = new DscSettingsCommand();
+
+        // Act
+        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--test", string.Empty]);
+
+        // Assert
+        Assert.That(result.Success, Is.False);
+        Assert.That(result.Output, Does.Contain(string.Format(Resources.DscInputRequired_Message, nameof(DscSettingsCommand.Test))));
     }
 
     /// <summary>
     /// Tests the Set operation with diff.
     /// </summary>
+    /// <param name="isPartial">Optional parameter to indicate if the operation is partial.</param>
     /// <returns>Async task.</returns>
     [Test]
     [TestCase(true)]
@@ -173,6 +192,7 @@ public class DscSettingsCommandTests
     /// <summary>
     /// Tests the Set operation without diff.
     /// </summary>
+    /// <param name="isPartial">Optional parameter to indicate if the operation is partial.</param>
     /// <returns>Async task.</returns>
     [Test]
     [TestCase(true)]
@@ -225,6 +245,7 @@ public class DscSettingsCommandTests
     /// <summary>
     /// Tests the Test operation with diff.
     /// </summary>
+    /// <param name="isPartial">Optional parameter to indicate if the operation is partial.</param>
     /// <returns>Async task.</returns>
     [Test]
     [TestCase(true)]
@@ -270,6 +291,7 @@ public class DscSettingsCommandTests
     /// <summary>
     /// Tests the Test operation without diff.
     /// </summary>
+    /// <param name="isPartial">Optional parameter to indicate if the operation is partial.</param>
     /// <returns>Async task.</returns>
     [Test]
     [TestCase(true)]

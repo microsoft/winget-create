@@ -3,7 +3,10 @@
 
 namespace Microsoft.WingetCreateCLI.Commands.DscCommands;
 
+using System;
+using Microsoft.WingetCreateCLI.Logging;
 using Microsoft.WingetCreateCLI.Models.DscModels;
+using Microsoft.WingetCreateCLI.Properties;
 using Newtonsoft.Json.Linq;
 
 /// <summary>
@@ -25,6 +28,7 @@ public class DscSettingsCommand : BaseDscCommand
     {
         if (input == null)
         {
+            Logger.ErrorLocalized(nameof(Resources.DscInputRequired_Message), nameof(this.Set));
             return false;
         }
 
@@ -48,8 +52,9 @@ public class DscSettingsCommand : BaseDscCommand
     /// <inheritdoc/>
     public override bool Test(JToken input)
     {
-        if ( input == null)
+        if (input == null)
         {
+            Logger.ErrorLocalized(nameof(Resources.DscInputRequired_Message), nameof(this.Test));
             return false;
         }
 

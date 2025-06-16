@@ -26,6 +26,10 @@ public class DscCommandTests
         Logger.Initialize();
     }
 
+    /// <summary>
+    /// Tests the a successful execution of the dsc command.
+    /// </summary>
+    /// <returns>Async Task.</returns>
     [Test]
     public async Task DscSettingsResource_Success()
     {
@@ -39,34 +43,30 @@ public class DscCommandTests
         Assert.That(result.Success, Is.True);
     }
 
-    [Test]
-    public async Task DscResourceMissing_ErrorMessage()
-    {
-        // Arrange
-        List<BaseDscCommand> dscCommands = [new DscSettingsCommand()];
-
-        // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([]);
-
-        // Assert
-        Assert.That(result.Success, Is.False);
-        Assert.That(result.Output, Does.Contain(string.Format(Resources.DscResourceMissing_Message, string.Join(", ", dscCommands.Select(c => c.CommandName)))));
-    }
-
+    /// <summary>
+    /// Tests the error message when a DSC resource is not found.
+    /// </summary>
+    /// <returns>Async Task.</returns>
     [Test]
     public async Task DscResourceNotFound_ErrorMessage()
     {
         // Arrange
         var dscResourceName = "ResourceNotFound";
+        List<BaseDscCommand> dscCommands = [new DscSettingsCommand()];
+        var availableResources = string.Join(", ", dscCommands.Select(c => c.CommandName));
 
         // Act
         var result = await TestUtils.ExecuteDscCommandAsync([dscResourceName]);
 
         // Assert
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Output, Does.Contain(string.Format(Resources.DscResourceNotFound_Message, dscResourceName)));
+        Assert.That(result.Output, Does.Contain(string.Format(Resources.DscResourceNotFound_Message, dscResourceName, availableResources)));
     }
 
+    /// <summary>
+    /// Tests the error message when an invalid operation is attempted on a DSC resource.
+    /// </summary>
+    /// <returns>Async Task.</returns>
     [Test]
     public async Task DscResourceInvalidOperation_ErrorMessage()
     {
@@ -81,6 +81,10 @@ public class DscCommandTests
         Assert.That(result.Output, Does.Contain(Resources.DscResourceOperationInvalid_Message));
     }
 
+    /// <summary>
+    /// Tests the error message when a DSC resource operation fails.
+    /// </summary>
+    /// <returns>Async Task.</returns>
     [Test]
     public async Task DscSettingsResourceFailedOperation_ErrorMessage()
     {

@@ -763,16 +763,34 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DSC resource is missing: {0}.
+        ///   Looks up a localized string similar to The input for the DSC resource.
         /// </summary>
-        public static string DscResourceMissing_Message {
+        public static string DscInput_HelpText {
             get {
-                return ResourceManager.GetString("DscResourceMissing_Message", resourceCulture);
+                return ResourceManager.GetString("DscInput_HelpText", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DSC resource not found: {0}.
+        ///   Looks up a localized string similar to The input for the {0} DSC operation is required..
+        /// </summary>
+        public static string DscInputRequired_Message {
+            get {
+                return ResourceManager.GetString("DscInputRequired_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name of the DSC resource to manage.
+        /// </summary>
+        public static string DscResourceName_HelpText {
+            get {
+                return ResourceManager.GetString("DscResourceName_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DSC resource not found: {0}. Valid resources: {1}.
         /// </summary>
         public static string DscResourceNotFound_Message {
             get {

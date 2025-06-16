@@ -23,34 +23,40 @@ public class DscCommand : BaseCommand
     public override bool RequiresGitHubToken => false;
 
     /// <summary>
-    /// Gets or sets the unbound arguments that exist after the positional parameters.
+    /// Gets or sets the name of the resource to be managed by the dsc command.
     /// </summary>
-    [Value(2, Hidden = true)]
-    public IList<string> UnboundArgs { get; set; } = new List<string>();
+    [Value(0, MetaName = "ResourceName", Required = true, HelpText = "DscResourceName_HelpText", ResourceType = typeof(Resources))]
+    public string ResourceName { get; set; }
 
     /// <summary>
-    /// Gets or sets the input for the dsc Get operation.
+    /// Gets or sets the input for the dsc command.
+    /// </summary>
+    [Value(1, MetaName = "Input", Required = false, HelpText = "DscInput_HelpText", ResourceType = typeof(Resources))]
+    public string Input { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to execute the dsc Get operation.
     /// </summary>
     [Option('g', "get", SetName = "GetMethod", HelpText = "DscGet_HelpText", ResourceType = typeof(Resources))]
-    public string Get { get; set; }
+    public bool Get { get; set; }
 
     /// <summary>
-    /// Gets or sets the input for the dsc Set operation.
+    /// Gets or sets a value indicating whether to execute the dsc Set operation.
     /// </summary>
     [Option('s', "set", SetName = "SetMethod", HelpText = "DscSet_HelpText", ResourceType = typeof(Resources))]
-    public string Set { get; set; }
+    public bool Set { get; set; }
 
     /// <summary>
-    /// Gets or sets the input for the dsc Test operation.
+    /// Gets or sets a value indicating whether to execute the dsc Test operation.
     /// </summary>
     [Option('t', "test", SetName = "TestMethod", HelpText = "DscTest_HelpText", ResourceType = typeof(Resources))]
-    public string Test { get; set; }
+    public bool Test { get; set; }
 
     /// <summary>
-    /// Gets or sets the input for the dsc Export operation.
+    /// Gets or sets a value indicating whether to execute the dsc Export operation.
     /// </summary>
     [Option('e', "export", SetName = "ExportMethod", HelpText = "DscExport_HelpText", ResourceType = typeof(Resources))]
-    public string Export { get; set; }
+    public bool Export { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether to execute the schema command.
@@ -67,51 +73,42 @@ public class DscCommand : BaseCommand
         await Task.CompletedTask;
 
         List<BaseDscCommand> dscCommands = [new DscSettingsCommand()];
-        var argCommandName = this.UnboundArgs.FirstOrDefault();
-        if(string.IsNullOrWhiteSpace(argCommandName))
-        {
-            Logger.ErrorLocalized(nameof(Resources.DscResourceMissing_Message), string.Join(", ", dscCommands.Select(c => c.CommandName)));
-            return false;
-        }
-
-        var dscCommand = dscCommands.FirstOrDefault(c => c.CommandName.Equals(argCommandName, StringComparison.OrdinalIgnoreCase));
+        var dscCommand = dscCommands.FirstOrDefault(c => c.CommandName.Equals(this.ResourceName, StringComparison.OrdinalIgnoreCase));
         if (dscCommand == null)
         {
-            Logger.ErrorLocalized(nameof(Resources.DscResourceNotFound_Message), argCommandName);
-            return false;
-        }
-
-        if (this.HandleOperation("Get", this.Get, (input) => dscCommand.Get(input)) ||
-           this.HandleOperation("Set", this.Set, (input) => dscCommand.Set(input)) ||
-           this.HandleOperation("Test", this.Test, (input) => dscCommand.Test(input)) ||
-           this.HandleOperation("Export", this.Export, (input) => dscCommand.Export(input)) ||
-           (this.Schema && dscCommand.Schema()))
-        {
-            return true;
-        }
-
-        Logger.ErrorLocalized(nameof(Resources.DscResourceOperationInvalid_Message));
-        return false;
-    }
-
-    private bool HandleOperation(string name, string arg, Func<JToken, bool> op)
-    {
-        if (arg == null)
-        {
-            // If no argument is provided, then we assume another operation is being requested.
+            var availableResources = string.Join(", ", dscCommands.Select(c => c.CommandName));
+            Logger.ErrorLocalized(nameof(Resources.DscResourceNotFound_Message), this.ResourceName, availableResources);
             return false;
         }
 
         try
         {
-            var input = string.IsNullOrWhiteSpace(arg) ? null : JToken.Parse(arg);
-            if (!op(input))
+            var input = string.IsNullOrWhiteSpace(this.Input) ? null : JToken.Parse(this.Input);
+            var operations = new (bool, Func<bool>)[]
             {
-                Logger.ErrorLocalized(nameof(Resources.DscResourceOperationFailed_Message));
-                return false;
+                (this.Get,    () => dscCommand.Get(input)),
+                (this.Set,    () => dscCommand.Set(input)),
+                (this.Test,   () => dscCommand.Test(input)),
+                (this.Export, () => dscCommand.Export(input)),
+                (this.Schema, () => dscCommand.Schema()),
+            };
+
+            foreach (var (methodFlag, methodAction) in operations)
+            {
+                if (methodFlag)
+                {
+                    if (!methodAction())
+                    {
+                        Logger.ErrorLocalized(nameof(Resources.DscResourceOperationFailed_Message));
+                        return false;
+                    }
+
+                    return true;
+                }
             }
 
-            return true;
+            Logger.ErrorLocalized(nameof(Resources.DscResourceOperationInvalid_Message));
+            return false;
         }
         catch (Exception ex)
         {

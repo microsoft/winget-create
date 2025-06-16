@@ -1424,13 +1424,19 @@ Warning: Using this argument may result in the token being logged. Consider an a
   <data name="DscSchema_HelpText" xml:space="preserve">
     <value>Execute the Schema command</value>
   </data>
-  <data name="DscResourceNotFound_Message" xml:space="preserve">
-    <value>DSC resource not found: {0}</value>
-    <comment>{Locked='{0}'} {0} is replaced by the DSC resource name</comment>
+  <data name="DscResourceName_HelpText" xml:space="preserve">
+    <value>The name of the DSC resource to manage</value>
   </data>
-  <data name="DscResourceMissing_Message" xml:space="preserve">
-    <value>DSC resource is missing: {0}</value>
-    <comment>{Locked='{0}'} {0} is replaced by the available DSC resource names</comment>
+  <data name="DscInput_HelpText" xml:space="preserve">
+    <value>The input for the DSC resource</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>The input for the {0} DSC operation is required.</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNotFound_Message" xml:space="preserve">
+    <value>DSC resource not found: {0}. Valid resources: {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
   </data>
   <data name="DscResourceOperationInvalid_Message" xml:space="preserve">
     <value>Invalid operation for the DSC resource</value>
