@@ -13,7 +13,10 @@ namespace Microsoft.WingetCreateTests
     using System.Net.Http.Headers;
     using System.Threading;
     using System.Threading.Tasks;
+    using CommandLine;
+    using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCore;
+    using Microsoft.WingetCreateUnitTests.Models;
     using Moq;
     using Moq.Protected;
 
@@ -212,6 +215,20 @@ namespace Microsoft.WingetCreateTests
             {
                 File.Delete(Path.Combine(PackageParser.InstallerDownloadPath, fileName));
             }
+        }
+
+        /// <summary>
+        /// Execute the DSC command.
+        /// </summary>
+        /// <param name="args">The arguments to pass to the DSC command.</param>
+        /// <returns>Result of executing the DSC command.</returns>
+        public static async Task<DscExecuteResult> ExecuteDscCommandAsync(List<string> args)
+        {
+            var sw = new StringWriter();
+            Console.SetOut(sw);
+            var executeResult = await Parser.Default.ParseArguments<DscCommand>(args).Value.Execute();
+            var output = sw.ToString();
+            return new(executeResult, output);
         }
     }
 }

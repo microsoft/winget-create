@@ -3,16 +3,13 @@
 
 namespace Microsoft.WingetCreateUnitTests;
 
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using CommandLine;
-using Microsoft.WingetCreateCLI.Commands;
 using Microsoft.WingetCreateCLI.Commands.DscCommands;
 using Microsoft.WingetCreateCLI.Logging;
 using Microsoft.WingetCreateCLI.Properties;
+using Microsoft.WingetCreateTests;
 using NUnit.Framework;
 
 /// <summary>
@@ -20,20 +17,6 @@ using NUnit.Framework;
 /// </summary>
 public class DscCommandTests
 {
-    /// <summary>
-    /// Execute the DSC command
-    /// </summary>
-    /// <param name="args">The arguments to pass to the DSC command.</param>
-    /// <returns>Result of executing the DSC command.</returns>
-    public static async Task<ExecuteResult> ExecuteDscCommandAsync(List<string> args)
-    {
-        var sw = new StringWriter();
-        Console.SetOut(sw);
-        var executeResult = await Parser.Default.ParseArguments<DscCommand>(args).Value.Execute();
-        var output = sw.ToString();
-        return new(executeResult, output);
-    }
-
     /// <summary>
     /// OneTimeSetup method for the DSC command unit tests.
     /// </summary>
@@ -50,7 +33,7 @@ public class DscCommandTests
         var command = new DscSettingsCommand();
 
         // Act
-        var result = await ExecuteDscCommandAsync([command.CommandName, "--get", string.Empty]);
+        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--get", string.Empty]);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -63,7 +46,7 @@ public class DscCommandTests
         List<BaseDscCommand> dscCommands = [new DscSettingsCommand()];
 
         // Act
-        var result = await ExecuteDscCommandAsync([]);
+        var result = await TestUtils.ExecuteDscCommandAsync([]);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -77,7 +60,7 @@ public class DscCommandTests
         var dscResourceName = "ResourceNotFound";
 
         // Act
-        var result = await ExecuteDscCommandAsync([dscResourceName]);
+        var result = await TestUtils.ExecuteDscCommandAsync([dscResourceName]);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -91,7 +74,7 @@ public class DscCommandTests
         var command = new DscSettingsCommand();
 
         // Act
-        var result = await ExecuteDscCommandAsync([command.CommandName]);
+        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName]);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -105,17 +88,10 @@ public class DscCommandTests
         var command = new DscSettingsCommand();
 
         // Act
-        var result = await ExecuteDscCommandAsync([command.CommandName, "--set", string.Empty]);
+        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--set", string.Empty]);
 
         // Assert
         Assert.That(result.Success, Is.False);
         Assert.That(result.Output, Does.Contain(Resources.DscResourceOperationFailed_Message));
     }
-
-    /// <summary>
-    /// Result of executing a DSC command.
-    /// </summary>
-    /// <param name="Success">Value indicating whether the command execution was successful.</param>
-    /// <param name="Output">Value containing the output of the command execution.</param>
-    public record class ExecuteResult(bool Success, string Output);
 }
