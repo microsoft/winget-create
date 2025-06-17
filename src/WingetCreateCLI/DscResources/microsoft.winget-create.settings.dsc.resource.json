@@ -1,6 +1,6 @@
 {
     "$schema": "https://raw.githubusercontent.com/PowerShell/DSC/main/schemas/2024/04/bundled/resource/manifest.json",
-    "description": "Allows management of settings state via the DSC v3 command line interface protocol. See the help link for details.",
+    "description": "Allows management of settings state via the DSC v3 command line interface protocol.",
     "export": {
         "executable": "wingetcreate",
         "input": "stdin",
