@@ -64,11 +64,11 @@ public class DscCommandTests
     }
 
     /// <summary>
-    /// Tests the error message when an invalid operation is attempted on a DSC resource.
+    /// Tests the error message when a DSC resource operation is not specified.
     /// </summary>
     /// <returns>Async Task.</returns>
     [Test]
-    public async Task DscResourceInvalidOperation_ErrorMessage()
+    public async Task DscResourceOperationNotSpecified_ErrorMessage()
     {
         // Arrange
         var command = new DscSettingsCommand();
