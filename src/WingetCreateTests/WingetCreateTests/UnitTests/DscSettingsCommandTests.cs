@@ -78,7 +78,7 @@ public class DscSettingsCommandTests
         var command = new DscSettingsCommand();
 
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--get", string.Empty]);
+        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--get"]);
         var state = result.OutputState();
 
         // Assert
@@ -99,7 +99,7 @@ public class DscSettingsCommandTests
         var command = new DscSettingsCommand();
 
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--export", string.Empty]);
+        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--export"]);
         var state = result.OutputState();
 
         // Assert

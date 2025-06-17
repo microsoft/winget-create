@@ -792,9 +792,9 @@ namespace Microsoft.WingetCreateCLI.Properties {
         /// <summary>
         ///   Looks up a localized string similar to DSC resource not found: {0}. Valid resources: {1}.
         /// </summary>
-        public static string DscResourceNotFound_Message {
+        public static string DscResourceNameNotFound_Message {
             get {
-                return ResourceManager.GetString("DscResourceNotFound_Message", resourceCulture);
+                return ResourceManager.GetString("DscResourceNameNotFound_Message", resourceCulture);
             }
         }
         
@@ -808,11 +808,11 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid operation for the DSC resource.
+        ///   Looks up a localized string similar to No operation specified. Use --help to see available operations..
         /// </summary>
-        public static string DscResourceOperationInvalid_Message {
+        public static string DscResourceOperationNotSpecified_Message {
             get {
-                return ResourceManager.GetString("DscResourceOperationInvalid_Message", resourceCulture);
+                return ResourceManager.GetString("DscResourceOperationNotSpecified_Message", resourceCulture);
             }
         }
         

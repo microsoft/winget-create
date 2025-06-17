@@ -77,7 +77,7 @@ public class DscCommand : BaseCommand
         if (dscCommand == null)
         {
             var availableResources = string.Join(", ", dscCommands.Select(c => c.CommandName));
-            Logger.ErrorLocalized(nameof(Resources.DscResourceNotFound_Message), this.ResourceName, availableResources);
+            Logger.ErrorLocalized(nameof(Resources.DscResourceNameNotFound_Message), this.ResourceName, availableResources);
             return false;
         }
 
@@ -107,7 +107,7 @@ public class DscCommand : BaseCommand
                 }
             }
 
-            Logger.ErrorLocalized(nameof(Resources.DscResourceOperationInvalid_Message));
+            Logger.ErrorLocalized(nameof(Resources.DscResourceOperationNotSpecified_Message));
             return false;
         }
         catch (Exception ex)

@@ -1434,12 +1434,12 @@ Warning: Using this argument may result in the token being logged. Consider an a
     <value>The input for the {0} DSC operation is required</value>
     <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
   </data>
-  <data name="DscResourceNotFound_Message" xml:space="preserve">
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
     <value>DSC resource not found: {0}. Valid resources: {1}</value>
     <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
   </data>
-  <data name="DscResourceOperationInvalid_Message" xml:space="preserve">
-    <value>Invalid operation for the DSC resource</value>
+  <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
+    <value>No operation specified. Use --help to see available operations.</value>
   </data>
   <data name="DscResourceOperationFailed_Message" xml:space="preserve">
     <value>DSC resource operation failed</value>

@@ -37,7 +37,7 @@ public class DscCommandTests
         var command = new DscSettingsCommand();
 
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--get", string.Empty]);
+        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--get"]);
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -60,7 +60,7 @@ public class DscCommandTests
 
         // Assert
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Output, Does.Contain(string.Format(Resources.DscResourceNotFound_Message, dscResourceName, availableResources)));
+        Assert.That(result.Output, Does.Contain(string.Format(Resources.DscResourceNameNotFound_Message, dscResourceName, availableResources)));
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public class DscCommandTests
 
         // Assert
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Output, Does.Contain(Resources.DscResourceOperationInvalid_Message));
+        Assert.That(result.Output, Does.Contain(Resources.DscResourceOperationNotSpecified_Message));
     }
 
     /// <summary>
