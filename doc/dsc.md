@@ -20,6 +20,6 @@ The following arguments are available:
 | **-g, --get** | Get the resource state
 | **-s, --set** | Set the resource state |
 | **-t, --test** | Test the resource state |
-| **e, --export** | Get all state instances |
+| **-e, --export** | Get all state instances |
 | **--schema** |  Execute the Schema command |
 | **-?, --help** |  Gets additional help on this command. |
