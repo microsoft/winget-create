@@ -241,6 +241,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authentication information for secured private sources.
+        /// </summary>
+        public static string Authentication_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Authentication_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type of authentication to use.
+        /// </summary>
+        public static string AuthenticationType_KeywordDescription {
+            get {
+                return ResourceManager.GetString("AuthenticationType_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package author.
         /// </summary>
         public static string Author_KeywordDescription {
@@ -1962,6 +1980,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Information required for Microsoft Entra Id authentication.
+        /// </summary>
+        public static string MicrosoftEntraIdAuthenticationInfo_KeywordDescription {
+            get {
+                return ResourceManager.GetString("MicrosoftEntraIdAuthenticationInfo_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The scope value for Microsoft Entra Id authentication.
+        /// </summary>
+        public static string MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription {
+            get {
+                return ResourceManager.GetString("MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installer minimum operating system version.
         /// </summary>
         public static string MinimumOSVersion_KeywordDescription {
@@ -2826,6 +2862,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The resource to use for Microsoft Entra Id authentication.
+        /// </summary>
+        public static string Resource_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Resource_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of restricted MSIX capabilities.
         /// </summary>
         public static string RestrictedCapabilities_KeywordDescription {
@@ -3245,6 +3290,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SingletonManifest_Message {
             get {
                 return ResourceManager.GetString("SingletonManifest_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skipping manifest validation. The CLI can only validate YAML format. Validate output manually before submission..
+        /// </summary>
+        public static string SkippingManifestValidation_Message {
+            get {
+                return ResourceManager.GetString("SkippingManifestValidation_Message", resourceCulture);
             }
         }
         

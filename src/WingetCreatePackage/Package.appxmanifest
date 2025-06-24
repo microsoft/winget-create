@@ -11,7 +11,7 @@
   <Identity
     Name="Microsoft.WindowsPackageManagerManifestCreator"
     Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
-    Version="0.0.1.0" />
+    Version="0.0.2.0" />
 
   <Properties>
     <DisplayName>Windows Package Manager Manifest Creator</DisplayName>

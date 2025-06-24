@@ -14,7 +14,7 @@ using Microsoft.WingetCreateCLI.Properties;
 using Newtonsoft.Json.Linq;
 
 /// <summary>
-/// Command for managin the application using dsc v3.
+/// Command for managing the application using dsc v3.
 /// </summary>
 [Verb("dsc", HelpText = "DscCommand_HelpText", ResourceType = typeof(Resources))]
 public class DscCommand : BaseCommand

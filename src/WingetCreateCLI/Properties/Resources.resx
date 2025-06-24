@@ -1453,4 +1453,22 @@ Warning: Using this argument may result in the token being logged. Consider an a
   <data name="DscResourcePropertyDescriptionAction" xml:space="preserve">
     <value>The action used to apply the settings</value>
   </data>
+  <data name="AuthenticationType_KeywordDescription" xml:space="preserve">
+    <value>The type of authentication to use</value>
+  </data>
+  <data name="Resource_KeywordDescription" xml:space="preserve">
+    <value>The resource to use for Microsoft Entra Id authentication</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_KeywordDescription" xml:space="preserve">
+    <value>Information required for Microsoft Entra Id authentication</value>
+  </data>
+  <data name="Authentication_KeywordDescription" xml:space="preserve">
+    <value>Authentication information for secured private sources</value>
+  </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>Skipping manifest validation. The CLI can only validate YAML format. Validate output manually before submission.</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
+    <value>The scope value for Microsoft Entra Id authentication</value>
+  </data>
 </root>
