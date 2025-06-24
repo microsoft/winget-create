@@ -241,7 +241,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Authentication information for Entra Id secured private sources.
+        ///   Looks up a localized string similar to Authentication information for secured private sources.
         /// </summary>
         public static string Authentication_KeywordDescription {
             get {
@@ -250,7 +250,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The type of authentication to use for Entra Id authentication.
+        ///   Looks up a localized string similar to The type of authentication to use.
         /// </summary>
         public static string AuthenticationType_KeywordDescription {
             get {
@@ -1845,11 +1845,20 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Information required for Entra Id authentication in private sources.
+        ///   Looks up a localized string similar to Information required for Microsoft Entra Id authentication.
         /// </summary>
         public static string MicrosoftEntraIdAuthenticationInfo_KeywordDescription {
             get {
                 return ResourceManager.GetString("MicrosoftEntraIdAuthenticationInfo_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The scope value for Microsoft Entra Id authentication.
+        /// </summary>
+        public static string MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription {
+            get {
+                return ResourceManager.GetString("MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription", resourceCulture);
             }
         }
         

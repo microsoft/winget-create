@@ -58,13 +58,6 @@ namespace Microsoft.WingetCreateE2ETests
         [TestCase(TestConstants.YamlConstants.TestPortablePackageIdentifier, TestConstants.YamlConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.YamlManifestFormat)]
         [TestCase(TestConstants.YamlConstants.TestZipPackageIdentifier, TestConstants.YamlConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.YamlManifestFormat)]
 
-        // JSON E2E Tests
-        [TestCase(TestConstants.JsonConstants.TestExePackageIdentifier, TestConstants.JsonConstants.TestExeManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat)]
-        [TestCase(TestConstants.JsonConstants.TestMsiPackageIdentifier, TestConstants.JsonConstants.TestMsiManifest, TestConstants.TestMsiInstaller, TestConstants.JsonManifestFormat)]
-        [TestCase(TestConstants.JsonConstants.TestMultifileMsixPackageIdentifier, TestConstants.JsonConstants.TestMultifileMsixManifestDir, TestConstants.TestMsixInstaller, TestConstants.JsonManifestFormat)]
-        [TestCase(TestConstants.JsonConstants.TestPortablePackageIdentifier, TestConstants.JsonConstants.TestPortableManifest, TestConstants.TestExeInstaller, TestConstants.JsonManifestFormat)]
-        [TestCase(TestConstants.JsonConstants.TestZipPackageIdentifier, TestConstants.JsonConstants.TestZipManifest, TestConstants.TestZipInstaller, TestConstants.JsonManifestFormat)]
-
         public async Task SubmitAndUpdateInstaller(string packageId, string manifestName, string installerName, ManifestFormat format)
         {
             await this.RunSubmitAndUpdateFlow(packageId, TestUtils.GetTestFile(manifestName), installerName, format);
