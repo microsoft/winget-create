@@ -58,7 +58,16 @@ public class SettingsFunctionData
     /// <returns>>true if the settings are equivalent; otherwise, false.</returns>
     public bool Test()
     {
-        return JToken.DeepEquals(this.GetResolvedInput(), this.GetValidSettings(this.Output.Settings));
+        return JToken.DeepEquals(this.GetResolvedInput(), GetValidSettings(this.Output.Settings));
+    }
+
+    /// <summary>
+    /// Writes the current output settings to persistent storage.
+    /// </summary>
+    public void Set()
+    {
+        Debug.Assert(this.Output.Settings != null, "Output settings should not be null.");
+        UserSettings.SaveSettings(this.Output.Settings.ToObject<SettingsManifest>());
     }
 
     /// <summary>
@@ -88,14 +97,14 @@ public class SettingsFunctionData
             if (SettingsResourceObject.ActionFull.Equals(this.Input.Action, StringComparison.OrdinalIgnoreCase))
             {
                 this.Output.Action = SettingsResourceObject.ActionFull;
-                this.resolvedInputUserSettings = this.GetValidSettings(this.Input.Settings);
+                this.resolvedInputUserSettings = GetValidSettings(this.Input.Settings);
             }
             else
             {
                 this.Output.Action = SettingsResourceObject.ActionPartial;
                 var mergedSettings = this.GetUserSettings();
                 mergedSettings.Merge(this.Input.Settings);
-                this.resolvedInputUserSettings = this.GetValidSettings(mergedSettings);
+                this.resolvedInputUserSettings = GetValidSettings(mergedSettings);
             }
         }
 
@@ -103,32 +112,23 @@ public class SettingsFunctionData
     }
 
     /// <summary>
-    /// Retrieves a deep-cloned JSON representation of the current user settings.
-    /// </summary>
-    /// <returns>A Json object representing the user settings.</returns>
-    public JObject GetUserSettings()
-    {
-        this.userSettings ??= UserSettings.ToJson();
-        return (JObject)this.userSettings.DeepClone();
-    }
-
-    /// <summary>
-    /// Writes the current output settings to persistent storage.
-    /// </summary>
-    public void WriteOutput()
-    {
-        Debug.Assert(this.Output.Settings != null, "Output settings should not be null.");
-        UserSettings.SaveSettings(this.Output.Settings.ToObject<SettingsManifest>());
-    }
-
-    /// <summary>
     /// Validates and converts the provided settings into a structured format.
     /// </summary>
     /// <param name="settings">An object containing settings to be validated.</param>
     /// <returns>An object representing the validated settings.</returns>
-    public JObject GetValidSettings(JObject settings)
+    private static JObject GetValidSettings(JObject settings)
     {
         var settingsManifest = settings.ToObject<SettingsManifest>();
         return JObject.FromObject(settingsManifest);
+    }
+
+    /// <summary>
+    /// Retrieves a deep-cloned JSON representation of the current user settings.
+    /// </summary>
+    /// <returns>A Json object representing the user settings.</returns>
+    private JObject GetUserSettings()
+    {
+        this.userSettings ??= UserSettings.ToJson();
+        return (JObject)this.userSettings.DeepClone();
     }
 }

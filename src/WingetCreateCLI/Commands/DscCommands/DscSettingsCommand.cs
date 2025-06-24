@@ -41,7 +41,7 @@ public class DscSettingsCommand : BaseDscCommand
         if (!data.Test())
         {
             data.Output.Settings = data.GetResolvedInput();
-            data.WriteOutput();
+            data.Set();
         }
 
         this.WriteJsonOutputLine(data.Output.ToJson());

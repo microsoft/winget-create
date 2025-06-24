@@ -1422,7 +1422,7 @@ Warning: Using this argument may result in the token being logged. Consider an a
     <value>Get all state instances</value>
   </data>
   <data name="DscSchema_HelpText" xml:space="preserve">
-    <value>Execute the Schema command</value>
+    <value>Outputs schema of the resource</value>
   </data>
   <data name="DscResourceName_HelpText" xml:space="preserve">
     <value>The name of the DSC resource to manage</value>

@@ -46,9 +46,6 @@ public abstract class BaseResourceObject
     /// <returns>A Json object representing the current object.</returns>
     public JObject ToJson()
     {
-        return JObject.FromObject(this, new JsonSerializer
-        {
-            NullValueHandling = NullValueHandling.Ignore,
-        });
+        return JObject.FromObject(this);
     }
 }
