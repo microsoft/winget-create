@@ -33,11 +33,8 @@ public class DscCommandTests
     [Test]
     public async Task DscSettingsResource_Success()
     {
-        // Arrange
-        var command = new DscSettingsCommand();
-
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--get"]);
+        var result = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--get");
 
         // Assert
         Assert.That(result.Success, Is.True);
@@ -52,11 +49,10 @@ public class DscCommandTests
     {
         // Arrange
         var dscResourceName = "ResourceNotFound";
-        List<BaseDscCommand> dscCommands = [new DscSettingsCommand()];
-        var availableResources = string.Join(", ", dscCommands.Select(c => c.CommandName));
+        var availableResources = string.Join(", ", BaseDscCommand.GetAvailableCommands());
 
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([dscResourceName]);
+        var result = await TestUtils.ExecuteDscCommandAsync(dscResourceName);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -70,11 +66,8 @@ public class DscCommandTests
     [Test]
     public async Task DscResourceOperationNotSpecified_ErrorMessage()
     {
-        // Arrange
-        var command = new DscSettingsCommand();
-
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName]);
+        var result = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -88,11 +81,8 @@ public class DscCommandTests
     [Test]
     public async Task DscSettingsResourceFailedOperation_ErrorMessage()
     {
-        // Arrange
-        var command = new DscSettingsCommand();
-
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--set", string.Empty]);
+        var result = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--set", string.Empty);
 
         // Assert
         Assert.That(result.Success, Is.False);

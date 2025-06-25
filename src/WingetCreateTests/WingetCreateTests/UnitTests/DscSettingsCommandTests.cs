@@ -74,11 +74,8 @@ public class DscSettingsCommandTests
     [Test]
     public async Task DscSettingsResource_Get_Success()
     {
-        // Arrange
-        var command = new DscSettingsCommand();
-
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--get"]);
+        var result = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--get");
         var state = result.OutputState();
 
         // Assert
@@ -95,11 +92,8 @@ public class DscSettingsCommandTests
     [Test]
     public async Task DscSettingsResource_Export_Success()
     {
-        // Arrange
-        var command = new DscSettingsCommand();
-
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--export"]);
+        var result = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--export");
         var state = result.OutputState();
 
         // Assert
@@ -116,11 +110,8 @@ public class DscSettingsCommandTests
     [Test]
     public async Task DscSettingsResource_SetEmpty_Fail()
     {
-        // Arrange
-        var command = new DscSettingsCommand();
-
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--set", string.Empty]);
+        var result = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--set", string.Empty);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -134,11 +125,8 @@ public class DscSettingsCommandTests
     [Test]
     public async Task DscSettingsResource_TestEmpty_Fail()
     {
-        // Arrange
-        var command = new DscSettingsCommand();
-
         // Act
-        var result = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--test", string.Empty]);
+        var result = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--test", string.Empty);
 
         // Assert
         Assert.That(result.Success, Is.False);
@@ -158,12 +146,11 @@ public class DscSettingsCommandTests
     {
         // Arrange
         this.ResetSettingsToDefaultValues();
-        var command = new DscSettingsCommand();
 
         // Part 1: Update settings repo name only
         {
             // Act
-            var setRepoName = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--set", this.CreateInput(name: MockName, isPartial: isPartial)]);
+            var setRepoName = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--set", this.CreateInput(name: MockName, isPartial: isPartial));
             var stateAndDiff = setRepoName.OutputStateAndDiff();
 
             // Assert
@@ -177,7 +164,7 @@ public class DscSettingsCommandTests
         // Part 2: Now update settings repo owner only
         {
             // Act
-            var setRepoOwner = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--set", this.CreateInput(owner: MockOwner, isPartial: isPartial)]);
+            var setRepoOwner = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--set", this.CreateInput(owner: MockOwner, isPartial: isPartial));
             var stateAndDiff = setRepoOwner.OutputStateAndDiff();
 
             // Assert
@@ -202,7 +189,6 @@ public class DscSettingsCommandTests
     {
         // Arrange
         this.ResetSettingsToDefaultValues();
-        var command = new DscSettingsCommand();
 
         // Part 1: Update settings repo name only
         {
@@ -211,7 +197,7 @@ public class DscSettingsCommandTests
             var currentSettingsBeforeExecute = this.CurrentSettings;
 
             // Act
-            var setRepoName = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--set", this.CreateInput(name: MockName, isPartial: isPartial)]);
+            var setRepoName = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--set", this.CreateInput(name: MockName, isPartial: isPartial));
             var stateAndDiff = setRepoName.OutputStateAndDiff();
 
             // Assert
@@ -230,7 +216,7 @@ public class DscSettingsCommandTests
             var currentSettingsBeforeExecute = this.CurrentSettings;
 
             // Act
-            var setRepoOwner = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--set", this.CreateInput(owner: MockOwner, isPartial: isPartial)]);
+            var setRepoOwner = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--set", this.CreateInput(owner: MockOwner, isPartial: isPartial));
             var stateAndDiff = setRepoOwner.OutputStateAndDiff();
 
             // Assert
@@ -255,12 +241,11 @@ public class DscSettingsCommandTests
     {
         // Arrange
         this.ResetSettingsToDefaultValues();
-        var command = new DscSettingsCommand();
 
         // Part 1: Test settings repo name only
         {
             // Act
-            var testRepoName = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--test", this.CreateInput(name: MockName, isPartial: isPartial)]);
+            var testRepoName = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--test", this.CreateInput(name: MockName, isPartial: isPartial));
             var stateAndDiff = testRepoName.OutputStateAndDiff();
 
             // Assert
@@ -275,7 +260,7 @@ public class DscSettingsCommandTests
         // Part 2: Now test settings repo owner only
         {
             // Act
-            var testRepoOwner = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--test", this.CreateInput(owner: MockOwner, isPartial: isPartial)]);
+            var testRepoOwner = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--test", this.CreateInput(owner: MockOwner, isPartial: isPartial));
             var stateAndDiff = testRepoOwner.OutputStateAndDiff();
 
             // Assert
@@ -301,7 +286,6 @@ public class DscSettingsCommandTests
     {
         // Arrange
         this.ResetSettingsToDefaultValues();
-        var command = new DscSettingsCommand();
 
         // Part 1: Test settings repo name only
         {
@@ -309,7 +293,7 @@ public class DscSettingsCommandTests
             this.UpdateSettings(name: MockName);
 
             // Act
-            var testRepoName = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--test", this.CreateInput(name: MockName, isPartial: isPartial)]);
+            var testRepoName = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--test", this.CreateInput(name: MockName, isPartial: isPartial));
             var stateAndDiff = testRepoName.OutputStateAndDiff();
 
             // Assert
@@ -327,7 +311,7 @@ public class DscSettingsCommandTests
             this.UpdateSettings(name: (isPartial ?? true) ? null : defaultRepoName, owner: MockOwner);
 
             // Act
-            var testRepoOwner = await TestUtils.ExecuteDscCommandAsync([command.CommandName, "--test", this.CreateInput(owner: MockOwner, isPartial: isPartial)]);
+            var testRepoOwner = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--test", this.CreateInput(owner: MockOwner, isPartial: isPartial));
             var stateAndDiff = testRepoOwner.OutputStateAndDiff();
 
             // Assert

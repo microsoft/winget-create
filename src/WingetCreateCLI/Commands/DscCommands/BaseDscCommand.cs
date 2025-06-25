@@ -4,6 +4,7 @@
 namespace Microsoft.WingetCreateCLI.Commands.DscCommands;
 
 using System;
+using System.Collections.Generic;
 using Microsoft.WingetCreateCLI.Models.DscModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -14,9 +15,41 @@ using Newtonsoft.Json.Linq;
 public abstract class BaseDscCommand
 {
     /// <summary>
-    /// Gets the name of the command used to access the DSC functionality.
+    /// Tries to create an instance of a DSC command based on the command name.
     /// </summary>
-    public virtual string CommandName { get; }
+    /// <param name="commandName">The name of the command to create an instance for.</param>
+    /// <param name="commandInstance">The created command instance if successful; otherwise, null.</param>
+    /// <returns>True if the command instance was created successfully; otherwise, false.</returns>
+    public static bool TryCreateInstance(string commandName, out BaseDscCommand commandInstance)
+    {
+        var formattedCommandName = commandName?.ToLowerInvariant() ?? string.Empty;
+        switch (formattedCommandName)
+        {
+            case DscSettingsCommand.CommandName:
+                commandInstance = new DscSettingsCommand();
+                return true;
+
+            // Add more cases here for other DSC commands as needed.
+
+            // Return false if no matching command is found.
+            default:
+                commandInstance = null;
+                return false;
+        }
+    }
+
+    /// <summary>
+    /// Gets the list of available command names for DSC commands.
+    /// </summary>
+    /// <returns>The list of available command names.</returns>
+    public static List<string> GetAvailableCommands()
+    {
+        return [
+            DscSettingsCommand.CommandName,
+
+            // Add more command names here as needed.
+        ];
+    }
 
     /// <summary>
     /// DSC Get command.
@@ -55,15 +88,16 @@ public abstract class BaseDscCommand
     /// <summary>
     /// Creates a Json schema for a DSC resource object.
     /// </summary>
+    /// <typeparam name="T">The type of the resource object.</typeparam>
     /// <returns>A Json object representing the schema.</returns>
-    protected JObject CreateSchema<T>()
+    protected JObject CreateSchema<T>(string commandName)
     where T : BaseResourceObject, new()
     {
         var resourceObject = new T();
         return new JObject
         {
             ["$schema"] = "http://json-schema.org/draft-07/schema#",
-            ["title"] = this.CommandName,
+            ["title"] = commandName,
             ["type"] = "object",
             ["properties"] = resourceObject.GetProperties(),
             ["required"] = resourceObject.GetRequiredProperties(),

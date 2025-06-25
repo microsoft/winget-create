@@ -3,7 +3,6 @@
 
 namespace Microsoft.WingetCreateCLI.Commands.DscCommands;
 
-using System;
 using Microsoft.WingetCreateCLI.Logging;
 using Microsoft.WingetCreateCLI.Models.DscModels;
 using Microsoft.WingetCreateCLI.Properties;
@@ -14,8 +13,10 @@ using Newtonsoft.Json.Linq;
 /// </summary>
 public class DscSettingsCommand : BaseDscCommand
 {
-    /// <inheritdoc/>
-    public override string CommandName => "settings";
+    /// <summary>
+    /// Represents the name of the settings command used to access the DSC functionality.
+    /// </summary>
+    public const string CommandName = "settings";
 
     /// <inheritdoc/>
     public override bool Get(JToken input)
@@ -80,7 +81,7 @@ public class DscSettingsCommand : BaseDscCommand
     /// <inheritdoc/>
     public override bool Schema()
     {
-        this.WriteJsonOutputLine(this.CreateSchema<SettingsResourceObject>());
+        this.WriteJsonOutputLine(this.CreateSchema<SettingsResourceObject>(CommandName));
         return true;
     }
 }

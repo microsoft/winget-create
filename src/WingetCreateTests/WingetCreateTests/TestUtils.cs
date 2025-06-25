@@ -222,7 +222,7 @@ namespace Microsoft.WingetCreateTests
         /// </summary>
         /// <param name="args">The arguments to pass to the DSC command.</param>
         /// <returns>Result of executing the DSC command.</returns>
-        public static async Task<DscExecuteResult> ExecuteDscCommandAsync(List<string> args)
+        public static async Task<DscExecuteResult> ExecuteDscCommandAsync(params string[] args)
         {
             var sw = new StringWriter();
             Console.SetOut(sw);

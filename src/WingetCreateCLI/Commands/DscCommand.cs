@@ -5,6 +5,7 @@ namespace Microsoft.WingetCreateCLI.Commands;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
@@ -72,11 +73,9 @@ public class DscCommand : BaseCommand
     {
         await Task.CompletedTask;
 
-        List<BaseDscCommand> dscCommands = [new DscSettingsCommand()];
-        var dscCommand = dscCommands.FirstOrDefault(c => c.CommandName.Equals(this.ResourceName, StringComparison.OrdinalIgnoreCase));
-        if (dscCommand == null)
+        if (!BaseDscCommand.TryCreateInstance(this.ResourceName, out var dscCommand))
         {
-            var availableResources = string.Join(", ", dscCommands.Select(c => c.CommandName));
+            var availableResources = string.Join(", ", BaseDscCommand.GetAvailableCommands());
             Logger.ErrorLocalized(nameof(Resources.DscResourceNameNotFound_Message), this.ResourceName, availableResources);
             return false;
         }
