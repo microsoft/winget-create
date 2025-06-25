@@ -1406,6 +1406,53 @@ Warning: Using this argument may result in the token being logged. Consider an a
   <data name="BranchMergeConflict_Message" xml:space="preserve">
     <value>The forked repository could not be synced with the upstream commits due to a merge conflict. Resolve conflicts manually and try again.</value>
   </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>DSC v3 resource commands</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>Get the resource state</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>Set the resource state</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>Test the resource state</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>Get all state instances</value>
+  </data>
+  <data name="DscSchema_HelpText" xml:space="preserve">
+    <value>Outputs schema of the resource</value>
+  </data>
+  <data name="DscResourceName_HelpText" xml:space="preserve">
+    <value>The name of the DSC resource to manage</value>
+  </data>
+  <data name="DscInput_HelpText" xml:space="preserve">
+    <value>The input for the DSC resource</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>The input for the {0} DSC operation is required</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
+    <value>DSC resource not found: {0}. Valid resources: {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
+  </data>
+  <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
+    <value>No operation specified. Use --help to see available operations.</value>
+  </data>
+  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
+    <value>DSC resource operation failed</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
+    <value>Indicates whether an instance is in the desired state</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionSettings" xml:space="preserve">
+    <value>The settings content</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionAction" xml:space="preserve">
+    <value>The action used to apply the settings</value>
+  </data>
   <data name="AuthenticationType_KeywordDescription" xml:space="preserve">
     <value>The type of authentication to use</value>
   </data>

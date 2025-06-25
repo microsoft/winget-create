@@ -62,6 +62,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         public static string Extension => Serialization.ManifestSerializer.AssociatedFileExtension;
 
         /// <summary>
+        /// Gets a value indicating whether or not the command accepts a GitHub token.
+        /// </summary>
+        public virtual bool AcceptsGitHubToken { get; } = true;
+
+        /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
         public virtual string GitHubToken { get; set; }

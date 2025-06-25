@@ -754,6 +754,141 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DSC v3 resource commands.
+        /// </summary>
+        public static string DscCommand_HelpText {
+            get {
+                return ResourceManager.GetString("DscCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get all state instances.
+        /// </summary>
+        public static string DscExport_HelpText {
+            get {
+                return ResourceManager.GetString("DscExport_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get the resource state.
+        /// </summary>
+        public static string DscGet_HelpText {
+            get {
+                return ResourceManager.GetString("DscGet_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The input for the DSC resource.
+        /// </summary>
+        public static string DscInput_HelpText {
+            get {
+                return ResourceManager.GetString("DscInput_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The input for the {0} DSC operation is required.
+        /// </summary>
+        public static string DscInputRequired_Message {
+            get {
+                return ResourceManager.GetString("DscInputRequired_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name of the DSC resource to manage.
+        /// </summary>
+        public static string DscResourceName_HelpText {
+            get {
+                return ResourceManager.GetString("DscResourceName_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DSC resource not found: {0}. Valid resources: {1}.
+        /// </summary>
+        public static string DscResourceNameNotFound_Message {
+            get {
+                return ResourceManager.GetString("DscResourceNameNotFound_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DSC resource operation failed.
+        /// </summary>
+        public static string DscResourceOperationFailed_Message {
+            get {
+                return ResourceManager.GetString("DscResourceOperationFailed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No operation specified. Use --help to see available operations..
+        /// </summary>
+        public static string DscResourceOperationNotSpecified_Message {
+            get {
+                return ResourceManager.GetString("DscResourceOperationNotSpecified_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The action used to apply the settings.
+        /// </summary>
+        public static string DscResourcePropertyDescriptionAction {
+            get {
+                return ResourceManager.GetString("DscResourcePropertyDescriptionAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates whether an instance is in the desired state.
+        /// </summary>
+        public static string DscResourcePropertyDescriptionInDesiredState {
+            get {
+                return ResourceManager.GetString("DscResourcePropertyDescriptionInDesiredState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The settings content.
+        /// </summary>
+        public static string DscResourcePropertyDescriptionSettings {
+            get {
+                return ResourceManager.GetString("DscResourcePropertyDescriptionSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Execute the Schema command.
+        /// </summary>
+        public static string DscSchema_HelpText {
+            get {
+                return ResourceManager.GetString("DscSchema_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the resource state.
+        /// </summary>
+        public static string DscSet_HelpText {
+            get {
+                return ResourceManager.GetString("DscSet_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test the resource state.
+        /// </summary>
+        public static string DscTest_HelpText {
+            get {
+                return ResourceManager.GetString("DscTest_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Would you like to edit your manifests?.
         /// </summary>
         public static string EditManifests_Message {
