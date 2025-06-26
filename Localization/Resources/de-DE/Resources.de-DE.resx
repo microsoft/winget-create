@@ -237,7 +237,9 @@
     <value>GitHub-Anmeldung fehlgeschlagen.</value>
   </data>
   <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Persönliches GitHub-Zugangs-Token, das für die direkte Übermittlung an das Windows-Paket-Manager-Repository verwendet wird. Wenn kein Token angegeben wird, fordert das Tool zur Eingabe der GitHub-Anmeldeinformationen auf.</value>
+    <value>Persönliches GitHub-Zugriffstoken, das für die direkte Übermittlung an das Windows-Paket-Manager-Repository verwendet wird. Wenn kein Token angegeben wird, fordert das Tool zur Eingabe von GitHub-Anmeldeinformationen auf.
+
+Warnung: Die Verwendung dieses Arguments kann dazu führen, dass das Token protokolliert wird. Erwägen Sie einen alternativen Ansatz: https://aka.ms/winget-create-token.</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Windows-Paket-Manager Manifest Creator v{0}</value>
@@ -652,6 +654,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>Das Token war ungültig. Generieren Sie bitte ein neues GitHub-Token und versuchen Sie es erneut.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Warnung: Die Verwendung des --token-Arguments kann dazu führen, dass das Token protokolliert wird. Alternativen Ansatz https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>Das Limit für die GitHub-API-Rate wurde überschritten. Um Ihr Ratenlimit zu erweitern, geben Sie Ihr GitHub-Token mit dem Kennzeichen '-t' an, oder speichern Sie eines mithilfe des Befehls 'token --store'.</value>
@@ -1394,5 +1399,37 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>Ist diese ausführbare Datei von DLLs oder anderen Dateien abhängig, die im ZIP-Archiv vorhanden sind?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>Das geforkte Repository konnte nicht mit den Upstreamcommits synchronisiert werden. Synchronisieren Sie Ihren Fork manuell, und versuchen Sie es noch mal.</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>Das verzweigte Repository konnte aufgrund eines Mergekonflikts nicht mit den Upstream Commits synchronisiert werden. Lösen Sie Konflikte manuell, und versuchen Sie es noch mal.</value>
+  </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>DSC v3-Ressourcenbefehle</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>Abrufen des Ressourcenstatus</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>Festlegen des Ressourcenstatus</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>Testen des Ressourcenstatus</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>Abrufen aller Zustandsinstanzen</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>Die Eingabe für den {0} DSC-Vorgang ist erforderlich.</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
+    <value>DSC-Ressource nicht gefunden: {0}. Gültige Ressourcen: {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
+  </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>Manifestüberprüfung wird übersprungen. Die CLI kann nur das YAML-Format überprüfen. Überprüfen Sie die Ausgabe manuell vor der Übermittlung.</value>
   </data>
 </root>

@@ -237,7 +237,9 @@
     <value>Сбой входа в GitHub.</value>
   </data>
   <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Токен личного доступа GitHub, используемый для прямой отправки в репозиторий диспетчера пакетов Windows. Если токен не предоставлен, инструмент запросит учетные данные для входа в GitHub.</value>
+    <value>Личный маркер доступа GitHub, используемый для прямой отправки в репозиторий Диспетчера пакетов Windows. Если маркер не предоставлен, инструмент запросит учетные данные для входа в GitHub.
+
+Предупреждение. Использование этого аргумента может привести к записи маркера в журнал. Рассмотрите альтернативный подход: https://aka.ms/winget-create-token.</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Средство создания манифестов Диспетчера пакетов Windows версии {0}</value>
@@ -652,6 +654,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>Недопустимый токен. Создайте новый токен GitHub и повторите попытку.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Предупреждение. Использование аргумента --token может привести к записи маркера в журнал. Рассмотрите альтернативный подход: https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>Превышено ограничение скорости API GitHub. Чтобы увеличить ограничение скорости, укажите токен GitHub с флагом "-t" или храните его с помощью команды "token --store".</value>
@@ -1394,5 +1399,40 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>Этот исполняемый файл зависит от DLL-библиотек или других файлов, которые находятся в ZIP-архиве?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>Не удалось синхронизировать разветвленный репозиторий с вышестоящими фиксациями. Синхронизируйте развилку репозитория вручную и попробуйте снова.</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>Не удалось синхронизировать вилку репозитория с вышестоящий из-за ошибки конфликт слияния. Устраните конфликты вручную и повторите попытку.</value>
+  </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>Команды ресурсов DSC v3</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>Получить состояние ресурса</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>Задать состояние ресурса</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>Проверьте состояние ресурса</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>Получить все экземпляры состояния</value>
+  </data>
+  <data name="DscResourceName_HelpText" xml:space="preserve">
+    <value>Имя ресурса DSC для управления</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>Для операции {0} DSC требуются входные данные</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
+    <value>Ресурс DSC не найден: {0}. Допустимые ресурсы: {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
+  </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>Пропуск проверки манифеста. CLI может проверять только формат YAML. Проверка выходных данных вручную перед отправкой.</value>
   </data>
 </root>

@@ -237,7 +237,9 @@
     <value>Échec de la connexion GitHub.</value>
   </data>
   <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Le jeton d’accès GitHub personnel utilisé pour l’envoi direct au référentiel du Gestionnaire de package Windows. Si aucun jeton n’est indiqué, l’outil demande des informations d’identification de connexion GitHub.</value>
+    <value>Jeton d’accès personnel GitHub utilisé pour la soumission directe au dépôt du Gestionnaire de package Windows. Si aucun jeton n’est fourni, l’outil demandera les informations d’identification de connexion GitHub.
+
+Avertissement : l’utilisation de cet argument peut entraîner la journalisation du jeton. Envisagez une autre approche à l’adresse https://aka.ms/winget-create-token.</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Créateur de manifeste du Gestionnaire de package Windows v{0}</value>
@@ -652,6 +654,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>Le jeton n’était pas valide. Veuillez générez un nouveau jeton GitHub et réessayez.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Avertissement : l’utilisation de l’argument --token peut entraîner la journalisation du jeton. Envisagez une autre approche https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>Limite de débit de l’API GitHub dépassée. Pour étendre votre limite de débit, fournissez le « -t » à votre jeton GitHub. marquer ou stocker un à l’aide du « jeton --store » commande.</value>
@@ -1394,5 +1399,40 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>Cet exécutable dépend-il de DLL ou d’autres fichiers présents dans l’archive zip ?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>Le dépôt fourchu n’a pas pu être synchronisé avec les validations en amont. Synchronisez votre dépôt manuellement et réessayez.</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>Le dépôt fourchu n’a pas pu être synchronisé avec les validations de amont en raison d’un conflit de fusion. Résolvez les conflits manuellement et réessayez.</value>
+  </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>Commandes de ressources DSC v3</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>Obtenir l’état de la ressource</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>Définir l’état de la ressource</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>Tester l’état de la ressource</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>Obtenir toutes les instances d’état</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>L’entrée pour l’opération DSC {0} est obligatoire</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
+    <value>Ressource DSC introuvable : {0}. Ressources valides : {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
+  </data>
+  <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
+    <value>Indique si un instance est dans l’état souhaité</value>
+  </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>Validation du manifeste ignorée. L’interface CLI peut uniquement valider le format YAML. Validez la sortie manuellement avant l’envoi.</value>
   </data>
 </root>
