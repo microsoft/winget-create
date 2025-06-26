@@ -79,9 +79,10 @@ You can use WingetCreate to update an existing WinGet manifest as part of your C
 
 You can view the [GitHub action](.github/workflows/publish.yml) utilized by this repository to publish the latest release of WinGet-Create to the Windows Package Manager Community repository. For reference, you may also see the following GitHub repositories that utilize a similar approach to update their manifests:
 
-- [Oh-My-Posh](https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/.github/workflows/winget.yml)
-- [PowerToys](https://github.com/microsoft/PowerToys/blob/main/.github/workflows/package-submissions.yml)
-- [Terminal](https://github.com/microsoft/terminal/blob/main/.github/workflows/winget.yml)
+- [JanDeDobbeleer/Oh-My-Posh](https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/.github/workflows/winget.yml)
+- [microsoft/edit](https://github.com/microsoft/edit/blob/main/.github/workflows/winget.yml)
+- [microsoft/PowerToys](https://github.com/microsoft/PowerToys/blob/main/.github/workflows/package-submissions.yml)
+- [microsoft/Terminal](https://github.com/microsoft/terminal/blob/main/.github/workflows/winget.yml)
 
 You can also check out this [episode of Open at Microsoft](https://learn.microsoft.com/en-us/shows/open-at-microsoft/wingetcreate-keeping-winget-packages-up-to-date) where we cover the same topic.
 
