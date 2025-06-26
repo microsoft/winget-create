@@ -224,7 +224,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     LocaleManifest newlocale = this.GenerateLocaleManifest(originalManifests, referenceLocaleManifest);
                     Console.WriteLine();
-                    ValidateManifestsInTempDir(originalManifests);
+                    ValidateManifestsInTempDir(originalManifests, this.Format);
                     originalManifests.LocaleManifests.Add(newlocale);
                     newLocales.Add(newlocale);
                 }
@@ -241,7 +241,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 string manifestDirectoryPath = SaveManifestDirToLocalPath(originalManifests, this.OutputDir);
 
-                if (ValidateManifest(manifestDirectoryPath))
+                if (ValidateManifest(manifestDirectoryPath, this.Format))
                 {
                     if (Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
                     {

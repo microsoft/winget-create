@@ -5,7 +5,7 @@
     <TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
     <AssemblyName>WingetCreateCLI</AssemblyName>
     <RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
-    <Version>1.9</Version>
+    <Version>1.10</Version>
     <Platforms>x64;x86</Platforms>
     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -81,7 +81,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
-    
+
   <!--Include VCLib binary dependencies-->  
   <ItemGroup Condition="'$(SelfContained)' == true">
     <None Update="msvcp140.dll">
@@ -96,11 +96,19 @@
   </ItemGroup>    
 
   <ItemGroup>
-      <SettingSchema Include="$(ProjectDir)\Schemas\settings.schema.0.1.json" ModelName="Settings" />
+    <SettingSchema Include="$(ProjectDir)\Schemas\settings.schema.0.1.json" ModelName="Settings" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(ProjectDir)\DscResources\microsoft.winget-create.*.dsc.resource.json">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <!--Generate settings manifest-->

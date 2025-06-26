@@ -240,7 +240,20 @@ namespace Microsoft.WingetCreateCLI
         {
             Type instanceType = typeof(T);
             string message = string.Format(Resources.FieldValueIs_Message, memberName);
-            Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
+
+            // TODO: Remove when updating the code to handle property name collisions.
+            // The proper way to handle this may be to append the model information
+            // something like "{modelName}_{propertyName}_KeywordDescription" e.g. "Installers_Scope_KeywordDescription" &
+            // "Installers_Authentication_MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" and updating all resource
+            // strings to follow this convention.
+            if (model.GetType() == typeof(MicrosoftEntraIdAuthenticationInfo) && memberName == "Scope")
+            {
+                Console.WriteLine(Resources.MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription);
+            }
+            else
+            {
+                Console.WriteLine(Resources.ResourceManager.GetString($"{memberName}_KeywordDescription"));
+            }
 
             if (instanceType == typeof(object))
             {

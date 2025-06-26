@@ -68,6 +68,7 @@ choco install wingetcreate
 | [Settings](doc/settings.md) | Command for editing the settings file configurations |
 | [Cache](doc/cache.md) | Command for managing downloaded installers stored in cache |
 | [Info](doc/info.md)      | Displays information about the client |
+| [Dsc](doc/dsc.md)      | DSC v3 resource commands |
 | [-?](doc/help.md)      | Displays command line help |
 
 Click on the individual commands to learn more.

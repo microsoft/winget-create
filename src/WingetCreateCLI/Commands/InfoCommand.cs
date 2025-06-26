@@ -20,6 +20,9 @@ namespace Microsoft.WingetCreateCLI.Commands
     [Verb("info", HelpText = "InfoCommand_HelpText", ResourceType = typeof(Resources))]
     public class InfoCommand : BaseCommand
     {
+        /// <inheritdoc/>
+        public override bool AcceptsGitHubToken => false;
+
         /// <summary>
         /// Executes the info command flow.
         /// </summary>
