@@ -45,7 +45,7 @@ namespace Microsoft.WingetCreateCore.Common
             this.github = new GitHubClient(new ProductHeaderValue(UserAgentName));
             if (githubApiToken != null)
             {
-                this.github.Credentials = new Credentials(githubApiToken, AuthenticationType.Bearer);
+                this.github.Credentials = new Credentials(githubApiToken, Octokit.AuthenticationType.Bearer);
             }
         }
 
@@ -62,7 +62,7 @@ namespace Microsoft.WingetCreateCore.Common
             string jwtToken = GetJwtToken(gitHubAppPrivateKeyPem, gitHubAppId);
 
             var github = new GitHubClient(new ProductHeaderValue(UserAgentName));
-            github.Credentials = new Credentials(jwtToken, AuthenticationType.Bearer);
+            github.Credentials = new Credentials(jwtToken, Octokit.AuthenticationType.Bearer);
 
             var installation = await github.GitHubApps.GetRepositoryInstallationForCurrent(wingetRepoOwner, wingetRepo);
             var response = await github.GitHubApps.CreateInstallationToken(installation.Id);
@@ -243,7 +243,7 @@ namespace Microsoft.WingetCreateCore.Common
         public async Task<bool> PopulateGitHubMetadata(Manifests manifests, string serializerFormat)
         {
             // Only populate metadata if we have a valid GitHub token.
-            if (this.github.Credentials.AuthenticationType != AuthenticationType.Anonymous)
+            if (this.github.Credentials.AuthenticationType != Octokit.AuthenticationType.Anonymous)
             {
                 return await GitHubManifestMetadata.PopulateManifestMetadata(manifests, serializerFormat, this.github);
             }
