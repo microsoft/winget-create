@@ -237,7 +237,9 @@
     <value>GitHub 登录失败。</value>
   </data>
   <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>GitHub 个人访问令牌，用于直接提交到 Windows 程序包管理器库。如果未提供任何令牌，工具将提示 GitHub 登录凭据。</value>
+    <value>用于直接提交到 Windows 程序包管理器存储库的 GitHub 个人访问令牌。如果未提供令牌，工具将提示输入 GitHub 登录凭据。
+
+警告: 使用此参数可能会导致令牌被记录。请考虑替代方法 https://aka.ms/winget-create-token。</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Windows 程序包管理器清单创建程序 v{0}</value>
@@ -652,6 +654,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>令牌无效。请生成新的 GitHub 令牌，然后重试。</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>警告： 使用 --token 参数可能会导致记录令牌。考虑替代方法 https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>已超过 GitHub API 速率限制。要提高速率限制，请向 GitHub 令牌提供 “-t” 标记或使用 “token --store” 命令存储一个标记。</value>
@@ -1394,5 +1399,76 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>此可执行文件是否依赖于 dLL 或 zip 存档中存在的任何其他文件?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>分叉存储库无法与上游提交同步。请手动同步分叉，然后重试。</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>由于合并冲突，分叉存储库无法与上游提交同步。请手动解决冲突，然后重试。</value>
+  </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>DSC v3 资源命令</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>获取资源状态</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>设置资源状态</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>测试资源状态</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>获取所有状态实例</value>
+  </data>
+  <data name="DscSchema_HelpText" xml:space="preserve">
+    <value>资源的输出架构</value>
+  </data>
+  <data name="DscResourceName_HelpText" xml:space="preserve">
+    <value>要管理的 DSC 资源的名称</value>
+  </data>
+  <data name="DscInput_HelpText" xml:space="preserve">
+    <value>DSC 资源的输入</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>{0} DSC作的输入是必需的</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
+    <value>找不到 DSC 资源： {0}。有效资源： {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
+  </data>
+  <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
+    <value>未指定任何操作。使用 --help 查看可用操作。</value>
+  </data>
+  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
+    <value>DSC 资源操作失败</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
+    <value>指示实例是否处于所需状态</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionSettings" xml:space="preserve">
+    <value>设置内容</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionAction" xml:space="preserve">
+    <value>用于应用设置的操作</value>
+  </data>
+  <data name="AuthenticationType_KeywordDescription" xml:space="preserve">
+    <value>要使用的身份验证类型</value>
+  </data>
+  <data name="Resource_KeywordDescription" xml:space="preserve">
+    <value>用于Microsoft Entra ID 身份验证的资源</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_KeywordDescription" xml:space="preserve">
+    <value>Microsoft Entra ID 身份验证所需的信息</value>
+  </data>
+  <data name="Authentication_KeywordDescription" xml:space="preserve">
+    <value>安全专用源的身份验证信息</value>
+  </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>正在跳过清单验证。CLI 只能验证 YAML 格式。提交前手动验证输出。</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
+    <value>Microsoft Entra ID 身份验证的作用域值</value>
   </data>
 </root>

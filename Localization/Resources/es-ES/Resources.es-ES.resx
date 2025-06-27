@@ -237,7 +237,9 @@
     <value>Error de inicio de sesión de GitHub.</value>
   </data>
   <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Token de acceso personal de GitHub usado para el envío directo al repositorio del administrador de paquetes de Windows. Si no se proporciona ningún token, la herramienta le pedirá credenciales de inicio de sesión de GitHub.</value>
+    <value>Token de acceso personal de GitHub utilizado para el envío directo al repositorio del Administrador de paquetes de Windows. Si no se proporciona ningún token, la herramienta solicitará las credenciales de inicio de sesión de GitHub.
+
+Advertencia: El uso de este argumento puede resultar en que se registre el token. Considere un enfoque alternativo en https://aka.ms/winget-create-token.</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Creador de manifiesto de Administrador de paquetes de Windows v{0}</value>
@@ -652,6 +654,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>El token no era válido. Genere un nuevo token de GitHub y vuelva a intentarlo.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Advertencia: el uso del argumento --token puede dar lugar a que se registre el token. Considere la posibilidad de usar un enfoque alternativo https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>Se superó el límite de velocidad de api de GitHub. Para ampliar el límite de velocidad, proporcione el token de GitHub con la marca "-t" o almacene uno mediante el comando "token --store".</value>
@@ -1394,5 +1399,76 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>¿Este ejecutable depende de archivos DLL o de otros archivos presentes en el archivo zip?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>No se pudo sincronizar el repositorio bifurcado con las confirmaciones ascendentes. Sincronice la bifurcación manualmente e inténtelo de nuevo.</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>No se pudo sincronizar el repositorio bifurcado con las confirmaciones ascendentes debido a un conflicto de fusión mediante combinación. Resuelva los conflictos manualmente e inténtelo de nuevo.</value>
+  </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>Comandos de recursos de DSC v3</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>Obtener el estado del recurso</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>Establecer el estado del recurso</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>Probar el estado del recurso</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>Obtener todas las instancias de estado</value>
+  </data>
+  <data name="DscSchema_HelpText" xml:space="preserve">
+    <value>Esquema de salida del recurso</value>
+  </data>
+  <data name="DscResourceName_HelpText" xml:space="preserve">
+    <value>Nombre del recurso dsc que se va a administrar</value>
+  </data>
+  <data name="DscInput_HelpText" xml:space="preserve">
+    <value>Entrada para el recurso DSC</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>Se requiere la entrada para la operación de DSC de {0}.</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
+    <value>Recurso DSC no encontrado: {0}. Recursos válidos: {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
+  </data>
+  <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
+    <value>No se especificó ninguna operación. Utilice --help para ver las operaciones disponibles.</value>
+  </data>
+  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
+    <value>La operación del recurso DSC ha fallado</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
+    <value>Indica si una instancia se encuentra en el estado deseado</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionSettings" xml:space="preserve">
+    <value>Contenido de la configuración</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionAction" xml:space="preserve">
+    <value>La acción utilizada para aplicar la configuración</value>
+  </data>
+  <data name="AuthenticationType_KeywordDescription" xml:space="preserve">
+    <value>Tipo de autenticación a utilizar</value>
+  </data>
+  <data name="Resource_KeywordDescription" xml:space="preserve">
+    <value>Recurso que se utilizará para la autenticación de Microsoft Entra ID</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_KeywordDescription" xml:space="preserve">
+    <value>Información necesaria para la autenticación de Microsoft Entra ID</value>
+  </data>
+  <data name="Authentication_KeywordDescription" xml:space="preserve">
+    <value>Información de autenticación para fuentes privadas seguras</value>
+  </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>Omitiendo validación del manifiesto. La CLI solo puede validar el formato YAML. Valide la salida manualmente antes del envío.</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
+    <value>Valor de ámbito para la autenticación de Microsoft Entra ID</value>
   </data>
 </root>
