@@ -237,7 +237,9 @@
     <value>Сбой входа в GitHub.</value>
   </data>
   <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Токен личного доступа GitHub, используемый для прямой отправки в репозиторий диспетчера пакетов Windows. Если токен не предоставлен, инструмент запросит учетные данные для входа в GitHub.</value>
+    <value>Личный маркер доступа GitHub, используемый для прямой отправки в репозиторий Диспетчера пакетов Windows. Если маркер не предоставлен, инструмент запросит учетные данные для входа в GitHub.
+
+Предупреждение. Использование этого аргумента может привести к записи маркера в журнал. Рассмотрите альтернативный подход: https://aka.ms/winget-create-token.</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Средство создания манифестов Диспетчера пакетов Windows версии {0}</value>
@@ -652,6 +654,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>Недопустимый токен. Создайте новый токен GitHub и повторите попытку.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Предупреждение. Использование аргумента --token может привести к записи маркера в журнал. Рассмотрите альтернативный подход: https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>Превышено ограничение скорости API GitHub. Чтобы увеличить ограничение скорости, укажите токен GitHub с флагом "-t" или храните его с помощью команды "token --store".</value>
@@ -1394,5 +1399,76 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>Этот исполняемый файл зависит от DLL-библиотек или других файлов, которые находятся в ZIP-архиве?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>Не удалось синхронизировать разветвленный репозиторий с вышестоящими фиксациями. Синхронизируйте развилку репозитория вручную и попробуйте снова.</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>Не удалось синхронизировать вилку репозитория с вышестоящий из-за ошибки конфликт слияния. Устраните конфликты вручную и повторите попытку.</value>
+  </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>Команды ресурсов DSC v3</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>Получить состояние ресурса</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>Задать состояние ресурса</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>Проверьте состояние ресурса</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>Получить все экземпляры состояния</value>
+  </data>
+  <data name="DscSchema_HelpText" xml:space="preserve">
+    <value>Схема выходных данных ресурса</value>
+  </data>
+  <data name="DscResourceName_HelpText" xml:space="preserve">
+    <value>Имя ресурса DSC для управления</value>
+  </data>
+  <data name="DscInput_HelpText" xml:space="preserve">
+    <value>Входные данные для ресурса DSC</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>Для операции {0} DSC требуются входные данные</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
+    <value>Ресурс DSC не найден: {0}. Допустимые ресурсы: {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
+  </data>
+  <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
+    <value>Операция не указана. Используйте параметр --help для просмотра доступных операций.</value>
+  </data>
+  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
+    <value>Сбой операции с ресурсом DSC</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
+    <value>Указывает, находится ли экземпляр в желаемом состоянии</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionSettings" xml:space="preserve">
+    <value>Содержимое настроек</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionAction" xml:space="preserve">
+    <value>Действие, используемое для применения настроек</value>
+  </data>
+  <data name="AuthenticationType_KeywordDescription" xml:space="preserve">
+    <value>Тип используемой проверки подлинности</value>
+  </data>
+  <data name="Resource_KeywordDescription" xml:space="preserve">
+    <value>Ресурс, используемый для проверки подлинности Microsoft Entra ID</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_KeywordDescription" xml:space="preserve">
+    <value>Информация, необходимая для проверки подлинности Microsoft Entra ID</value>
+  </data>
+  <data name="Authentication_KeywordDescription" xml:space="preserve">
+    <value>Сведения о проверке подлинности для защищенных частных источников</value>
+  </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>Пропуск проверки манифеста. CLI может проверять только формат YAML. Проверка выходных данных вручную перед отправкой.</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
+    <value>Значение области для проверки подлинности Microsoft Entra ID</value>
   </data>
 </root>

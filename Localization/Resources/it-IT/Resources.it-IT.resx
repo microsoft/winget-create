@@ -237,7 +237,9 @@
     <value>Accesso a GitHub non riuscito.</value>
   </data>
   <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>Token di accesso personale GitHub usato per l'invio diretto a Windows Gestione pacchetti reamo. Se non viene specificato alcun token, lo strumento richiederà le credenziali di accesso GitHub.</value>
+    <value>Token di accesso personale di GitHub usato per l'invio diretto al repository Gestione pacchetti Windows. Se non viene specificato un token, lo strumento chiederà le credenziali di accesso a GitHub.
+
+Avviso: l'uso di questo argomento può comportare la registrazione del token. Valuta un approccio alternativo: https://aka.ms/winget-create-token.</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Autore del manifesto di Gestione pacchetti Windows v{0}</value>
@@ -652,6 +654,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>Il token non è valido. Generare un nuovo token GitHub e riprovare.</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>Avviso: se si utilizza l'argomento --token, il token potrebbe essere registrato. Considera un approccio alternativo https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>Limite di velocità GitHub superato. Per estendere il limite di velocità, specificare il token GitHub con il flag '-t' o archiviarne uno usando il comando 'token --store'.</value>
@@ -1394,5 +1399,76 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>L'eseguibile dipende dalle DLL o da altri file presenti nell'archivio ZIP?</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>Non è possibile sincronizzare il repository con fork con i commit upstream. Sincronizza manualmente il fork e riprova.</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>Non è stato possibile sincronizzare il repository con fork con i commit upstream a causa di un conflitto di merge. Risolvere i conflitti manualmente e riprovare.</value>
+  </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>Comandi delle risorse DSC v3</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>Recupera stato della risorsa</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>Imposta stato della risorsa</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>Testa stato della risorsa</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>Recupera tutte le istanze di stato</value>
+  </data>
+  <data name="DscSchema_HelpText" xml:space="preserve">
+    <value>Schema di output della risorsa</value>
+  </data>
+  <data name="DscResourceName_HelpText" xml:space="preserve">
+    <value>Nome della risorsa DSC da gestire</value>
+  </data>
+  <data name="DscInput_HelpText" xml:space="preserve">
+    <value>Input per la risorsa DSC</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>L'input per l'operazione DSC {0} è obbligatorio</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
+    <value>Risorsa DSC non trovata: {0}. Risorse valide: {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
+  </data>
+  <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
+    <value>Nessuna operazione specificata. Usa --help per visualizzare le operazioni disponibili.</value>
+  </data>
+  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
+    <value>Operazione sulla risorsa DSC non riuscita</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
+    <value>Indica se un'istanza si trova nello stato desiderato</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionSettings" xml:space="preserve">
+    <value>Contenuto delle impostazioni</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionAction" xml:space="preserve">
+    <value>Azione utilizzata per applicare le impostazioni</value>
+  </data>
+  <data name="AuthenticationType_KeywordDescription" xml:space="preserve">
+    <value>Tipo di autenticazione da utilizzare</value>
+  </data>
+  <data name="Resource_KeywordDescription" xml:space="preserve">
+    <value>Risorsa da utilizzare per l'autenticazione con Microsoft Entra ID</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_KeywordDescription" xml:space="preserve">
+    <value>Informazioni necessarie per l'autenticazione con Microsoft Entra ID</value>
+  </data>
+  <data name="Authentication_KeywordDescription" xml:space="preserve">
+    <value>Informazioni di autenticazione per origini private protette</value>
+  </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>La convalida del manifesto verrà ignorata. L'interfaccia della riga di comando può convalidare solo il formato YAML. Convalidare manualmente l'output prima dell'invio.</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
+    <value>Valore dell'ambito per l'autenticazione con ID Microsoft Entra</value>
   </data>
 </root>

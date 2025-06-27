@@ -237,7 +237,9 @@
     <value>GitHub 登入失敗。</value>
   </data>
   <data name="GitHubToken_HelpText" xml:space="preserve">
-    <value>GitHub 個人存取權杖，用於直接提交至 Windows 封裝管理員存放庫。如果未提供權杖，工具會提示您輸入 GitHub 登入認證。</value>
+    <value>用於直接提交至 Windows 封裝管理員存放庫的 GitHub 個人存取權杖。如果未提供權杖，工具將提示您輸入 GitHub 登入認證。
+
+警告: 使用此引數可能會導致權杖被記錄。請考慮使用替代方法 https://aka.ms/winget-create-token。</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Windows 封裝管理員資訊清單建立者 v{0}</value>
@@ -652,6 +654,9 @@
   </data>
   <data name="InvalidGitHubToken_Message" xml:space="preserve">
     <value>權杖無效。請產生新的 GitHub 權杖，然後再試一次。</value>
+  </data>
+  <data name="GitHubTokenWarning_Message" xml:space="preserve">
+    <value>警告： 使用 --token 自變數可能會導致標記被記錄。請考慮替代方法 https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
     <value>已超過 GitHub API 速率限制。若要擴充您的速率限制，請提供具 '-t' 旗標的 GitHub 權杖，或使用 'token --store'命令儲存。</value>
@@ -1394,5 +1399,76 @@
   </data>
   <data name="ConfirmZippedBinary_Message" xml:space="preserve">
     <value>此可執行檔是否相依於 DLL 或 ZIP 封存中存在的任何其他檔案？</value>
+  </data>
+  <data name="SyncForkFailed_Message" xml:space="preserve">
+    <value>分叉存放庫無法與上游認可同步。手動同步您的分叉，然後再試一次。</value>
+  </data>
+  <data name="BranchMergeConflict_Message" xml:space="preserve">
+    <value>分叉存放庫因為合併衝突而無法與上游認可同步。請手動解決衝突，然後再試一次。</value>
+  </data>
+  <data name="DscCommand_HelpText" xml:space="preserve">
+    <value>DSC v3 資源命令</value>
+  </data>
+  <data name="DscGet_HelpText" xml:space="preserve">
+    <value>取得資源狀態</value>
+  </data>
+  <data name="DscSet_HelpText" xml:space="preserve">
+    <value>設定資源狀態</value>
+  </data>
+  <data name="DscTest_HelpText" xml:space="preserve">
+    <value>測試資源狀態</value>
+  </data>
+  <data name="DscExport_HelpText" xml:space="preserve">
+    <value>取得所有狀態執行個體</value>
+  </data>
+  <data name="DscSchema_HelpText" xml:space="preserve">
+    <value>資源的輸出結構描述</value>
+  </data>
+  <data name="DscResourceName_HelpText" xml:space="preserve">
+    <value>要管理之 DSC 資源的名稱</value>
+  </data>
+  <data name="DscInput_HelpText" xml:space="preserve">
+    <value>DSC 資源的輸入</value>
+  </data>
+  <data name="DscInputRequired_Message" xml:space="preserve">
+    <value>需要 {0} DSC 作業的輸入</value>
+    <comment>{Locked="{0}"} {0} is replaced by the DSC operation name</comment>
+  </data>
+  <data name="DscResourceNameNotFound_Message" xml:space="preserve">
+    <value>找不到 DSC 資源： {0}。有效資源： {1}</value>
+    <comment>{Locked="{0}", "{1}"} {0} is replaced by the DSC resource name, {1} is replaced by the list of valid resources</comment>
+  </data>
+  <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
+    <value>未指定任何作業。使用 --help 查看可用的作業。</value>
+  </data>
+  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
+    <value>DSC 資源作業失敗</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
+    <value>指出實例是否處於預期狀態</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionSettings" xml:space="preserve">
+    <value>設定內容</value>
+  </data>
+  <data name="DscResourcePropertyDescriptionAction" xml:space="preserve">
+    <value>用來套用設定的動作</value>
+  </data>
+  <data name="AuthenticationType_KeywordDescription" xml:space="preserve">
+    <value>要使用的驗證類型</value>
+  </data>
+  <data name="Resource_KeywordDescription" xml:space="preserve">
+    <value>用於 Microsoft Entra標識碼驗證的資源</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_KeywordDescription" xml:space="preserve">
+    <value>Microsoft Entra ID 驗證所需的資訊</value>
+  </data>
+  <data name="Authentication_KeywordDescription" xml:space="preserve">
+    <value>安全私人來源的驗證資訊</value>
+  </data>
+  <data name="SkippingManifestValidation_Message" xml:space="preserve">
+    <value>正在略過指令清單驗證。CLI 只能驗證 YAML 格式。提交前手動驗證輸出。</value>
+  </data>
+  <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
+    <value>Microsoft Entra識別碼驗證的範圍值</value>
   </data>
 </root>
