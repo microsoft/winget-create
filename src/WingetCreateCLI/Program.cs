@@ -62,7 +62,8 @@ namespace Microsoft.WingetCreateCLI
                 DisplayParsingErrors(parserResult as NotParsed<object>);
                 return args.Any() ? 1 : 0;
             }
-            else if (command is not DscCommand)
+
+            if (command is not DscCommand)
             {
                 // For DSC commands, we do not want to display the header to
                 // ensure the output is a valid JSON.
