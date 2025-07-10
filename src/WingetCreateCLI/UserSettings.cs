@@ -175,14 +175,12 @@ namespace Microsoft.WingetCreateCLI
         {
             if (!File.Exists(SettingsJsonPath))
             {
-                // Use the error stream to ensure DSC command output remains in
-                // the expected format.
-                Console.Error.WriteLine(Resources.TelemetrySettings_Message);
-                Console.Error.WriteLine("------------------");
-                Console.Error.WriteLine(Resources.TelemetryJustification_Message);
-                Console.Error.WriteLine(Resources.TelemetryAnonymous_Message);
-                Console.Error.WriteLine(Resources.TelemetryEnabledByDefault_Message);
-                Console.Error.WriteLine();
+                Console.WriteLine(Resources.TelemetrySettings_Message);
+                Console.WriteLine("------------------");
+                Console.WriteLine(Resources.TelemetryJustification_Message);
+                Console.WriteLine(Resources.TelemetryAnonymous_Message);
+                Console.WriteLine(Resources.TelemetryEnabledByDefault_Message);
+                Console.WriteLine();
                 TelemetryDisabled = false;
             }
         }
