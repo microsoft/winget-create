@@ -11,6 +11,7 @@ namespace Microsoft.WingetCreateCore
     using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Security.Cryptography;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -46,7 +47,13 @@ namespace Microsoft.WingetCreateCore
             "nullsoft",
         };
 
-        private static HttpClient httpClient = new HttpClient();
+        private static HttpClient httpClient = new()
+        {
+            DefaultRequestHeaders =
+            {
+                UserAgent = { new ProductInfoHeaderValue("WinGetCreate", Utils.GetEntryAssemblyVersion()) },
+            },
+        };
 
         private enum MachineType
         {
