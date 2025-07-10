@@ -175,6 +175,8 @@ namespace Microsoft.WingetCreateCLI
         {
             if (!File.Exists(SettingsJsonPath))
             {
+                // Use the error stream to ensure DSC command output remains in
+                // the expected format.
                 Console.Error.WriteLine(Resources.TelemetrySettings_Message);
                 Console.Error.WriteLine("------------------");
                 Console.Error.WriteLine(Resources.TelemetryJustification_Message);
