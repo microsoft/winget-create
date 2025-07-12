@@ -308,9 +308,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Downloads the package file from the provided installer url.
         /// </summary>
-        /// /// <param name="installerUrl"> Installer Url to be downloaded. </param>
+        /// <param name="installerUrl">Installer Url to be downloaded. </param>
+        /// <param name="allowHttp">The flag indicating whether to allow HTTP downloads.</param>
         /// <returns>Package file.</returns>
-        protected static async Task<string> DownloadPackageFile(string installerUrl)
+        protected static async Task<string> DownloadPackageFile(string installerUrl, bool allowHttp)
         {
             Logger.InfoLocalized(nameof(Resources.DownloadInstaller_Message), installerUrl);
 
@@ -332,7 +333,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                string packageFilePath = await PackageParser.DownloadFileAsync(installerUrl);
+                string packageFilePath = await PackageParser.DownloadFileAsync(installerUrl, allowHttp);
                 TelemetryManager.Log.WriteEvent(new DownloadInstallerEvent { IsSuccessful = true });
                 DownloadedInstallers.Add(installerUrl, packageFilePath);
                 return packageFilePath;
@@ -375,6 +376,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                 else if (e is TaskCanceledException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.DownloadConnectionTimeout_Error));
+                    return null;
+                }
+                else if (e is NotSupportedException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadProtocolNotSupported_Error));
+                    return null;
+                }
+                else if (e is DownloadHttpsOnlyException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadHttpsOnly_Error));
                     return null;
                 }
                 else
