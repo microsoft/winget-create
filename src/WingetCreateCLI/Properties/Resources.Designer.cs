@@ -754,7 +754,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only HTTPS URLs are supported without &quot;--allow-unsecure-downloads&quot;.
+        ///   Looks up a localized string similar to Only HTTPS URLs are supported without &quot;--allow-unsecure-downloads&quot;..
         /// </summary>
         public static string DownloadHttpsOnly_Error {
             get {
