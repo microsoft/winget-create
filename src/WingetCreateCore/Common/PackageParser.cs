@@ -1120,14 +1120,14 @@ namespace Microsoft.WingetCreateCore
                 throw new InvalidOperationException();
             }
 
-            if (!allowHttp && downloadUrl.Scheme != Uri.UriSchemeHttps)
-            {
-                throw new DownloadHttpsOnlyException();
-            }
-
             if (downloadUrl.Scheme != Uri.UriSchemeHttp && downloadUrl.Scheme != Uri.UriSchemeHttps)
             {
                 throw new NotSupportedException();
+            }
+
+            if (!allowHttp && downloadUrl.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new DownloadHttpsOnlyException();
             }
         }
     }
