@@ -821,12 +821,11 @@ namespace Microsoft.WingetCreateCore
         {
             try
             {
-                ManifestResource rc = new ManifestResource();
+                XmlDocument manifest = GetManifest(path);
                 InstallerType? installerTypeEnum;
                 try
                 {
-                    rc.LoadFrom(path);
-                    string installerType = rc.Manifest.DocumentElement
+                    string installerType = manifest?.DocumentElement?
                         .GetElementsByTagName("description")
                         .Cast<XmlNode>()
                         .FirstOrDefault()?
@@ -1115,6 +1114,27 @@ namespace Microsoft.WingetCreateCore
         private static string RemoveInvalidCharsFromString(string value)
         {
             return Regex.Replace(value, InvalidCharacters, string.Empty);
+        }
+
+        /// <summary>
+        /// Gets the manifest from the specified path.</summary>
+        /// <param name="path">The path to the manifest.</param>
+        /// <returns>XmlDocument of the manifest.</returns>
+        private static XmlDocument GetManifest(string path)
+        {
+            var rc = new ManifestResource();
+            var manifest = new XmlDocument();
+
+            try
+            {
+                rc.LoadFrom(path);
+                manifest = rc.Manifest;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return manifest;
         }
     }
 }
