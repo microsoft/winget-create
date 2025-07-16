@@ -1472,7 +1472,7 @@ Warning: Using this argument may result in the token being logged. Consider an a
     <value>The scope value for Microsoft Entra Id authentication</value>
   </data>
   <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
-    <value>Only HTTPS URL are supported for downloads. Use the "--allow-unsecure-downloads" option to allow HTTP URLs.</value>
+    <value>Only HTTPS URLs are supported for downloads. Use the "--allow-unsecure-downloads" option to allow HTTP URLs.</value>
   </data>
   <data name="DownloadHttpsOnly_Error" xml:space="preserve">
     <value>Only HTTPS URLs are supported without "--allow-unsecure-downloads".</value>

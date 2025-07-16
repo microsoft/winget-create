@@ -27,6 +27,7 @@ The following arguments are available:
 | Argument  | Description |
 |--------------|-------------|
 | **-o,--out** |  The output directory where the newly created manifests will be saved locally |
+| **--allow-unsecure-downloads** | Allow unsecure downloads (HTTP) for this operation. |
 | **-f,--format** |  Output format of the manifest. Default is "yaml". |
 | **-t,--token**  | GitHub personal access token used for direct submission to the Windows Package Manager repo. <br/>⚠️ _Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token._ |
 | **-?, --help** |  Gets additional help on this command |

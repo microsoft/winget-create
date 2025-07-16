@@ -772,7 +772,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only HTTPS URL are supported for downloads. Use the &quot;--allow-unsecure-downloads&quot; option to allow HTTP URLs..
+        ///   Looks up a localized string similar to Only HTTPS URLs are supported for downloads. Use the &quot;--allow-unsecure-downloads&quot; option to allow HTTP URLs..
         /// </summary>
         public static string DownloadProtocolNotSupported_Error {
             get {
