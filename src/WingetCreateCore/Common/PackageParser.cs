@@ -129,7 +129,7 @@ namespace Microsoft.WingetCreateCore
             while (response.StatusCode == System.Net.HttpStatusCode.Redirect && redirectCount < 2)
             {
                 var redirectUri = response.Headers.Location;
-                ValidateUrl(url, allowHttp);
+                ValidateUrl(redirectUri, allowHttp);
                 response = await httpClient.GetAsync(redirectUri, HttpCompletionOption.ResponseHeadersRead);
                 redirectCount++;
             }
