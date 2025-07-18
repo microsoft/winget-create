@@ -169,6 +169,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allow unsecure downloads (HTTP) for this operation..
+        /// </summary>
+        public static string AllowUnsecureDownloads_HelpText {
+            get {
+                return ResourceManager.GetString("AllowUnsecureDownloads_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The manifest creation command line utility generates manifest for submitting apps to the Windows Package Manager repo..
         /// </summary>
         public static string AppDescription_HelpText {
@@ -745,11 +754,29 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only HTTPS URLs are supported without &quot;--allow-unsecure-downloads&quot;..
+        /// </summary>
+        public static string DownloadHttpsOnly_Error {
+            get {
+                return ResourceManager.GetString("DownloadHttpsOnly_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloading and parsing: {0}....
         /// </summary>
         public static string DownloadInstaller_Message {
             get {
                 return ResourceManager.GetString("DownloadInstaller_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only HTTPS URLs are supported for downloads. Use the &quot;--allow-unsecure-downloads&quot; option to allow HTTP URLs..
+        /// </summary>
+        public static string DownloadProtocolNotSupported_Error {
+            get {
+                return ResourceManager.GetString("DownloadProtocolNotSupported_Error", resourceCulture);
             }
         }
         
@@ -862,7 +889,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Execute the Schema command.
+        ///   Looks up a localized string similar to Outputs schema of the resource.
         /// </summary>
         public static string DscSchema_HelpText {
             get {

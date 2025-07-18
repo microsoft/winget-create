@@ -139,7 +139,7 @@ namespace Microsoft.WingetCreateTests
         {
             string url = $"https://fakedomain.com/{filename}";
             SetMockHttpResponseContent(filename);
-            string downloadedPath = PackageParser.DownloadFileAsync(url).Result;
+            string downloadedPath = PackageParser.DownloadFileAsync(url, false).Result;
             return downloadedPath;
         }
 

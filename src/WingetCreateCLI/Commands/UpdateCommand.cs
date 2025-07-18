@@ -122,6 +122,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public override ManifestFormat Format { get => base.Format; set => base.Format = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to allow unsecure downloads.
+        /// </summary>
+        [Option("allow-unsecure-downloads", Required = false, HelpText = "AllowUnsecureDownloads_HelpText", ResourceType = typeof(Resources))]
+        public bool AllowUnsecureDownloads { get; set; }
+
+        /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
         [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
@@ -406,7 +412,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var installerUpdate in installerMetadataList)
             {
-                string packageFile = await DownloadPackageFile(installerUpdate.InstallerUrl);
+                string packageFile = await DownloadPackageFile(installerUpdate.InstallerUrl, this.AllowUnsecureDownloads);
                 if (string.IsNullOrEmpty(packageFile))
                 {
                     return null;
@@ -1005,7 +1011,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 string url = Prompt.Input<string>(Resources.NewInstallerUrl_Message, null, null, new[] { FieldValidation.ValidateProperty(newInstaller, nameof(Installer.InstallerUrl)) });
 
-                string packageFile = await DownloadPackageFile(url);
+                string packageFile = await DownloadPackageFile(url, this.AllowUnsecureDownloads);
                 string archivePath = null;
 
                 if (string.IsNullOrEmpty(packageFile))
