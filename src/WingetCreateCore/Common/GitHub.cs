@@ -340,7 +340,6 @@ namespace Microsoft.WingetCreateCore.Common
             {
                 var retryPolicy = Policy
                     .Handle<ApiException>()
-                    .Or<NonFastForwardException>()
                     .Or<GenericSyncFailureException>()
                     .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
 
@@ -349,9 +348,6 @@ namespace Microsoft.WingetCreateCore.Common
                     // Related issue: https://github.com/microsoft/winget-create/issues/282
                     // There is a known issue where a reference is unable to be created if the fork is behind by too many commits.
                     // Always attempt to sync fork in order to mitigate the possibility of this scenario occurring.
-                    // If the fork is behind by too many commits, syncing will also fail with a NotFoundException.
-                    // Updating the fork can fail if it is a non-fast forward update, but this should not be blocking as pull request submission can still proceed.
-                    // If creating a reference fails, that means syncing the fork also failed, therefore the user will need to manually sync their repo regardless.
                     if (submitToFork)
                     {
                         await this.UpdateForkedRepoWithUpstreamCommits(repo);
@@ -475,15 +471,8 @@ namespace Microsoft.WingetCreateCore.Common
             var upstream = forkedRepo.Parent;
             var compareResult = await this.github.Repository.Commit.Compare(upstream.Id, upstream.DefaultBranch, $"{forkedRepo.Owner.Login}:{forkedRepo.DefaultBranch}");
 
-            // Check to ensure that the update is only a fast-forward update.
             if (compareResult.BehindBy > 0)
             {
-                int commitsAheadBy = compareResult.AheadBy;
-                if (commitsAheadBy > 0)
-                {
-                    throw new NonFastForwardException(commitsAheadBy);
-                }
-
                 // Octokit .NET doesn't support sync fork endpoint, so we make a direct call to the GitHub API.
                 // Tracking issue for the request: https://github.com/octokit/octokit.net/issues/2989
                 HttpClient httpClient = new HttpClient();
