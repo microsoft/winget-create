@@ -1441,9 +1441,6 @@ Aviso: o uso desse argumento pode fazer com que o token seja registrado. Consid
   <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
     <value>Nenhuma operação especificada. Use --help para ver as operações disponíveis.</value>
   </data>
-  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
-    <value>Falha na operação do recurso DSC</value>
-  </data>
   <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
     <value>Indica se uma instância está no estado desejado</value>
   </data>

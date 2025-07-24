@@ -3,7 +3,6 @@
 
 namespace Microsoft.WingetCreateCLI.Commands.DscCommands;
 
-using Microsoft.WingetCreateCLI.Logging;
 using Microsoft.WingetCreateCLI.Models.DscModels;
 using Microsoft.WingetCreateCLI.Properties;
 using Newtonsoft.Json.Linq;
@@ -29,7 +28,7 @@ public class DscSettingsCommand : BaseDscCommand
     {
         if (input == null)
         {
-            Logger.ErrorLocalized(nameof(Resources.DscInputRequired_Message), nameof(this.Set));
+            WriteMessageOutputLine(DscMessageLevel.Error, string.Format(Resources.DscInputRequired_Message, nameof(this.Set)));
             return false;
         }
 
@@ -45,8 +44,8 @@ public class DscSettingsCommand : BaseDscCommand
             data.Set();
         }
 
-        this.WriteJsonOutputLine(data.Output.ToJson());
-        this.WriteJsonOutputLine(diff);
+        WriteJsonOutputLine(data.Output.ToJson());
+        WriteJsonOutputLine(diff);
         return true;
     }
 
@@ -55,7 +54,7 @@ public class DscSettingsCommand : BaseDscCommand
     {
         if (input == null)
         {
-            Logger.ErrorLocalized(nameof(Resources.DscInputRequired_Message), nameof(this.Test));
+            WriteMessageOutputLine(DscMessageLevel.Error, string.Format(Resources.DscInputRequired_Message, nameof(this.Test)));
             return false;
         }
 
@@ -64,8 +63,8 @@ public class DscSettingsCommand : BaseDscCommand
         data.Get();
         data.Output.InDesiredState = data.Test();
 
-        this.WriteJsonOutputLine(data.Output.ToJson());
-        this.WriteJsonOutputLine(data.DiffJson());
+        WriteJsonOutputLine(data.Output.ToJson());
+        WriteJsonOutputLine(data.DiffJson());
         return true;
     }
 
@@ -74,14 +73,14 @@ public class DscSettingsCommand : BaseDscCommand
     {
         var data = new SettingsFunctionData();
         data.Get();
-        this.WriteJsonOutputLine(data.Output.ToJson());
+        WriteJsonOutputLine(data.Output.ToJson());
         return true;
     }
 
     /// <inheritdoc/>
     public override bool Schema()
     {
-        this.WriteJsonOutputLine(this.CreateSchema<SettingsResourceObject>(CommandName));
+        WriteJsonOutputLine(this.CreateSchema<SettingsResourceObject>(CommandName));
         return true;
     }
 }

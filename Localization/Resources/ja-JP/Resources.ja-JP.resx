@@ -1441,9 +1441,6 @@
   <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
     <value>エラー: 操作が指定されていません。--help を使用して、使用可能な操作を確認してください。</value>
   </data>
-  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
-    <value>DSC リソース操作に失敗しました</value>
-  </data>
   <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
     <value>インスタンスが目的の状態であるかどうかを示します</value>
   </data>

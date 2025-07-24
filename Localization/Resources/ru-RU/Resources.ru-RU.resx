@@ -1441,9 +1441,6 @@
   <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
     <value>Операция не указана. Используйте параметр --help для просмотра доступных операций.</value>
   </data>
-  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
-    <value>Сбой операции с ресурсом DSC</value>
-  </data>
   <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
     <value>Указывает, находится ли экземпляр в желаемом состоянии</value>
   </data>

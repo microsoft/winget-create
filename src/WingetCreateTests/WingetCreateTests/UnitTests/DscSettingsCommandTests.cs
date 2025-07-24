@@ -112,10 +112,13 @@ public class DscSettingsCommandTests
     {
         // Act
         var result = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--set", string.Empty);
+        var messages = result.Messages();
 
         // Assert
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Output, Does.Contain(string.Format(Resources.DscInputRequired_Message, nameof(DscSettingsCommand.Set))));
+        Assert.That(messages.Count, Is.EqualTo(1));
+        Assert.That(messages[0].Level, Is.EqualTo(DscMessageLevel.Error));
+        Assert.That(messages[0].Message, Is.EqualTo(string.Format(Resources.DscInputRequired_Message, nameof(DscSettingsCommand.Set))));
     }
 
     /// <summary>
@@ -127,10 +130,13 @@ public class DscSettingsCommandTests
     {
         // Act
         var result = await TestUtils.ExecuteDscCommandAsync(DscSettingsCommand.CommandName, "--test", string.Empty);
+        var messages = result.Messages();
 
         // Assert
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Output, Does.Contain(string.Format(Resources.DscInputRequired_Message, nameof(DscSettingsCommand.Test))));
+        Assert.That(messages.Count, Is.EqualTo(1));
+        Assert.That(messages[0].Level, Is.EqualTo(DscMessageLevel.Error));
+        Assert.That(messages[0].Message, Is.EqualTo(string.Format(Resources.DscInputRequired_Message, nameof(DscSettingsCommand.Test))));
     }
 
     /// <summary>
