@@ -1471,4 +1471,13 @@ Avertissement : l’utilisation de cet argument peut entraîner la journalisati
   <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
     <value>Valeur d’étendue pour l’authentification Microsoft Entra ID</value>
   </data>
+  <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
+    <value>Seules les URL HTTPS sont prises en charge pour les téléchargements. Utilisez l’option « --allow-unsecure-downloads » pour autoriser les URL HTTP.</value>
+  </data>
+  <data name="DownloadHttpsOnly_Error" xml:space="preserve">
+    <value>Seules les URL HTTPS sont prises en charge sans « --allow-unsecure-downloads ».</value>
+  </data>
+  <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
+    <value>Autorisez les téléchargements non sécurisés (HTTP) pour cette opération.</value>
+  </data>
 </root>

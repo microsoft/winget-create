@@ -1471,4 +1471,13 @@ Warnung: Die Verwendung dieses Arguments kann dazu führen, dass das Token proto
   <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
     <value>Der Bereichswert für die Microsoft Entra-ID-Authentifizierung</value>
   </data>
+  <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
+    <value>Für Downloads werden nur HTTPS-URLs unterstützt. Verwenden Sie die Option "--allow-unsecure-downloads", um HTTP-URLs zuzulassen.</value>
+  </data>
+  <data name="DownloadHttpsOnly_Error" xml:space="preserve">
+    <value>Nur HTTPS-URLs werden ohne "--allow-unsecure-downloads" unterstützt.</value>
+  </data>
+  <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
+    <value>Lassen Sie unsichere Downloads (HTTP) für diesen Vorgang zu.</value>
+  </data>
 </root>
