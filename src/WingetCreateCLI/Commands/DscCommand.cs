@@ -96,13 +96,7 @@ public class DscCommand : BaseCommand
             {
                 if (methodFlag)
                 {
-                    if (!methodAction())
-                    {
-                        Logger.ErrorLocalized(nameof(Resources.DscResourceOperationFailed_Message));
-                        return false;
-                    }
-
-                    return true;
+                    return methodAction();
                 }
             }
 

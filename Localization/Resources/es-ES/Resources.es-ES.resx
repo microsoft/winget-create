@@ -1441,9 +1441,6 @@ Advertencia: El uso de este argumento puede resultar en que se registre el token
   <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
     <value>No se especificó ninguna operación. Utilice --help para ver las operaciones disponibles.</value>
   </data>
-  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
-    <value>La operación del recurso DSC ha fallado</value>
-  </data>
   <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
     <value>Indica si una instancia se encuentra en el estado deseado</value>
   </data>

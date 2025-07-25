@@ -1441,9 +1441,6 @@
   <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
     <value>未指定任何操作。使用 --help 查看可用操作。</value>
   </data>
-  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
-    <value>DSC 资源操作失败</value>
-  </data>
   <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
     <value>指示实例是否处于所需状态</value>
   </data>

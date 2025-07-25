@@ -1441,9 +1441,6 @@ Warning: Using this argument may result in the token being logged. Consider an a
   <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
     <value>No operation specified. Use --help to see available operations.</value>
   </data>
-  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
-    <value>DSC resource operation failed</value>
-  </data>
   <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
     <value>Indicates whether an instance is in the desired state</value>
   </data>

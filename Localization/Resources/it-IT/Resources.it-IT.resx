@@ -1441,9 +1441,6 @@ Avviso: l'uso di questo argomento può comportare la registrazione del token. Va
   <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
     <value>Nessuna operazione specificata. Usa --help per visualizzare le operazioni disponibili.</value>
   </data>
-  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
-    <value>Operazione sulla risorsa DSC non riuscita</value>
-  </data>
   <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
     <value>Indica se un'istanza si trova nello stato desiderato</value>
   </data>
