@@ -1471,4 +1471,13 @@
   <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
     <value>Microsoft Entra識別碼驗證的範圍值</value>
   </data>
+  <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
+    <value>下載僅支援 HTTPS URL。使用 [--allow-unsecure-downloads] 選項允許 HTTP URL。</value>
+  </data>
+  <data name="DownloadHttpsOnly_Error" xml:space="preserve">
+    <value>僅支援不含 "--allow-unsecure-downloads" 的 HTTPS URL。</value>
+  </data>
+  <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
+    <value>允許此作業的不安全下載 (HTTP)。</value>
+  </data>
 </root>

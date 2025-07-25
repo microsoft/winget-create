@@ -1471,4 +1471,13 @@
   <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
     <value>Значение области для проверки подлинности Microsoft Entra ID</value>
   </data>
+  <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
+    <value>Для скачивания поддерживаются только URL-адреса HTTPS. Чтобы разрешить URL-адреса HTTP, используйте параметр "--allow-unsecure-downloads".</value>
+  </data>
+  <data name="DownloadHttpsOnly_Error" xml:space="preserve">
+    <value>Без параметра "--allow-unsecure-downloads" поддерживаются только URL-адреса HTTPS.</value>
+  </data>
+  <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
+    <value>Разрешить небезопасные скачивания (HTTP) для этой операции.</value>
+  </data>
 </root>
