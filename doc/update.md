@@ -77,29 +77,29 @@ In some cases, the publisher of the package may use a different marketing versio
 
 Search for an existing manifest and update the version:
 
-`wingetcreate.exe update --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --version <Version>`
 
 Search for an existing manifest and update the installer url:
 
-`wingetcreate.exe update --urls <InstallerUrl1> <InstallerUrl2> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --urls <InstallerUrl1> <InstallerUrl2>`
 
 Save and publish updated manifest:
 
-`wingetcreate.exe update --out <OutputDirectory> --token <GitHubPersonalAccessToken> --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --out <OutputDirectory> --token <GitHubPersonalAccessToken> --version <Version>`
 
 Override the architecture of an installer:
 
-`wingetcreate.exe update --urls '<InstallerUrl1>|<InstallerArchitecture>' --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --urls '<InstallerUrl1>|<InstallerArchitecture>' --version <Version>`
 
 Override the scope of an installer:
-`wingetcreate.exe update --urls '<InstallerUrl1>|<InstallerScope>' --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --urls '<InstallerUrl1>|<InstallerScope>' --version <Version>`
 
 > [!NOTE]
 > The <kbd>|</kbd> character is interpreted as the pipeline operator in most shells. To use the overrides, you should wrap the installer url in quotes.
 
 Update an existing manifest and submit PR to GitHub:
 
-`wingetcreate.exe update --submit --token <GitHubPersonalAccessToken> --urls <InstallerUrl1> <InstallerUrl2> --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --submit --token <GitHubPersonalAccessToken> --urls <InstallerUrl1> <InstallerUrl2> --version <Version>`
 
 ## Arguments
 

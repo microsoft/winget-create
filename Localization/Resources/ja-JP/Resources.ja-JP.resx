@@ -1468,4 +1468,13 @@
   <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
     <value>Microsoft Entra ID 認証のスコープ値</value>
   </data>
+  <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
+    <value>ダウンロードでサポートされているのは HTTPS URL のみです。HTTP URL を許可するには、"--allow-unsecure-downloads" オプションを使用します。</value>
+  </data>
+  <data name="DownloadHttpsOnly_Error" xml:space="preserve">
+    <value>"--allow-unsecure-downloads" なしでサポートされているのは HTTPS URL のみです。</value>
+  </data>
+  <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
+    <value>この操作に対して、セキュリティで保護されていないダウンロード (HTTP) を許可します。</value>
+  </data>
 </root>

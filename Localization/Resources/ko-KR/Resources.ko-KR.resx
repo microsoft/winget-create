@@ -1468,4 +1468,13 @@
   <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
     <value>Microsoft Entra ID 인증을 위한 범위 값</value>
   </data>
+  <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
+    <value>다운로드에는 HTTPS URL만 지원됩니다. HTTP URL을 허용하려면 "--allow-unsecure-downloads" 옵션을 사용합니다.</value>
+  </data>
+  <data name="DownloadHttpsOnly_Error" xml:space="preserve">
+    <value>"--allow-unsecure-downloads" 없는 HTTPS URL만 지원됩니다.</value>
+  </data>
+  <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
+    <value>이 작업에 대해 안전하지 않은 다운로드(HTTP)를 허용합니다.</value>
+  </data>
 </root>

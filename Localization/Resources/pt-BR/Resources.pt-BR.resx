@@ -1468,4 +1468,13 @@ Aviso: o uso desse argumento pode fazer com que o token seja registrado. Consid
   <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
     <value>O valor do escopo da autenticação Microsoft Entra ID</value>
   </data>
+  <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
+    <value>Somente URLs HTTPS têm suporte para downloads. Use a opção "--allow-unsecure-downloads" para permitir URLs HTTP.</value>
+  </data>
+  <data name="DownloadHttpsOnly_Error" xml:space="preserve">
+    <value>Somente URLs HTTPS têm suporte sem "--allow-unsecure-downloads".</value>
+  </data>
+  <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
+    <value>Permitir downloads não seguros (HTTP) para essa operação.</value>
+  </data>
 </root>

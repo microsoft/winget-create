@@ -1468,4 +1468,13 @@ Avviso: l'uso di questo argomento può comportare la registrazione del token. Va
   <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
     <value>Valore dell'ambito per l'autenticazione con ID Microsoft Entra</value>
   </data>
+  <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
+    <value>Per i download sono supportati solo GLI URL HTTPS. Usare l'opzione "--allow-unsecure-downloads" per consentire gli URL HTTP.</value>
+  </data>
+  <data name="DownloadHttpsOnly_Error" xml:space="preserve">
+    <value>Solo gli URL HTTPS sono supportati senza "--allow-unsecure-downloads".</value>
+  </data>
+  <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
+    <value>Consenti download non sicuri (HTTP) per questa operazione.</value>
+  </data>
 </root>
