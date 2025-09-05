@@ -59,6 +59,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [System.Runtime.Serialization.EnumMember(Value = @"portable")]
         Portable = 10,
 
+        [System.Runtime.Serialization.EnumMember(Value = @"advinstExe")]
+        AdvinstExe = 11,
+
 
     }
 
@@ -103,6 +106,9 @@ namespace Microsoft.WingetCreateCore.Models.Installer
 
         [System.Runtime.Serialization.EnumMember(Value = @"portable")]
         Portable = 8,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"advinstExe")]
+        AdvinstExe = 9,
 
 
     }
