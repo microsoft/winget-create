@@ -843,6 +843,10 @@ namespace Microsoft.WingetCreateCore
                         // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
                         installerTypeEnum = InstallerType.Burn;
                     }
+                    else if (IsAdvinstExe(path))
+                    {
+                        installerTypeEnum = InstallerType.AdvinstExe;
+                    }
                     else if (KnownInstallerResourceNames.Contains(installerType))
                     {
                         // If it's a known exe installer type, set as appropriately
@@ -898,6 +902,27 @@ namespace Microsoft.WingetCreateCore
                 installer.Properties.AsEnumerable().Any(property => property.Property.ToLower().Contains("wix") || property.Value.ToLower().Contains("wix")) ||
                 installer.SummaryInfo.CreatingApp.ToLower().Contains("wix") ||
                 installer.SummaryInfo.CreatingApp.ToLower().Contains("windows installer xml");
+        }
+
+        private static bool IsAdvinstExe(string path)
+        {
+            try
+            {
+                string extractLocation = Directory.CreateTempSubdirectory().ToString();
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = path,
+                    Arguments = $"/extract \"{extractLocation}\"",
+                    CreateNoWindow = true,
+                }).WaitForExit();
+
+                return Directory.EnumerateFiles(extractLocation, "*.msi").Any();
+            }
+            catch (Win32Exception)
+            {
+                return false;
+            }
         }
 
         private static bool ParseMsi(string path, Installer baseInstaller, Manifests manifests, List<Installer> newInstallers)
