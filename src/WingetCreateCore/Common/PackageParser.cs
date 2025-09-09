@@ -812,6 +812,7 @@ namespace Microsoft.WingetCreateCore
                     return CompatibilitySet.Exe;
                 case InstallerType.Wix:
                 case InstallerType.Msi:
+                case InstallerType.AdvinstMsi:
                     return CompatibilitySet.Msi;
                 case InstallerType.Msix:
                 case InstallerType.Appx:
