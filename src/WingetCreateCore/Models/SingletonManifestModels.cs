@@ -183,6 +183,14 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         Portable = 10,
 
 
+        [System.Runtime.Serialization.EnumMember(Value = @"advinstExe")]
+        AdvinstExe = 11,
+
+
+        [System.Runtime.Serialization.EnumMember(Value = @"advinstMsi")]
+        AdvinstMsi = 12,
+
+
     }
 
     /// <summary>
@@ -226,6 +234,14 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
 
         [System.Runtime.Serialization.EnumMember(Value = @"portable")]
         Portable = 8,
+
+
+        [System.Runtime.Serialization.EnumMember(Value = @"advinstExe")]
+        AdvinstExe = 9,
+
+
+        [System.Runtime.Serialization.EnumMember(Value = @"advinstMsi")]
+        AdvinstMsi = 10,
 
 
     }

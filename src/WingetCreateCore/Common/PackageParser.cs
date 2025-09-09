@@ -804,6 +804,7 @@ namespace Microsoft.WingetCreateCore
                 case InstallerType.Nullsoft:
                 case InstallerType.Exe:
                 case InstallerType.Burn:
+                case InstallerType.AdvinstExe:
                 // Portable is included as a compatible installer type since
                 // they are detected as 'exe' installers. This is to ensure
                 // updating a portable manifest is supported.
@@ -811,6 +812,7 @@ namespace Microsoft.WingetCreateCore
                     return CompatibilitySet.Exe;
                 case InstallerType.Wix:
                 case InstallerType.Msi:
+                case InstallerType.AdvinstMsi:
                     return CompatibilitySet.Msi;
                 case InstallerType.Msix:
                 case InstallerType.Appx:
@@ -841,6 +843,10 @@ namespace Microsoft.WingetCreateCore
                     {
                         // See https://github.com/microsoft/winget-create/issues/26, a Burn installer is an exe-installer produced by the WiX toolset.
                         installerTypeEnum = InstallerType.Burn;
+                    }
+                    else if (IsAdvinstExe(path))
+                    {
+                        installerTypeEnum = InstallerType.AdvinstExe;
                     }
                     else if (KnownInstallerResourceNames.Contains(installerType))
                     {
@@ -899,6 +905,32 @@ namespace Microsoft.WingetCreateCore
                 installer.SummaryInfo.CreatingApp.ToLower().Contains("windows installer xml");
         }
 
+        private static bool IsAdvinstExe(string path)
+        {
+            try
+            {
+                string extractLocation = Directory.CreateTempSubdirectory().ToString();
+
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = path,
+                    Arguments = $"/extract \"{extractLocation}\"",
+                    CreateNoWindow = true,
+                }).WaitForExit();
+
+                return Directory.EnumerateFiles(extractLocation, "*.msi").Any();
+            }
+            catch (Win32Exception)
+            {
+                return false;
+            }
+        }
+
+        private static bool IsAdvinstMsi(QDatabase installer)
+        {
+            return installer.Properties.AsEnumerable().Any(property => property.Property.StartsWith("AI_"));
+        }
+
         private static bool ParseMsi(string path, Installer baseInstaller, Manifests manifests, List<Installer> newInstallers)
         {
             DefaultLocaleManifest defaultLocaleManifest = manifests?.DefaultLocaleManifest;
@@ -907,9 +939,10 @@ namespace Microsoft.WingetCreateCore
             {
                 using (var database = new QDatabase(path, Deployment.WindowsInstaller.DatabaseOpenMode.ReadOnly))
                 {
-                    InstallerType installerType = IsWix(database)
-                            ? InstallerType.Wix
-                            : InstallerType.Msi;
+                    InstallerType installerType = IsAdvinstMsi(database) ? InstallerType.AdvinstMsi :
+                                                  IsWix(database) ? InstallerType.Wix :
+                                                  InstallerType.Msi;
+
                     SetInstallerType(baseInstaller, installerType);
 
                     var properties = database.Properties.ToList();
