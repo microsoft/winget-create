@@ -925,6 +925,11 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
+        private static bool IsAdvinstMsi(QDatabase installer)
+        {
+            return installer.Properties.AsEnumerable().Any(property => property.Property.StartsWith("AI_"));
+        }
+
         private static bool ParseMsi(string path, Installer baseInstaller, Manifests manifests, List<Installer> newInstallers)
         {
             DefaultLocaleManifest defaultLocaleManifest = manifests?.DefaultLocaleManifest;
@@ -933,9 +938,10 @@ namespace Microsoft.WingetCreateCore
             {
                 using (var database = new QDatabase(path, Deployment.WindowsInstaller.DatabaseOpenMode.ReadOnly))
                 {
-                    InstallerType installerType = IsWix(database)
-                            ? InstallerType.Wix
-                            : InstallerType.Msi;
+                    InstallerType installerType = IsAdvinstMsi(database) ? InstallerType.AdvinstMsi :
+                                                  IsWix(database) ? InstallerType.Wix :
+                                                  InstallerType.Msi;
+
                     SetInstallerType(baseInstaller, installerType);
 
                     var properties = database.Properties.ToList();
