@@ -68,6 +68,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
 
         /// <summary>
+        /// Gets or sets the name of the owner of the fork to use for the pull request.
+        /// </summary>
+        [Option("forkowner", Required = false, HelpText = "ForkOwner_HelpText", ResourceType = typeof(Resources))]
+        public override string ForkOwner { get => base.ForkOwner; set => base.ForkOwner = value; }
+
+        /// <summary>
         /// Gets or sets the unbound arguments that exist after the first positional parameter.
         /// </summary>
         [Value(1, Hidden = true)]

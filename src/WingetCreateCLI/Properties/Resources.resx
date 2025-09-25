@@ -1480,4 +1480,7 @@ Warning: Using this argument may result in the token being logged. Consider an a
   <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
     <value>Allow unsecure downloads (HTTP) for this operation.</value>
   </data>
+  <data name="ForkOwner_HelpText" xml:space="preserve">
+    <value>The name of the owner of the fork to use for the pull request.</value>
+  </data>
 </root>

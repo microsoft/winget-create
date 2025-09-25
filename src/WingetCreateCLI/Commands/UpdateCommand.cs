@@ -140,6 +140,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public IEnumerable<string> InstallerUrls { get; set; } = new List<string>();
 
         /// <summary>
+        /// Gets or sets the name of the owner of the fork to use for the pull request.
+        /// </summary>
+        [Option("forkowner", Required = false, HelpText = "ForkOwner_HelpText", ResourceType = typeof(Resources))]
+        public override string ForkOwner { get => base.ForkOwner; set => base.ForkOwner = value; }
+
+        /// <summary>
         /// Gets or sets the unbound arguments that exist after the positional parameters.
         /// </summary>
         [Value(2, Hidden = true)]
