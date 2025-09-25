@@ -107,6 +107,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         public bool OpenPRInBrowser { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the name of the owner of the fork to use for the pull request.
+        /// </summary>
+        public virtual string ForkOwner { get; set; }
+
+        /// <summary>
         /// Gets the GitHubClient instance to use for interacting with GitHub from the CLI.
         /// </summary>
         internal GitHub GitHubClient { get; private set; }
@@ -742,8 +747,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
         /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
         /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
+        /// <param name="forkOwner">Optional parameter specifying the name of the owner of the fork.</param>
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
-        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null, string forkOwner = null)
         {
             // Community repo only supports yaml submissions.
             if (this.WingetRepo == DefaultWingetRepo &&
@@ -765,7 +771,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion);
+                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion, forkOwner);
                 this.PullRequestNumber = pullRequest.Number;
                 PullRequestEvent pullRequestEvent = new PullRequestEvent { IsSuccessful = true, PullRequestNumber = pullRequest.Number };
                 TelemetryManager.Log.WriteEvent(pullRequestEvent);

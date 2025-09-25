@@ -139,8 +139,9 @@ namespace Microsoft.WingetCreateCore.Common
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
         /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
         /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
+        /// <param name="forkOwner">Optional parameter specifying the name of the owner of the fork.</param>
         /// <returns>Pull request object.</returns>
-        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null, string forkOwner = null)
         {
             Dictionary<string, string> contents = new Dictionary<string, string>();
             string id;
@@ -164,7 +165,7 @@ namespace Microsoft.WingetCreateCore.Common
                 contents.Add($"{id}.locale.{manifests.DefaultLocaleManifest.PackageLocale}", manifests.DefaultLocaleManifest.ToManifestString());
             }
 
-            return this.SubmitPRAsync(id, version, contents, submitToFork, prTitle, shouldReplace, replaceVersion);
+            return this.SubmitPRAsync(id, version, contents, submitToFork, prTitle, shouldReplace, replaceVersion, forkOwner);
         }
 
         /// <summary>
@@ -301,7 +302,7 @@ namespace Microsoft.WingetCreateCore.Common
             return null;
         }
 
-        private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null, string forkOwner = null)
         {
             bool createdRepo = false;
             Repository repo;
@@ -310,11 +311,17 @@ namespace Microsoft.WingetCreateCore.Common
             {
                 try
                 {
-                    var user = await this.github.User.Current();
-                    repo = await this.github.Repository.Get(user.Login, this.wingetRepo);
+                    if (forkOwner == null)
+                    {
+                        var user = await this.github.User.Current();
+                        forkOwner = user.Login;
+                    }
+
+                    repo = await this.github.Repository.Get(forkOwner, this.wingetRepo);
                 }
                 catch (NotFoundException)
                 {
+                    // This will only work for GitHub users and not if the GitHub token is associated with a GitHub app
                     repo = await this.github.Repository.Forks.Create(this.wingetRepoOwner, this.wingetRepo, new NewRepositoryFork());
                     createdRepo = true;
                 }

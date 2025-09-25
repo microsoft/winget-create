@@ -310,7 +310,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                             updatedManifests,
                             this.GetPRTitle(updatedManifests, originalManifests),
                             this.Replace,
-                            this.ReplaceVersion))
+                            this.ReplaceVersion,
+                            this.ForkOwner))
                         : false;
                 }
 

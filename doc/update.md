@@ -120,6 +120,7 @@ The following arguments are available:
 | **-i, --interactive** |  Boolean value for making the update command interactive. If true, the tool will prompt the user for input. Default is false. |
 | **-f,--format** |  Output format of the manifest. Default is "yaml". |
 | **--allow-unsecure-downloads** | Allow unsecure downloads (HTTP) for this operation. |
+| **--forkowner** |  The name of the owner of the fork to use for the pull request. |
 | **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials. <br/>⚠️ _Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token._ |
 | **-?, --help** |  Gets additional help on this command. |
 

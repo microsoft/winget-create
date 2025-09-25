@@ -284,7 +284,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                     {
                         return commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                             manifests,
-                            this.GetPRTitle(manifests));
+                            this.GetPRTitle(manifests),
+                            forkOwner: this.ForkOwner);
                     }
 
                     return false;

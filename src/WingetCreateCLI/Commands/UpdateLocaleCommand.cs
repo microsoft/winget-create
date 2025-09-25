@@ -179,7 +179,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                         return await this.LoadGitHubClient(true) ?
                             (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                                 originalManifests,
-                                $"Update locale: {originalManifests.VersionManifest.PackageIdentifier} version {originalManifests.VersionManifest.PackageVersion}"))
+                                $"Update locale: {originalManifests.VersionManifest.PackageIdentifier} version {originalManifests.VersionManifest.PackageVersion}",
+                                forkOwner: this.ForkOwner))
                             : false;
                     }
                     else

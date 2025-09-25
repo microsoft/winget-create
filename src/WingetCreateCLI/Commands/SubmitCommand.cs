@@ -122,7 +122,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion, this.ForkOwner);
             }
             else if (Directory.Exists(expandedPath) && ValidateManifest(expandedPath, this.Format))
             {
@@ -134,7 +134,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion, this.ForkOwner);
             }
             else
             {
