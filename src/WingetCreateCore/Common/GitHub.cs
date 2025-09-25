@@ -321,8 +321,7 @@ namespace Microsoft.WingetCreateCore.Common
                 }
                 catch (NotFoundException)
                 {
-                    // This will only work for GitHub users and not if the GitHub token is associated with a GitHub app
-                    repo = await this.github.Repository.Forks.Create(this.wingetRepoOwner, this.wingetRepo, new NewRepositoryFork());
+                    repo = await this.github.Repository.Forks.Create(this.wingetRepoOwner, this.wingetRepo, new NewRepositoryFork() { Organization = forkOwner });
                     createdRepo = true;
                 }
             }
