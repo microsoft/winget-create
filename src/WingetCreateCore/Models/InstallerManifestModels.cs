@@ -60,6 +60,10 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         Portable = 10,
 
 
+        [System.Runtime.Serialization.EnumMember(Value = @"font")]
+        Font = 11,
+
+
     }
 
     /// <summary>
@@ -103,6 +107,10 @@ namespace Microsoft.WingetCreateCore.Models.Installer
 
         [System.Runtime.Serialization.EnumMember(Value = @"portable")]
         Portable = 8,
+
+
+        [System.Runtime.Serialization.EnumMember(Value = @"font")]
+        Font = 9,
 
 
     }
@@ -644,7 +652,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     }
 
     /// <summary>
-    /// A representation of a single-file manifest representing an app installers in the OWC. v1.10.0
+    /// A representation of a single-file manifest representing an app installers in the OWC. v1.12.0
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class InstallerManifest
@@ -813,7 +821,7 @@ namespace Microsoft.WingetCreateCore.Models.Installer
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.10.0";
+        public string ManifestVersion { get; set; } = "1.12.0";
 
 
 

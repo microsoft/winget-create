@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.CorrelationVector" Version="1.0.42" />
     <PackageReference Include="Microsoft.Msix.Utils" Version="2.1.1" />
     <!--https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#generatepathproperty-->
-    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" Version="1.10.340" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" Version="1.12.350" GeneratePathProperty="true" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
     <PackageReference Include="NLog" Version="5.2.8" />
     <PackageReference Include="NSwag.MSBuild" Version="14.0.3">
@@ -48,11 +48,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.10.0\manifest.defaultLocale.1.10.0.json" ModelName="DefaultLocale" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.10.0\manifest.installer.1.10.0.json" ModelName="Installer" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.10.0\manifest.locale.1.10.0.json" ModelName="Locale" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.10.0\manifest.version.1.10.0.json" ModelName="Version" />
-    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.10.0\manifest.singleton.1.10.0.json" ModelName="Singleton" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.12.0\manifest.defaultLocale.1.12.0.json" ModelName="DefaultLocale" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.12.0\manifest.installer.1.12.0.json" ModelName="Installer" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.12.0\manifest.locale.1.12.0.json" ModelName="Locale" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.12.0\manifest.version.1.12.0.json" ModelName="Version" />
+    <SchemaFiles Include="$(PkgMicrosoft_WindowsPackageManager_Utils)\content\schemas\JSON\manifests\v1.12.0\manifest.singleton.1.12.0.json" ModelName="Singleton" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(SchemaFiles)" Outputs="@(SchemaFiles -> '$(ProjectDir)Models\%(ModelName)ManifestModels.cs')">

@@ -10,7 +10,7 @@ namespace Microsoft.WingetCreateCore.Models.Version
     #pragma warning disable // Disable all warnings
 
     /// <summary>
-    /// A representation of a multi-file manifest representing an app version in the OWC. v1.10.0
+    /// A representation of a multi-file manifest representing an app version in the OWC. v1.12.0
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class VersionManifest
@@ -55,7 +55,7 @@ namespace Microsoft.WingetCreateCore.Models.Version
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.10.0";
+        public string ManifestVersion { get; set; } = "1.12.0";
 
 
 
