@@ -64,7 +64,7 @@ Click on the individual commands to learn more.
 You can use WingetCreate to update your existing app manifest as part of your CI/CD pipeline. For reference, see the final task in this repo's [release Azure pipeline](https://github.com/microsoft/winget-create/blob/main/pipelines/azure-pipelines.release.yml). If you are utilizing GitHub Actions as your CI pipeline, you can refer to the following repositories that have implemented WingetCreate within their release pipelines:
 
 - [DevHome](https://github.com/microsoft/devhome/blob/main/.github/workflows/winget-submission.yml)
-- [Oh-My-Posh](https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/.github/workflows/winget.yml)
+- [Oh-My-Posh](https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/.github/workflows/release.yml#L139)
 - [PowerToys](https://github.com/microsoft/PowerToys/blob/main/.github/workflows/package-submissions.yml)
 - [Terminal](https://github.com/microsoft/terminal/blob/main/.github/workflows/winget.yml)
 
