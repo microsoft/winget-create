@@ -54,7 +54,7 @@ namespace Microsoft.WingetCreateCore.Serializers
                 serialized.AppendLine($"# Created using {Serialization.ProducedBy}");
             }
 
-            string schemaTemplate = "# yaml-language-server: $schema=https://aka.ms/winget-manifest.{0}.{1}.schema.json";
+            string schemaTemplate = "#yaml-language-server: $schema=https://aka.ms/winget-manifest.{0}.{1}.schema.json";
 
             switch (value)
             {
