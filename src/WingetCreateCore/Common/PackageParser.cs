@@ -47,13 +47,7 @@ namespace Microsoft.WingetCreateCore
             "nullsoft",
         };
 
-        private static HttpClient httpClient = new()
-        {
-            DefaultRequestHeaders =
-            {
-                UserAgent = { new ProductInfoHeaderValue("WinGetCreate", Utils.GetEntryAssemblyVersion()) },
-            },
-        };
+        private static HttpClient httpClient = CreateHttpClient();
 
         private enum MachineType
         {
@@ -85,6 +79,33 @@ namespace Microsoft.WingetCreateCore
         {
             httpClient.Dispose();
             httpClient = httpMessageHandler != null ? new HttpClient(httpMessageHandler) : new HttpClient();
+            SetDefaultHeaders(httpClient);
+        }
+
+        private static HttpClient CreateHttpClient()
+        {
+            var client = new HttpClient();
+            SetDefaultHeaders(client);
+            return client;
+        }
+
+        private static void SetDefaultHeaders(HttpClient client)
+        {
+            client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("WinGetCreate", Utils.GetEntryAssemblyVersion()));
+
+            // Add Authorization header from environment variable, if present
+            string authToken = Environment.GetEnvironmentVariable("WINGET_CREATE_HTTP_CLIENT_AUTH_TOKEN");
+            if (!string.IsNullOrEmpty(authToken))
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+            }
+
+            // Add Accept header from environment variable, if present
+            string acceptHeader = Environment.GetEnvironmentVariable("WINGET_CREATE_HTTP_CLIENT_ACCEPT_HEADER");
+            if (!string.IsNullOrEmpty(acceptHeader))
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+            }
         }
 
         /// <summary>
