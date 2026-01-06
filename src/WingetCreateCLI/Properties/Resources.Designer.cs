@@ -169,6 +169,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allow unsecure downloads (HTTP) for this operation..
+        /// </summary>
+        public static string AllowUnsecureDownloads_HelpText {
+            get {
+                return ResourceManager.GetString("AllowUnsecureDownloads_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The manifest creation command line utility generates manifest for submitting apps to the Windows Package Manager repo..
         /// </summary>
         public static string AppDescription_HelpText {
@@ -241,6 +250,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authentication information for secured private sources.
+        /// </summary>
+        public static string Authentication_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Authentication_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type of authentication to use.
+        /// </summary>
+        public static string AuthenticationType_KeywordDescription {
+            get {
+                return ResourceManager.GetString("AuthenticationType_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The package author.
         /// </summary>
         public static string Author_KeywordDescription {
@@ -264,6 +291,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Back_MenuItem {
             get {
                 return ResourceManager.GetString("Back_MenuItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The forked repository could not be synced with the upstream commits due to a merge conflict. Resolve conflicts manually and try again..
+        /// </summary>
+        public static string BranchMergeConflict_Message {
+            get {
+                return ResourceManager.GetString("BranchMergeConflict_Message", resourceCulture);
             }
         }
         
@@ -718,11 +754,164 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only HTTPS URLs are supported without &quot;--allow-unsecure-downloads&quot;..
+        /// </summary>
+        public static string DownloadHttpsOnly_Error {
+            get {
+                return ResourceManager.GetString("DownloadHttpsOnly_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloading and parsing: {0}....
         /// </summary>
         public static string DownloadInstaller_Message {
             get {
                 return ResourceManager.GetString("DownloadInstaller_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only HTTPS URLs are supported for downloads. Use the &quot;--allow-unsecure-downloads&quot; option to allow HTTP URLs..
+        /// </summary>
+        public static string DownloadProtocolNotSupported_Error {
+            get {
+                return ResourceManager.GetString("DownloadProtocolNotSupported_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DSC v3 resource commands.
+        /// </summary>
+        public static string DscCommand_HelpText {
+            get {
+                return ResourceManager.GetString("DscCommand_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get all state instances.
+        /// </summary>
+        public static string DscExport_HelpText {
+            get {
+                return ResourceManager.GetString("DscExport_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get the resource state.
+        /// </summary>
+        public static string DscGet_HelpText {
+            get {
+                return ResourceManager.GetString("DscGet_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The input for the DSC resource.
+        /// </summary>
+        public static string DscInput_HelpText {
+            get {
+                return ResourceManager.GetString("DscInput_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The input for the {0} DSC operation is required.
+        /// </summary>
+        public static string DscInputRequired_Message {
+            get {
+                return ResourceManager.GetString("DscInputRequired_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name of the DSC resource to manage.
+        /// </summary>
+        public static string DscResourceName_HelpText {
+            get {
+                return ResourceManager.GetString("DscResourceName_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DSC resource not found: {0}. Valid resources: {1}.
+        /// </summary>
+        public static string DscResourceNameNotFound_Message {
+            get {
+                return ResourceManager.GetString("DscResourceNameNotFound_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DSC resource operation failed.
+        /// </summary>
+        public static string DscResourceOperationFailed_Message {
+            get {
+                return ResourceManager.GetString("DscResourceOperationFailed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No operation specified. Use --help to see available operations..
+        /// </summary>
+        public static string DscResourceOperationNotSpecified_Message {
+            get {
+                return ResourceManager.GetString("DscResourceOperationNotSpecified_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The action used to apply the settings.
+        /// </summary>
+        public static string DscResourcePropertyDescriptionAction {
+            get {
+                return ResourceManager.GetString("DscResourcePropertyDescriptionAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indicates whether an instance is in the desired state.
+        /// </summary>
+        public static string DscResourcePropertyDescriptionInDesiredState {
+            get {
+                return ResourceManager.GetString("DscResourcePropertyDescriptionInDesiredState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The settings content.
+        /// </summary>
+        public static string DscResourcePropertyDescriptionSettings {
+            get {
+                return ResourceManager.GetString("DscResourcePropertyDescriptionSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Outputs schema of the resource.
+        /// </summary>
+        public static string DscSchema_HelpText {
+            get {
+                return ResourceManager.GetString("DscSchema_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the resource state.
+        /// </summary>
+        public static string DscSet_HelpText {
+            get {
+                return ResourceManager.GetString("DscSet_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test the resource state.
+        /// </summary>
+        public static string DscTest_HelpText {
+            get {
+                return ResourceManager.GetString("DscTest_HelpText", resourceCulture);
             }
         }
         
@@ -1150,11 +1339,22 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials..
+        ///   Looks up a localized string similar to GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
+        ///
+        ///Warning: Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token..
         /// </summary>
         public static string GitHubToken_HelpText {
             get {
                 return ResourceManager.GetString("GitHubToken_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning: Using the --token argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token..
+        /// </summary>
+        public static string GitHubTokenWarning_Message {
+            get {
+                return ResourceManager.GetString("GitHubTokenWarning_Message", resourceCulture);
             }
         }
         
@@ -1803,6 +2003,24 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string Markets_KeywordDescription {
             get {
                 return ResourceManager.GetString("Markets_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information required for Microsoft Entra Id authentication.
+        /// </summary>
+        public static string MicrosoftEntraIdAuthenticationInfo_KeywordDescription {
+            get {
+                return ResourceManager.GetString("MicrosoftEntraIdAuthenticationInfo_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The scope value for Microsoft Entra Id authentication.
+        /// </summary>
+        public static string MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription {
+            get {
+                return ResourceManager.GetString("MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription", resourceCulture);
             }
         }
         
@@ -2680,6 +2898,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The resource to use for Microsoft Entra Id authentication.
+        /// </summary>
+        public static string Resource_KeywordDescription {
+            get {
+                return ResourceManager.GetString("Resource_KeywordDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to List of restricted MSIX capabilities.
         /// </summary>
         public static string RestrictedCapabilities_KeywordDescription {
@@ -3103,6 +3330,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Skipping manifest validation. The CLI can only validate YAML format. Validate output manually before submission..
+        /// </summary>
+        public static string SkippingManifestValidation_Message {
+            get {
+                return ResourceManager.GetString("SkippingManifestValidation_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Skipping pull request submission....
         /// </summary>
         public static string SkippingPullRequest_Message {
@@ -3189,6 +3425,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         public static string SwitchToUpdateLocaleFlow_Message {
             get {
                 return ResourceManager.GetString("SwitchToUpdateLocaleFlow_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The forked repository could not be synced with the upstream commits. Sync your fork manually and try again..
+        /// </summary>
+        public static string SyncForkFailed_Message {
+            get {
+                return ResourceManager.GetString("SyncForkFailed_Message", resourceCulture);
             }
         }
         

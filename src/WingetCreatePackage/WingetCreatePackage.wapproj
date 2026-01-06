@@ -51,6 +51,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\WingetCreateCli\DscResources\*.dsc.resource.json" />
     <Content Include="Images\LockScreenLogo.scale-200.png" />
     <Content Include="Images\SplashScreen.scale-200.png" />
     <Content Include="Images\Square150x150Logo.scale-200.png" />

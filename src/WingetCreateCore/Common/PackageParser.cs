@@ -11,6 +11,7 @@ namespace Microsoft.WingetCreateCore
     using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Security.Cryptography;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -46,7 +47,13 @@ namespace Microsoft.WingetCreateCore
             "nullsoft",
         };
 
-        private static HttpClient httpClient = new HttpClient();
+        private static HttpClient httpClient = new()
+        {
+            DefaultRequestHeaders =
+            {
+                UserAgent = { new ProductInfoHeaderValue("WinGetCreate", Utils.GetEntryAssemblyVersion()) },
+            },
+        };
 
         private enum MachineType
         {
@@ -110,16 +117,19 @@ namespace Microsoft.WingetCreateCore
         /// Download file at specified URL to temp directory, unless it's already present.
         /// </summary>
         /// <param name="url">The URL of the file to be downloaded.</param>
+        /// <param name="allowHttp">Whether to allow HTTP downloads.</param>
         /// <param name="maxDownloadSize">The maximum file size in bytes to download.</param>
         /// <returns>Path of downloaded, or previously downloaded, file.</returns>
-        public static async Task<string> DownloadFileAsync(string url, long? maxDownloadSize = null)
+        public static async Task<string> DownloadFileAsync(string url, bool allowHttp, long? maxDownloadSize = null)
         {
+            ValidateUrl(url, allowHttp);
             var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             int redirectCount = 0;
             while (response.StatusCode == System.Net.HttpStatusCode.Redirect && redirectCount < 2)
             {
                 var redirectUri = response.Headers.Location;
+                ValidateUrl(redirectUri, allowHttp);
                 response = await httpClient.GetAsync(redirectUri, HttpCompletionOption.ResponseHeadersRead);
                 redirectCount++;
             }
@@ -1108,6 +1118,29 @@ namespace Microsoft.WingetCreateCore
         private static string RemoveInvalidCharsFromString(string value)
         {
             return Regex.Replace(value, InvalidCharacters, string.Empty);
+        }
+
+        private static void ValidateUrl(string url, bool allowHttp)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri downloadUrl))
+            {
+                throw new InvalidOperationException();
+            }
+
+            ValidateUrl(downloadUrl, allowHttp);
+        }
+
+        private static void ValidateUrl(Uri url, bool allowHttp)
+        {
+            if (url.Scheme != Uri.UriSchemeHttp && url.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!allowHttp && url.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new DownloadHttpsOnlyException();
+            }
         }
     }
 }

@@ -43,7 +43,7 @@ extends:
           variables:
             skipComponentGovernanceDetection: true
           steps:
-          - task: TouchdownBuildTask@4
+          - task: TouchdownBuildTask@5
             displayName: Send resources to Touchdown Build
             inputs:
               teamId: 25160

@@ -27,7 +27,7 @@ The following arguments are available:
 | **-l, --locale** |  The package locale to update the manifest for. If not provided, the tool will prompt you a list of existing locales to choose from.
 | **-o, --out** |  The output directory where the newly created manifests will be saved locally.
 | **-f, --format** |  Output format of the manifest. Default is "yaml". |
-| **-t, --token**  | GitHub personal access token used for direct submission to the Windows Package Manager repo |
+| **-t, --token**  | GitHub personal access token used for direct submission to the Windows Package Manager repo. <br/>⚠️ _Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token._ |
 | **-n, --no-open** |  Boolean value that controls whether the pull request should not be open in the browser on submission. Default is false, meaning the PR will be opened in the browser. |
 | **-?, --help** |  Gets additional help on this command |
 

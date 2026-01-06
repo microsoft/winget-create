@@ -5,9 +5,6 @@ namespace Microsoft.WingetCreateCLI
 {
     using System;
     using System.ComponentModel;
-    using System.IO;
-    using System.Security.Cryptography;
-    using System.Text;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using System.Threading.Tasks;
@@ -26,48 +23,26 @@ namespace Microsoft.WingetCreateCLI
         private const string GitHubDeviceEndpoint = "https://github.com/login/device/code";
         private const string GitHubTokenEndpoint = "https://github.com/login/oauth/access_token";
         private const string GrantType = "urn:ietf:params:oauth:grant-type:device_code";
-        private static readonly string TokenFile = Path.Combine(Common.LocalAppStatePath, "tokenCache.bin");
 
         /// <summary>
-        /// Create byte array for additional entropy when using Protect method.
+        /// Deletes the token.
         /// </summary>
-        private static readonly byte[] EntropyBytes = Encoding.UTF8.GetBytes(TokenFile);
+        /// <returns>True if the token was deleted, false otherwise.</returns>
+        public static bool DeleteTokenCache() => TokenHelper.Delete();
 
         /// <summary>
-        /// Deletes the cached token.
-        /// </summary>
-        public static void DeleteTokenCache()
-        {
-            File.Delete(TokenFile);
-        }
-
-        /// <summary>
-        /// Reads and decrypts the cached token, if one exists.
-        /// </summary>
-        /// <returns>Decrypted cached token.</returns>
-        public static string ReadTokenCache()
-        {
-            if (File.Exists(TokenFile))
-            {
-                var protectedBytes = File.ReadAllBytes(TokenFile);
-                var bytes = ProtectedData.Unprotect(protectedBytes, EntropyBytes, DataProtectionScope.CurrentUser);
-                return Encoding.UTF8.GetString(bytes);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Encrypts and writes the token to the file cache.
+        /// Writes the token.
         /// </summary>
         /// <param name="token">Token to be cached.</param>
-        public static void WriteTokenCache(string token)
-        {
-            var bytes = ProtectedData.Protect(Encoding.UTF8.GetBytes(token), EntropyBytes, DataProtectionScope.CurrentUser);
-            File.WriteAllBytes(TokenFile, bytes);
-        }
+        /// <returns>True if the token was written, false otherwise.</returns>
+        public static bool WriteTokenCache(string token) => TokenHelper.Write(token);
+
+        /// <summary>
+        /// Reads the token.
+        /// </summary>
+        /// <param name="token">Output token.</param>
+        /// <returns>True if the token was read, false otherwise.</returns>
+        public static bool TryReadTokenCache(out string token) => TokenHelper.TryRead(out token);
 
         /// <summary>
         /// Sends a POST request to GitHub's authorization server to obtain a device code.

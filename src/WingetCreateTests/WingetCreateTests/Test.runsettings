@@ -5,16 +5,10 @@
   Parameters used by tests at run time. 
        WingetPkgsTestRepoOwner: The repository owner of the winget-pkgs submission test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
        WingetPkgsTestRepo: The winget-pkgs test repository.
-       GitHubApiKey: GitHub access token for testing.
-       GitHubAppPrivateKey: GitHub app installation access token for the winget-create app.
   -->
   <TestRunParameters>
     <Parameter name="WingetPkgsTestRepoOwner" value="" />
     <Parameter name="WingetPkgsTestRepo" value="winget-pkgs-submission-test" />
-    <Parameter name="GitHubApiKey" value="" />
-    
-    <!-- Leave blank, this is only used by the build server. -->
-    <Parameter name="GitHubAppPrivateKey" value="" />
   </TestRunParameters>
 
   <RunConfiguration>

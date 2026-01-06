@@ -178,7 +178,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 string manifestDirectoryPath = SaveManifestDirToLocalPath(originalManifests, this.OutputDir);
 
-                if (ValidateManifest(manifestDirectoryPath))
+                if (ValidateManifest(manifestDirectoryPath, this.Format))
                 {
                     if (Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
                     {
@@ -287,7 +287,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 Console.WriteLine();
-                ValidateManifestsInTempDir(manifests);
+                ValidateManifestsInTempDir(manifests, this.Format);
             }
             while (Prompt.Confirm(Resources.UpdateAnotherLocale_Message));
 

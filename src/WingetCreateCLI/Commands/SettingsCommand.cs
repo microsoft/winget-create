@@ -22,6 +22,9 @@ namespace Microsoft.WingetCreateCLI.Commands
     [Verb("settings", HelpText = "SettingsCommand_HelpText", ResourceType = typeof(Resources))]
     public class SettingsCommand : BaseCommand
     {
+        /// <inheritdoc/>
+        public override bool AcceptsGitHubToken => false;
+
         /// <summary>
         /// Executes the token command flow.
         /// </summary>

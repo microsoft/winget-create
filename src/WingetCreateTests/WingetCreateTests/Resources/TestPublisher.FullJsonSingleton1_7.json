@@ -1,5 +1,5 @@
 ﻿{
-    "PackageIdentifier": "TestPublisher.FullJsonSingleton1_5",
+    "PackageIdentifier": "TestPublisher.FullJsonSingleton1_7",
     "PackageVersion": "0.1.2.3",
     "PackageLocale": "en-US",
     "DefaultLocale": "en-US",
@@ -8,14 +8,14 @@
     "PublisherSupportUrl": "https://fakeTestUrl.com",
     "PrivacyUrl": "https://fakeTestUrl.com",
     "Author": "fakeAuthor",
-    "PackageName": "Full Singleton 1.5 Test",
+    "PackageName": "Full Singleton 1.7 Test",
     "PackageUrl": "https://fakeTestUrl.com",
     "License": "MIT",
     "LicenseUrl": "https://fakeTestUrl.com",
     "Copyright": "fakeCopyright",
     "CopyrightUrl": "https://fakeTestUrl.com",
-    "ShortDescription": "A manifest used to verify that all fields from a full 1.1 singleton manifest can be deserialized and updated.",
-    "Description": "A manifest used to verify that all fields from a full 1.1 singleton manifest can be deseri",
+    "ShortDescription": "A manifest used to verify that all fields from a full singleton manifest can be deserialized and updated.",
+    "Description": "A manifest used to verify that all fields from a full singleton manifest can be deserialized and updated.",
     "Moniker": "testMoniker",
     "Tags": [
         "testSingleton"

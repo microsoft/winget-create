@@ -77,29 +77,29 @@ In some cases, the publisher of the package may use a different marketing versio
 
 Search for an existing manifest and update the version:
 
-`wingetcreate.exe update --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --version <Version>`
 
 Search for an existing manifest and update the installer url:
 
-`wingetcreate.exe update --urls <InstallerUrl1> <InstallerUrl2> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --urls <InstallerUrl1> <InstallerUrl2>`
 
 Save and publish updated manifest:
 
-`wingetcreate.exe update --out <OutputDirectory> --token <GitHubPersonalAccessToken> --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --out <OutputDirectory> --token <GitHubPersonalAccessToken> --version <Version>`
 
 Override the architecture of an installer:
 
-`wingetcreate.exe update --urls '<InstallerUrl1>|<InstallerArchitecture>' --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --urls '<InstallerUrl1>|<InstallerArchitecture>' --version <Version>`
 
 Override the scope of an installer:
-`wingetcreate.exe update --urls '<InstallerUrl1>|<InstallerScope>' --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --urls '<InstallerUrl1>|<InstallerScope>' --version <Version>`
 
 > [!NOTE]
 > The <kbd>|</kbd> character is interpreted as the pipeline operator in most shells. To use the overrides, you should wrap the installer url in quotes.
 
 Update an existing manifest and submit PR to GitHub:
 
-`wingetcreate.exe update --submit --token <GitHubPersonalAccessToken> --urls <InstallerUrl1> <InstallerUrl2> --version <Version> <PackageIdentifier>`
+`wingetcreate.exe update <PackageIdentifier> --submit --token <GitHubPersonalAccessToken> --urls <InstallerUrl1> <InstallerUrl2> --version <Version>`
 
 ## Arguments
 
@@ -119,7 +119,8 @@ The following arguments are available:
 | **-r, --replace** |  Boolean value for replacing an existing manifest from the Windows Package Manager repo. Optionally provide a version or else the latest version will be replaced. Default is false. |
 | **-i, --interactive** |  Boolean value for making the update command interactive. If true, the tool will prompt the user for input. Default is false. |
 | **-f, --format** |  Output format of the manifest. Default is "yaml". |
-| **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials. |
+| **--allow-unsecure-downloads** | Allow unsecure downloads (HTTP) for this operation. |
+| **-t, --token** |  GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials. <br/>⚠️ _Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token._ |
 | **-n, --no-open** |  Boolean value that controls whether the pull request should not be open in the browser on submission. Default is false, meaning the PR will be opened in the browser. |
 | **-?, --help** |  Gets additional help on this command. |
 

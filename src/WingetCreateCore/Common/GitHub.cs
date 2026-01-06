@@ -7,7 +7,10 @@ namespace Microsoft.WingetCreateCore.Common
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net.Http;
     using System.Security.Cryptography;
+    using System.Text;
+    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using Jose;
     using Microsoft.WingetCreateCore.Common.Exceptions;
@@ -42,7 +45,7 @@ namespace Microsoft.WingetCreateCore.Common
             this.github = new GitHubClient(new ProductHeaderValue(UserAgentName));
             if (githubApiToken != null)
             {
-                this.github.Credentials = new Credentials(githubApiToken, AuthenticationType.Bearer);
+                this.github.Credentials = new Credentials(githubApiToken, Octokit.AuthenticationType.Bearer);
             }
         }
 
@@ -59,7 +62,7 @@ namespace Microsoft.WingetCreateCore.Common
             string jwtToken = GetJwtToken(gitHubAppPrivateKeyPem, gitHubAppId);
 
             var github = new GitHubClient(new ProductHeaderValue(UserAgentName));
-            github.Credentials = new Credentials(jwtToken, AuthenticationType.Bearer);
+            github.Credentials = new Credentials(jwtToken, Octokit.AuthenticationType.Bearer);
 
             var installation = await github.GitHubApps.GetRepositoryInstallationForCurrent(wingetRepoOwner, wingetRepo);
             var response = await github.GitHubApps.CreateInstallationToken(installation.Id);
@@ -240,7 +243,7 @@ namespace Microsoft.WingetCreateCore.Common
         public async Task<bool> PopulateGitHubMetadata(Manifests manifests, string serializerFormat)
         {
             // Only populate metadata if we have a valid GitHub token.
-            if (this.github.Credentials.AuthenticationType != AuthenticationType.Anonymous)
+            if (this.github.Credentials.AuthenticationType != Octokit.AuthenticationType.Anonymous)
             {
                 return await GitHubManifestMetadata.PopulateManifestMetadata(manifests, serializerFormat, this.github);
             }
@@ -333,26 +336,20 @@ namespace Microsoft.WingetCreateCore.Common
             var upstreamMasterSha = upstreamMaster.Object.Sha;
 
             Reference newBranch = null;
-            bool forkSyncAttempted = false;
-
             try
             {
                 var retryPolicy = Policy
                     .Handle<ApiException>()
-                    .Or<NonFastForwardException>()
+                    .Or<GenericSyncFailureException>()
                     .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
 
                 await retryPolicy.ExecuteAsync(async () =>
                 {
                     // Related issue: https://github.com/microsoft/winget-create/issues/282
                     // There is a known issue where a reference is unable to be created if the fork is behind by too many commits.
-                    // Always attempt to sync fork during first execution in order to mitigate the possibility of this scenario occurring.
-                    // If the fork is behind by too many commits, syncing will also fail with a NotFoundException.
-                    // Updating the fork can fail if it is a non-fast forward update, but this should not be blocking as pull request submission can still proceed.
-                    // If creating a reference fails, that means syncing the fork also failed, therefore the user will need to manually sync their repo regardless.
-                    if (!forkSyncAttempted && submitToFork)
+                    // Always attempt to sync fork in order to mitigate the possibility of this scenario occurring.
+                    if (submitToFork)
                     {
-                        forkSyncAttempted = true;
                         await this.UpdateForkedRepoWithUpstreamCommits(repo);
                     }
 
@@ -474,17 +471,41 @@ namespace Microsoft.WingetCreateCore.Common
             var upstream = forkedRepo.Parent;
             var compareResult = await this.github.Repository.Commit.Compare(upstream.Id, upstream.DefaultBranch, $"{forkedRepo.Owner.Login}:{forkedRepo.DefaultBranch}");
 
-            // Check to ensure that the update is only a fast-forward update.
             if (compareResult.BehindBy > 0)
             {
-                int commitsAheadBy = compareResult.AheadBy;
-                if (commitsAheadBy > 0)
+                // Octokit .NET doesn't support sync fork endpoint, so we make a direct call to the GitHub API.
+                // Tracking issue for the request: https://github.com/octokit/octokit.net/issues/2989
+                HttpClient httpClient = new HttpClient();
+
+                // API reference: https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#sync-a-fork-branch-with-the-upstream-repository
+                var url = $"https://api.github.com/repos/{forkedRepo.Owner.Login}/{forkedRepo.Name}/merge-upstream";
+
+                // Headers
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.github.Credentials.Password);
+                httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
+                httpClient.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+                httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(Constants.ProgramName);
+
+                // Payload
+                JsonObject jsonObject = new JsonObject { { "branch", forkedRepo.DefaultBranch } };
+                var content = new StringContent(jsonObject.ToString(), Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(url, content);
+
+                // 409 status code
+                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
                 {
-                    throw new NonFastForwardException(commitsAheadBy);
+                    throw new BranchMergeConflictException();
                 }
 
-                var upstreamBranchReference = await this.github.Git.Reference.Get(upstream.Id, $"heads/{upstream.DefaultBranch}");
-                await this.github.Git.Reference.Update(forkedRepo.Id, $"heads/{forkedRepo.DefaultBranch}", new ReferenceUpdate(upstreamBranchReference.Object.Sha));
+                // 422 status code
+                if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                {
+                    throw new GenericSyncFailureException();
+                }
+
+                // The API doesn't document another error code. If this fails, a generic HttpRequestException is thrown.
+                response.EnsureSuccessStatusCode();
             }
         }
 

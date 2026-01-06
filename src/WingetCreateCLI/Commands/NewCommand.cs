@@ -75,6 +75,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string OutputDir { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to allow unsecure downloads.
+        /// </summary>
+        [Option("allow-unsecure-downloads", Required = false, HelpText = "AllowUnsecureDownloads_HelpText", ResourceType = typeof(Resources))]
+        public bool AllowUnsecureDownloads { get; set; }
+
+        /// <summary>
         /// Gets or sets the format of the output manifest files.
         /// </summary>
         [Option('f', "format", Required = false, HelpText = "ManifestFormat_HelpText", ResourceType = typeof(Resources))]
@@ -122,7 +128,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 foreach (var installerUrl in this.InstallerUrls)
                 {
-                    string packageFile = await DownloadPackageFile(installerUrl);
+                    string packageFile = await DownloadPackageFile(installerUrl, this.AllowUnsecureDownloads);
                     if (string.IsNullOrEmpty(packageFile))
                     {
                         return false;
@@ -201,6 +207,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                 try
                 {
                     PackageParser.ParsePackages(installerUpdateList, manifests);
+
+                    // The CLI parses ARP entries uses them in update flow to update existing AppsAndFeaturesEntries in the manifest.
+                    // AppsAndFeaturesEntries should not be set for a new package as they may cause more harm than good.
+                    RemoveARPEntries(manifests.InstallerManifest);
                     DisplayArchitectureWarnings(installerUpdateList);
                 }
                 catch (IOException iOException) when (iOException.HResult == -2147024671)
@@ -263,7 +273,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     ShiftInstallerFieldsToRootLevel(manifests.InstallerManifest);
                     RemoveEmptyStringAndListFieldsInManifests(manifests);
                     DisplayManifestPreview(manifests);
-                    isManifestValid = ValidateManifestsInTempDir(manifests);
+                    isManifestValid = ValidateManifestsInTempDir(manifests, this.Format);
                 }
                 while (Prompt.Confirm(Resources.ConfirmManifestCreation_Message));
 
@@ -511,6 +521,15 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 // Add the installer with the merged nested installer files back to the manifest
                 installerManifest.Installers.Add(installerToMergeInto);
+            }
+        }
+
+        private static void RemoveARPEntries(InstallerManifest installerManifest)
+        {
+            installerManifest.AppsAndFeaturesEntries = null;
+            foreach (var installer in installerManifest.Installers)
+            {
+                installer.AppsAndFeaturesEntries = null;
             }
         }
 
