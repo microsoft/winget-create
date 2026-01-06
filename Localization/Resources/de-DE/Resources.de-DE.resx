@@ -1441,9 +1441,6 @@ Warnung: Die Verwendung dieses Arguments kann dazu führen, dass das Token proto
   <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
     <value>Es wurde kein Vorgang angegeben. Verwenden Sie „--help“, um verfügbare Vorgänge anzuzeigen.</value>
   </data>
-  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
-    <value>Der Vorgang der DSC-Ressource ist fehlgeschlagen</value>
-  </data>
   <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
     <value>Gibt an, ob sich eine Instanz im gewünschten Zustand befindet</value>
   </data>

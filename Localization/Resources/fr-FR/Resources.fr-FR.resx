@@ -1441,9 +1441,6 @@ Avertissement : l’utilisation de cet argument peut entraîner la journalisati
   <data name="DscResourceOperationNotSpecified_Message" xml:space="preserve">
     <value>Aucune opération n’est spécifiée. Utilisez --help pour voir les opérations disponibles.</value>
   </data>
-  <data name="DscResourceOperationFailed_Message" xml:space="preserve">
-    <value>Nous n’avons pas pu effectuer l’opération de la ressource DSC</value>
-  </data>
   <data name="DscResourcePropertyDescriptionInDesiredState" xml:space="preserve">
     <value>Indique si un instance est dans l’état souhaité</value>
   </data>

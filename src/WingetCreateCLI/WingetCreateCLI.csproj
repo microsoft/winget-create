@@ -99,10 +99,6 @@
     <SettingSchema Include="$(ProjectDir)\Schemas\settings.schema.0.1.json" ModelName="Settings" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
   <!--Generate settings manifest-->
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Inputs="@(SettingSchema)" Outputs="@(SettingSchema -> '$(ProjectDir)Models\%(ModelName)Model.cs')">
       <Message Importance="high" Text="Rebuilding: %(SettingSchema.ModelName) because $(ProjectDir)Models\%(ModelName)Model.cs is older than %(FullPath)" />

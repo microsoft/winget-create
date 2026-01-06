@@ -224,11 +224,14 @@ namespace Microsoft.WingetCreateTests
         /// <returns>Result of executing the DSC command.</returns>
         public static async Task<DscExecuteResult> ExecuteDscCommandAsync(params string[] args)
         {
-            var sw = new StringWriter();
-            Console.SetOut(sw);
+            var outSw = new StringWriter();
+            var errSw = new StringWriter();
+            Console.SetOut(outSw);
+            Console.SetError(errSw);
             var executeResult = await Parser.Default.ParseArguments<DscCommand>(args).Value.Execute();
-            var output = sw.ToString();
-            return new(executeResult, output);
+            var output = outSw.ToString();
+            var errorOutput = errSw.ToString();
+            return new(executeResult, output, errorOutput);
         }
     }
 }

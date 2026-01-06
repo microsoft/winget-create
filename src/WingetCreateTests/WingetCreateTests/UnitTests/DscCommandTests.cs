@@ -86,6 +86,5 @@ public class DscCommandTests
 
         // Assert
         Assert.That(result.Success, Is.False);
-        Assert.That(result.Output, Does.Contain(Resources.DscResourceOperationFailed_Message));
     }
 }

@@ -844,15 +844,6 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DSC resource operation failed.
-        /// </summary>
-        public static string DscResourceOperationFailed_Message {
-            get {
-                return ResourceManager.GetString("DscResourceOperationFailed_Message", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to No operation specified. Use --help to see available operations..
         /// </summary>
         public static string DscResourceOperationNotSpecified_Message {

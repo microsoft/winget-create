@@ -86,9 +86,33 @@ public abstract class BaseDscCommand
     public abstract bool Schema();
 
     /// <summary>
+    /// Writes a JSON output line to the console.
+    /// </summary>
+    /// <param name="token">The JSON token to be written.</param>
+    protected static void WriteJsonOutputLine(JToken token)
+    {
+        Console.WriteLine(token.ToString(Formatting.None));
+    }
+
+    /// <summary>
+    /// Writes a JSON output line to the error stream.
+    /// </summary>
+    /// <param name="level">The message level.</param>
+    /// <param name="message">The message to be written.</param>
+    protected static void WriteMessageOutputLine(DscMessageLevel level, string message)
+    {
+        var token = new JObject
+        {
+            [GetMessageLevel(level)] = message,
+        };
+        Console.Error.WriteLine(token.ToString(Formatting.None));
+    }
+
+    /// <summary>
     /// Creates a Json schema for a DSC resource object.
     /// </summary>
     /// <typeparam name="T">The type of the resource object.</typeparam>
+    /// <param name="commandName">The name of the command for which the schema is being created.</param>
     /// <returns>A Json object representing the schema.</returns>
     protected JObject CreateSchema<T>(string commandName)
     where T : BaseResourceObject, new()
@@ -106,11 +130,21 @@ public abstract class BaseDscCommand
     }
 
     /// <summary>
-    /// Writes a JSON output line to the console.
+    /// Gets the message level as a string based on the provided DscMessageLevel enum value.
     /// </summary>
-    /// <param name="token">The JSON token to be written.</param>
-    protected void WriteJsonOutputLine(JToken token)
+    /// <param name="level">The DscMessageLevel enum value.</param>
+    /// <returns>A string representation of the message level.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the provided message level is not recognized.</exception>
+    private static string GetMessageLevel(DscMessageLevel level)
     {
-        Console.WriteLine(token.ToString(Formatting.None));
+        return level switch
+        {
+            DscMessageLevel.Error => "error",
+            DscMessageLevel.Warning => "warn",
+            DscMessageLevel.Info => "info",
+            DscMessageLevel.Debug => "debug",
+            DscMessageLevel.Trace => "trace",
+            _ => throw new ArgumentOutOfRangeException(nameof(level), level, null),
+        };
     }
 }
