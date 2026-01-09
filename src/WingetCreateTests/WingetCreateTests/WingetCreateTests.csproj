@@ -96,9 +96,9 @@
     <None Update="Resources\TestPublisher.SingleInstallerWithMultipleDisplayVersions.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Update="Resources\TestPublisher.UpdateDisplayName.yaml">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+    <None Update="Resources\TestPublisher.UpdateDisplayName.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\TestPublisher.UpdateDisplayVersion.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

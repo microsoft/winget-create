@@ -614,7 +614,6 @@ namespace Microsoft.WingetCreateUnitTests
 
             // Initial installers
             var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
-            var initialSecondInstaller = initialManifests.SingletonManifest.Installers[1];
 
             // Initial display names (second installer does not have a display name)
             var initialFirstDisplayName = initialFirstInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayName;
