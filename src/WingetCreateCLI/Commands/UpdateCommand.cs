@@ -74,6 +74,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public string DisplayVersion { get; set; }
 
         /// <summary>
+        /// Gets or sets the new value used to update the display name field in the manifest.
+        /// </summary>
+        [Option("display-name", Required = false, HelpText = "DisplayName_HelpText", ResourceType = typeof(Resources))]
+        public string DisplayName { get; set; }
+
+        /// <summary>
         /// Gets or sets the release notes URL for the manifest.
         /// </summary>
         [Option("release-notes-url", Required = false, HelpText = "ReleaseNotesUrl_HelpText", ResourceType = typeof(Resources))]
@@ -363,6 +369,18 @@ namespace Microsoft.WingetCreateCLI.Commands
                     if (string.IsNullOrEmpty(installerUpdate.DisplayVersion))
                     {
                         installerUpdate.DisplayVersion = this.DisplayVersion;
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(this.DisplayName))
+            {
+                // Use --display-name value if provided as an argument.
+                foreach (InstallerMetadata installerUpdate in installerMetadataList)
+                {
+                    if (string.IsNullOrEmpty(installerUpdate.DisplayName))
+                    {
+                        installerUpdate.DisplayName = this.DisplayName;
                     }
                 }
             }
