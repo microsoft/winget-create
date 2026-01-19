@@ -856,10 +856,10 @@ namespace Microsoft.WingetCreateCore
                 }
                 catch (Win32Exception err)
                 {
-                    if ((err.Message == "The specified resource type cannot be found in the image file."
-                        && err.NativeErrorCode == 1813) ||
-                        (err.Message == "The specified image file did not contain a resource section."
-                        && err.NativeErrorCode == 1812))
+                    const int ERROR_RESOURCE_DATA_NOT_FOUND = 1812;
+                    const int ERROR_RESOURCE_TYPE_NOT_FOUND = 1813;
+                    if (err.NativeErrorCode == ERROR_RESOURCE_DATA_NOT_FOUND ||
+                        err.NativeErrorCode == ERROR_RESOURCE_TYPE_NOT_FOUND)
                     {
                         installerTypeEnum = (baseInstaller.InstallerType == InstallerType.Portable ||
                                 baseInstaller.NestedInstallerType == NestedInstallerType.Portable) ?
