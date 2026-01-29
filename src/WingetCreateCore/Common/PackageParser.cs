@@ -82,6 +82,27 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
+        /// Manifest Root Type Enum
+        /// </summary>
+        public enum ManifestRootType
+        {
+            /// <summary>
+            /// Unknown root type.
+            /// </summary>
+            Unknown,
+
+            /// <summary>
+            /// Manifests root.
+            /// </summary>
+            Manifests,
+
+            /// <summary>
+            /// Fonts root.
+            /// </summary>
+            Fonts,
+        }
+
+        /// <summary>
         /// Gets or sets the path in the %TEMP% directory where installers are downloaded to.
         /// </summary>
         public static string InstallerDownloadPath { get; set; } = DefaultInstallerDownloadPath;
@@ -402,6 +423,29 @@ namespace Microsoft.WingetCreateCore
         /// <param name="installerPaths">List of installer paths.</param>
         /// <returns>True if the installerPath is considered a font type.</returns>
         public static bool IsFontPackage(List<string> installerPaths) => installerPaths.All(i => IsFontInstaller(i));
+
+        /// <summary>
+        /// Determines the root type of the given installer paths.
+        /// </summary>
+        /// <param name="installerPaths">List of installer paths.</param>
+        /// <returns>ManifestRootType for that installer path.</returns>
+        public static ManifestRootType GetManifestRootTypeForInstallerPaths(List<string> installerPaths)
+        {
+            // If all installer paths are font it is a font package.
+            if (IsFontPackage(installerPaths))
+            {
+                return ManifestRootType.Fonts;
+            }
+
+            // If any installer paths are font, but we aren't a font package, then this is a mixed type.
+            if (installerPaths.Any(i => IsFontInstaller(i)))
+            {
+                return ManifestRootType.Unknown;
+            }
+
+            // No font installer paths, this is a Manifests root.
+            return ManifestRootType.Manifests;
+        }
 
         /// <summary>
         /// Finds an existing installer that matches the new installer by checking the installerType and the following:

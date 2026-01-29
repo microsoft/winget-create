@@ -2052,6 +2052,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Found mixed font and non-font installer types in the manifest. This is not a supported configuration and the manifest should be edited to contain only font or non-font installers before submission..
+        /// </summary>
+        public static string MixedInstallerRootTypes_ErrorMessage {
+            get {
+                return ResourceManager.GetString("MixedInstallerRootTypes_ErrorMessage", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Would you like to modify the optional default locale fields?.
         /// </summary>
         public static string ModifyOptionalDefaultLocaleFields_Message {
