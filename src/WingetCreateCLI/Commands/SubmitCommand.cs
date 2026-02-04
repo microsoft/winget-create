@@ -9,6 +9,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
+    using Microsoft.VisualBasic;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
@@ -128,7 +129,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
+                // TODO: Add Font Root Support
+                // See issue: See issue https://github.com/microsoft/winget-create/issues/647
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, WingetCreateCore.Common.Constants.WingetManifestRoot, this.Replace, this.ReplaceVersion);
             }
             else if (Directory.Exists(expandedPath) && ValidateManifest(expandedPath, this.Format))
             {
@@ -140,7 +143,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
+                // TODO: Add Font Root Support
+                // See issue: See issue https://github.com/microsoft/winget-create/issues/647
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, WingetCreateCore.Common.Constants.WingetManifestRoot, this.Replace, this.ReplaceVersion);
             }
             else
             {

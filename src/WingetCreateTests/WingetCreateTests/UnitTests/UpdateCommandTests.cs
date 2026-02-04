@@ -75,11 +75,12 @@ namespace Microsoft.WingetCreateUnitTests
 
             string packageIdentifier = "TestPublisher.SingleExe";
             string version = "1.2.3.4";
+            string root = Constants.WingetManifestRoot;
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(packageIdentifier, version, this.tempPath, new[] { $"{installerUrl}" });
             var updatedManifests = await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent);
             ClassicAssert.IsTrue(updatedManifests, "Command should have succeeded");
 
-            string manifestDir = Utils.GetAppManifestDirPath(packageIdentifier, version);
+            string manifestDir = Utils.GetAppManifestDirPath(packageIdentifier, version, root);
             var updatedManifestContents = Directory.GetFiles(Path.Combine(this.tempPath, manifestDir)).Select(f => File.ReadAllText(f));
             ClassicAssert.IsTrue(updatedManifestContents.Any(), "Updated manifests were not created successfully");
             Manifests manifestsToValidate = Serialization.DeserializeManifestContents(updatedManifestContents);
@@ -172,11 +173,12 @@ namespace Microsoft.WingetCreateUnitTests
         {
             string packageId = "TestPublisher.EmptyFields";
             string version = "1.2.3.4";
+            string root = Constants.WingetManifestRoot;
             TestUtils.InitializeMockDownloads(TestConstants.TestExeInstaller);
             (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData(packageId, version, this.tempPath, null);
             bool updateExecuted = await command.ExecuteManifestUpdate(initialManifestContent, this.testCommandEvent);
             ClassicAssert.IsTrue(updateExecuted, "Command should have succeeded");
-            string manifestDir = Utils.GetAppManifestDirPath(packageId, version);
+            string manifestDir = Utils.GetAppManifestDirPath(packageId, version, root);
             var updatedManifestContents = Directory.GetFiles(Path.Combine(this.tempPath, manifestDir)).Select(f => File.ReadAllText(f));
             ClassicAssert.IsTrue(updatedManifestContents.Any(), "Updated manifests were not created successfully");
 

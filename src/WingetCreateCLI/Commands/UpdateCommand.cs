@@ -287,7 +287,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.OutputDir = Directory.GetCurrentDirectory();
             }
 
-            string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, this.OutputDir);
+            // TODO: Font root support.
+            // See issue: See issue https://github.com/microsoft/winget-create/issues/647
+            string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, Constants.WingetManifestRoot, this.OutputDir);
 
             if (ValidateManifest(manifestDirectoryPath, this.Format))
             {
@@ -314,9 +316,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                         }
                     }
 
+                    // TODO: Font root support.
+                    // See issue: See issue https://github.com/microsoft/winget-create/issues/647
                     return await this.LoadGitHubClient(true)
                         ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                             updatedManifests,
+                            Constants.WingetManifestRoot,
                             this.GetPRTitle(updatedManifests, originalManifests),
                             this.Replace,
                             this.ReplaceVersion))

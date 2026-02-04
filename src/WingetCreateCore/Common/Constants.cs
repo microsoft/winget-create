@@ -19,6 +19,11 @@ namespace Microsoft.WingetCreateCore.Common
         public const string WingetManifestRoot = "manifests";
 
         /// <summary>
+        /// Root directory of the winget-pkgs fonts repository.
+        /// </summary>
+        public const string WingetFontRoot = "fonts";
+
+        /// <summary>
         /// Client Id for the WingetCreate GitHub OAuth app.
         /// </summary>
         public const string GitHubOAuthClientId = "7799527e58dca9b4d33c";

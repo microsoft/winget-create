@@ -25,6 +25,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Microsoft.WingetCreateCore.Models.Version;
+    using Newtonsoft.Json.Schema.Generation;
     using Sharprompt;
 
     /// <summary>
@@ -41,7 +42,20 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Installer type file extensions that are supported.
         /// </summary>
-        private static readonly string[] SupportedInstallerTypeExtensions = new[] { ".msix", ".msi", ".exe", ".msixbundle", ".appx", ".appxbundle" };
+        private static readonly string[] SupportedInstallerTypeExtensions =
+        [
+            ".msix",
+            ".msi",
+            ".exe",
+            ".msixbundle",
+            ".appx",
+            ".appxbundle",
+            ".otf",         // OpenType Font
+            ".ttf",         // TrueType Font
+            ".fnt",         // Font
+            ".ttc",         // TrueType Font Collection
+            ".otc",         // OpenType Font Collection
+        ];
 
         /// <summary>
         /// Gets the usage examples for the New command.
@@ -117,6 +131,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Prompt.Symbols.Prompt = new Symbol(string.Empty, string.Empty);
 
                 Manifests manifests = new Manifests();
+                PackageParser.ManifestRootType manifestRootType = PackageParser.ManifestRootType.Unknown;
 
                 if (!this.InstallerUrls.Any())
                 {
@@ -169,6 +184,29 @@ namespace Microsoft.WingetCreateCLI.Commands
                             .ToList();
 
                         int extractedFilesCount = extractedFiles.Count();
+
+                        var rootTypeForFiles = PackageParser.GetManifestRootTypeForInstallerPaths(extractedFiles);
+                        var isFontPackage = rootTypeForFiles == PackageParser.ManifestRootType.Fonts;
+
+                        // Set the root type if it is unknown.
+                        if (manifestRootType == PackageParser.ManifestRootType.Unknown)
+                        {
+                            manifestRootType = rootTypeForFiles;
+                        }
+
+                        // Check for installer type mismatches or mixed installers.
+                        if ((manifestRootType != rootTypeForFiles) || (manifestRootType == PackageParser.ManifestRootType.Unknown))
+                        {
+                            // Mismatched root and installer types is a WinGet-Pkgs policy, not an invalid manifest.
+                            Logger.WarnLocalized(nameof(Resources.MixedInstallerRootTypes_ErrorMessage));
+                        }
+
+                        // If the root type is still unknown, it means a mixed package. We will assume manifests.
+                        if (manifestRootType == PackageParser.ManifestRootType.Unknown)
+                        {
+                            manifestRootType = PackageParser.ManifestRootType.Manifests;
+                        }
+
                         List<string> selectedInstallers;
 
                         if (extractedFilesCount == 0)
@@ -180,26 +218,70 @@ namespace Microsoft.WingetCreateCLI.Commands
                         {
                             selectedInstallers = extractedFiles;
                         }
+                        else if (isFontPackage)
+                        {
+                            // If this is a font package, every installer is intended to be installed.
+                            selectedInstallers = extractedFiles;
+                        }
                         else
                         {
                             selectedInstallers = Prompt.MultiSelect(Resources.SelectInstallersFromZip_Message, extractedFiles, minimum: 1).ToList();
                         }
 
-                        foreach (var installer in selectedInstallers)
+                        if (isFontPackage)
                         {
+                            // If every installer is a single font package, we can convert the entire package into a single font nested installer.
+                            List<NestedInstallerFile> nestedInstallerFiles = [];
+                            foreach (var fontFile in selectedInstallers)
+                            {
+                                nestedInstallerFiles.Add(new NestedInstallerFile { RelativeFilePath = fontFile });
+                            }
+
                             installerUpdateList.Add(
                             new InstallerMetadata
                             {
                                 InstallerUrl = installerUrl,
                                 PackageFile = packageFile,
-                                NestedInstallerFiles = new List<NestedInstallerFile> { new NestedInstallerFile { RelativeFilePath = installer } },
+                                NestedInstallerFiles = nestedInstallerFiles,
+                                OverrideArchitecture = Architecture.Neutral,
                                 IsZipFile = true,
                                 ExtractedDirectory = extractDirectory,
                             });
                         }
+                        else
+                        {
+                            foreach (var installer in selectedInstallers)
+                            {
+                                installerUpdateList.Add(
+                                new InstallerMetadata
+                                {
+                                    InstallerUrl = installerUrl,
+                                    PackageFile = packageFile,
+                                    NestedInstallerFiles = new List<NestedInstallerFile> { new NestedInstallerFile { RelativeFilePath = installer } },
+                                    IsZipFile = true,
+                                    ExtractedDirectory = extractDirectory,
+                                });
+                            }
+                        }
                     }
-                    else
+                    else // Not a Zip package archive.
                     {
+                        // Set the manifest root type. There is only one file here so it can only be Font or Manifests.
+                        var rootTypeForInstaller = PackageParser.GetManifestRootTypeForInstallerPaths([packageFile]);
+
+                        // Set the root type if it is unknown.
+                        if (manifestRootType == PackageParser.ManifestRootType.Unknown)
+                        {
+                            manifestRootType = rootTypeForInstaller;
+                        }
+
+                        // Check for root type mismatches.
+                        if (manifestRootType != rootTypeForInstaller)
+                        {
+                            // Mismatched root and installer types is a WinGet-Pkgs policy, not an invalid manifest.
+                            Logger.WarnLocalized(nameof(Resources.MixedInstallerRootTypes_ErrorMessage));
+                        }
+
                         installerUpdateList.Add(new InstallerMetadata { InstallerUrl = installerUrl, PackageFile = packageFile });
                     }
                 }
@@ -282,7 +364,8 @@ namespace Microsoft.WingetCreateCLI.Commands
                     this.OutputDir = Directory.GetCurrentDirectory();
                 }
 
-                SaveManifestDirToLocalPath(manifests, this.OutputDir);
+                var manifestRoot = manifestRootType == PackageParser.ManifestRootType.Fonts ? Constants.WingetFontRoot : Constants.WingetManifestRoot;
+                SaveManifestDirToLocalPath(manifests, manifestRoot, this.OutputDir);
 
                 if (isManifestValid && Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
                 {
@@ -494,13 +577,13 @@ namespace Microsoft.WingetCreateCLI.Commands
 
         /// <summary>
         /// Merge nested installer files into a single installer if:
-        /// 1. Matching installers have NestedInstallerType: portable.
+        /// 1. Matching installers have NestedInstallerType: portable
         /// 2. Matching installers have the same architecture.
         /// 3. Matching installers have the same hash.
         /// </summary>
         private static void MergeNestedInstallerFilesIfApplicable(InstallerManifest installerManifest)
         {
-            var nestedPortableInstallers = installerManifest.Installers.Where(i => i.NestedInstallerType == NestedInstallerType.Portable).ToList();
+            var nestedPortableInstallers = installerManifest.Installers.Where(i => (i.NestedInstallerType == NestedInstallerType.Portable)).ToList();
             var mergeableInstallersList = nestedPortableInstallers.GroupBy(i => i.Architecture + i.InstallerSha256).ToList();
             foreach (var installers in mergeableInstallersList)
             {

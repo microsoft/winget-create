@@ -176,7 +176,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     this.OutputDir = Directory.GetCurrentDirectory();
                 }
 
-                string manifestDirectoryPath = SaveManifestDirToLocalPath(originalManifests, this.OutputDir);
+                // TODO: Font root support.
+                // See issue: See issue https://github.com/microsoft/winget-create/issues/647
+                string manifestDirectoryPath = SaveManifestDirToLocalPath(originalManifests, WingetCreateCore.Common.Constants.WingetManifestRoot, this.OutputDir);
 
                 if (ValidateManifest(manifestDirectoryPath, this.Format))
                 {

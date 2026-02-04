@@ -166,10 +166,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Creates a formatted directory of manifest files from the manifest object models and saves the directory to a local path.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models.</param>
+        /// <param name="manifestRoot">Manifest root name.</param>
         /// <param name="outputDir">Output directory where the manifests are saved locally.</param>
         /// <returns>Path to manifest directory.</returns>
         protected static string SaveManifestDirToLocalPath(
             Manifests manifests,
+            string manifestRoot,
             string outputDir)
         {
             VersionManifest versionManifest = manifests.VersionManifest;
@@ -180,7 +182,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             outputDir = Environment.ExpandEnvironmentVariables(outputDir);
             string version = versionManifest.PackageVersion;
             string packageId = versionManifest.PackageIdentifier;
-            string manifestDir = Utils.GetAppManifestDirPath(packageId, version);
+            string manifestDir = Utils.GetAppManifestDirPath(packageId, version, manifestRoot);
             string fullDirPath = Path.GetFullPath(Path.Combine(outputDir, manifestDir));
 
             try
@@ -739,11 +741,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Submits a pull request with multifile manifests using the user's GitHub access token.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be submitted.</param>
+        /// <param name="manifestRoot">Manifest root name.</param>
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
         /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
         /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
-        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string manifestRoot = Constants.WingetManifestRoot, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
         {
             // Community repo only supports yaml submissions.
             if (this.WingetRepo == DefaultWingetRepo &&
@@ -765,7 +768,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                Octokit.PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion);
+                Octokit.PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, manifestRoot, prTitle, shouldReplace, replaceVersion);
                 this.PullRequestNumber = pullRequest.Number;
                 PullRequestEvent pullRequestEvent = new PullRequestEvent { IsSuccessful = true, PullRequestNumber = pullRequest.Number };
                 TelemetryManager.Log.WriteEvent(pullRequestEvent);
