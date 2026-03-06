@@ -39,7 +39,7 @@ extends:
       fetchTags: false
 
     stages:
-    - stage: __default
+    - stage: deploy
 
       jobs:
         - job: GetVersion
