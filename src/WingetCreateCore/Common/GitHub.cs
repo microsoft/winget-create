@@ -417,7 +417,7 @@ namespace Microsoft.WingetCreateCore.Common
             }
         }
 
-        private async Task<string> GetVersionDirectoryPath(string packageId, string manifestRoot = Constants.WingetManifestRoot, string version = null)
+        private async Task<string> GetVersionDirectoryPath(string packageId, string version = null, string manifestRoot = Constants.WingetManifestRoot)
         {
             string appPath = Utils.GetAppManifestDirPath(packageId, string.Empty, manifestRoot, '/');
             var contents = await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, appPath);
