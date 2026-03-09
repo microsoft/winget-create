@@ -158,7 +158,7 @@ You can install the prerequisites in one of two ways:
 * The following workloads:
    * .NET Desktop Development
    * Universal Windows Platform Development
-* Windows 11 SDK (10.0.22000.0) (Tools -> Get Tools and Features -> Individual Components)
+* Windows 11 SDK (10.0.26100.0) (Tools -> Get Tools and Features -> Individual Components)
 
 ### Building
 
