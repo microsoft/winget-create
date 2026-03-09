@@ -85,6 +85,15 @@ extends:
 
           steps:
             - task: PowerShell@2
+              name: InspectSDKs
+              displayName: 'Inspect installed UAP SDKs'
+              inputs:
+                targetType: inline
+                script: |
+                  Write-Host "Installed Windows Kits:"
+                  Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\Platforms\UAP' -ErrorAction SilentlyContinue | Select Name
+                  Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\DesignTime\CommonConfiguration\Neutral\UAP' -ErrorAction SilentlyContinue | Select Name
+            - task: PowerShell@2
               name: OutputVersionStep
               displayName: Set output variables for UpdateManifest job
               inputs:
