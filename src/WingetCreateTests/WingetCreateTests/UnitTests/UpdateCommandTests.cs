@@ -1482,7 +1482,7 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType at the root level should be ZIP");
             ClassicAssert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType at the root level should be EXE");
             ClassicAssert.IsTrue(updatedInstallerManifest.Scope == Scope.Machine, "Scope at the root level should be machine");
-            ClassicAssert.IsTrue(updatedInstallerManifest.MinimumOSVersion == "10.0.22000.0", "MinimumOSVersion at the root level should be 10.0.22000.0");
+            ClassicAssert.IsTrue(updatedInstallerManifest.MinimumOSVersion == "10.0.26100.0", "MinimumOSVersion at the root level should be 10.0.26100.0");
             ClassicAssert.IsTrue(updatedInstallerManifest.PackageFamilyName == "TestPackageFamilyName", "PackageFamilyName at the root level should be TestPackageFamilyName");
             ClassicAssert.IsTrue(updatedInstallerManifest.UpgradeBehavior == UpgradeBehavior.Install, "UpgradeBehavior at the root level should be install");
             ClassicAssert.IsTrue(updatedInstallerManifest.ElevationRequirement == ElevationRequirement.ElevationRequired, "ElevationRequirement at the root level should be elevationRequired");
@@ -1649,7 +1649,7 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsTrue(updatedInstallerManifest.InstallerType == InstallerType.Zip, "InstallerType at the root level should be ZIP");
             ClassicAssert.IsTrue(updatedInstallerManifest.NestedInstallerType == NestedInstallerType.Exe, "NestedInstallerType at the root level should be EXE");
             ClassicAssert.IsTrue(updatedInstallerManifest.Scope == Scope.Machine, "Scope at the root level should be machine");
-            ClassicAssert.IsTrue(updatedInstallerManifest.MinimumOSVersion == "10.0.22000.0", "MinimumOSVersion at the root level should be 10.0.22000.0");
+            ClassicAssert.IsTrue(updatedInstallerManifest.MinimumOSVersion == "10.0.26100.0", "MinimumOSVersion at the root level should be 10.0.26100.0");
             ClassicAssert.IsTrue(updatedInstallerManifest.PackageFamilyName == "TestPackageFamilyName1", "PackageFamilyName at the root level should be TestPackageFamilyName");
             ClassicAssert.IsTrue(updatedInstallerManifest.UpgradeBehavior == UpgradeBehavior.Install, "UpgradeBehavior at the root level should be install");
             ClassicAssert.IsTrue(updatedInstallerManifest.ElevationRequirement == ElevationRequirement.ElevationRequired, "ElevationRequirement at the root level should be elevationRequired");
@@ -1741,7 +1741,7 @@ namespace Microsoft.WingetCreateUnitTests
 
             // Fields for first installer should be copied over from root
             ClassicAssert.IsTrue(firstInstaller.Scope == Scope.Machine, "Scope for the first installer should be copied over from root");
-            ClassicAssert.IsTrue(firstInstaller.MinimumOSVersion == "10.0.22000.0", "MinimumOSVersion for the first installer should be copied over from root");
+            ClassicAssert.IsTrue(firstInstaller.MinimumOSVersion == "10.0.26100.0", "MinimumOSVersion for the first installer should be copied over from root");
             ClassicAssert.IsTrue(firstInstaller.PackageFamilyName == "TestPackageFamilyName1", "PackageFamilyName for the first installer should be copied over from root");
             ClassicAssert.IsTrue(firstInstaller.UpgradeBehavior == UpgradeBehavior.Install, "UpgradeBehavior for the first installer should be copied over from root");
             ClassicAssert.IsTrue(firstInstaller.ElevationRequirement == ElevationRequirement.ElevationRequired, "ElevationRequirement for the first installer should be copied over from root");
