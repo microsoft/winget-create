@@ -20,7 +20,7 @@ variables:
   buildPlatform: "x64"
 
   # Docker image which is used to build the project
-  WindowsContainerImage: 'onebranch.azurecr.io/windows/ltsc2019/vse2022:latest'
+  WindowsContainerImage: 'onebranch.azurecr.io/windows/ltsc2022/vse2022:latest'
 
 resources:
   repositories:
