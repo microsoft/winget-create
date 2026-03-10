@@ -741,12 +741,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Submits a pull request with multifile manifests using the user's GitHub access token.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be submitted.</param>
-        /// <param name="manifestRoot">Manifest root name.</param>
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
         /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
         /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
+        /// <param name="manifestRoot">Manifest root name.</param>
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
-        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string manifestRoot = Constants.WingetManifestRoot, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null, string manifestRoot = Constants.WingetManifestRoot)
         {
             // Community repo only supports yaml submissions.
             if (this.WingetRepo == DefaultWingetRepo &&
@@ -768,7 +768,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                Octokit.PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, manifestRoot, prTitle, shouldReplace, replaceVersion);
+                Octokit.PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion, manifestRoot);
                 this.PullRequestNumber = pullRequest.Number;
                 PullRequestEvent pullRequestEvent = new PullRequestEvent { IsSuccessful = true, PullRequestNumber = pullRequest.Number };
                 TelemetryManager.Log.WriteEvent(pullRequestEvent);
