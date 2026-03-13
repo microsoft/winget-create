@@ -137,12 +137,12 @@ namespace Microsoft.WingetCreateCore.Common
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models to be submitted in the PR.</param>
         /// <param name="submitToFork">Bool indicating whether or not to submit the PR via a fork.</param>
-        /// <param name="manifestRoot">The manifest root name.</param>
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
         /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
         /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
+        /// <param name="manifestRoot">The manifest root name.</param>
         /// <returns>Pull request object.</returns>
-        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork, string manifestRoot = Constants.WingetManifestRoot, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null, string manifestRoot = Constants.WingetManifestRoot)
         {
             Dictionary<string, string> contents = new Dictionary<string, string>();
             string id;
@@ -189,6 +189,16 @@ namespace Microsoft.WingetCreateCore.Common
             // Close PR and delete its branch.
             await this.github.PullRequest.Update(this.wingetRepoOwner, this.wingetRepo, pullRequestId, new PullRequestUpdate() { State = ItemState.Closed });
             await this.DeletePullRequestBranch(pullRequestId);
+        }
+
+        /// <summary>
+        /// Retrieves a pull request based on the provided pull request id.
+        /// </summary>
+        /// <param name="pullRequestId">The pull request number.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<Octokit.PullRequest> GetPullRequest(int pullRequestId)
+        {
+            return await this.github.PullRequest.Get(this.wingetRepoOwner, this.wingetRepo, pullRequestId);
         }
 
         /// <summary>

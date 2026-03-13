@@ -84,6 +84,7 @@ namespace Microsoft.WingetCreateE2ETests
             };
             ClassicAssert.IsTrue(await submitCommand.Execute(), "Command should have succeeded");
             this.AssertValidationOutput(format);
+            await this.AssertPRTitle(submitCommand.PullRequestNumber, pullRequestTitle);
 
             // Clear output for the next command
             this.sw.GetStringBuilder().Clear();
@@ -118,6 +119,7 @@ namespace Microsoft.WingetCreateE2ETests
 
             // Since SubmitToGitHub is true, the command will first validate the manifest & then submit the PR
             this.AssertValidationOutput(format);
+            await this.AssertPRTitle(submitCommand.PullRequestNumber, pullRequestTitle);
             await this.gitHub.ClosePullRequest(updateCommand.PullRequestNumber);
         }
 
@@ -132,6 +134,12 @@ namespace Microsoft.WingetCreateE2ETests
             {
                 Assert.That(output, Does.Contain(Resources.SkippingManifestValidation_Message), "Skipping manifest validation message should be shown");
             }
+        }
+
+        private async Task AssertPRTitle(int pullRequestNumber, string expectedTitle)
+        {
+            Octokit.PullRequest pr = await this.gitHub.GetPullRequest(pullRequestNumber);
+            Assert.That(pr.Title, Is.EqualTo(expectedTitle), "PR title should match the expected title");
         }
     }
 }

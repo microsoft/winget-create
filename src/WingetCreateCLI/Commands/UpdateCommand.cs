@@ -321,10 +321,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return await this.LoadGitHubClient(true)
                         ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                             updatedManifests,
-                            Constants.WingetManifestRoot,
                             this.GetPRTitle(updatedManifests, originalManifests),
                             this.Replace,
-                            this.ReplaceVersion))
+                            this.ReplaceVersion,
+                            Constants.WingetManifestRoot))
                         : false;
                 }
 

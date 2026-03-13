@@ -104,7 +104,7 @@ namespace Microsoft.WingetCreateUnitTests
             manifests.SingletonManifest = Serialization.DeserializeFromString<SingletonManifest>(latestManifest.First());
             Assert.That(manifests.SingletonManifest.PackageIdentifier, Is.EqualTo(TestConstants.TestPackageIdentifier), FailedToRetrieveManifestFromId);
 
-            Octokit.PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, root, TestConstants.TestPRTitle);
+            Octokit.PullRequest pullRequest = await this.gitHub.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, TestConstants.TestPRTitle, false, null, root);
             Assert.That(TestConstants.TestPRTitle, Is.EqualTo(pullRequest.Title), TitleMismatch);
             await this.gitHub.ClosePullRequest(pullRequest.Number);
             StringAssert.StartsWith(string.Format(GitHubPullRequestBaseUrl, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo), pullRequest.HtmlUrl, PullRequestFailedToGenerate);

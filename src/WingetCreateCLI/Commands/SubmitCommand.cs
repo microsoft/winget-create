@@ -131,7 +131,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 // TODO: Add Font Root Support
                 // See issue: See issue https://github.com/microsoft/winget-create/issues/647
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle, WingetCreateCore.Common.Constants.WingetManifestRoot, this.Replace, this.ReplaceVersion);
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion, WingetCreateCore.Common.Constants.WingetManifestRoot);
             }
             else if (Directory.Exists(expandedPath) && ValidateManifest(expandedPath, this.Format))
             {
@@ -145,7 +145,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 // TODO: Add Font Root Support
                 // See issue: See issue https://github.com/microsoft/winget-create/issues/647
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle, WingetCreateCore.Common.Constants.WingetManifestRoot, this.Replace, this.ReplaceVersion);
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion, WingetCreateCore.Common.Constants.WingetManifestRoot);
             }
             else
             {
