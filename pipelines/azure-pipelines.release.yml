@@ -210,17 +210,6 @@ extends:
                   $(appxBundlePath)
                   $(appxBundlePath).txt
 
-            - task: GitHubRelease@1
-              displayName: Create GitHub release
-              inputs:
-                gitHubConnection: "Github winget-create"
-                repositoryName: $(Build.Repository.Name)
-                tagSource: userSpecifiedTag
-                tag: v$(version)
-                isPreRelease: true
-                isDraft: true # After running this step, visit the new draft release, edit, and publish.
-                assets: $(ob_outputDirectory)
-
         - job: Wait
           displayName: Wait for vanity URL to be manually updated
           dependsOn: Build
