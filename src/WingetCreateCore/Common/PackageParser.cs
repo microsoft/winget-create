@@ -300,6 +300,25 @@ namespace Microsoft.WingetCreateCore
                         }
                     }
 
+                    // Update DisplayName for each AppsAndFeaturesEntry
+                    if (!string.IsNullOrEmpty(installerUpdate.DisplayName))
+                    {
+                        if (newInstaller.AppsAndFeaturesEntries != null)
+                        {
+                            newInstaller.AppsAndFeaturesEntries[0].DisplayName = installerUpdate.DisplayName;
+                        }
+                        else
+                        {
+                            newInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
+                            {
+                                new AppsAndFeaturesEntry
+                                {
+                                    DisplayName = installerUpdate.DisplayName,
+                                },
+                            };
+                        }
+                    }
+
                     // if the installerUpdate does not have a binary or url architecture specified, then just use what is specified in the installer.
                     Installer existingInstallerMatch = FindInstallerMatch(
                         newInstaller,
