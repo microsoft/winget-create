@@ -7,6 +7,13 @@ Instructions on setting up GitHub Token for Winget-Create can be found [here](..
 
 ## Usage
 
+> [!WARNING] 
+> Using the `--token` argument may result in the token being logged.  
+> 
+> For local development, it is recommended to go through the OAuth flow by omitting the `--token` argument.  
+>   
+> For CI/CD scenarios, it is recommended to use the 'WINGET_CREATE_GITHUB_TOKEN' environment variable to store the token.
+
 `wingetcreate.exe token [\<options>]`
 
 ### Store a new GitHub token in your local cache
@@ -25,5 +32,5 @@ The following arguments are available:
 |----------------  |-------------|
 | **-c, --clear**  | Required. Clear the cached GitHub token
 | **-s, --store**  | Required. Set the cached GitHub token. Can specify token to cache with --token parameter, otherwise will initiate OAuth flow.
-| **-t, --token**   | GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials.
+| **-t, --token**   | GitHub personal access token used for direct submission to the Windows Package Manager repo. If no token is provided, tool will prompt for GitHub login credentials. <br/>⚠️ _Using this argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token._
 | **-?, --help** |  Gets additional help on this command. |

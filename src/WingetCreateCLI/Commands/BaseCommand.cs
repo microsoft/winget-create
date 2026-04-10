@@ -62,6 +62,11 @@ namespace Microsoft.WingetCreateCLI.Commands
         public static string Extension => Serialization.ManifestSerializer.AssociatedFileExtension;
 
         /// <summary>
+        /// Gets a value indicating whether or not the command accepts a GitHub token.
+        /// </summary>
+        public virtual bool AcceptsGitHubToken { get; } = true;
+
+        /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
         public virtual string GitHubToken { get; set; }
@@ -99,7 +104,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets or sets a value indicating whether or not to automatically open the PR webpage in the browser after creation.
         /// </summary>
-        public bool OpenPRInBrowser { get; set; } = true;
+        public bool OpenPRInBrowser { get; set; } = UserSettings.OpenPRInBrowser;
 
         /// <summary>
         /// Gets the GitHubClient instance to use for interacting with GitHub from the CLI.
@@ -126,22 +131,19 @@ namespace Microsoft.WingetCreateCLI.Commands
             if (string.IsNullOrEmpty(this.GitHubToken))
             {
                 Logger.Trace("No token parameter, reading cached token");
-                this.GitHubToken = GitHubOAuth.ReadTokenCache();
-                if (string.IsNullOrEmpty(this.GitHubToken))
+                if (GitHubOAuth.TryReadTokenCache(out var token))
                 {
-                    if (requireToken)
-                    {
-                        Logger.Trace("No token found in cache, launching OAuth flow");
-                        if (!await this.GetTokenFromOAuth())
-                        {
-                            Logger.Trace("Failed to obtain token from OAuth flow.");
-                            return false;
-                        }
-                    }
-                }
-                else
-                {
+                    this.GitHubToken = token;
                     isCacheToken = true;
+                }
+                else if (requireToken)
+                {
+                    Logger.Trace("No token found in cache, launching OAuth flow");
+                    if (!await this.GetTokenFromOAuth())
+                    {
+                        Logger.Trace("Failed to obtain token from OAuth flow.");
+                        return false;
+                    }
                 }
             }
 
@@ -164,10 +166,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Creates a formatted directory of manifest files from the manifest object models and saves the directory to a local path.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models.</param>
+        /// <param name="manifestRoot">Manifest root name.</param>
         /// <param name="outputDir">Output directory where the manifests are saved locally.</param>
         /// <returns>Path to manifest directory.</returns>
         protected static string SaveManifestDirToLocalPath(
             Manifests manifests,
+            string manifestRoot,
             string outputDir)
         {
             VersionManifest versionManifest = manifests.VersionManifest;
@@ -178,7 +182,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             outputDir = Environment.ExpandEnvironmentVariables(outputDir);
             string version = versionManifest.PackageVersion;
             string packageId = versionManifest.PackageIdentifier;
-            string manifestDir = Utils.GetAppManifestDirPath(packageId, version);
+            string manifestDir = Utils.GetAppManifestDirPath(packageId, version, manifestRoot);
             string fullDirPath = Path.GetFullPath(Path.Combine(outputDir, manifestDir));
 
             try
@@ -219,8 +223,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Saves the manifests to a randomly generated directory in the %TEMP% folder and validates them, printing the results to console.
         /// </summary>
         /// <param name="manifests">Manifests object model.</param>
+        /// <param name="format">Format of the serialized manifest. </param>
         /// <returns>A boolean value indicating whether validation of the manifests was successful.</returns>
-        protected static bool ValidateManifestsInTempDir(Manifests manifests)
+        protected static bool ValidateManifestsInTempDir(Manifests manifests, ManifestFormat format)
         {
             string versionManifestFileName = Manifests.GetFileName(manifests.VersionManifest, Extension);
             string installerManifestFileName = Manifests.GetFileName(manifests.InstallerManifest, Extension);
@@ -239,7 +244,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 File.WriteAllText(Path.Combine(randomDirPath, localeManifestFileName), localeManifest.ToManifestString());
             }
 
-            bool result = ValidateManifest(randomDirPath);
+            bool result = ValidateManifest(randomDirPath, format);
             Directory.Delete(randomDirPath, true);
             return result;
         }
@@ -305,9 +310,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Downloads the package file from the provided installer url.
         /// </summary>
-        /// /// <param name="installerUrl"> Installer Url to be downloaded. </param>
+        /// <param name="installerUrl">Installer Url to be downloaded. </param>
+        /// <param name="allowHttp">The flag indicating whether to allow HTTP downloads.</param>
         /// <returns>Package file.</returns>
-        protected static async Task<string> DownloadPackageFile(string installerUrl)
+        protected static async Task<string> DownloadPackageFile(string installerUrl, bool allowHttp)
         {
             Logger.InfoLocalized(nameof(Resources.DownloadInstaller_Message), installerUrl);
 
@@ -329,7 +335,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                string packageFilePath = await PackageParser.DownloadFileAsync(installerUrl);
+                string packageFilePath = await PackageParser.DownloadFileAsync(installerUrl, allowHttp);
                 TelemetryManager.Log.WriteEvent(new DownloadInstallerEvent { IsSuccessful = true });
                 DownloadedInstallers.Add(installerUrl, packageFilePath);
                 return packageFilePath;
@@ -374,6 +380,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                     Logger.ErrorLocalized(nameof(Resources.DownloadConnectionTimeout_Error));
                     return null;
                 }
+                else if (e is NotSupportedException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadProtocolNotSupported_Error));
+                    return null;
+                }
+                else if (e is DownloadHttpsOnlyException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadHttpsOnly_Error));
+                    return null;
+                }
                 else
                 {
                     throw;
@@ -385,9 +401,20 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Utilizes WingetUtil to validate a specified manifest.
         /// </summary>
         /// <param name="manifestPath"> Path to the manifest file to be validated. </param>
+        /// <param name="format"> Format of the manifest file. </param>"
         /// <returns>Bool indicating the validity of the manifest file. </returns>
-        protected static bool ValidateManifest(string manifestPath)
+        protected static bool ValidateManifest(string manifestPath, ManifestFormat format)
         {
+            bool skipValidation = format != ManifestFormat.Yaml;
+
+            // Skip validation because of https://github.com/microsoft/winget-cli/issues/5336
+            // More discussion in the PR https://github.com/microsoft/winget-create/pull/593
+            if (skipValidation)
+            {
+                Logger.WarnLocalized(nameof(Resources.SkippingManifestValidation_Message));
+                return true;
+            }
+
             (bool success, string message) = WinGetUtil.ValidateManifest(manifestPath);
 
             if (success)
@@ -424,19 +451,19 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Removes fields with empty string values from all manifests.
         /// </summary>
         /// <param name="manifests">Wrapper object containing the manifest object models.</param>
-        protected static void RemoveEmptyStringFieldsInManifests(Manifests manifests)
+        protected static void RemoveEmptyStringAndListFieldsInManifests(Manifests manifests)
         {
-            RemoveEmptyStringFields(manifests.InstallerManifest);
-            RemoveEmptyStringFields(manifests.DefaultLocaleManifest);
+            RemoveEmptyStringAndListFields(manifests.InstallerManifest);
+            RemoveEmptyStringAndListFields(manifests.DefaultLocaleManifest);
 
             foreach (var localeManifest in manifests.LocaleManifests)
             {
-                RemoveEmptyStringFields(localeManifest);
+                RemoveEmptyStringAndListFields(localeManifest);
             }
 
             foreach (var installer in manifests.InstallerManifest.Installers)
             {
-                RemoveEmptyStringFields(installer);
+                RemoveEmptyStringAndListFields(installer);
             }
         }
 
@@ -717,8 +744,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
         /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
         /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
+        /// <param name="manifestRoot">Manifest root name.</param>
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
-        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null, string manifestRoot = Constants.WingetManifestRoot)
         {
             // Community repo only supports yaml submissions.
             if (this.WingetRepo == DefaultWingetRepo &&
@@ -740,7 +768,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion);
+                Octokit.PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion, manifestRoot);
                 this.PullRequestNumber = pullRequest.Number;
                 PullRequestEvent pullRequestEvent = new PullRequestEvent { IsSuccessful = true, PullRequestNumber = pullRequest.Number };
                 TelemetryManager.Log.WriteEvent(pullRequestEvent);
@@ -779,6 +807,24 @@ namespace Microsoft.WingetCreateCLI.Commands
                     // This exception can occur if the client is unable to create a reference due to being behind by too many commits.
                     // The user will need to manually update their master branch of their winget-pkgs fork.
                     Logger.ErrorLocalized(nameof(Resources.SyncForkWithUpstream_Message));
+                    return false;
+                }
+                else if (e is BranchMergeConflictException)
+                {
+                    // While attempting to sync fork through the GitHub API, a branch merge conflict was detected.
+                    // The user will need to manually resolve the conflict.
+                    Logger.ErrorLocalized(nameof(Resources.BranchMergeConflict_Message));
+                    return false;
+                }
+                else if (e is GenericSyncFailureException)
+                {
+                    // While attempting to sync fork through the GitHub API, a generic sync failure occurred.
+                    Logger.ErrorLocalized(nameof(Resources.SyncForkFailed_Message));
+                    return false;
+                }
+                else if (e is HttpRequestException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.NetworkConnectionFailure_Message));
                     return false;
                 }
                 else
@@ -824,17 +870,28 @@ namespace Microsoft.WingetCreateCLI.Commands
         }
 
         /// <summary>
-        /// Removes fields with empty string values from a given object.
+        /// Removes fields with empty string and list values from a given object.
         /// </summary>
         /// <param name="obj">Object to remove empty string fields from.</param>
-        private static void RemoveEmptyStringFields(object obj)
+        private static void RemoveEmptyStringAndListFields(object obj)
         {
             var stringProperties = obj.GetType().GetProperties()
                 .Where(p => p.PropertyType == typeof(string));
+            var listProperties = obj.GetType().GetProperties()
+                .Where(p => p.PropertyType.IsGenericType &&
+                            p.PropertyType.GetGenericTypeDefinition() == typeof(List<>));
 
             foreach (var prop in stringProperties)
             {
                 if ((string)prop.GetValue(obj) == string.Empty)
+                {
+                    prop.SetValue(obj, null);
+                }
+            }
+
+            foreach (var prop in listProperties)
+            {
+                if (prop.GetValue(obj) is IList list && list.Count == 0)
                 {
                     prop.SetValue(obj, null);
                 }

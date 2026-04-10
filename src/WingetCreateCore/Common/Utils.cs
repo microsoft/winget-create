@@ -36,11 +36,12 @@ namespace Microsoft.WingetCreateCore.Common
         /// </summary>
         /// <param name="packageId">Package Identifier.</param>
         /// <param name="version">Package Version.</param>
+        /// <param name="manifestRoot">The manifest root name.</param>
         /// <param name="pathDelimiter">Delimiter character of the generated path.</param>
         /// <returns>Full directory path where the manifests should be saved to.</returns>
-        public static string GetAppManifestDirPath(string packageId, string version, char pathDelimiter = '\\')
+        public static string GetAppManifestDirPath(string packageId, string version, string manifestRoot = Constants.WingetManifestRoot, char pathDelimiter = '\\')
         {
-            string path = Path.Combine(Constants.WingetManifestRoot, $"{char.ToLowerInvariant(packageId[0])}", packageId.Replace('.', '\\'), version);
+            string path = Path.Combine(manifestRoot, $"{char.ToLowerInvariant(packageId[0])}", packageId.Replace('.', '\\'), version);
             return pathDelimiter != '\\' ? path.Replace('\\', pathDelimiter) : path;
         }
 

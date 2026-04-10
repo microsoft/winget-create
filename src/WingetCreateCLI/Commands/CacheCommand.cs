@@ -38,6 +38,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         [Option('o', "open", Required = true, SetName = nameof(Open), HelpText = "Open_HelpText", ResourceType = typeof(Resources))]
         public bool Open { get; set; }
 
+        /// <inheritdoc/>
+        public override bool AcceptsGitHubToken => false;
+
         /// <summary>
         /// Executes the cache command flow.
         /// </summary>

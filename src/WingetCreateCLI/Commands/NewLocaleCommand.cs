@@ -99,6 +99,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the PR should be opened automatically in the browser.
+        /// </summary>
+        [Option('n', "no-open", Required = false, HelpText = "NoOpenPRInBrowser_HelpText", ResourceType = typeof(Resources))]
+        public bool NoOpenPRInBrowser { get => !this.OpenPRInBrowser; set => this.OpenPRInBrowser = !value; }
+
+        /// <summary>
         /// Executes the new-locale command flow.
         /// </summary>
         /// <returns>Boolean representing success or fail of the command.</returns>
@@ -224,7 +230,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 {
                     LocaleManifest newlocale = this.GenerateLocaleManifest(originalManifests, referenceLocaleManifest);
                     Console.WriteLine();
-                    ValidateManifestsInTempDir(originalManifests);
+                    ValidateManifestsInTempDir(originalManifests, this.Format);
                     originalManifests.LocaleManifests.Add(newlocale);
                     newLocales.Add(newlocale);
                 }
@@ -239,9 +245,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                     this.OutputDir = Directory.GetCurrentDirectory();
                 }
 
-                string manifestDirectoryPath = SaveManifestDirToLocalPath(originalManifests, this.OutputDir);
+                // TODO: Need to discern font root manifests. Assume default root for now.
+                // All of this locale code is generated assuming 'manifests' root, and updating it to support fonts
+                // would require significant restructuring. See issue https://github.com/microsoft/winget-create/issues/647
+                string manifestDirectoryPath = SaveManifestDirToLocalPath(originalManifests, Constants.WingetManifestRoot, this.OutputDir);
 
-                if (ValidateManifest(manifestDirectoryPath))
+                if (ValidateManifest(manifestDirectoryPath, this.Format))
                 {
                     if (Prompt.Confirm(Resources.ConfirmGitHubSubmitManifest_Message))
                     {

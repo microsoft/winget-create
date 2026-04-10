@@ -7,7 +7,10 @@ namespace Microsoft.WingetCreateCore.Common
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net.Http;
     using System.Security.Cryptography;
+    using System.Text;
+    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
     using Jose;
     using Microsoft.WingetCreateCore.Common.Exceptions;
@@ -42,7 +45,7 @@ namespace Microsoft.WingetCreateCore.Common
             this.github = new GitHubClient(new ProductHeaderValue(UserAgentName));
             if (githubApiToken != null)
             {
-                this.github.Credentials = new Credentials(githubApiToken, AuthenticationType.Bearer);
+                this.github.Credentials = new Credentials(githubApiToken, Octokit.AuthenticationType.Bearer);
             }
         }
 
@@ -59,7 +62,7 @@ namespace Microsoft.WingetCreateCore.Common
             string jwtToken = GetJwtToken(gitHubAppPrivateKeyPem, gitHubAppId);
 
             var github = new GitHubClient(new ProductHeaderValue(UserAgentName));
-            github.Credentials = new Credentials(jwtToken, AuthenticationType.Bearer);
+            github.Credentials = new Credentials(jwtToken, Octokit.AuthenticationType.Bearer);
 
             var installation = await github.GitHubApps.GetRepositoryInstallationForCurrent(wingetRepoOwner, wingetRepo);
             var response = await github.GitHubApps.CreateInstallationToken(installation.Id);
@@ -69,14 +72,15 @@ namespace Microsoft.WingetCreateCore.Common
         /// <summary>
         /// Gets all app manifests in the repo.
         /// </summary>
+        /// <param name="manifestRoot">The name of the ManifestRoot.</param>
         /// <returns>A list of <see cref="PublisherAppVersion"/>, each representing a single app manifest version.</returns>
-        public async Task<IList<PublisherAppVersion>> GetAppVersions()
+        public async Task<IList<PublisherAppVersion>> GetAppVersions(string manifestRoot = Constants.WingetManifestRoot)
         {
             var reference = await this.github.Git.Reference.Get(this.wingetRepoOwner, this.wingetRepo, HeadMasterRef);
             var tree = await this.github.Git.Tree.GetRecursive(this.wingetRepoOwner, this.wingetRepo, reference.Object.Sha);
             return tree.Tree
-                .Where(i => i.Path.StartsWith(Constants.WingetManifestRoot + "/") && i.Type.Value == TreeType.Blob)
-                .Select(i => new { i.Path, PathTokens = i.Path[Constants.WingetManifestRoot.Length..].Split('/') })
+                .Where(i => i.Path.StartsWith(manifestRoot + "/") && i.Type.Value == TreeType.Blob)
+                .Select(i => new { i.Path, PathTokens = i.Path[manifestRoot.Length..].Split('/') })
                 .Where(i => i.PathTokens.Length >= 3)
                 .Select(i =>
                 {
@@ -136,8 +140,9 @@ namespace Microsoft.WingetCreateCore.Common
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
         /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
         /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
+        /// <param name="manifestRoot">The manifest root name.</param>
         /// <returns>Pull request object.</returns>
-        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        public Task<PullRequest> SubmitPullRequestAsync(Manifests manifests, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null, string manifestRoot = Constants.WingetManifestRoot)
         {
             Dictionary<string, string> contents = new Dictionary<string, string>();
             string id;
@@ -161,7 +166,7 @@ namespace Microsoft.WingetCreateCore.Common
                 contents.Add($"{id}.locale.{manifests.DefaultLocaleManifest.PackageLocale}", manifests.DefaultLocaleManifest.ToManifestString());
             }
 
-            return this.SubmitPRAsync(id, version, contents, submitToFork, prTitle, shouldReplace, replaceVersion);
+            return this.SubmitPRAsync(id, version, contents, submitToFork, manifestRoot, prTitle, shouldReplace, replaceVersion);
         }
 
         /// <summary>
@@ -184,6 +189,16 @@ namespace Microsoft.WingetCreateCore.Common
             // Close PR and delete its branch.
             await this.github.PullRequest.Update(this.wingetRepoOwner, this.wingetRepo, pullRequestId, new PullRequestUpdate() { State = ItemState.Closed });
             await this.DeletePullRequestBranch(pullRequestId);
+        }
+
+        /// <summary>
+        /// Retrieves a pull request based on the provided pull request id.
+        /// </summary>
+        /// <param name="pullRequestId">The pull request number.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public async Task<Octokit.PullRequest> GetPullRequest(int pullRequestId)
+        {
+            return await this.github.PullRequest.Get(this.wingetRepoOwner, this.wingetRepo, pullRequestId);
         }
 
         /// <summary>
@@ -224,10 +239,11 @@ namespace Microsoft.WingetCreateCore.Common
         /// Recursively searches the repository for the provided package identifer to determine if it already exists.
         /// </summary>
         /// <param name="packageId">The package identifier.</param>
+        /// <param name="manifestRoot">The manifest root name.</param>
         /// <returns>The exact matching package identifier or null if no match was found.</returns>
-        public async Task<string> FindPackageId(string packageId)
+        public async Task<string> FindPackageId(string packageId, string manifestRoot = Constants.WingetManifestRoot)
         {
-            string path = Constants.WingetManifestRoot + '/' + $"{char.ToLowerInvariant(packageId[0])}";
+            string path = manifestRoot + '/' + $"{char.ToLowerInvariant(packageId[0])}";
             return await this.FindPackageIdRecursive(packageId.Split('.'), path, string.Empty, 0);
         }
 
@@ -240,7 +256,7 @@ namespace Microsoft.WingetCreateCore.Common
         public async Task<bool> PopulateGitHubMetadata(Manifests manifests, string serializerFormat)
         {
             // Only populate metadata if we have a valid GitHub token.
-            if (this.github.Credentials.AuthenticationType != AuthenticationType.Anonymous)
+            if (this.github.Credentials.AuthenticationType != Octokit.AuthenticationType.Anonymous)
             {
                 return await GitHubManifestMetadata.PopulateManifestMetadata(manifests, serializerFormat, this.github);
             }
@@ -298,7 +314,7 @@ namespace Microsoft.WingetCreateCore.Common
             return null;
         }
 
-        private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        private async Task<PullRequest> SubmitPRAsync(string packageId, string version, Dictionary<string, string> contents, bool submitToFork, string manifestRoot = Constants.WingetManifestRoot, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
         {
             bool createdRepo = false;
             Repository repo;
@@ -333,26 +349,20 @@ namespace Microsoft.WingetCreateCore.Common
             var upstreamMasterSha = upstreamMaster.Object.Sha;
 
             Reference newBranch = null;
-            bool forkSyncAttempted = false;
-
             try
             {
                 var retryPolicy = Policy
                     .Handle<ApiException>()
-                    .Or<NonFastForwardException>()
+                    .Or<GenericSyncFailureException>()
                     .WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(i));
 
                 await retryPolicy.ExecuteAsync(async () =>
                 {
                     // Related issue: https://github.com/microsoft/winget-create/issues/282
                     // There is a known issue where a reference is unable to be created if the fork is behind by too many commits.
-                    // Always attempt to sync fork during first execution in order to mitigate the possibility of this scenario occurring.
-                    // If the fork is behind by too many commits, syncing will also fail with a NotFoundException.
-                    // Updating the fork can fail if it is a non-fast forward update, but this should not be blocking as pull request submission can still proceed.
-                    // If creating a reference fails, that means syncing the fork also failed, therefore the user will need to manually sync their repo regardless.
-                    if (!forkSyncAttempted && submitToFork)
+                    // Always attempt to sync fork in order to mitigate the possibility of this scenario occurring.
+                    if (submitToFork)
                     {
-                        forkSyncAttempted = true;
                         await this.UpdateForkedRepoWithUpstreamCommits(repo);
                     }
 
@@ -364,7 +374,7 @@ namespace Microsoft.WingetCreateCore.Common
                 var updatedSha = newBranch.Object.Sha;
 
                 var nt = new NewTree { BaseTree = updatedSha };
-                string appPath = Utils.GetAppManifestDirPath(packageId, version, '/');
+                string appPath = Utils.GetAppManifestDirPath(packageId, version, manifestRoot, '/');
 
                 foreach (KeyValuePair<string, string> item in contents)
                 {
@@ -417,9 +427,9 @@ namespace Microsoft.WingetCreateCore.Common
             }
         }
 
-        private async Task<string> GetVersionDirectoryPath(string packageId, string version = null)
+        private async Task<string> GetVersionDirectoryPath(string packageId, string version = null, string manifestRoot = Constants.WingetManifestRoot)
         {
-            string appPath = Utils.GetAppManifestDirPath(packageId, string.Empty, '/');
+            string appPath = Utils.GetAppManifestDirPath(packageId, string.Empty, manifestRoot, '/');
             var contents = await this.github.Repository.Content.GetAllContents(this.wingetRepoOwner, this.wingetRepo, appPath);
             string directory;
 
@@ -474,17 +484,41 @@ namespace Microsoft.WingetCreateCore.Common
             var upstream = forkedRepo.Parent;
             var compareResult = await this.github.Repository.Commit.Compare(upstream.Id, upstream.DefaultBranch, $"{forkedRepo.Owner.Login}:{forkedRepo.DefaultBranch}");
 
-            // Check to ensure that the update is only a fast-forward update.
             if (compareResult.BehindBy > 0)
             {
-                int commitsAheadBy = compareResult.AheadBy;
-                if (commitsAheadBy > 0)
+                // Octokit .NET doesn't support sync fork endpoint, so we make a direct call to the GitHub API.
+                // Tracking issue for the request: https://github.com/octokit/octokit.net/issues/2989
+                HttpClient httpClient = new HttpClient();
+
+                // API reference: https://docs.github.com/en/rest/branches/branches?apiVersion=2022-11-28#sync-a-fork-branch-with-the-upstream-repository
+                var url = $"https://api.github.com/repos/{forkedRepo.Owner.Login}/{forkedRepo.Name}/merge-upstream";
+
+                // Headers
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", this.github.Credentials.Password);
+                httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
+                httpClient.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2022-11-28");
+                httpClient.DefaultRequestHeaders.UserAgent.TryParseAdd(Constants.ProgramName);
+
+                // Payload
+                JsonObject jsonObject = new JsonObject { { "branch", forkedRepo.DefaultBranch } };
+                var content = new StringContent(jsonObject.ToString(), Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(url, content);
+
+                // 409 status code
+                if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
                 {
-                    throw new NonFastForwardException(commitsAheadBy);
+                    throw new BranchMergeConflictException();
                 }
 
-                var upstreamBranchReference = await this.github.Git.Reference.Get(upstream.Id, $"heads/{upstream.DefaultBranch}");
-                await this.github.Git.Reference.Update(forkedRepo.Id, $"heads/{forkedRepo.DefaultBranch}", new ReferenceUpdate(upstreamBranchReference.Object.Sha));
+                // 422 status code
+                if (response.StatusCode == System.Net.HttpStatusCode.UnprocessableEntity)
+                {
+                    throw new GenericSyncFailureException();
+                }
+
+                // The API doesn't document another error code. If this fails, a generic HttpRequestException is thrown.
+                response.EnsureSuccessStatusCode();
             }
         }
 

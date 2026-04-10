@@ -37,8 +37,7 @@ choco install wingetcreate
 
 ## Build status
 
-[![Build Status](https://dev.azure.com/ms/winget-create/_apis/build/status/microsoft.winget-create?branchName=main&label=winget-create)](https://dev.azure.com/ms/winget-create/_build/latest?definitionId=459&branchName=main)
-
+[![Build Status](https://microsoft.visualstudio.com/Apps/_apis/build/status%2FADEX%2Fwinget-create%20Release?repoName=microsoft%2Fwinget-create&branchName=main)](https://microsoft.visualstudio.com/Apps/_build/latest?definitionId=64953&repoName=microsoft%2Fwinget-create&branchName=main)
 ## Using Windows Package Manager Manifest Creator
 
 **WingetCreate** has the following commands:
@@ -55,6 +54,7 @@ choco install wingetcreate
 | [Settings](doc/settings.md) | Command for editing the settings file configurations |
 | [Cache](doc/cache.md) | Command for managing downloaded installers stored in cache
 | [Info](doc/info.md)      | Displays information about the client |
+| [Dsc](doc/dsc.md)      | DSC v3 resource commands |
 | [-?](doc/help.md)      | Displays command line help |
 
 Click on the individual commands to learn more.
@@ -63,10 +63,12 @@ Click on the individual commands to learn more.
 
 You can use WingetCreate to update your existing app manifest as part of your CI/CD pipeline. For reference, see the final task in this repo's [release Azure pipeline](https://github.com/microsoft/winget-create/blob/main/pipelines/azure-pipelines.release.yml). If you are utilizing GitHub Actions as your CI pipeline, you can refer to the following repositories that have implemented WingetCreate within their release pipelines:
 
-- [DevHome](https://github.com/microsoft/devhome/blob/main/.github/workflows/winget-submission.yml)
-- [Oh-My-Posh](https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/.github/workflows/winget.yml)
+- [Copilot CLI](https://github.com/github/copilot-cli/blob/v0.0.368-2/.github/workflows/winget.yml)
+- [Edit](https://github.com/microsoft/edit/blob/main/.github/workflows/winget.yml)
+- [Oh-My-Posh](https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/.github/workflows/release.yml#L139)
 - [PowerToys](https://github.com/microsoft/PowerToys/blob/main/.github/workflows/package-submissions.yml)
 - [Terminal](https://github.com/microsoft/terminal/blob/main/.github/workflows/winget.yml)
+- [WinGet Studio](https://github.com/microsoft/winget-studio/blob/main/.github/workflows/winget.yml)
 
 You can also check out this [episode of Open at Microsoft](https://learn.microsoft.com/en-us/shows/open-at-microsoft/wingetcreate-keeping-winget-packages-up-to-date) where we cover the same topic.
 
@@ -141,9 +143,7 @@ You can install the prerequisites in one of two ways:
 
 1. Clone the repository
 2. Configure your system
-   * Please use the [configuration file](.configurations/configuration.dsc.yaml). This can be applied by either:
-     * [Dev Home](https://github.com/microsoft/devhome)'s machine configuration tool
-     * WinGet configuration. If you have WinGet version [v1.6.2631 or later](https://github.com/microsoft/winget-cli/releases), run `winget configure .configurations/configuration.dsc.yaml` in an elevated shell from the project root so relative paths resolve correctly
+   * Configure your system using the [configuration file](.config/configuration.winget). To run the configuration, use `winget configure .config/configuration.winget` from the project root or you can double-click the file directly from the file explorer.
    * Alternatively, if you already are running the minimum OS version, have Visual Studio installed, and have developer mode enabled, you may configure your Visual Studio directly via the .vsconfig file. To do this:
      * Open the Visual Studio Installer, select “More” on your product card and then "Import configuration"
      * Specify the .vsconfig file at the root of the repo and select “Review Details”
@@ -158,7 +158,7 @@ You can install the prerequisites in one of two ways:
 * The following workloads:
    * .NET Desktop Development
    * Universal Windows Platform Development
-* Windows 11 SDK (10.0.22000.0) (Tools -> Get Tools and Features -> Individual Components)
+* Windows 11 SDK (10.0.26100.0) (Tools -> Get Tools and Features -> Individual Components)
 
 ### Building
 
@@ -176,16 +176,13 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
 * Fill out the test parameters in the `WingetCreateTests/Test.runsettings` file
     *  `WingetPkgsTestRepoOwner`: The repository owner of the winget-pkgs-submission-test repo. (Repo owner must be forked from main "winget-pkgs-submission-test" repo)
     *  `WingetPkgsTestRepo`: The winget-pkgs test repository. (winget-pkgs-submission-test)
-    *  `GitHubApiKey`: GitHub personal access token for testing.
-       *  Instructions on [how to generate your own GitHubApiKey](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
-       *  Direct link to GitHub [Personal Access Tokens page](https://github.com/settings/tokens).
-   * `GitHubAppPrivateKey`: Leave blank, this is only used by the build server.
 
 * Set the solution wide runsettings file for the tests
     * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
-> [!CAUTION]
-> You should treat your access token like a password. To avoid exposing your PAT, be sure to reset changes to the `WingetCreateTests/Test.runsettings` file before committing your changes. You can also use the command `git update-index --skip-worktree src/WingetCreateTests/WingetCreateTests/Test.runsettings` command to untrack changes to the file and prevent it from being committed.
+* Set up your github token:
+    * __[Recommended]__ Run `wingetcreate token -s` to go through the Github authentication flow
+    * Or create a personal access token with the `repo` permission and set it as an environment variable `WINGET_CREATE_GITHUB_TOKEN`. _(This option is more convenient for CI/CD pipelines.)_
 
 ## Contributing
 

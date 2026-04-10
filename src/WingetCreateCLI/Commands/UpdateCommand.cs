@@ -122,10 +122,22 @@ namespace Microsoft.WingetCreateCLI.Commands
         public override ManifestFormat Format { get => base.Format; set => base.Format = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to allow unsecure downloads.
+        /// </summary>
+        [Option("allow-unsecure-downloads", Required = false, HelpText = "AllowUnsecureDownloads_HelpText", ResourceType = typeof(Resources))]
+        public bool AllowUnsecureDownloads { get; set; }
+
+        /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
         [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
         public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the PR should be opened automatically in the browser.
+        /// </summary>
+        [Option('n', "no-open", Required = false, HelpText = "NoOpenPRInBrowser_HelpText", ResourceType = typeof(Resources))]
+        public bool NoOpenPRInBrowser { get => !this.OpenPRInBrowser; set => this.OpenPRInBrowser = !value; }
 
         /// <summary>
         /// Gets or sets the new value(s) used to update the manifest installer elements.
@@ -163,7 +175,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                bool submitFlagMissing = !this.SubmitToGitHub && (!string.IsNullOrEmpty(this.PRTitle) || this.Replace);
+                bool submitFlagMissing = !this.SubmitToGitHub && (
+                    !string.IsNullOrEmpty(this.PRTitle) ||
+                    this.Replace ||
+                    this.NoOpenPRInBrowser);
 
                 if (!string.IsNullOrEmpty(this.ReleaseNotesUrl))
                 {
@@ -263,7 +278,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 return false;
             }
 
-            RemoveEmptyStringFieldsInManifests(updatedManifests);
+            RemoveEmptyStringAndListFieldsInManifests(updatedManifests);
             ShiftInstallerFieldsToRootLevel(updatedManifests.InstallerManifest);
             DisplayManifestPreview(updatedManifests);
 
@@ -272,9 +287,11 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.OutputDir = Directory.GetCurrentDirectory();
             }
 
-            string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, this.OutputDir);
+            // TODO: Font root support.
+            // See issue: See issue https://github.com/microsoft/winget-create/issues/647
+            string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, Constants.WingetManifestRoot, this.OutputDir);
 
-            if (ValidateManifest(manifestDirectoryPath))
+            if (ValidateManifest(manifestDirectoryPath, this.Format))
             {
                 if (this.SubmitToGitHub)
                 {
@@ -299,12 +316,15 @@ namespace Microsoft.WingetCreateCLI.Commands
                         }
                     }
 
+                    // TODO: Font root support.
+                    // See issue: See issue https://github.com/microsoft/winget-create/issues/647
                     return await this.LoadGitHubClient(true)
                         ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                             updatedManifests,
                             this.GetPRTitle(updatedManifests, originalManifests),
                             this.Replace,
-                            this.ReplaceVersion))
+                            this.ReplaceVersion,
+                            Constants.WingetManifestRoot))
                         : false;
                 }
 
@@ -406,7 +426,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var installerUpdate in installerMetadataList)
             {
-                string packageFile = await DownloadPackageFile(installerUpdate.InstallerUrl);
+                string packageFile = await DownloadPackageFile(installerUpdate.InstallerUrl, this.AllowUnsecureDownloads);
                 if (string.IsNullOrEmpty(packageFile))
                 {
                     return null;
@@ -617,6 +637,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Files, WingetCreateCore.Models.Installer.Files>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallationMetadata, WingetCreateCore.Models.Installer.InstallationMetadata>();
                 cfg.CreateMap<WingetCreateCore.Models.Singleton.Icon, WingetCreateCore.Models.DefaultLocale.Icon>();
+                cfg.CreateMap<WingetCreateCore.Models.Singleton.Authentication, WingetCreateCore.Models.Installer.Authentication>();
             });
             var mapper = config.CreateMapper();
 
@@ -686,7 +707,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             return newHashes.Except(oldHashes).Any();
         }
 
-        private static void DisplayManifestsAsMenuSelection(Manifests manifests)
+        private static void DisplayManifestsAsMenuSelection(Manifests manifests, ManifestFormat format)
         {
             Console.Clear();
             string versionFileName = Manifests.GetFileName(manifests.VersionManifest, Extension);
@@ -708,7 +729,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 }
 
                 selectionList.Add(Resources.Done_MenuItem);
-                ValidateManifestsInTempDir(manifests);
+                ValidateManifestsInTempDir(manifests, format);
                 var selectedItem = Prompt.Select(Resources.SelectManifestToEdit_Message, selectionList);
 
                 if (selectedItem == versionManifestMenuItem)
@@ -955,13 +976,13 @@ namespace Microsoft.WingetCreateCLI.Commands
 
                 this.AddVersionSpecificMetadata(manifests);
                 DisplayManifestPreview(manifests);
-                ValidateManifestsInTempDir(manifests);
+                ValidateManifestsInTempDir(manifests, this.Format);
             }
             while (Prompt.Confirm(Resources.DiscardUpdateAndStartOver_Message));
 
             if (Prompt.Confirm(Resources.EditManifests_Message))
             {
-                DisplayManifestsAsMenuSelection(manifests);
+                DisplayManifestsAsMenuSelection(manifests, this.Format);
             }
 
             if (!this.SubmitToGitHub)
@@ -1004,7 +1025,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 string url = Prompt.Input<string>(Resources.NewInstallerUrl_Message, null, null, new[] { FieldValidation.ValidateProperty(newInstaller, nameof(Installer.InstallerUrl)) });
 
-                string packageFile = await DownloadPackageFile(url);
+                string packageFile = await DownloadPackageFile(url, this.AllowUnsecureDownloads);
                 string archivePath = null;
 
                 if (string.IsNullOrEmpty(packageFile))
