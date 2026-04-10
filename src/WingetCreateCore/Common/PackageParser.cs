@@ -11,6 +11,7 @@ namespace Microsoft.WingetCreateCore
     using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Security.Cryptography;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -19,7 +20,6 @@ namespace Microsoft.WingetCreateCore
     using Microsoft.Msix.Utils;
     using Microsoft.Msix.Utils.AppxPackaging;
     using Microsoft.Msix.Utils.AppxPackagingInterop;
-    using Microsoft.Msix.Utils.Logger;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Common.Exceptions;
     using Microsoft.WingetCreateCore.Models;
@@ -47,7 +47,22 @@ namespace Microsoft.WingetCreateCore
             "nullsoft",
         };
 
-        private static HttpClient httpClient = new HttpClient();
+        private static readonly string[] FontInstallerExtensions =
+        [
+            ".otf",         // OpenType Font
+            ".ttf",         // TrueType Font
+            ".fnt",         // Font
+            ".ttc",         // TrueType Font Collection
+            ".otc",         // OpenType Font Collection
+        ];
+
+        private static HttpClient httpClient = new()
+        {
+            DefaultRequestHeaders =
+            {
+                UserAgent = { new ProductInfoHeaderValue("WinGetCreate", Utils.GetEntryAssemblyVersion()) },
+            },
+        };
 
         private enum MachineType
         {
@@ -64,6 +79,27 @@ namespace Microsoft.WingetCreateCore
             Exe,
             Msi,
             Msix,
+        }
+
+        /// <summary>
+        /// Manifest Root Type Enum
+        /// </summary>
+        public enum ManifestRootType
+        {
+            /// <summary>
+            /// Unknown root type.
+            /// </summary>
+            Unknown,
+
+            /// <summary>
+            /// Manifests root.
+            /// </summary>
+            Manifests,
+
+            /// <summary>
+            /// Fonts root.
+            /// </summary>
+            Fonts,
         }
 
         /// <summary>
@@ -111,16 +147,19 @@ namespace Microsoft.WingetCreateCore
         /// Download file at specified URL to temp directory, unless it's already present.
         /// </summary>
         /// <param name="url">The URL of the file to be downloaded.</param>
+        /// <param name="allowHttp">Whether to allow HTTP downloads.</param>
         /// <param name="maxDownloadSize">The maximum file size in bytes to download.</param>
         /// <returns>Path of downloaded, or previously downloaded, file.</returns>
-        public static async Task<string> DownloadFileAsync(string url, long? maxDownloadSize = null)
+        public static async Task<string> DownloadFileAsync(string url, bool allowHttp, long? maxDownloadSize = null)
         {
+            ValidateUrl(url, allowHttp);
             var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             int redirectCount = 0;
             while (response.StatusCode == System.Net.HttpStatusCode.Redirect && redirectCount < 2)
             {
                 var redirectUri = response.Headers.Location;
+                ValidateUrl(redirectUri, allowHttp);
                 response = await httpClient.GetAsync(redirectUri, HttpCompletionOption.ResponseHeadersRead);
                 redirectCount++;
             }
@@ -245,13 +284,20 @@ namespace Microsoft.WingetCreateCore
                     // Update DisplayVersion for each AppsAndFeaturesEntry
                     if (!string.IsNullOrEmpty(installerUpdate.DisplayVersion))
                     {
-                        newInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
+                        if (newInstaller.AppsAndFeaturesEntries != null)
                         {
-                            new AppsAndFeaturesEntry
+                            newInstaller.AppsAndFeaturesEntries[0].DisplayVersion = installerUpdate.DisplayVersion;
+                        }
+                        else
+                        {
+                            newInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
                             {
-                                DisplayVersion = installerUpdate.DisplayVersion,
-                            },
-                        };
+                                new AppsAndFeaturesEntry
+                                {
+                                    DisplayVersion = installerUpdate.DisplayVersion,
+                                },
+                            };
+                        }
                     }
 
                     // if the installerUpdate does not have a binary or url architecture specified, then just use what is specified in the installer.
@@ -362,6 +408,43 @@ namespace Microsoft.WingetCreateCore
         {
             string json = JsonConvert.SerializeObject(installer);
             return JsonConvert.DeserializeObject<Installer>(json);
+        }
+
+        /// <summary>
+        /// Determines if a given installer path is a Font installer.
+        /// </summary>
+        /// <param name="installerPath">Installer path or filename.</param>
+        /// <returns>True if the installerPath is considered a font type.</returns>
+        public static bool IsFontInstaller(string installerPath) => FontInstallerExtensions.Any(s => installerPath.Contains(s, StringComparison.InvariantCultureIgnoreCase));
+
+        /// <summary>
+        /// Determines if a given installer path is a Font installer.
+        /// </summary>
+        /// <param name="installerPaths">List of installer paths.</param>
+        /// <returns>True if the installerPath is considered a font type.</returns>
+        public static bool IsFontPackage(List<string> installerPaths) => installerPaths.All(i => IsFontInstaller(i));
+
+        /// <summary>
+        /// Determines the root type of the given installer paths.
+        /// </summary>
+        /// <param name="installerPaths">List of installer paths.</param>
+        /// <returns>ManifestRootType for that installer path.</returns>
+        public static ManifestRootType GetManifestRootTypeForInstallerPaths(List<string> installerPaths)
+        {
+            // If all installer paths are font it is a font package.
+            if (IsFontPackage(installerPaths))
+            {
+                return ManifestRootType.Fonts;
+            }
+
+            // If any installer paths are font, but we aren't a font package, then this is a mixed type.
+            if (installerPaths.Any(i => IsFontInstaller(i)))
+            {
+                return ManifestRootType.Unknown;
+            }
+
+            // No font installer paths, this is a Manifests root.
+            return ManifestRootType.Manifests;
         }
 
         /// <summary>
@@ -477,21 +560,36 @@ namespace Microsoft.WingetCreateCore
 
             if (existingInstaller.AppsAndFeaturesEntries != null && newInstaller.AppsAndFeaturesEntries != null)
             {
-                // When --display-version is provided, AppsAndFeaturesEntries for the new installer will not be null
-                // and will contain a single entry.
-                string newDisplayVersion = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
-
-                // Set DisplayVersion for each new installer if it exists in the corresponding existing installer.
                 foreach (var existingAppsAndFeaturesEntry in existingInstaller.AppsAndFeaturesEntries)
                 {
-                    if (existingAppsAndFeaturesEntry.DisplayVersion != null)
+                    if (existingAppsAndFeaturesEntry.DisplayName != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayName != null)
                     {
-                        existingAppsAndFeaturesEntry.DisplayVersion = newDisplayVersion ?? existingAppsAndFeaturesEntry.DisplayVersion;
-
-                        // Break on first match to avoid setting DisplayVersion for all entries.
-                        // We do not support updating multiple DisplayVersions under the same installer.
-                        break;
+                        existingAppsAndFeaturesEntry.DisplayName = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayName;
                     }
+
+                    if (existingAppsAndFeaturesEntry.DisplayVersion != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion != null)
+                    {
+                        existingAppsAndFeaturesEntry.DisplayVersion = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayVersion;
+                    }
+
+                    if (existingAppsAndFeaturesEntry.Publisher != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().Publisher != null)
+                    {
+                        existingAppsAndFeaturesEntry.Publisher = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().Publisher;
+                    }
+
+                    if (existingAppsAndFeaturesEntry.ProductCode != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().ProductCode != null)
+                    {
+                        existingAppsAndFeaturesEntry.ProductCode = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().ProductCode;
+                    }
+
+                    if (existingAppsAndFeaturesEntry.UpgradeCode != null && newInstaller.AppsAndFeaturesEntries.FirstOrDefault().UpgradeCode != null)
+                    {
+                        existingAppsAndFeaturesEntry.UpgradeCode = newInstaller.AppsAndFeaturesEntries.FirstOrDefault().UpgradeCode;
+                    }
+
+                    // Break on first match to avoid setting DisplayVersion for all entries.
+                    // We do not support updating multiple DisplayVersions under the same installer.
+                    break;
                 }
             }
         }
@@ -563,6 +661,22 @@ namespace Microsoft.WingetCreateCore
 
                 foreach (NestedInstallerFile nestedInstallerFile in installerMetadata.NestedInstallerFiles)
                 {
+                    if (IsFontInstaller(nestedInstallerFile.RelativeFilePath))
+                    {
+                        // Skip adding duplicate NestedInstallerFile object.
+                        if (baseInstaller.NestedInstallerFiles.Any(i => i.RelativeFilePath == nestedInstallerFile.RelativeFilePath))
+                        {
+                            continue;
+                        }
+
+                        baseInstaller.NestedInstallerFiles.Add(new NestedInstallerFile
+                        {
+                            RelativeFilePath = nestedInstallerFile.RelativeFilePath,
+                        });
+
+                        continue;
+                    }
+
                     // Skip adding duplicate NestedInstallerFile object.
                     if (baseInstaller.NestedInstallerFiles.Any(i =>
                         i.RelativeFilePath == nestedInstallerFile.RelativeFilePath &&
@@ -587,6 +701,14 @@ namespace Microsoft.WingetCreateCore
             else
             {
                 installerPaths.Add(packageFile);
+            }
+
+            // If every installer path is a font this is a font package.
+            var isFontPackage = IsFontPackage(installerPaths);
+            if (isFontPackage)
+            {
+                SetFontInstallerType(baseInstaller, newInstallers);
+                return true;
             }
 
             Architecture? nestedArchitecture = null;
@@ -854,6 +976,13 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
+        private static void SetFontInstallerType(Installer baseInstaller, List<Installer> newInstallers)
+        {
+            SetInstallerType(baseInstaller, InstallerType.Font);
+            baseInstaller.Architecture = Architecture.Neutral;
+            newInstallers.Add(baseInstaller);
+        }
+
         /// <summary>
         /// Checks if a MSI Installer database was generated by WiX, based on common characteristics.
         /// </summary>
@@ -891,6 +1020,17 @@ namespace Microsoft.WingetCreateCore
                     }
 
                     baseInstaller.ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value;
+                    baseInstaller.AppsAndFeaturesEntries = new List<AppsAndFeaturesEntry>
+                    {
+                        new AppsAndFeaturesEntry
+                        {
+                            DisplayName = properties.FirstOrDefault(p => p.Property == "ProductName")?.Value,
+                            DisplayVersion = properties.FirstOrDefault(p => p.Property == "ProductVersion")?.Value,
+                            Publisher = properties.FirstOrDefault(p => p.Property == "Manufacturer")?.Value,
+                            ProductCode = properties.FirstOrDefault(p => p.Property == "ProductCode")?.Value,
+                            UpgradeCode = properties.FirstOrDefault(p => p.Property == "UpgradeCode")?.Value,
+                        },
+                    };
 
                     string archString = database.SummaryInfo.Template.Split(';').First();
 
@@ -1076,6 +1216,29 @@ namespace Microsoft.WingetCreateCore
         private static string RemoveInvalidCharsFromString(string value)
         {
             return Regex.Replace(value, InvalidCharacters, string.Empty);
+        }
+
+        private static void ValidateUrl(string url, bool allowHttp)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri downloadUrl))
+            {
+                throw new InvalidOperationException();
+            }
+
+            ValidateUrl(downloadUrl, allowHttp);
+        }
+
+        private static void ValidateUrl(Uri url, bool allowHttp)
+        {
+            if (url.Scheme != Uri.UriSchemeHttp && url.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!allowHttp && url.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new DownloadHttpsOnlyException();
+            }
         }
     }
 }

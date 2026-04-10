@@ -5,9 +5,11 @@ namespace Microsoft.WingetCreateUnitTests
 {
     using System;
     using System.Threading.Tasks;
+    using Microsoft.WingetCreateCLI;
     using Microsoft.WingetCreateCLI.Commands;
     using Microsoft.WingetCreateCore.Common;
     using NUnit.Framework;
+    using NUnit.Framework.Legacy;
 
     /// <summary>
     /// Base class for unit tests which need to interact with GitHub.
@@ -41,6 +43,10 @@ namespace Microsoft.WingetCreateUnitTests
         [OneTimeSetUp]
         public async Task SetupBase()
         {
+            // Ensure keys are not set in runsettings file
+            ClassicAssert.True(string.IsNullOrEmpty(TestContext.Parameters.Get("GitHubApiKey")), "GitHubApiKey should not be set in runsettings file");
+            ClassicAssert.True(string.IsNullOrEmpty(TestContext.Parameters.Get("GitHubAppPrivateKey")), "GitHubAppPrivateKey should not be set in runsettings file");
+
             this.WingetPkgsTestRepoOwner = TestContext.Parameters.Get("WingetPkgsTestRepoOwner") ?? throw new ArgumentNullException("WingetPkgsTestRepoOwner must be set in runsettings file");
             this.WingetPkgsTestRepo = TestContext.Parameters.Get("WingetPkgsTestRepo") ?? throw new ArgumentNullException("WingetPkgsTestRepo must be set in runsettings file");
 
@@ -49,24 +55,44 @@ namespace Microsoft.WingetCreateUnitTests
                 throw new ArgumentException($"Invalid configuration specified, you can not run tests against default repo {BaseCommand.DefaultWingetRepoOwner}/{BaseCommand.DefaultWingetRepo}");
             }
 
-            string gitHubApiKey = TestContext.Parameters.Get("GitHubApiKey");
-            string gitHubAppPrivateKey = TestContext.Parameters.Get("GitHubAppPrivateKey");
-
-            if (!string.IsNullOrEmpty(gitHubApiKey))
+            string gitHubAppPrivateKey = Environment.GetEnvironmentVariable("WINGET_CREATE_APP_KEY");
+            if (string.IsNullOrEmpty(gitHubAppPrivateKey))
             {
-                TestContext.Progress.WriteLine("Using GitHubApiKey value for tests");
-                this.GitHubApiKey = gitHubApiKey;
-                this.SubmitPRToFork = true;
-            }
-            else if (!string.IsNullOrEmpty(gitHubAppPrivateKey))
-            {
-                TestContext.Progress.WriteLine("Using GitHubAppPrivateKey value for tests");
-                this.GitHubApiKey = await GitHub.GetGitHubAppInstallationAccessToken(gitHubAppPrivateKey, Constants.GitHubAppId, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
-                this.SubmitPRToFork = false;
+                await this.ConfigureForLocalTestsAsync();
             }
             else
             {
-                throw new ArgumentNullException("Either GitHubApiKey or GitHubAppPrivateKey must be set in runsettings file");
+                await this.ConfigureForPipelineTestsAsync(gitHubAppPrivateKey);
+            }
+        }
+
+        /// <summary>
+        /// Configures the tests to run in a pipeline.
+        /// </summary>
+        /// <param name="gitHubAppPrivateKey">Github app private key.</param>
+        private async Task ConfigureForPipelineTestsAsync(string gitHubAppPrivateKey)
+        {
+            TestContext.Progress.WriteLine("Running in pipeline, using GitHubAppPrivateKey value for tests");
+            this.GitHubApiKey = await GitHub.GetGitHubAppInstallationAccessToken(gitHubAppPrivateKey, Constants.GitHubAppId, this.WingetPkgsTestRepoOwner, this.WingetPkgsTestRepo);
+            this.SubmitPRToFork = false;
+        }
+
+        /// <summary>
+        /// Configures the tests to run locally.
+        /// </summary>
+        private async Task ConfigureForLocalTestsAsync()
+        {
+            TestContext.Progress.WriteLine("Running locally, using Github token for tests");
+            if (TokenHelper.TryRead(out string token))
+            {
+                this.GitHubApiKey = token;
+                this.SubmitPRToFork = true;
+            }
+            else
+            {
+                ClassicAssert.Fail("No GitHub token found.\n" +
+                    ">> Please run 'wingetcreate token -s'\n" +
+                    ">> Or set the 'WINGET_CREATE_GITHUB_TOKEN' environment variable to a valid GitHub token.");
             }
         }
     }
