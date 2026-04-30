@@ -125,7 +125,7 @@ namespace Microsoft.WingetCreateCore.Serializers
         }
 
         /// <summary>
-        /// Custom TypeInspector to priorize properties that have a defined YamlMemberAttribute for custom override.
+        /// Custom TypeInspector to prioritize properties that have a defined YamlMemberAttribute for custom override.
         /// </summary>
         private class AliasTypeInspector : TypeInspectorSkeleton
         {
@@ -229,7 +229,7 @@ namespace Microsoft.WingetCreateCore.Serializers
         }
 
         /// <summary>
-        /// A custom emitter for YamlDotNet which ensures all multiline fields use a <see cref="ScalarStyle.Literal"/>.
+        /// A custom emitter for YamlDotNet which ensures all multi-line fields use a <see cref="ScalarStyle.Literal"/>.
         /// </summary>
         private class MultilineScalarFlowStyleEmitter : ChainedEventEmitter
         {

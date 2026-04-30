@@ -25,7 +25,7 @@
 \bw3\.org/[-0-9a-zA-Z/#.]+
 
 # C# code keywords that appear in comments/strings
-\b(?:namespace|foreach|typeof|nameof|readonly|pragma|endif|ifdef|ifndef|cref|typeparam|params|enum|Enum|args|Args|Func|ulong|uint|UInt|ushort|IList|IEnumerable|IDictionary|IComparer|ICloneable|IManifest|ISerializer|IDeserializer|IEmitter|IParser|IProperty|IObject|IEvent|IYaml|IType|IRest|IAppx|JToken|JObject|JArray|JProperty|NLog|NSwag|NJson|Linq|Json|Yaml|msbuild|xmlns|xsd|csharp|csproj|sln|wapproj|pubxml|resx|runsettings|editorconfig|stylecop)\b
+\b(?:namespace|foreach|typeof|nameof|readonly|pragma|endif|ifdef|ifndef|cref|typeparam|params|enum|Enum|args|Args|Func|ulong|uint|UInt|ushort|IList|IEnumerable|IDictionary|IComparer|ICloneable|IManifest|ISerializer|IDeserializer|IEmitter|IParser|IProperty|IObject|IEvent|IYaml|IType|IRest|IAppx|JToken|JObject|JArray|JProperty|NLog|NSwag|NJson|nodoc|Linq|Json|Yaml|msbuild|xmlns|xsd|csharp|csproj|sln|wapproj|pubxml|resx|runsettings|editorconfig|stylecop)\b
 
 # Preprocessor and compiler directives in comments
 ^#(?:pragma|endif|ifdef|ifndef|if|else|define|include)\b

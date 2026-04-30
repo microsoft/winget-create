@@ -46,7 +46,7 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
-        /// Writes a formatted string to the console in a specifed console color.
+        /// Writes a formatted string to the console in a specified console color.
         /// </summary>
         /// <param name="color">Console color of the outputted string. </param>
         /// <param name="format">String with format items.</param>

@@ -21,6 +21,6 @@ https://www.regexplanet.com/advanced/perl/) yours before committing to verify it
   Patterns are Perl 5 Regular Expressions - you can [test](
 https://www.regexplanet.com/advanced/perl/) yours before committing to verify it will match your lines.
 
-  Note that patterns can't match multiline strings.
+  Note that patterns can't match multi-line strings.
 
 </details>

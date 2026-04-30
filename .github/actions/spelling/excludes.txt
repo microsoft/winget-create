@@ -57,6 +57,7 @@ ignore$
 \.webm$
 \.webp$
 \.woff2?$
+\.fnt$
 \.xlsx?$
 \.zip$
 \.vdproj$
@@ -69,3 +70,4 @@ ignore$
 ^\.github/workflows/spellCheck\.yml$
 ^Localization/
 ^NOTICE.txt$
+^src/WingetCreateTests/WingetCreateTests/UnitTests/CharacterValidationTests.cs$

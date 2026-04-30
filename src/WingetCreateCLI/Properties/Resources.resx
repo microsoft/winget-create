@@ -659,7 +659,7 @@ Warning: Using this argument may result in the token being logged. Consider an a
     <value>Warning: Using the --token argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
-    <value>GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the '-t' flag or store one using the 'token --store' command.</value>
+    <value>GitHub API rate limit exceeded. To extend your rate limit, provide your GitHub token with the '-t' flag or store one using the 'token --store' command.</value>
     <comment>'-t' refers to a command line switch argument
 'token --store' refers to a command line argument</comment>
   </data>

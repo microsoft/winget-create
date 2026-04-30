@@ -493,7 +493,7 @@ namespace Microsoft.WingetCreateUnitTests
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var initialInstaller = initialManifests.SingletonManifest.Installers.First();
             var updatedManifests = await RunUpdateCommand(goodCommand, initialManifestContent);
-            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded as installer should be overrided with ARM architecture.");
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded as installer should be overriden with ARM architecture.");
 
             var updatedInstaller = updatedManifests.InstallerManifest.Installers.Single();
             ClassicAssert.AreEqual(expectedArch, updatedInstaller.Architecture, $"Architecture should be {expectedArch} from override.");
@@ -522,7 +522,7 @@ namespace Microsoft.WingetCreateUnitTests
                 GetUpdateCommandAndManifestData("TestPublisher.ScopeOverride", "1.2.3.4", this.tempPath, new[] { $"{testInstallerUrl}|user", $"{testInstallerUrl}|machine" });
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(goodCommand, initialManifestContent);
-            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded as installers should be overrided with scope.");
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded as installers should be overriden with scope.");
 
             var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
             var initialSecondInstaller = initialManifests.SingletonManifest.Installers[1];
@@ -561,7 +561,7 @@ namespace Microsoft.WingetCreateUnitTests
                 GetUpdateCommandAndManifestData("TestPublisher.AllUrlArguments", "1.2.3.4", this.tempPath, new[] { $"{testInstallerUrl}|user|arm|{newDisplayVersion1}", $"{testInstallerUrl}|arm|machine|{newDisplayVersion2}" });
             var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
             var updatedManifests = await RunUpdateCommand(goodCommand, initialManifestContent);
-            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded as installers should be overrided with architecture and scope.");
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded as installers should be overriden with architecture and scope.");
 
             var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
             var initialSecondInstaller = initialManifests.SingletonManifest.Installers[1];

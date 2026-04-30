@@ -39,7 +39,7 @@ namespace Microsoft.WingetCreateCore.Common
         }
 
         /// <summary>
-        /// Returns a new string in which all occurences of a specified string in the current instance are removed.
+        /// Returns a new string in which all occurrences of a specified string in the current instance are removed.
         /// </summary>
         /// <param name="value">String to be modified.</param>
         /// <param name="toRemove">String to be removed.</param>

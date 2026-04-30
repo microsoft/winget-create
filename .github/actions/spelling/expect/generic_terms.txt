@@ -19,3 +19,8 @@ usr
 versioning
 VGpu
 vse
+deconstruct
+Diffing
+distro
+hardcode
+metadata

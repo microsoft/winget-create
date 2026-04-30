@@ -659,7 +659,7 @@ Advertencia: El uso de este argumento puede resultar en que se registre el token
     <value>Advertencia: el uso del argumento --token puede dar lugar a que se registre el token. Considere la posibilidad de usar un enfoque alternativo https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
-    <value>Se superó el límite de velocidad de api de GitHub. Para ampliar el límite de velocidad, proporcione el token de GitHub con la marca "-t" o almacene uno mediante el comando "token --store".</value>
+    <value>Se superó el límite de velocidad de API de GitHub. Para ampliar el límite de velocidad, proporcione el token de GitHub con la marca "-t" o almacene uno mediante el comando "token --store".</value>
     <comment>'-t' refers to a command line switch argument
 'token --store' refers to a command line argument</comment>
   </data>

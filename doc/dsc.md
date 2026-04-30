@@ -1,6 +1,6 @@
 # dsc command (Winget-Create)
 
-The **dsc** command is the entry point for using DSC (Desired State Coonfiguration) with Winget-Create.
+The **dsc** command is the entry point for using DSC (Desired State Configuration) with Winget-Create.
 
 ## Usage
 
