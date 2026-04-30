@@ -1,5 +1,7 @@
+BSODs
 dotnet
 LASTEXITCODE
 msbuild
+msrc
 msvcp
 vcruntime
