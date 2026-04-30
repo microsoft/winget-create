@@ -355,7 +355,7 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
-        /// Parses the package for relevant metadata and and updates the metadata of the provided installer node.
+        /// Parses the package for relevant metadata and updates the metadata of the provided installer node.
         /// </summary>
         /// <param name="installer">Installer node.</param>
         /// <param name="filePath">Path to package file.</param>

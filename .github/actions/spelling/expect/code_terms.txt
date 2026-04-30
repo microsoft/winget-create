@@ -2,7 +2,6 @@
 aarch
 acqu
 agentless
-AMD
 anonymize
 Anonymize
 anonymized

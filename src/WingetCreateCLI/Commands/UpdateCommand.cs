@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 
 namespace Microsoft.WingetCreateCLI.Commands
@@ -98,7 +98,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         public override string PRTitle { get => base.PRTitle; set => base.PRTitle = value; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not the updated manifest should be submitted to Github.
+        /// Gets or sets a value indicating whether or not the updated manifest should be submitted to GitHub.
         /// </summary>
         [Option('s', "submit", Required = false, HelpText = "SubmitToWinget_HelpText", ResourceType = typeof(Resources))]
         public bool SubmitToGitHub { get; set; }

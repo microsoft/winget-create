@@ -58,7 +58,8 @@
 # Date-time log format strings containing .fff
 \b\w{4}-\w{2}-\w{2}(?:-\w{2}){0,3}\.fff\b
 
-# Preprocessor and compiler directives in comments
+# C# property declarations where type name equals property name (e.g. public Architecture Architecture { get; set; })
+(?:public|private|protected|internal)(?:\s+(?:static|readonly|override|virtual))*\s+(\w+)\s+\g{-1}\s*(?:\{|=)
 ^#(?:pragma|endif|ifdef|ifndef|if|else|define|include)\b
 
 # XML/markup attributes in code/config

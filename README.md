@@ -15,7 +15,7 @@ For your convenience, **WingetCreate** can be acquired a number of ways.
 
 ### Install from the github repo
 
-The **Windows Package Manager Manifest Creator** is available for download from the [winget-create](https://github.com/microsoft/winget-create/releases) repository.  To install the package, simply click the the MSIX file in your browser.  Once it has downloaded, click open.
+The **Windows Package Manager Manifest Creator** is available for download from the [winget-create](https://github.com/microsoft/winget-create/releases) repository.  To install the package, simply click the MSIX file in your browser.  Once it has downloaded, click open.
 
 ### Install with Windows Package Manager
 
@@ -181,7 +181,7 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
     * Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
 * Set up your github token:
-    * __[Recommended]__ Run `wingetcreate token -s` to go through the Github authentication flow
+    * __[Recommended]__ Run `wingetcreate token -s` to go through the GitHub authentication flow
     * Or create a personal access token with the `repo` permission and set it as an environment variable `WINGET_CREATE_GITHUB_TOKEN`. _(This option is more convenient for CI/CD pipelines.)_
 
 ## Contributing
