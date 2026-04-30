@@ -125,13 +125,7 @@ The CLI also supports creating or updating manifests with multiple installer URL
 
 ## GitHub Personal Access Token (classic) Permissions
 
-When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) to be used with WingetCreate, make sure the following permissions are selected.
-
-- Select the **public_repo** scope to allow access to public repositories
-
-![public_repo scope](./doc/images/tokenscope-publicrepo.png)
-
-- (Optional) Select the **delete_repo** scope permission if you want WingetCreate to automatically delete the forked repo that it created if the PR submission fails.
+Please see the steps in [token.md](./doc/token.md)
 
 ## Building the client
 
