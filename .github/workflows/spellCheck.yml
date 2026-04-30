@@ -1,3 +1,6 @@
+# spelling.yml is blocked per https://github.com/check-spelling/check-spelling/security/advisories/GHSA-g86g-chm8-7r2p
+# spelling2.yml is blocked per https://github.com/check-spelling/check-spelling/security/advisories/GHSA-p8r9-69g4-jwqq
+
 name: Check Spelling
 
 # Comment management is handled through a secondary job, for details see:
@@ -54,29 +57,21 @@ name: Check Spelling
 #   spelling:
 #     # remove `security-events: write` and `use_sarif: 1`
 #     # remove `experimental_apply_changes_via_bot: 1`
-#     ... otherwise, adjust the `with:` as you wish
-
-# on.pull_request(_target).edited is only needed for with.check_commit_messages: title | description
+#     ... otherwise adjust the `with:` as you wish
 
 on:
   push:
     branches:
-      - '**'
+      - "**"
     tags-ignore:
-      - '**'
+      - "**"
   pull_request_target:
     branches:
-      - '**'
+      - "**"
     types:
-      - 'edited'
-      - 'opened'
-      - 'reopened'
-      - 'synchronize'
-  issue_comment:
-    types:
-      - 'created'
-
-permissions: {}
+      - "opened"
+      - "reopened"
+      - "synchronize"
 
 jobs:
   spelling:
@@ -85,11 +80,10 @@ jobs:
       contents: read
       pull-requests: read
       actions: read
-      security-events: write
     outputs:
       followup: ${{ steps.spelling.outputs.followup }}
     runs-on: ubuntu-latest
-    if: ${{ (contains(github.event_name, 'pull_request') && github.event.pull_request.state == 'open') || github.event_name == 'push' }}
+    if: ${{ contains(github.event_name, 'pull_request') || github.event_name == 'push' }}
     concurrency:
       group: spelling-${{ github.event.pull_request.number || github.ref }}
       # note: If you use only_check_changed_files, you do not want cancel-in-progress
@@ -102,85 +96,51 @@ jobs:
           suppress_push_for_open_pull_request: ${{ github.actor != 'dependabot[bot]' && 1 }}
           checkout: true
           check_file_names: 1
-          check_commit_messages: commits, title, description
-          spell_check_this: check-spelling/spell-check-this@main
           post_comment: 0
           use_magic_file: 1
-          report-timing: 1
           warnings: bad-regex,binary-file,deprecated-feature,ignored-expect-variant,large-file,limited-references,no-newline-at-eof,noisy-file,non-alpha-in-dictionary,token-is-substring,unexpected-line-ending,whitespace-in-dictionary,minified-file,unsupported-configuration,no-files-to-check,unclosed-block-ignore-begin,unclosed-block-ignore-end
-          experimental_apply_changes_via_bot: 1
-          use_sarif: 1
-          check-images: 1
-          extra_dictionary_limit: 20
-          allow-hunspell: false
-          load-config-from: |
+          check_extra_dictionaries: ""
+          dictionary_source_prefixes: >
             {
-              "pr-base-keys": [
-                "check_extra_dictionaries",
-                "dictionary_source_prefixes",
-                "extra_dictionaries",
-                ""
-              ],
-              "pr-trusted-keys": [
-                ""
-              ],
-              "": []
+            "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20241114/dictionaries/"
             }
-
-  comment-push:
-    name: Report (Push)
-    # If your workflow isn't running on push, you can remove this job
-    runs-on: ubuntu-slim
-    needs: spelling
-    permissions:
-      actions: read
-      contents: write
-    if: (success() || failure()) && needs.spelling.outputs.followup && github.event_name == 'push'
-    steps:
-      - name: comment
-        uses: check-spelling/check-spelling@v0.0.26
-        with:
-          spell_check_this: check-spelling/spell-check-this@main
-          task: ${{ needs.spelling.outputs.followup }}
+          extra_dictionaries: |
+            cspell:software-terms/softwareTerms.txt
+            cspell:cpp/stdlib-cpp.txt
+            cspell:filetypes/filetypes.txt
+            cspell:cpp/stdlib-c.txt
+            cspell:php/php.txt
+            cspell:python/python/python-lib.txt
+            cspell:dotnet/dotnet.txt
+            cspell:golang/go.txt
+            cspell:cpp/compiler-msvc.txt
+            cspell:dart/dart.txt
+            cspell:html/html.txt
+            cspell:powershell/powershell.txt
+            cspell:aws/aws.txt
+            cspell:python/common/extra.txt
+            cspell:node/node.txt
+            cspell:npm/npm.txt
+            cspell:fullstack/fullstack.txt
+            cspell:java/java.txt
+            cspell:csharp/csharp.txt
+            cspell:cpp/ecosystem.txt
+            cspell:typescript/typescript.txt
+            cspell:cpp/lang-keywords.txt
 
   comment-pr:
     name: Report (PR)
     # If you workflow isn't running on pull_request*, you can remove this job
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     needs: spelling
     permissions:
       actions: read
+      contents: read
       pull-requests: write
     if: (success() || failure()) && needs.spelling.outputs.followup && contains(github.event_name, 'pull_request')
     steps:
       - name: comment
         uses: check-spelling/check-spelling@v0.0.26
         with:
-          spell_check_this: check-spelling/spell-check-this@main
-          task: ${{ needs.spelling.outputs.followup }}
-          experimental_apply_changes_via_bot: 1
-
-  update:
-    name: Update PR
-    permissions:
-      contents: write
-      pull-requests: write
-      actions: read
-    runs-on: ubuntu-slim
-    if: ${{
-      github.event_name == 'issue_comment' &&
-      github.event.issue.pull_request &&
-      contains(github.event.comment.body, '@check-spelling-bot') &&
-      contains(github.event.comment.body, 'apply') &&
-      contains(github.event.comment.body, 'https://')
-      }}
-    concurrency:
-      group: spelling-update-${{ github.event.issue.number }}
-      cancel-in-progress: false
-    steps:
-      - name: apply spelling updates
-        uses: check-spelling/check-spelling@v0.0.26
-        with:
-          experimental_apply_changes_via_bot: 1
           checkout: true
-          ssh_key: '${{ secrets.CHECK_SPELLING }}'
+          task: ${{ needs.spelling.outputs.followup }}

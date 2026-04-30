@@ -189,9 +189,9 @@ namespace Microsoft.WingetCreateCore.Common
                 {
                     toAdd = item;
                 }
-                else if (item is ICloneable clonableItem)
+                else if (item is ICloneable cloneableItem)
                 {
-                    toAdd = clonableItem.Clone();
+                    toAdd = cloneableItem.Clone();
                 }
                 else
                 {

@@ -67,7 +67,9 @@ ignore$
 \.pubxml$
 ^\.(?!github/)
 ^\.github/actions/spelling/
+^\.github/actions/spelling/expect
 ^\.github/workflows/spellCheck\.yml$
 ^Localization/
 ^NOTICE.txt$
 ^src/WingetCreateTests/WingetCreateTests/UnitTests/CharacterValidationTests.cs$
+^src/WingetCreateTests/WingetCreateTests/Resources/WingetCreateTestMsiInstaller\.msi$
