@@ -27,6 +27,37 @@
 # C# code keywords that appear in comments/strings
 \b(?:namespace|foreach|typeof|nameof|readonly|pragma|endif|ifdef|ifndef|cref|typeparam|params|enum|Enum|args|Args|Func|ulong|uint|UInt|ushort|IList|IEnumerable|IDictionary|IComparer|ICloneable|IManifest|ISerializer|IDeserializer|IEmitter|IParser|IProperty|IObject|IEvent|IYaml|IType|IRest|IAppx|JToken|JObject|JArray|JProperty|NLog|NSwag|NJson|nodoc|Linq|Json|Yaml|msbuild|xmlns|xsd|csharp|csproj|sln|wapproj|pubxml|resx|runsettings|editorconfig|stylecop)\b
 
+# UInt type codes (UInt16, UInt32, UInt64, UInt8)
+\bUInt(?:8|16|32|64)?\b
+
+# NJsonSchema / NSwag library names
+\bNJson(?:Schema)?\b
+\bNSwag\b
+
+# HttpStatusCode / HttpStatus
+\b[Hh]ttp[Ss]tatus(?:Code)?\b
+
+# OAuth variants
+\b[Oo][Aa][Uu][Tt][Hh]\b
+
+# Azure DevOps ##vso logging commands
+##vso\[[\w.]+\]
+
+# MIME type vnd. strings
+\bapplication/vnd\.[^\s"]+
+
+# E2ETests identifier
+\bE2E(?:Tests?)?\b
+
+# Withx64 / Withx86 style identifiers
+\bWith[xX]\d+\b
+
+# winx64 / winx86 / winx?64 inside regex strings
+\bwin[xX](?:\??\d+)?\b
+
+# Date-time log format strings containing .fff
+\b\w{4}-\w{2}-\w{2}(?:-\w{2}){0,3}\.fff\b
+
 # Preprocessor and compiler directives in comments
 ^#(?:pragma|endif|ifdef|ifndef|if|else|define|include)\b
 
