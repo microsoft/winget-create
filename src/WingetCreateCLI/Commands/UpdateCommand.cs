@@ -510,7 +510,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
                 return null;
             }
-            catch (IOException iOException) when (iOException.HResult == -2147024671)
+            catch (IOException ioException) when (ioException.HResult == -2147024671)
             {
                 Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
                 return null;

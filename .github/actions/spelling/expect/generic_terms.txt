@@ -1,12 +1,11 @@
-Amd
 amd
 azurecr
-deconstruct
+deconstructed
 Diffing
 distro
 hardcode
 ltsc
-metadata
+Metadatas
 onebranch
 screenshots
 vse

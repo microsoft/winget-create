@@ -1,12 +1,8 @@
 vscode
 dotnet
 NUnit
-baz
-crlf
-csharp
-deserializable
 enum
 minkernel
 nowrap
-pdb
+PDBs
 Utils
