@@ -5,6 +5,10 @@ README
 Unicode
 Uncomment
 Uwp
+ETests
+NSwag
+UInt
+Withx
 apps
 appwiz
 appx
