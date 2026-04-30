@@ -129,7 +129,7 @@
 [Ww][Ss][Bb]
 
 # MSI/MSIX installer format variants (msi, Msi, MSI, msix, Msix, MSIX, msixbundle, etc.)
-\b[Mm][Ss][Ii][Xx]?(?:[Bb]undle)?\b
+(?i)\bmsi(x)?(bundle)?\b
 
 # DLL variants (dll, Dll, DLL, DLLs)
 \b[Dd][Ll][Ll][Ss]?\b
