@@ -3,7 +3,16 @@
 The **token** command of the [Winget-Create](../README.md) tool is designed to manage cached GitHub personal access tokens used by the tool for interacting with the [Windows Package Manager repo](https://docs.microsoft.com/windows/package-manager/) automatically.
 To use the **token** command, you can specify whether you want to store a new [GitHub token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) or clear any existing cached tokens. If you choose not to provide a token when storing, the tool will initiate an OAuth flow and prompt for your GitHub login credentials.
 
-Instructions on setting up GitHub Token for Winget-Create can be found [here](../README.md#github-personal-access-token-classic-permissions).
+## GitHub Personal Access Token (classic) Permissions
+
+When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) to be used with WingetCreate, make sure the following permissions are selected.
+
+- Select "Tokens (classic)". Fine-grained tokens are not supported (https://github.com/microsoft/winget-create/issues/595)
+- Select the **public_repo** scope to allow access to public repositories
+
+![public_repo scope](./images/tokenscope-publicrepo.png)
+
+- (Optional) Select the **delete_repo** scope permission if you want WingetCreate to automatically delete the forked repo that it created if the PR submission fails.
 
 ## Usage
 
