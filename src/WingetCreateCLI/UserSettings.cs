@@ -246,7 +246,7 @@ namespace Microsoft.WingetCreateCLI
             }
             else
             {
-                // If either of these files exist, then this indicates that a parsing error has occurred and we can display warnings.
+                // If either of these files exist, then this indicates that a parsing error has occured and we can display warnings.
                 if (File.Exists(SettingsJsonPath) || File.Exists(SettingsBackupJsonPath))
                 {
                     Logger.WarnLocalized(nameof(Resources.UnexpectedErrorLoadSettings_Message));
