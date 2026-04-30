@@ -59,7 +59,11 @@ ignore$
 \.woff2?$
 \.xlsx?$
 \.zip$
+\.vdproj$
+\.appxmanifest$
+\.wapproj$
 ^\.(?!github/)
 ^\.github/actions/spelling/
-^\.github/policies/moderatorTriggers\.yml$
 ^\.github/workflows/spellCheck\.yml$
+^Localization/
+^NOTICE.txt$
