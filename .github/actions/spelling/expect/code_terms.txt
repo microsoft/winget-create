@@ -40,10 +40,6 @@ deserializer
 Deserializer
 deseri
 deserialized
-DLL
-Dll
-dll
-DLLs
 eif
 elseif
 ema
@@ -103,11 +99,6 @@ longdate
 LOCALAPPDATA
 mergeable
 Moq
-MSIX
-msix
-Msix
-msi
-Msi
 msgs
 multifile
 Multifile

@@ -128,6 +128,12 @@
 # Variations on WSB
 [Ww][Ss][Bb]
 
+# MSI/MSIX installer format variants (msi, Msi, MSI, msix, Msix, MSIX, msixbundle, etc.)
+\b[Mm][Ss][Ii][Xx]?(?:[Bb]undle)?\b
+
+# DLL variants (dll, Dll, DLL, DLLs)
+\b[Dd][Ll][Ll][Ss]?\b
+
 # GUIDS
 \w{8}-(?:\w{4}-){3}\w{12}
 

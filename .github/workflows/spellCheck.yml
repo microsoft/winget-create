@@ -97,7 +97,7 @@ jobs:
     steps:
       - name: check-spelling
         id: spelling
-        uses: check-spelling/check-spelling@main
+        uses: check-spelling/check-spelling@v0.0.26
         with:
           suppress_push_for_open_pull_request: ${{ github.actor != 'dependabot[bot]' && 1 }}
           checkout: true
@@ -138,7 +138,7 @@ jobs:
     if: (success() || failure()) && needs.spelling.outputs.followup && github.event_name == 'push'
     steps:
       - name: comment
-        uses: check-spelling/check-spelling@main
+        uses: check-spelling/check-spelling@v0.0.26
         with:
           spell_check_this: check-spelling/spell-check-this@main
           task: ${{ needs.spelling.outputs.followup }}
@@ -154,7 +154,7 @@ jobs:
     if: (success() || failure()) && needs.spelling.outputs.followup && contains(github.event_name, 'pull_request')
     steps:
       - name: comment
-        uses: check-spelling/check-spelling@main
+        uses: check-spelling/check-spelling@v0.0.26
         with:
           spell_check_this: check-spelling/spell-check-this@main
           task: ${{ needs.spelling.outputs.followup }}
@@ -179,7 +179,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: apply spelling updates
-        uses: check-spelling/check-spelling@main
+        uses: check-spelling/check-spelling@v0.0.26
         with:
           experimental_apply_changes_via_bot: 1
           checkout: true

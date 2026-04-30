@@ -55,7 +55,6 @@ mhutchie
 microsoft
 MMdd
 msftbot
-msixbundle
 msjsdiag
 msstore
 msvc
