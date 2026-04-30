@@ -1,4 +1,6 @@
 admins
+config
+src
 apps
 appwiz
 appx

@@ -62,6 +62,8 @@ ignore$
 \.vdproj$
 \.appxmanifest$
 \.wapproj$
+\.sln$
+\.pubxml$
 ^\.(?!github/)
 ^\.github/actions/spelling/
 ^\.github/workflows/spellCheck\.yml$

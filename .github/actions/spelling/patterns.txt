@@ -1,5 +1,44 @@
 # See https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples:-patterns
 
+# IServiceProvider / isAThing
+(?:\b|_)(?:(?:ns|)I|isA|T)(?=(?:[A-Z][a-z]{2,})+(?:[A-Z\d]|\b))
+
+# uuid:
+\b[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}\b
+
+# hex runs
+\b[0-9a-fA-F]{16,}\b
+
+# microsoft urls
+\b(?:https?://|)(?:(?:(?:apps|blogs|download\.visualstudio|docs|msdn2?|research)\.|)microsoft|blogs\.msdn)\.co(?:m|\.\w\w)/[-_a-zA-Z0-9()=./%?&:#]*
+
+# version suffix <word>v#
+(?:(?<=[A-Z]{2})V|(?<=[a-z]{2}|[A-Z]{2})v)\d+(?:\b|(?=[a-zA-Z_]))
+
+# hex digits including css/html color classes:
+(?:[\\0][xX]|\\u|[uU]\+|#x?|%23)[0-9_a-fA-FgGrR]*?[a-fA-FgGrR]{2,}[0-9_a-fA-FgGrR]*(?:[uUlL]{0,3}|[iu]\d+)\b
+
+# vs devops
+\bvisualstudio.com(?::443|)/[-\w/?=%&.]*
+
+# w3
+\bw3\.org/[-0-9a-zA-Z/#.]+
+
+# C# code keywords that appear in comments/strings
+\b(?:namespace|foreach|typeof|nameof|readonly|pragma|endif|ifdef|ifndef|cref|typeparam|params|enum|Enum|args|Args|Func|ulong|uint|UInt|ushort|IList|IEnumerable|IDictionary|IComparer|ICloneable|IManifest|ISerializer|IDeserializer|IEmitter|IParser|IProperty|IObject|IEvent|IYaml|IType|IRest|IAppx|JToken|JObject|JArray|JProperty|NLog|NSwag|NJson|Linq|Json|Yaml|msbuild|xmlns|xsd|csharp|csproj|sln|wapproj|pubxml|resx|runsettings|editorconfig|stylecop)\b
+
+# Preprocessor and compiler directives in comments
+^#(?:pragma|endif|ifdef|ifndef|if|else|define|include)\b
+
+# XML/markup attributes in code/config
+\b(?:resheader|resmimetype|XResource|bytearray|msdata|mimetype|depersist)\b
+
+# Azure DevOps pipeline variables
+\$\((?:Build|Agent|System|Pipeline)\.[A-Za-z.]+\)
+
+# NuGet/MSBuild specific terms in project files
+\b(?:contentfiles|buildtransitive|generatepathproperty|dependencyversion|PackageReference|ItemGroup|PropertyGroup)\b
+
 # user
 "user":\s*"[^"]+"
 
