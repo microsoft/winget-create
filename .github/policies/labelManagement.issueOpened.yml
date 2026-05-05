@@ -1,0 +1,50 @@
+id: labelManagement.issueOpened
+name: GitOps.PullRequestIssueManagement
+description: Handlers for when an issue is first opened
+owner:
+resource: repository
+disabled: false
+where:
+configuration:
+  resourceManagementConfiguration:
+    eventResponderTasks:
+      - description: Add Needs-Triage to new issues
+        if:
+          - payloadType: Issues
+          - isAction:
+              action: Opened
+        then:
+          - addLabel:
+              label: Needs-Triage
+      - description: Add CodeFlow link to new PRs
+        if:
+          - payloadType: Pull_Request
+          - isAction:
+              action: Opened
+        then:
+          - addCodeFlowLink
+      - description: >-
+          Close issues with empty body on open or reopen
+          * Close the issue
+          * Add Needs-Author-Feedback label
+          * Add a reply notifying the author
+        if:
+          - payloadType: Issues
+          - or:
+              - isAction:
+                  action: Opened
+              - isAction:
+                  action: Reopened
+          - or:
+              - not:
+                  bodyContains:
+                    pattern: .+
+                    isRegex: True
+        then:
+          - closeIssue
+          - addLabel:
+              label: Needs-Author-Feedback
+          - addReply:
+              reply: "Hi! Thanks for attempting to open an issue. Unfortunately, you didn't write anything in the body which makes it impossible to understand your concern. You are welcome to fix up the issue and try again by opening another issue with the body filled out. "
+onFailure:
+onSuccess:

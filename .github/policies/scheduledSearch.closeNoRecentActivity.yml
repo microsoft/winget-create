@@ -1,0 +1,88 @@
+id: scheduledSearch.closeNoRecentActivity
+name: GitOps.PullRequestIssueManagement
+description: Closes issues and pull requests that are inactive
+owner:
+resource: repository
+disabled: false
+where:
+configuration:
+  resourceManagementConfiguration:
+    scheduledSearches:
+      - description: >-
+          Search for Issues where -
+          * Issue is Open
+          * Issue has the label Needs-Author-Feedback
+          * Issue has the label No-Recent-Activity
+          * Issue does not have the label Blocking-Issue
+          * Issue does not have the label Issue-Feature
+          * Has not had activity in the last 7 days
+
+          Then -
+          * Close the Issue
+        frequencies:
+          - hourly:
+              hour: 6
+        filters:
+          - isIssue
+          - isOpen
+          - hasLabel:
+              label: Needs-Author-Feedback
+          - hasLabel:
+              label: No-Recent-Activity
+          - noActivitySince:
+              days: 7
+          - isNotLabeledWith:
+              label: Blocking-Issue
+          - isNotLabeledWith:
+              label: Issue-Feature
+        actions:
+          - closeIssue
+      - description: >-
+          Search for PRs where -
+          * Pull Request is Open
+          * Pull Request has the label Needs-Author-Feedback
+          * Pull Request has the label No-Recent-Activity
+          * Has not had activity in the last 7 days
+
+          Then -
+          * Close the Pull Request
+        frequencies:
+          - hourly:
+              hour: 3
+        filters:
+          - isPullRequest
+          - isOpen
+          - hasLabel:
+              label: Needs-Author-Feedback
+          - hasLabel:
+              label: No-Recent-Activity
+          - noActivitySince:
+              days: 7
+        actions:
+          - closeIssue
+      - description: >-
+          Search for Issues where -
+          * Issue is Open
+          * Issue has the label Resolution-Duplicate
+          * Has not had activity in the last 1 day
+
+          Then -
+          * Close the Issue
+        frequencies:
+          - hourly:
+              hour: 3
+        filters:
+          - isIssue
+          - isOpen
+          - hasLabel:
+              label: Resolution-Duplicate
+          - noActivitySince:
+              days: 1
+        actions:
+          - addReply:
+              reply: This issue has been marked as duplicate and has not had any activity for **1 day**. It will be closed for housekeeping purposes.
+          - removeLabel:
+              label: Needs-Triage
+          - closeIssue
+onFailure:
+onSuccess:
