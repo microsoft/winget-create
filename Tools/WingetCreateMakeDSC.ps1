@@ -20,7 +20,7 @@ if (-not(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
     # If there was an exception while installing, pass it as an InternalException for further debugging
     throw [UnmetDependencyException]::new("'Microsoft.Winget.Client' was not installed successfully", $_.Exception)
   } finally {
-    # Check to be sure it acutally installed
+    # Check to be sure it actually installed
     if (-not(Get-Module -ListAvailable -Name Microsoft.Winget.Client)) {
       throw [UnmetDependencyException]::new("`Microsoft.Winget.Client` was not found. Check that you have installed the Windows Package Manager modules correctly.")
     }
@@ -36,7 +36,7 @@ if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
     # If there was an exception while installing, pass it as an InternalException for further debugging
     throw [UnmetDependencyException]::new("'powershell-yaml' was not installed successfully", $_.Exception)
   } finally {
-    # Check to be sure it acutally installed
+    # Check to be sure it actually installed
     if (-not(Get-Module -ListAvailable -Name powershell-yaml)) {
       throw [UnmetDependencyException]::new("`powershell-yaml` was not found. Check that you have installed the module correctly.")
     }

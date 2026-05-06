@@ -63,7 +63,7 @@ Winget-Create will attempt to determine the architecture of the installer packag
 
 #### Override Scope
 
-In case there are multiple installers with the same architecture, it may mean the same installer is available for multiple scopes. In this case, you can explicitly provide the installer scope in the update command using the following following argument format:
+In case there are multiple installers with the same architecture, it may mean the same installer is available for multiple scopes. In this case, you can explicitly provide the installer scope in the update command using the following argument format:
 
 `'<InstallerUrl>|<InstallerScope>'`
 

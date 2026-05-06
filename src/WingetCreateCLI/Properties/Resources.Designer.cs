@@ -2700,7 +2700,7 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the &apos;-t&apos; flag or store one using the &apos;token --store&apos; command..
+        ///   Looks up a localized string similar to GitHub API rate limit exceeded. To extend your rate limit, provide your GitHub token with the &apos;-t&apos; flag or store one using the &apos;token --store&apos; command..
         /// </summary>
         public static string RateLimitExceeded_Message {
             get {

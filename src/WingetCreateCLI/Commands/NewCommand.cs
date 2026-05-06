@@ -295,7 +295,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                     RemoveARPEntries(manifests.InstallerManifest);
                     DisplayArchitectureWarnings(installerUpdateList);
                 }
-                catch (IOException iOException) when (iOException.HResult == -2147024671)
+                catch (IOException ioException) when (ioException.HResult == -2147024671)
                 {
                     Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
                     return false;

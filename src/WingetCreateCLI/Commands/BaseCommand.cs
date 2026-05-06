@@ -661,7 +661,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             if (string.IsNullOrEmpty(this.GitHubToken))
             {
-                // User must've cancelled OAuth flow, we can't proceed successfully
+                // User must have cancelled OAuth flow, we can't proceed successfully
                 Logger.WarnLocalized(nameof(Resources.NoTokenResponse_Message));
                 return false;
             }
@@ -840,7 +840,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Returns the title to be used for the pull request.
         /// </summary>
         /// <param name="currentManifest">Manifest object containing metadata of new manifest to be submitted.</param>
-        /// <param name="repositoryManifest">Manifest object representing an already exisitng manifest in the repository.</param>
+        /// <param name="repositoryManifest">Manifest object representing an already existing manifest in the repository.</param>
         /// <returns>A string representing the pull request title.</returns>
         protected string GetPRTitle(Manifests currentManifest, Manifests repositoryManifest = null)
         {
