@@ -237,7 +237,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ---------------------------------------------------------
 
-AutoMapper 13.0.1 - MIT
+AutoMapper 15.1.1 - MIT
 
 
 Copyright (c) 2014-2018 Axel Heer
