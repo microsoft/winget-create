@@ -116,6 +116,10 @@ Once you've discussed your proposed feature/fix/etc. with a team member, and you
 
 Testing is a key component in the development workflow.
 
+### CI Pipeline
+
+Pull request builds are gated on a team member's approval. If you are an external contributor, the Azure Pipelines CI will **not** run automatically when you open or update a PR. A repository owner or team member must trigger it by commenting `/azp run` on the PR. Please do not be surprised if CI does not start immediately — the team will kick it off during triage.
+
 ### Code Review
 
 When you'd like the team to take a look, (even if the work is not yet fully-complete), mark the Draft PR as 'Ready For Review' so that the team can review your work and provide comments, suggestions, and request changes. It may take several cycles, but the end result will be solid, testable, conformant code that is safe for us to merge.
