@@ -12,6 +12,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using AutoMapper;
     using CommandLine;
     using CommandLine.Text;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
     using Microsoft.WingetCreateCLI.Properties;
@@ -614,31 +615,33 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static Manifests ConvertSingletonToMultifileManifest(WingetCreateCore.Models.Singleton.SingletonManifest singletonManifest)
         {
             // Create automapping configuration
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AllowNullCollections = true;
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, VersionManifest>()
-                    .ForMember(dest => dest.DefaultLocale, opt => opt.MapFrom(src => src.PackageLocale))
-                    .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, DefaultLocaleManifest>().ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, InstallerManifest>()
-                    .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.AppsAndFeaturesEntry, WingetCreateCore.Models.Installer.AppsAndFeaturesEntry>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.ExpectedReturnCode, WingetCreateCore.Models.Installer.ExpectedReturnCode>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.PackageDependencies, WingetCreateCore.Models.Installer.PackageDependencies>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets, WingetCreateCore.Models.Installer.Markets>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets2, WingetCreateCore.Models.Installer.Markets2>(); // Markets2 is not used, but is required to satisfy mapping configuration.
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Agreement, WingetCreateCore.Models.DefaultLocale.Agreement>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Documentation, WingetCreateCore.Models.DefaultLocale.Documentation>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Files, WingetCreateCore.Models.Installer.Files>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallationMetadata, WingetCreateCore.Models.Installer.InstallationMetadata>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Icon, WingetCreateCore.Models.DefaultLocale.Icon>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Authentication, WingetCreateCore.Models.Installer.Authentication>();
-            });
+            var config = new MapperConfiguration(
+                cfg =>
+                {
+                    cfg.AllowNullCollections = true;
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, VersionManifest>()
+                        .ForMember(dest => dest.DefaultLocale, opt => opt.MapFrom(src => src.PackageLocale))
+                        .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, DefaultLocaleManifest>().ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, InstallerManifest>()
+                        .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.AppsAndFeaturesEntry, WingetCreateCore.Models.Installer.AppsAndFeaturesEntry>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.ExpectedReturnCode, WingetCreateCore.Models.Installer.ExpectedReturnCode>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.PackageDependencies, WingetCreateCore.Models.Installer.PackageDependencies>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets, WingetCreateCore.Models.Installer.Markets>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets2, WingetCreateCore.Models.Installer.Markets2>(); // Markets2 is not used, but is required to satisfy mapping configuration.
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Agreement, WingetCreateCore.Models.DefaultLocale.Agreement>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Documentation, WingetCreateCore.Models.DefaultLocale.Documentation>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Files, WingetCreateCore.Models.Installer.Files>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallationMetadata, WingetCreateCore.Models.Installer.InstallationMetadata>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Icon, WingetCreateCore.Models.DefaultLocale.Icon>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Authentication, WingetCreateCore.Models.Installer.Authentication>();
+                },
+                NullLoggerFactory.Instance);
             var mapper = config.CreateMapper();
 
             Manifests manifests = new Manifests();

@@ -9,6 +9,7 @@ namespace Microsoft.WingetCreateUnitTests
     using System.IO.Compression;
     using System.Linq;
     using AutoMapper;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
@@ -207,14 +208,16 @@ namespace Microsoft.WingetCreateUnitTests
         /// <returns>Installer Manifest Installer object model.</returns>
         private static Installer ConvertSingletonInstaller(WingetCreateCore.Models.Singleton.Installer installer)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AllowNullCollections = true;
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
-            });
+            var config = new MapperConfiguration(
+                cfg =>
+                {
+                    cfg.AllowNullCollections = true;
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
+                },
+                NullLoggerFactory.Instance);
             var mapper = config.CreateMapper();
 
             return mapper.Map<Installer>(installer);
