@@ -109,6 +109,14 @@ extends:
                     $manifest.Package.Identity.Version = "$(version)"
                     $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
 
+              - task: UseDotNet@2
+                displayName: Use .NET SDK from global.json
+                inputs:
+                  packageType: sdk
+                  useGlobalJson: true
+                  workingDirectory: $(Build.SourcesDirectory)
+                  performMultiLevelLookup: true
+
               - task: DotNetCoreCLI@2
                 displayName: Restore
                 inputs:
