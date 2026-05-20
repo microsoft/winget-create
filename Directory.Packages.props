@@ -29,6 +29,6 @@
     <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
     <PackageVersion Include="Vestris.ResourceLib" Version="2.2.0" />
     <PackageVersion Include="WiX" Version="3.14.1" />
-    <PackageVersion Include="YamlDotNet" Version="15.1.1" />
+    <PackageVersion Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 </Project>
