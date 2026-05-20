@@ -13,6 +13,7 @@
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.213" />
     <PackageVersion Include="Microsoft.WindowsPackageManager.Utils" Version="1.12.350" />
     <PackageVersion Include="Moq" Version="4.20.70" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="Newtonsoft.Json.Schema" Version="3.0.15" />
     <PackageVersion Include="NLog" Version="5.2.8" />
     <PackageVersion Include="NSwag.MSBuild" Version="14.0.3" />

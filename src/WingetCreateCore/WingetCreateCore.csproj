@@ -16,25 +16,20 @@
 
   <ItemGroup>
     <PackageReference Include="jose-jwt" />
-    <PackageReference Include="Microsoft.CorrelationVector" />
     <PackageReference Include="Microsoft.Msix.Utils" />
     <!--https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#generatepathproperty-->
     <PackageReference Include="Microsoft.WindowsPackageManager.Utils" GeneratePathProperty="true" />
-    <PackageReference Include="Newtonsoft.Json.Schema" />
-    <PackageReference Include="NLog" />
+    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="NSwag.MSBuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Polly" />
-    <PackageReference Include="RestSharp" />
     <PackageReference Include="StyleCop.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Octokit" />
-    <PackageReference Include="System.Private.Uri" />
-    <PackageReference Include="System.Text.RegularExpressions" />
     <PackageReference Include="Vestris.ResourceLib" />
     <PackageReference Include="WiX" />
     <PackageReference Include="YamlDotNet" />
