@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <AssemblyName>WingetCreateCLI</AssemblyName>
     <RootNamespace>Microsoft.WingetCreateCLI</RootNamespace>
     <Version>1.12</Version>
@@ -21,18 +21,14 @@
     <PackageReference Include="AutoMapper" />
     <PackageReference Include="CommandLineParser" />
     <PackageReference Include="DesktopBridge.Helpers" />
-    <PackageReference Include="Microsoft.CorrelationVector" />
     <PackageReference Include="Microsoft.Windows.CsWin32">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json.Schema" />
-    <PackageReference Include="NLog" />
     <PackageReference Include="NSwag.MSBuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="RestSharp" />
     <PackageReference Include="Sharprompt" />
     <PackageReference Include="StyleCop.Analyzers">
       <PrivateAssets>all</PrivateAssets>

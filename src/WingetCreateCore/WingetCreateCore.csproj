@@ -4,7 +4,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <RootNamespace>Microsoft.WingetCreateCore</RootNamespace>
-    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <Platforms>x86;x64</Platforms>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -16,15 +16,18 @@
 
   <ItemGroup>
     <PackageReference Include="jose-jwt" />
+    <PackageReference Include="Microsoft.CorrelationVector" />
     <PackageReference Include="Microsoft.Msix.Utils" />
     <!--https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#generatepathproperty-->
     <PackageReference Include="Microsoft.WindowsPackageManager.Utils" GeneratePathProperty="true" />
-    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Newtonsoft.Json.Schema" />
+    <PackageReference Include="NLog" />
     <PackageReference Include="NSwag.MSBuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Polly" />
+    <PackageReference Include="RestSharp" />
     <PackageReference Include="StyleCop.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
