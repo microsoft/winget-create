@@ -48,7 +48,7 @@ extends:
   parameters:
     pool:
       name: Azure-Pipelines-1ESPT-ExDShared
-      image: windows-2025-vs2026
+      image: windows-2022
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
@@ -136,9 +136,16 @@ extends:
                     /p:UapAppxPackageBuildMode=SideloadOnly
                     /p:AppxPackageSigningEnabled=false'
 
+              - task: VisualStudioTestPlatformInstaller@1
+                displayName: Install latest VSTest platform
+                inputs:
+                  packageFeedSelector: 'nugetOrg'
+                  versionSelector: 'latestStable'
+
               - task: VSTest@2
                 displayName: Run Tests
                 inputs:
+                  vsTestVersion: 'toolsInstaller'
                   testSelector: "testAssemblies"
                   testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\$(targetFramework)\WingetCreateTests.dll'
                   runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
