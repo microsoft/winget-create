@@ -34,7 +34,7 @@ variables:
   buildPlatform: "x64"
 
   # Target framework
-  targetFramework: "net10.0-windows10.0.26100.0"
+  targetFramework: "net9.0-windows10.0.26100.0"
 
 resources:
   repositories:
@@ -136,16 +136,9 @@ extends:
                     /p:UapAppxPackageBuildMode=SideloadOnly
                     /p:AppxPackageSigningEnabled=false'
 
-              - task: VisualStudioTestPlatformInstaller@1
-                displayName: Install latest VSTest platform
-                inputs:
-                  packageFeedSelector: 'nugetOrg'
-                  versionSelector: 'latestStable'
-
               - task: VSTest@2
                 displayName: Run Tests
                 inputs:
-                  vsTestVersion: 'toolsInstaller'
                   testSelector: "testAssemblies"
                   testAssemblyVer2: 'src\WingetCreateTests\WingetCreateTests\bin\$(buildPlatform)\$(buildConfiguration)\$(targetFramework)\WingetCreateTests.dll'
                   runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
