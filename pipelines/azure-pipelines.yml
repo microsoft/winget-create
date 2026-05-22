@@ -34,7 +34,7 @@ variables:
   buildPlatform: "x64"
 
   # Target framework
-  targetFramework: "net8.0-windows10.0.26100.0"
+  targetFramework: "net9.0-windows10.0.26100.0"
 
 resources:
   repositories:
@@ -108,6 +108,14 @@ extends:
                     [xml]$manifest = get-content "$(workingDirectory)/WingetCreatePackage/Package.appxmanifest"
                     $manifest.Package.Identity.Version = "$(version)"
                     $manifest.save("$(workingDirectory)/WingetCreatePackage/Package.appxmanifest")
+
+              - task: UseDotNet@2
+                displayName: Use .NET SDK from global.json
+                inputs:
+                  packageType: sdk
+                  useGlobalJson: true
+                  workingDirectory: $(Build.SourcesDirectory)
+                  performMultiLevelLookup: true
 
               - task: DotNetCoreCLI@2
                 displayName: Restore

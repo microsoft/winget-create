@@ -4,7 +4,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <RootNamespace>Microsoft.WingetCreateCore</RootNamespace>
-    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <Platforms>x86;x64</Platforms>
     <RuntimeIdentifiers>win-x86;win-x64</RuntimeIdentifiers>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -15,27 +15,27 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="jose-jwt" Version="4.1.0" />
-    <PackageReference Include="Microsoft.CorrelationVector" Version="1.0.42" />
-    <PackageReference Include="Microsoft.Msix.Utils" Version="2.1.1" />
+    <PackageReference Include="jose-jwt" />
+    <PackageReference Include="Microsoft.CorrelationVector" />
+    <PackageReference Include="Microsoft.Msix.Utils" />
     <!--https://docs.microsoft.com/en-us/nuget/consume-packages/package-references-in-project-files#generatepathproperty-->
-    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" Version="1.12.350" GeneratePathProperty="true" />
-    <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.15" />
-    <PackageReference Include="NLog" Version="5.2.8" />
-    <PackageReference Include="NSwag.MSBuild" Version="14.0.3">
+    <PackageReference Include="Microsoft.WindowsPackageManager.Utils" GeneratePathProperty="true" />
+    <PackageReference Include="Newtonsoft.Json.Schema" />
+    <PackageReference Include="NLog" />
+    <PackageReference Include="NSwag.MSBuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Polly" Version="8.3.0" />
-    <PackageReference Include="RestSharp" Version="112.0.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+    <PackageReference Include="Polly" />
+    <PackageReference Include="RestSharp" />
+    <PackageReference Include="StyleCop.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Octokit" Version="9.1.2" />
-    <PackageReference Include="Vestris.ResourceLib" Version="2.2.0" />
-    <PackageReference Include="WiX" Version="3.14.1" />
-    <PackageReference Include="YamlDotNet" Version="15.1.1" />
+    <PackageReference Include="Octokit" />
+    <PackageReference Include="Vestris.ResourceLib" />
+    <PackageReference Include="WiX" />
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
 
   <ItemGroup>
