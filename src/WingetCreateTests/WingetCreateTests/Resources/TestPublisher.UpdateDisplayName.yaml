@@ -1,0 +1,23 @@
+﻿PackageIdentifier: TestPublisher.UpdateDisplayName
+PackageVersion: 0.1.2
+PackageName: Test for updating display name through CLI arg
+Publisher: Test publisher
+License: MIT
+ShortDescription: A manifest used to test whether the display name is correctly updated with the CLI arg
+InstallerLocale: en-US
+Installers:
+  # DisplayVersion: 1.0.0
+  - Architecture: x64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerType: exe
+    AppsAndFeaturesEntries:
+    - DisplayName: FooApp 1.0.0
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+  # No DisplayVersion
+  - Architecture: arm64
+    InstallerUrl: https://fakedomain.com/WingetCreateTestExeInstaller.exe
+    InstallerType: exe
+    InstallerSha256: A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC
+PackageLocale: en-US
+ManifestType: singleton
+ManifestVersion: 1.4.0

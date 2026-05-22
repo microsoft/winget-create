@@ -111,6 +111,7 @@ The following arguments are available:
 | **-u, --urls** |  Installer Url(s) used to extract relevant metadata for generating a manifest |
 | **-v, --version** |  Version to be used when updating the package version field. |
 | **-d, --display-version** | Version to be used when updating the display version field. Version provided in the installer URL arguments will take precedence over this value. |
+| **--display-name** | Name to be used when updating the display name field. |
 | **--release-notes-url** |  URL to be used when updating the release notes url field. |
 | **--release-date** |  Date to be used when updating the release date field. Expected format is "YYYY-MM-DD". |
 | **-o, --out** |  The output directory where the newly created manifests will be saved locally |
