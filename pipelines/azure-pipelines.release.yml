@@ -42,6 +42,15 @@ extends:
     git:
       fetchTags: false
 
+    globalSdl:
+      tsa:
+        enabled: true
+        config:
+          tsaVersion: TsaV2
+          codebase: NewOrUpdate
+          codebaseName: winget-create
+          repositoryName: winget-create
+
     stages:
     - stage: deploy
 
