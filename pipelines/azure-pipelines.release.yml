@@ -32,6 +32,12 @@ resources:
 extends:
   template: v2/Microsoft.Official.yml@templates
   parameters:
+    globalSdl:
+      tsa:
+        enabled: true
+        configFile: $(Build.SourcesDirectory)\.config\tsaoptions.json
+        onboard: false
+
     featureFlags:
       WindowsHostVersion:
         Version: 2022
