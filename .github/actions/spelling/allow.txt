@@ -117,5 +117,7 @@ xffff
 yml
 zhuangtongfa
 DWM
+tsa
+tsaoptions
 tzautoupdate
 Usb
