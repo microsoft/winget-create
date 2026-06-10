@@ -34,7 +34,7 @@ extends:
   parameters:
     globalSdl:
       tsa:
-        enabled: true
+        enabled: false
         configFile: $(Build.SourcesDirectory)\.config\tsaoptions.json
         onboard: false
 
