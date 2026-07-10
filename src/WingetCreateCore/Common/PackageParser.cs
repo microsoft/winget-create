@@ -178,7 +178,7 @@ namespace Microsoft.WingetCreateCore
             }
 
             string urlFile = Path.GetFileName(url.Split('?').Last());
-            string contentDispositionFile = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
+            string contentDispositionFile = Path.GetFileName(response.Content.Headers.ContentDisposition?.FileName?.Trim('"'));
             string requestUrlFileName = Path.GetFileName(response.RequestMessage?.RequestUri?.ToString());
 
             if (!Directory.Exists(InstallerDownloadPath))
@@ -189,6 +189,15 @@ namespace Microsoft.WingetCreateCore
             // If no relevant filename can be obtained for the installer download, use a temporary filename as last option.
             string targetFileName = contentDispositionFile.NullIfEmpty() ?? urlFile.NullIfEmpty() ?? requestUrlFileName.NullIfEmpty() ?? Path.GetTempFileName();
             string targetFile = GetNumericFilename(Path.Combine(InstallerDownloadPath, targetFileName));
+
+            // Defense in depth: ensure the resolved path stays under the installer download directory.
+            string downloadRoot = Path.GetFullPath(InstallerDownloadPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            string fullTargetFile = Path.GetFullPath(targetFile);
+            if (!fullTargetFile.StartsWith(downloadRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Resolved download path escapes the installer download directory.");
+            }
+
             using var targetFileStream = File.OpenWrite(targetFile);
             var contentStream = await response.Content.ReadAsStreamAsync();
 

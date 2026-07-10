@@ -98,6 +98,23 @@ namespace Microsoft.WingetCreateTests
         }
 
         /// <summary>
+        /// Sets the mock http response content along with a server-supplied Content-Disposition filename.
+        /// </summary>
+        /// <param name="installerName">File name of the installer.</param>
+        /// <param name="contentDispositionFileName">The filename value to advertise in the Content-Disposition header.</param>
+        public static void SetMockHttpResponseContent(string installerName, string contentDispositionFileName)
+        {
+            var content = new ByteArrayContent(File.ReadAllBytes(GetTestFile(installerName)));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = contentDispositionFileName,
+            };
+            httpResponseMessage.Content = content;
+            PackageParser.SetHttpMessageHandler(httpMessageHandler);
+        }
+
+        /// <summary>
         /// Obtains the relative filepath of the resources test data directory.
         /// </summary>
         /// <param name="fileName">File name of the test file.</param>

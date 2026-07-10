@@ -67,6 +67,37 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies that a server-supplied Content-Disposition filename containing directory
+        /// traversal sequences cannot cause the installer to be written outside the intended download
+        /// directory.
+        /// </summary>
+        [Test]
+        public void DownloadFileDispositionStaysInDownloadDirectory()
+        {
+            string downloadedPath = null;
+            try
+            {
+                string url = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+                string invalidFileName = @"..\..\..\..\example.exe";
+                TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller, invalidFileName);
+
+                downloadedPath = PackageParser.DownloadFileAsync(url, false).Result;
+
+                string downloadRoot = Path.GetFullPath(PackageParser.InstallerDownloadPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                string fullDownloadedPath = Path.GetFullPath(downloadedPath);
+                Assert.That(fullDownloadedPath, Does.StartWith(downloadRoot + Path.DirectorySeparatorChar), "Downloaded file escaped the installer download directory.");
+                ClassicAssert.AreEqual("example.exe", Path.GetFileName(downloadedPath));
+            }
+            finally
+            {
+                if (downloadedPath != null && File.Exists(downloadedPath))
+                {
+                    File.Delete(downloadedPath);
+                }
+            }
+        }
+
+        /// <summary>
         /// Downloads the MSI installer file from HTTPS localhost and parses the package to create a manifest object.
         /// </summary>
         [Test]
