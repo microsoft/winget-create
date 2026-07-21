@@ -188,6 +188,23 @@ namespace Microsoft.WingetCreateTests
         }
 
         /// <summary>
+        /// Deletes existing copies of the specified resource (base and numbered variants) from the test resources directory.
+        /// </summary>
+        /// <param name="resourceName">Name of the resource file whose copies should be deleted.</param>
+        public static void DeleteResourceCopies(string resourceName)
+        {
+            string resourcePath = GetTestFile(resourceName);
+            string directory = Path.GetDirectoryName(resourcePath);
+            string fileName = Path.GetFileNameWithoutExtension(resourcePath);
+            string fileExt = Path.GetExtension(resourcePath);
+
+            foreach (string file in Directory.GetFiles(directory, fileName + "*" + fileExt))
+            {
+                File.Delete(file);
+            }
+        }
+
+        /// <summary>
         /// Adds files to an existing test zip archive.
         /// </summary>
         /// <param name="zipResourceName">Name of the zip resource file.</param>
@@ -230,7 +247,11 @@ namespace Microsoft.WingetCreateTests
         {
             foreach (string fileName in testFileNames)
             {
-                File.Delete(Path.Combine(PackageParser.InstallerDownloadPath, fileName));
+                string filePath = Path.Combine(PackageParser.InstallerDownloadPath, fileName);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
             }
         }
 

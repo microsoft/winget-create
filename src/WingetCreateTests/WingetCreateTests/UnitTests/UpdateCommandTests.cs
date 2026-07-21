@@ -1381,24 +1381,41 @@ namespace Microsoft.WingetCreateUnitTests
         [Test]
         public async Task UpdateZipWithMultipleNestedInstallers()
         {
+            // Ensure a clean slate
+            TestUtils.DeleteResourceCopies(TestConstants.TestPortableInstaller);
+
             // Create copies of test exe installer to be used as portable installers
             List<string> portableFilePaths = TestUtils.CreateResourceCopy(TestConstants.TestExeInstaller, 4, TestConstants.TestPortableInstaller);
 
-            // Add the generated portable installers to the test zip installer
-            TestUtils.AddFilesToZip(TestConstants.TestZipInstaller, portableFilePaths);
+            Manifests updatedManifests;
+            List<string> initialManifestContent;
 
-            // Delete cached zip installer from other test runs so that the modified zip installer is downloaded
-            TestUtils.DeleteCachedFiles(new List<string> { TestConstants.TestZipInstaller });
+            try
+            {
+                // Add the generated portable installers to the test zip installer
+                TestUtils.AddFilesToZip(TestConstants.TestZipInstaller, portableFilePaths);
 
-            TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
-            string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
-            (UpdateCommand command, var initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.ZipMultipleNestedInstallers", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86", $"{installerUrl}|arm", $"{installerUrl}|arm64|user", $"{installerUrl}|arm64|machine" });
+                // Delete cached zip installer from other test runs so that the modified zip installer is downloaded
+                TestUtils.DeleteCachedFiles(new List<string> { TestConstants.TestZipInstaller });
 
-            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+                TestUtils.InitializeMockDownloads(TestConstants.TestZipInstaller);
+                string installerUrl = $"https://fakedomain.com/{TestConstants.TestZipInstaller}";
+                (UpdateCommand command, initialManifestContent) = GetUpdateCommandAndManifestData("TestPublisher.ZipMultipleNestedInstallers", null, this.tempPath, new[] { $"{installerUrl}|x64", $"{installerUrl}|x86", $"{installerUrl}|arm", $"{installerUrl}|arm64|user", $"{installerUrl}|arm64|machine" });
 
-            // Perform test clean up before any assertions
-            portableFilePaths.ForEach(File.Delete);
-            TestUtils.RemoveFilesFromZip(TestConstants.TestZipInstaller, portableFilePaths.Select(Path.GetFileName).ToList());
+                updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            }
+            finally
+            {
+                // Perform test clean up before any assertions
+                portableFilePaths.ForEach(path =>
+                {
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                });
+                TestUtils.RemoveFilesFromZip(TestConstants.TestZipInstaller, portableFilePaths.Select(Path.GetFileName).ToList());
+            }
 
             ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded");
 
