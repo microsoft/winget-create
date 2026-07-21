@@ -245,10 +245,18 @@ namespace Microsoft.WingetCreateTests
         /// <param name="testFileNames">Name of the test files to delete.</param>
         public static void DeleteCachedFiles(List<string> testFileNames)
         {
+            string downloadDirectory = PackageParser.InstallerDownloadPath;
+            if (!Directory.Exists(downloadDirectory))
+            {
+                return;
+            }
+
             foreach (string fileName in testFileNames)
             {
-                string filePath = Path.Combine(PackageParser.InstallerDownloadPath, fileName);
-                if (File.Exists(filePath))
+                string baseName = Path.GetFileNameWithoutExtension(fileName);
+                string fileExt = Path.GetExtension(fileName);
+
+                foreach (string filePath in Directory.GetFiles(downloadDirectory, baseName + "*" + fileExt))
                 {
                     File.Delete(filePath);
                 }
