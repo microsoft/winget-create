@@ -186,8 +186,8 @@ namespace Microsoft.WingetCreateCore
                 Directory.CreateDirectory(InstallerDownloadPath);
             }
 
-            // If no relevant filename can be obtained for the installer download, use a temporary filename as last option.
-            string targetFileName = contentDispositionFile.NullIfEmpty() ?? urlFile.NullIfEmpty() ?? requestUrlFileName.NullIfEmpty() ?? Path.GetTempFileName();
+            // If no relevant filename can be obtained for the installer download, use a random filename as last option.
+            string targetFileName = contentDispositionFile.NullIfEmpty() ?? urlFile.NullIfEmpty() ?? requestUrlFileName.NullIfEmpty() ?? Path.GetRandomFileName();
             string targetFile = GetNumericFilename(Path.Combine(InstallerDownloadPath, targetFileName));
 
             // Defense in depth: ensure the resolved path stays under the installer download directory.
