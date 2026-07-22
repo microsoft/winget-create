@@ -144,7 +144,7 @@ extends:
                   runSettingsFile: 'src\WingetCreateTests\WingetCreateTests\Test.runsettings'
                   overrideTestrunParameters: '-WingetPkgsTestRepoOwner microsoft -WingetPkgsTestRepo winget-pkgs-submission-test'
                 env:
-                  WINGET_CREATE_GITHUB_TOKEN: $(GitHubPAT)
+                  WINGET_CREATE_APP_KEY: $(GitHubApp_PrivateKey)
 
               - task: 1ES.PublishPipelineArtifact@1
                 inputs:

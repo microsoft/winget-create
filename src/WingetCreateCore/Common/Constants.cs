@@ -31,7 +31,7 @@ namespace Microsoft.WingetCreateCore.Common
         /// <summary>
         /// App Id for the Winget-Create GitHub App.
         /// </summary>
-        public const int GitHubAppId = 965520;
+        public const int GitHubAppId = 100205;
 
         /// <summary>
         /// Link to the GitHub releases page for the winget-create tool.
