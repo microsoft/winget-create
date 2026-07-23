@@ -54,6 +54,7 @@ extends:
     - ES365AIMigrationTooling
     settings:
       skipBuildTagsForGitHubPullRequests: true
+      networkIsolationPolicy: Permissive,CFSClean
 
     stages:
       - stage: GetVersion_Build
@@ -117,12 +118,14 @@ extends:
                   workingDirectory: $(Build.SourcesDirectory)
                   performMultiLevelLookup: true
 
+              - task: NuGetAuthenticate@1
+
               - task: DotNetCoreCLI@2
                 displayName: Restore
                 inputs:
                   command: "restore"
                   feedsToUse: "config"
-                  nugetConfigPath: "NuGet.config"
+                  nugetConfigPath: "NuGet.Internal.config"
                   projects: $(workingDirectory)/**/*.csproj
 
               - task: MSBuild@1
