@@ -80,7 +80,7 @@ namespace Microsoft.WingetCreateUnitTests
         /// <summary>
         /// Configures the tests to run locally.
         /// </summary>
-        private async Task ConfigureForLocalTestsAsync()
+        private Task ConfigureForLocalTestsAsync()
         {
             TestContext.Progress.WriteLine("Running locally, using GitHub token for tests");
             if (TokenHelper.TryRead(out string token))
@@ -94,6 +94,8 @@ namespace Microsoft.WingetCreateUnitTests
                     ">> Please run 'wingetcreate token -s'\n" +
                     ">> Or set the 'WINGET_CREATE_GITHUB_TOKEN' environment variable to a valid GitHub token.");
             }
+
+            return Task.CompletedTask;
         }
     }
 }

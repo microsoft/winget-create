@@ -50,6 +50,7 @@ namespace Microsoft.WingetCreateUnitTests
         /// <summary>
         /// Test case for verifying that the "token" can be read from the environment variable after clearing the token cache.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Test]
         public async Task TokenClearAndReadFromEnvironmentVariable()
         {
@@ -63,6 +64,7 @@ namespace Microsoft.WingetCreateUnitTests
         /// <summary>
         /// Test case for verifying that the "token --clear" command is working as expected.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Test]
         public async Task TokenClearCommand()
         {
@@ -74,6 +76,7 @@ namespace Microsoft.WingetCreateUnitTests
         /// <summary>
         /// Test case for verifying that the "token --store" command is working as expected.
         /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [Test]
         public async Task TokenStoreCommand()
         {

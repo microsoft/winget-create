@@ -264,8 +264,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                             }
                         }
                     }
-                    else // Not a Zip package archive.
+                    else
                     {
+                        // Not a Zip package archive.
                         // Set the manifest root type. There is only one file here so it can only be Font or Manifests.
                         var rootTypeForInstaller = PackageParser.GetManifestRootTypeForInstallerPaths([packageFile]);
 
