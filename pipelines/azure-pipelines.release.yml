@@ -34,9 +34,11 @@ extends:
   parameters:
     globalSdl:
       tsa:
-        enabled: false
+        enabled: true
         configFile: $(Build.SourcesDirectory)\.config\tsaoptions.json
-        onboard: false
+        onboard: true
+      armory:
+        enabled: false
 
     featureFlags:
       WindowsHostVersion:
