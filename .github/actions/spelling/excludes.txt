@@ -68,6 +68,8 @@ ignore$
 ^\.(?!github/)
 ^\.github/actions/spelling/
 ^\.github/actions/spelling/expect
+^\.github/aw/
+^\.github/workflows/[^/]*\.lock\.yml$
 ^\.github/workflows/spellCheck\.yml$
 ^Localization/
 ^NOTICE.txt$
