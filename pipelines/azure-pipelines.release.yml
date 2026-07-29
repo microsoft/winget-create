@@ -143,10 +143,11 @@ extends:
             # Copies binary dependencies from VCLibs package to be included in standalone exe
             - task: PowerShell@2
               displayName: Download VCLibs package
+              retryCountOnTaskFailure: 3
               inputs:
                 targetType: 'inline'
                 script: |
-                  iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
+                  iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx -MaximumRetryCount 3 -RetryIntervalSec 5
 
             - task: ExtractFiles@1
               displayName: Extract files from VCLibs appx
