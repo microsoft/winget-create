@@ -147,7 +147,7 @@ extends:
               inputs:
                 targetType: 'inline'
                 script: |
-                  iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx -MaximumRetryCount 3 -RetryIntervalSec 5
+                  iwr https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
 
             - task: ExtractFiles@1
               displayName: Extract files from VCLibs appx
