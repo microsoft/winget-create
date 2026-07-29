@@ -175,7 +175,7 @@ extends:
               inputs:
                 command: restore
                 feedsToUse: config
-                nugetConfigPath: "nuget.config"
+                nugetConfigPath: "NuGet.Internal.config"
                 projects: $(workingDirectory)/**/*.csproj
                 arguments: --runtime win-x64
 
