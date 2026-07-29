@@ -177,6 +177,7 @@ extends:
                 feedsToUse: config
                 nugetConfigPath: "nuget.config"
                 projects: $(workingDirectory)/**/*.csproj
+                arguments: --runtime win-x64
 
             - task: DotNetCoreCLI@2
               displayName: Build standalone, framework-dependent exe
@@ -185,7 +186,7 @@ extends:
                 publishWebProjects: false
                 zipAfterPublish: false
                 projects: $(workingDirectory)/**/WingetCreateCLI.csproj
-                arguments: "--configuration Release --runtime=win-x64 --output $(exeDirFrameworkDependent) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
+                arguments: "--configuration Release --runtime=win-x64 --no-restore --output $(exeDirFrameworkDependent) -p:DebugType=None -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --self-contained=false"
 
             - task: MSBuild@1
               displayName: Build Solution
