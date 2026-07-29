@@ -39,6 +39,8 @@ extends:
         onboard: true
       armory:
         enabled: false
+      evidence:
+        enabled: false
 
     featureFlags:
       WindowsHostVersion:
