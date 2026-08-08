@@ -49,6 +49,15 @@ Open `src\WingetCreateCLI.sln` in Visual Studio and build. Command-line `msbuild
 - CI runs on Azure Pipelines (`pipelines/`).
 - Documentation for each command lives under `doc/` (e.g., `doc/new.md`, `doc/update.md`) — update alongside CLI changes.
 
+## Issues and Pull Requests
+
+- Before filing an issue, search existing open and closed issues for duplicates.
+- Use the GitHub issue forms in `.github/ISSUE_TEMPLATE/`; do not file a blank issue unless a maintainer explicitly asks for one.
+- Bug reports should include the form fields for brief description, steps to reproduce, expected behavior, actual behavior, and environment.
+- Feature requests should include the form fields for feature or enhancement description and proposed technical implementation details when known.
+- Keep issue bodies concise and evidence-based. Do not paste large speculative patches into issue bodies; open a pull request or link a branch when code is available.
+- Before opening a pull request, review `CONTRIBUTING.md`, follow the PR template, keep the change focused, and summarize validation performed.
+
 ## Telemetry & Privacy
 
 The built/released `wingetcreate.exe` collects usage/diagnostic telemetry (respecting machine-wide privacy settings and `settings.json`'s `telemetry.disabled`). Locally-built binaries do not have telemetry enabled. See `PRIVACY.md` for details.
