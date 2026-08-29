@@ -134,12 +134,13 @@ extends:
               inputs:
                 Contents: '$(workingDirectory)\WingetCreateCLI\Telemetry\TelemetryEventSource.cs'
 
+            # Source repository, branch and path are defined in the ADO pipeline variables
             - task: PkgESGitFetch@10
-              displayName: "Fetch TelemetryEventSource.cs from OS repo and overwrite stubbed version"
+              displayName: "Fetch TelemetryEventSource.cs and overwrite stubbed version"
               inputs:
-                repository: "https://microsoft.visualstudio.com/os/_git/os.2020"
-                branch: official/main
-                source: 'minkernel\published\internal\telemetry\TelemetryEventSource.cs'
+                repository: $(TelemetrySourceRepository)
+                branch: $(TelemetrySourceBranch)
+                source: $(TelemetrySourcePath)
                 destination: '$(workingDirectory)\WingetCreateCLI\Telemetry\'
 
             # Copies binary dependencies from VCLibs package to be included in standalone exe
