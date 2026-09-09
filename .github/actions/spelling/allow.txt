@@ -24,6 +24,7 @@ cla
 codeowner
 codeowners
 coenraads
+cooldown
 dbaeumer
 devdocs
 eamodio
