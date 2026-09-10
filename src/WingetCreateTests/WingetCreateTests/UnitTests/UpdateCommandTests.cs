@@ -587,6 +587,54 @@ namespace Microsoft.WingetCreateUnitTests
         }
 
         /// <summary>
+        /// Verifies that display name provided as CLI arg correctly updates the display name in the manifest.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        [Test]
+        public async Task UpdateDisplayName()
+        {
+            TestUtils.InitializeMockDownload();
+            TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller);
+            string testInstallerUrl = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+            string displayNameForCLIArg = "FooApp 2.3.4.5";
+
+            var initialManifestContent = TestUtils.GetInitialManifestContent("TestPublisher.UpdateDisplayName.yaml");
+            UpdateCommand command = new UpdateCommand
+            {
+                Id = "TestPublisher.UpdateDisplayName",
+                Version = "1.2.3.4",
+                InstallerUrls = new[]
+                {
+                    $"{testInstallerUrl}|x64",
+                    $"{testInstallerUrl}|arm64",
+                },
+                DisplayName = displayNameForCLIArg,
+            };
+            var initialManifests = Serialization.DeserializeManifestContents(initialManifestContent);
+            var updatedManifests = await RunUpdateCommand(command, initialManifestContent);
+            ClassicAssert.IsNotNull(updatedManifests, "Command should have succeeded.");
+
+            // Initial installers
+            var initialFirstInstaller = initialManifests.SingletonManifest.Installers[0];
+
+            // Initial display names (second installer does not have a display name)
+            var initialFirstDisplayName = initialFirstInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayName;
+
+            // Updated installers
+            var updatedFirstInstaller = updatedManifests.InstallerManifest.Installers[0];
+            var updatedSecondInstaller = updatedManifests.InstallerManifest.Installers[1];
+
+            // Updated display names (second installer does not have a display name)
+            var updatedFirstDisplayName = updatedFirstInstaller.AppsAndFeaturesEntries.FirstOrDefault().DisplayName;
+
+            ClassicAssert.AreEqual(displayNameForCLIArg, updatedFirstDisplayName, "DisplayName should be updated by the value in the CLI arg");
+            ClassicAssert.IsNull(updatedSecondInstaller.AppsAndFeaturesEntries);
+
+            ClassicAssert.AreNotEqual(initialFirstInstaller.InstallerSha256, updatedFirstInstaller.InstallerSha256, "InstallerSha256 should be updated");
+            ClassicAssert.AreNotEqual(initialFirstDisplayName, updatedFirstDisplayName, "DisplayName should be updated");
+        }
+
+        /// <summary>
         /// Verifies that display version provided as CLI arg and in the URL arguments correctly updates the display version in the manifest.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
