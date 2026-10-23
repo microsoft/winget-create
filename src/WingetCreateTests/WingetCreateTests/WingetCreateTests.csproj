@@ -67,7 +67,13 @@
     <None Update="Resources\TestPublisher.FullJsonSingleton1_12.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\TestPublisher.FullJsonSingleton1_28.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\TestPublisher.FullYamlSingleton1_12.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TestPublisher.FullYamlSingleton1_28.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\TestPublisher.FullJsonSingleton1_10.json">

@@ -77,6 +77,20 @@ Installers:
     DownloadCommandProhibited: true
     RepairBehavior: modify
     ArchiveBinariesDependOnPath: true
+    Authentication:
+      AuthenticationType: microsoftEntraId
+      MicrosoftEntraIdAuthenticationInfo:
+        Resource: TestResource1
+        Scope: TestScope1
+    DesiredStateConfiguration:
+      PowerShell:
+        - RepositoryUrl: https://fakeTestUrl.com/repository1
+          ModuleName: TestModule1
+          Resources:
+            - Name: TestResource1
+      DSCv3:
+        Resources:
+          - Type: TestPublisher/TestResource1
   - Architecture: x86
     InstallerType: zip
     InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
@@ -147,6 +161,20 @@ Installers:
     DownloadCommandProhibited: false
     RepairBehavior: installer
     ArchiveBinariesDependOnPath: false
+    Authentication:
+      AuthenticationType: microsoftEntraId
+      MicrosoftEntraIdAuthenticationInfo:
+        Resource: TestResource2
+        Scope: TestScope2
+    DesiredStateConfiguration:
+      PowerShell:
+        - RepositoryUrl: https://fakeTestUrl.com/repository2
+          ModuleName: TestModule2
+          Resources:
+            - Name: TestResource2
+      DSCv3:
+        Resources:
+          - Type: TestPublisher/TestResource2
   - Architecture: arm
     InstallerType: zip
     InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
@@ -217,6 +245,20 @@ Installers:
     DownloadCommandProhibited: false
     RepairBehavior: modify
     ArchiveBinariesDependOnPath: false
+    Authentication:
+      AuthenticationType: microsoftEntraId
+      MicrosoftEntraIdAuthenticationInfo:
+        Resource: TestResource2
+        Scope: TestScope2
+    DesiredStateConfiguration:
+      PowerShell:
+        - RepositoryUrl: https://fakeTestUrl.com/repository2
+          ModuleName: TestModule2
+          Resources:
+            - Name: TestResource2
+      DSCv3:
+        Resources:
+          - Type: TestPublisher/TestResource2
 PackageLocale: en-US
 ManifestType: singleton
-ManifestVersion: 1.9.0
+ManifestVersion: 1.28.0

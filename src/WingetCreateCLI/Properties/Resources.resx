@@ -1486,4 +1486,25 @@ Warning: Using this argument may result in the token being logged. Consider an a
   <data name="MixedInstallerRootTypes_ErrorMessage" xml:space="preserve">
     <value>Found mixed font and non-font installer types in the manifest. This is not a supported configuration and the manifest should be edited to contain only font or non-font installers before submission.</value>
   </data>
+  <data name="DesiredStateConfiguration_KeywordDescription" xml:space="preserve">
+    <value>Desired state configuration (DSC) resources related to the package</value>
+  </data>
+  <data name="PowerShell_KeywordDescription" xml:space="preserve">
+    <value>DSC resources contained in PowerShell modules</value>
+  </data>
+  <data name="RepositoryUrl_KeywordDescription" xml:space="preserve">
+    <value>The URL of the repository containing the PowerShell module</value>
+  </data>
+  <data name="ModuleName_KeywordDescription" xml:space="preserve">
+    <value>The name of the PowerShell module containing DSC resources</value>
+  </data>
+  <data name="Resources_KeywordDescription" xml:space="preserve">
+    <value>The DSC resources contained in the module or package</value>
+  </data>
+  <data name="DSCv3_KeywordDescription" xml:space="preserve">
+    <value>DSC resources contained in the package using the DSC v3 specification</value>
+  </data>
+  <data name="Type_KeywordDescription" xml:space="preserve">
+    <value>The fully qualified type of the DSC resource</value>
+  </data>
 </root>
