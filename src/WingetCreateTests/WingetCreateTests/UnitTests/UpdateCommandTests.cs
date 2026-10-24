@@ -1553,6 +1553,11 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsNotNull(updatedInstallerManifest.RepairBehavior, "RepairBehavior at the root level should not be null");
             ClassicAssert.IsTrue(updatedInstallerManifest.ArchiveBinariesDependOnPath == true, "ArchiveBinariesDependOnPath at the root level should be true");
             ClassicAssert.AreEqual(AuthenticationType.MicrosoftEntraId, updatedInstallerManifest.Authentication.AuthenticationType);
+            ClassicAssert.IsNotNull(updatedInstallerManifest.DesiredStateConfiguration, "DesiredStateConfiguration at the root level should not be null");
+            ClassicAssert.AreEqual("https://fakeTestUrl.com/repository", updatedInstallerManifest.DesiredStateConfiguration.PowerShell.Single().RepositoryUrl);
+            ClassicAssert.AreEqual("TestModule", updatedInstallerManifest.DesiredStateConfiguration.PowerShell.Single().ModuleName);
+            ClassicAssert.AreEqual("TestResource", updatedInstallerManifest.DesiredStateConfiguration.PowerShell.Single().Resources.Single().Name);
+            ClassicAssert.AreEqual("TestPublisher/TestResource", updatedInstallerManifest.DesiredStateConfiguration.DSCv3.Resources.Single().Type);
 
             foreach (var installer in updatedInstallerManifest.Installers)
             {
