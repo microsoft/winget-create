@@ -10,12 +10,12 @@ namespace Microsoft.WingetCreateCLI
     using System.Linq;
     using System.Reflection;
     using Microsoft.WingetCreateCLI.Logging;
-    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Sharprompt;
+    using Resources = Microsoft.WingetCreateCLI.Properties.Resources;
 
     /// <summary>
     /// Provides functionality for prompting the user for input to obtain field values for a manifest.

@@ -10,7 +10,6 @@ namespace Microsoft.WingetCreateUnitTests
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
@@ -18,6 +17,7 @@ namespace Microsoft.WingetCreateUnitTests
     using Microsoft.WingetCreateCore.Models.Singleton;
     using Microsoft.WingetCreateCore.Models.Version;
     using NUnit.Framework;
+    using Resources = Microsoft.WingetCreateCLI.Properties.Resources;
 
     /// <summary>
     /// Test cases for verifying that strings are correctly localized.

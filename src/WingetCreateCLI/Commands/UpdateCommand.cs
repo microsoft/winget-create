@@ -15,7 +15,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
-    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
@@ -27,6 +26,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Locale;
     using Microsoft.WingetCreateCore.Models.Version;
     using Sharprompt;
+    using Resources = Microsoft.WingetCreateCLI.Properties.Resources;
 
     /// <summary>
     /// Command for updating the elements of an existing or local manifest.
@@ -640,6 +640,12 @@ namespace Microsoft.WingetCreateCLI.Commands
                     cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallationMetadata, WingetCreateCore.Models.Installer.InstallationMetadata>();
                     cfg.CreateMap<WingetCreateCore.Models.Singleton.Icon, WingetCreateCore.Models.DefaultLocale.Icon>();
                     cfg.CreateMap<WingetCreateCore.Models.Singleton.Authentication, WingetCreateCore.Models.Installer.Authentication>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.MicrosoftEntraIdAuthenticationInfo, WingetCreateCore.Models.Installer.MicrosoftEntraIdAuthenticationInfo>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.DesiredStateConfiguration, WingetCreateCore.Models.Installer.DesiredStateConfiguration>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.PowerShell, WingetCreateCore.Models.Installer.PowerShell>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.DSCv3, WingetCreateCore.Models.Installer.DSCv3>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Resources, WingetCreateCore.Models.Installer.Resources>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Resources2, WingetCreateCore.Models.Installer.Resources2>();
                 },
                 NullLoggerFactory.Instance);
             var mapper = config.CreateMapper();

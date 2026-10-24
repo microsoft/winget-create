@@ -11,12 +11,12 @@ namespace Microsoft.WingetCreateCLI.Commands
     using CommandLine.Text;
     using Microsoft.VisualBasic;
     using Microsoft.WingetCreateCLI.Logging;
-    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.Singleton;
+    using Resources = Microsoft.WingetCreateCLI.Properties.Resources;
 
     /// <summary>
     /// Command to validate and submit a manifest to the GitHub Windows Package Manager repository.
