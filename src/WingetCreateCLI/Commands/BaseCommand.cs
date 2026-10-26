@@ -15,7 +15,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
-    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
@@ -30,6 +29,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Octokit;
     using RestSharp;
     using Sharprompt;
+    using Resources = Microsoft.WingetCreateCLI.Properties.Resources;
 
     /// <summary>
     /// Abstract base command class that all commands inherit from.

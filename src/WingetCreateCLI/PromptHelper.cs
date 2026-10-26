@@ -10,12 +10,12 @@ namespace Microsoft.WingetCreateCLI
     using System.Linq;
     using System.Reflection;
     using Microsoft.WingetCreateCLI.Logging;
-    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models.DefaultLocale;
     using Microsoft.WingetCreateCore.Models.Installer;
     using Sharprompt;
+    using Resources = Microsoft.WingetCreateCLI.Properties.Resources;
 
     /// <summary>
     /// Provides functionality for prompting the user for input to obtain field values for a manifest.
@@ -490,7 +490,7 @@ namespace Microsoft.WingetCreateCLI
                 var installerTuple = string.Join(" | ", new[]
                     {
                         installer.Architecture.ToEnumAttributeValue(),
-                        installer.InstallerType.ToEnumAttributeValue(),
+                        installer.InstallerType?.ToEnumAttributeValue(),
                         installer.Scope?.ToEnumAttributeValue(),
                         installer.InstallerLocale,
                         installer.InstallerUrl,
@@ -515,56 +515,63 @@ namespace Microsoft.WingetCreateCLI
         private static void ApplyChangesToIndividualInstallers(Installer installerCopy, List<Installer> installers)
         {
             // Skip architecture as the default value when instantiated is x86.
-            var modifiedFields = installerCopy.GetType().GetProperties()
-                .Select(prop => prop)
-                .Where(pi =>
-                    pi.GetValue(installerCopy) != null &&
-                    pi.Name != nameof(Installer.Architecture) &&
-                    pi.Name != nameof(Installer.AdditionalProperties));
-
-            foreach (var field in modifiedFields)
+            foreach (var property in typeof(Installer).GetProperties().Where(p =>
+                p.Name != nameof(Installer.Architecture) && p.Name != nameof(Installer.AdditionalProperties)))
             {
-                foreach (Installer installer in installers)
+                var value = property.GetValue(installerCopy);
+                if (value != null)
                 {
-                    var fieldValue = field.GetValue(installerCopy);
-                    var prop = installer.GetType().GetProperty(field.Name);
-                    if (prop.PropertyType.IsValueType)
+                    foreach (var installer in installers)
                     {
-                        prop.SetValue(installer, fieldValue);
-                    }
-                    else if (fieldValue is IList list)
-                    {
-                        prop.SetValue(installer, list.DeepClone());
-                    }
-                    else if (fieldValue is Dependencies dependencies)
-                    {
-                        ApplyDependencyChangesToInstaller(dependencies, installer);
+                        property.SetValue(installer, ApplyPropertyChanges(value, property.GetValue(installer)));
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Clones any non-null property values of the dependencies object and assigns them to the provided installer object.
-        /// </summary>
-        /// <param name="dependencies">Dependencies object with new values.</param>
-        /// <param name="installer">Installer object to assign new changes to.</param>
-        private static void ApplyDependencyChangesToInstaller(Dependencies dependencies, Installer installer)
+        private static object ApplyPropertyChanges(object value, object target)
         {
-            var modifiedFields = dependencies.GetType().GetProperties()
-                .Select(prop => prop)
-                .Where(pi => pi.GetValue(dependencies) != null);
-
-            foreach (var field in modifiedFields.Where(f => f.Name != nameof(Installer.AdditionalProperties)))
+            var pending = new Queue<(object Source, object Target)>();
+            var result = CopyValue(value, target);
+            while (pending.Count > 0)
             {
-                var fieldValue = field.GetValue(dependencies);
-                installer.Dependencies ??= new Dependencies();
-                var prop = installer.Dependencies.GetType().GetProperty(field.Name);
-
-                if (fieldValue is IList list)
+                var (source, destination) = pending.Dequeue();
+                if (source is IList list)
                 {
-                    prop.SetValue(installer.Dependencies, list.DeepClone());
+                    foreach (var item in list)
+                    {
+                        ((IList)destination).Add(CopyValue(item, null));
+                    }
                 }
+                else
+                {
+                    foreach (var property in source.GetType().GetProperties().Where(p => p.CanWrite && p.Name != nameof(Installer.AdditionalProperties)))
+                    {
+                        var propertyValue = property.GetValue(source);
+                        if (propertyValue != null)
+                        {
+                            property.SetValue(destination, CopyValue(propertyValue, property.GetValue(destination)));
+                        }
+                    }
+                }
+            }
+
+            return result;
+
+            object CopyValue(object source, object destination)
+            {
+                if (source == null || source.GetType().IsValueType || source is string)
+                {
+                    return source;
+                }
+
+                if (source is IList || destination == null)
+                {
+                    destination = Activator.CreateInstance(source.GetType());
+                }
+
+                pending.Enqueue((source, destination));
+                return destination;
             }
         }
 

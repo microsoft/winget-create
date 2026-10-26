@@ -76,6 +76,20 @@ Installers:
     DownloadCommandProhibited: true
     RepairBehavior: modify
     ArchiveBinariesDependOnPath: true
+    Authentication:
+      AuthenticationType: microsoftEntraId
+      MicrosoftEntraIdAuthenticationInfo:
+        Resource: TestResource
+        Scope: TestScope
+    DesiredStateConfiguration:
+      PowerShell:
+        - RepositoryUrl: https://fakeTestUrl.com/repository
+          ModuleName: TestModule
+          Resources:
+            - Name: TestResource
+      DSCv3:
+        Resources:
+          - Type: TestPublisher/TestResource
   - Architecture: x86
     InstallerType: zip
     InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
@@ -146,6 +160,20 @@ Installers:
     DownloadCommandProhibited: true
     RepairBehavior: modify
     ArchiveBinariesDependOnPath: true
+    Authentication:
+      AuthenticationType: microsoftEntraId
+      MicrosoftEntraIdAuthenticationInfo:
+        Resource: TestResource
+        Scope: TestScope
+    DesiredStateConfiguration:
+      PowerShell:
+        - RepositoryUrl: https://fakeTestUrl.com/repository
+          ModuleName: TestModule
+          Resources:
+            - Name: TestResource
+      DSCv3:
+        Resources:
+          - Type: TestPublisher/TestResource
   - Architecture: arm
     InstallerType: zip
     InstallerUrl: https://fakedomain.com/WingetCreateTestZipInstaller.zip
@@ -217,6 +245,20 @@ Installers:
     DownloadCommandProhibited: true
     RepairBehavior: modify
     ArchiveBinariesDependOnPath: true
+    Authentication:
+      AuthenticationType: microsoftEntraId
+      MicrosoftEntraIdAuthenticationInfo:
+        Resource: TestResource
+        Scope: TestScope
+    DesiredStateConfiguration:
+      PowerShell:
+        - RepositoryUrl: https://fakeTestUrl.com/repository
+          ModuleName: TestModule
+          Resources:
+            - Name: TestResource
+      DSCv3:
+        Resources:
+          - Type: TestPublisher/TestResource
 PackageLocale: en-US
 ManifestType: singleton
-ManifestVersion: 1.9.0
+ManifestVersion: 1.28.0

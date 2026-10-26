@@ -600,6 +600,38 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
 
     }
 
+    /// <summary>
+    /// References to desired state configuration (DSC) resources that are related to the package.
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
+    public partial class DesiredStateConfiguration
+    {
+        /// <summary>
+        /// Contains data about DSC resources that are contained in PowerShell modules.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("PowerShell", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.MaxLength(16)]
+        public System.Collections.Generic.List<PowerShell> PowerShell { get; set; }
+
+        /// <summary>
+        /// Contains data about DSC resources that are contained in the package using the DSC v3 specification.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("DSCv3", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public DSCv3 DSCv3 { get; set; }
+
+
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Installer
     {
@@ -761,6 +793,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("Authentication", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Authentication Authentication { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("DesiredStateConfiguration", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public DesiredStateConfiguration DesiredStateConfiguration { get; set; }
+
 
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
@@ -775,7 +810,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     }
 
     /// <summary>
-    /// A representation of a single-file manifest representing an app in the OWC. v1.12.0
+    /// A representation of a single-file manifest representing an app in the OWC. v1.28.0
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class SingletonManifest
@@ -1087,6 +1122,9 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("Authentication", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Authentication Authentication { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("DesiredStateConfiguration", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public DesiredStateConfiguration DesiredStateConfiguration { get; set; }
+
         [Newtonsoft.Json.JsonProperty("Installers", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(1)]
@@ -1106,7 +1144,7 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [Newtonsoft.Json.JsonProperty("ManifestVersion", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.RegularExpression(@"^(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])(\.(0|[1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])){2}$")]
-        public string ManifestVersion { get; set; } = "1.12.0";
+        public string ManifestVersion { get; set; } = "1.28.0";
 
 
 
@@ -1358,6 +1396,68 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
+    public partial class PowerShell
+    {
+        [Newtonsoft.Json.JsonProperty("RepositoryUrl", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(2048)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^([Hh][Tt][Tt][Pp][Ss]?)://.+$")]
+        public string RepositoryUrl { get; set; }
+
+        /// <summary>
+        /// The name of the module containing resources.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("ModuleName", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.ComponentModel.DataAnnotations.StringLength(100)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^\w+([.-]\w+)*$")]
+        public string ModuleName { get; set; }
+
+        /// <summary>
+        /// The resources contained within the module.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("Resources", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.MaxLength(64)]
+        public System.Collections.Generic.List<Resources> Resources { get; set; } = new System.Collections.Generic.List<Resources>();
+
+
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
+    public partial class DSCv3
+    {
+        /// <summary>
+        /// The resources contained within the package.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("Resources", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        [System.ComponentModel.DataAnnotations.MaxLength(128)]
+        public System.Collections.Generic.List<Resources2> Resources { get; set; } = new System.Collections.Generic.List<Resources2>();
+
+
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public enum Platform
     {
 
@@ -1507,6 +1607,54 @@ namespace Microsoft.WingetCreateCore.Models.Singleton
         [System.Runtime.Serialization.EnumMember(Value = @"other")]
         Other = 2,
 
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
+    public partial class Resources
+    {
+        /// <summary>
+        /// The name of the resource.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(100)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^[A-Za-z][-_A-Za-z0-9]*$")]
+        public string Name { get; set; }
+
+
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
+    public partial class Resources2
+    {
+        /// <summary>
+        /// The name of the resource.
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("Type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.StringLength(256)]
+        [System.ComponentModel.DataAnnotations.RegularExpression(@"^\w+(\.\w+){0,2}\/\w+$")]
+        public string Type { get; set; }
+
+
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
+            set { _additionalProperties = value; }
+        }
 
     }
 
