@@ -619,6 +619,15 @@ namespace Microsoft.WingetCreateCLI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name to be used when updating the display name field..
+        /// </summary>
+        public static string DisplayName_HelpText {
+            get {
+                return ResourceManager.GetString("DisplayName_HelpText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The DisplayName of the package or file.
         /// </summary>
         public static string DisplayName_KeywordDescription {
