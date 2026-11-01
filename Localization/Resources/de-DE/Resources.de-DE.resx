@@ -931,10 +931,10 @@ Warnung: Die Verwendung dieses Arguments kann dazu führen, dass das Token proto
     <comment>"winget" is the proper name of the tool</comment>
   </data>
   <data name="ConfirmPortablePackage_Message" xml:space="preserve">
-    <value>Handelt es sich um ein portierbares Paket?</value>
+    <value>Handelt es sich um ein portables Paket?</value>
   </data>
   <data name="PortableCommandAlias_Message" xml:space="preserve">
-    <value>Wie lautet der Befehlsalias des portierbaren Pakets |z. B. nuget|</value>
+    <value>Wie lautet der Befehlsalias des portablen Pakets |z. B. nuget|</value>
     <comment>`command alias` refers to the name of the exe file that will be used when running the application from the command line.</comment>
   </data>
   <data name="SyncForkWithUpstream_Message" xml:space="preserve">
@@ -980,7 +980,7 @@ Warnung: Die Verwendung dieses Arguments kann dazu führen, dass das Token proto
     <value>Im ZIP-Archiv wurden keine unterstützten Installationsprogramme gefunden.</value>
   </data>
   <data name="PortableCommandAlias_KeywordDescription" xml:space="preserve">
-    <value>Der Befehlsalias, der zum Aufrufen des geschachtelten portierbaren Pakets verwendet werden soll.</value>
+    <value>Der Befehlsalias, der zum Aufrufen des geschachtelten portablen Pakets verwendet werden soll.</value>
   </data>
   <data name="RelativeFilePath_KeywordDescription" xml:space="preserve">
     <value>Der relative Dateipfad zur geschachtelten Installationsprogrammdatei</value>
