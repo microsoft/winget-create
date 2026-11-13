@@ -89,6 +89,7 @@ public abstract class BaseDscCommand
     /// Creates a Json schema for a DSC resource object.
     /// </summary>
     /// <typeparam name="T">The type of the resource object.</typeparam>
+    /// <param name="commandName">The name of the DSC command used as the schema title.</param>
     /// <returns>A Json object representing the schema.</returns>
     protected JObject CreateSchema<T>(string commandName)
     where T : BaseResourceObject, new()

@@ -1,0 +1,60 @@
+id: moderatorTriggers
+name: GitOps.PullRequestIssueManagement
+description: Handlers for moderator comment triggers
+owner:
+resource: repository
+disabled: false
+where:
+configuration:
+  resourceManagementConfiguration:
+    eventResponderTasks:
+      - description: >-
+          When a moderator comments with specific trigger patterns
+        if:
+          - or:
+              - payloadType: Issue_Comment
+              - payloadType: Pull_Request_Review_Comment
+          - or:
+              - activitySenderHasPermission:
+                  permission: Admin
+              - activitySenderHasPermission:
+                  permission: Write
+        then:
+          # Duplicate of #
+          - if:
+              - commentContains:
+                  pattern: '(?in)Duplicate\s+of\s+\#?\s*\d+'
+                  isRegex: True
+            then:
+              - addReply:
+                  reply: >-
+                    Hi! We've identified this issue as a duplicate of another one that already
+                    exists on this Issue Tracker. This specific instance is being closed in favor
+                    of tracking the concern over on the referenced thread. Be sure to add your
+                    👍 to that issue. Thanks for your report!
+              - closeIssue
+              - removeLabel:
+                  label: Needs-Triage
+              - addLabel:
+                  label: Resolution-Duplicate
+              - removeLabel:
+                  label: Needs-Author-Feedback
+          # /feedback
+          - if:
+              - commentContains:
+                  pattern: '\/feedback'
+                  isRegex: True
+            then:
+              - addReply:
+                  reply: >-
+                    Hi there!
+
+
+                    Can you please send us feedback with the Feedback Hub with this issue and paste the link here so we can more easily find your crash information on the back end?
+
+
+                    Thanks!
+              - addLabel:
+                  label: Needs-Author-Feedback
+onFailure:
+onSuccess:

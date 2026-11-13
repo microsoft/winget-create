@@ -1,0 +1,71 @@
+# spelling.yml is blocked per https://github.com/check-spelling/check-spelling/security/advisories/GHSA-g86g-chm8-7r2p
+# spelling2.yml is blocked per https://github.com/check-spelling/check-spelling/security/advisories/GHSA-p8r9-69g4-jwqq
+
+name: Check Spelling
+
+on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "**"
+  pull_request:
+    branches:
+      - "**"
+    types:
+      - "opened"
+      - "reopened"
+      - "synchronize"
+
+jobs:
+  spelling:
+    name: Check Spelling
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event_name, 'pull_request') || github.event_name == 'push' }}
+    concurrency:
+      group: spelling-${{ github.event.pull_request.number || github.ref }}
+      # note: If you use only_check_changed_files, you do not want cancel-in-progress
+      cancel-in-progress: true
+    steps:
+      - name: check-spelling
+        id: spelling
+        uses: check-spelling/check-spelling@cfb6f7e75bbfc89c71eaa30366d0c166f1bd9c8c # v0.0.26
+        with:
+          suppress_push_for_open_pull_request: ${{ github.actor != 'dependabot[bot]' && 1 }}
+          checkout: true
+          check_file_names: 1
+          post_comment: 0
+          use_magic_file: 1
+          warnings: bad-regex,binary-file,deprecated-feature,ignored-expect-variant,large-file,limited-references,no-newline-at-eof,noisy-file,non-alpha-in-dictionary,token-is-substring,unexpected-line-ending,whitespace-in-dictionary,minified-file,unsupported-configuration,no-files-to-check,unclosed-block-ignore-begin,unclosed-block-ignore-end
+          check_extra_dictionaries: ""
+          dictionary_source_prefixes: >
+            {
+            "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20241114/dictionaries/"
+            }
+          extra_dictionaries: |
+            cspell:software-terms/softwareTerms.txt
+            cspell:cpp/stdlib-cpp.txt
+            cspell:filetypes/filetypes.txt
+            cspell:cpp/stdlib-c.txt
+            cspell:php/php.txt
+            cspell:python/python/python-lib.txt
+            cspell:dotnet/dotnet.txt
+            cspell:golang/go.txt
+            cspell:cpp/compiler-msvc.txt
+            cspell:dart/dart.txt
+            cspell:html/html.txt
+            cspell:powershell/powershell.txt
+            cspell:aws/aws.txt
+            cspell:python/common/extra.txt
+            cspell:node/node.txt
+            cspell:npm/npm.txt
+            cspell:fullstack/fullstack.txt
+            cspell:java/java.txt
+            cspell:csharp/csharp.txt
+            cspell:cpp/ecosystem.txt
+            cspell:typescript/typescript.txt
+            cspell:cpp/lang-keywords.txt

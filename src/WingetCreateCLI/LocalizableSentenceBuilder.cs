@@ -77,9 +77,9 @@ namespace Microsoft.WingetCreateCLI
                             return string.Format(Properties.Resources.SentenceUnknownOptionError, ((UnknownOptionError)error).Token);
 
                         case ErrorType.MissingRequiredOptionError:
-                            var errMisssing = (MissingRequiredOptionError)error;
-                            return errMisssing.NameInfo.Equals(NameInfo.EmptyName) ? Properties.Resources.SentenceMissingRequiredValueError
-                                       : string.Format(Properties.Resources.SentenceMissingRequiredOptionError, errMisssing.NameInfo.NameText);
+                            var errMissing = (MissingRequiredOptionError)error;
+                            return errMissing.NameInfo.Equals(NameInfo.EmptyName) ? Properties.Resources.SentenceMissingRequiredValueError
+                                       : string.Format(Properties.Resources.SentenceMissingRequiredOptionError, errMissing.NameInfo.NameText);
 
                         case ErrorType.BadFormatConversionError:
                             var badFormat = (BadFormatConversionError)error;

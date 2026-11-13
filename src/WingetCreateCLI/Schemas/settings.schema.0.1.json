@@ -77,6 +77,18 @@
         }
       },
       "additionalProperties": false
+    },
+    "PullRequest": {
+      "description": "Pull request settings",
+      "type": "object",
+      "properties": {
+        "openInBrowser": {
+          "description": "Controls whether the pull request is opened in the browser on submission",
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "additionalProperties": false
     }
   },
   "type": "object",
@@ -90,14 +102,16 @@
     "CleanUp": { "$ref": "#/definitions/CleanUp" },
     "WindowsPackageManagerRepository": { "$ref": "#/definitions/WindowsPackageManagerRepository" },
     "Manifest": { "$ref": "#/definitions/Manifest" },
-    "Visual": { "$ref": "#/definitions/Visual" }
+    "Visual": { "$ref": "#/definitions/Visual" },
+    "PullRequest": { "$ref": "#/definitions/PullRequest" }
   },
   "required": [
     "Telemetry",
     "CleanUp",
     "WindowsPackageManagerRepository",
     "Manifest",
-    "Visual"
+    "Visual",
+    "PullRequest"
   ],
   "additionalProperties": false
 }

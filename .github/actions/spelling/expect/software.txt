@@ -1,0 +1,8 @@
+vscode
+dotnet
+NUnit
+enum
+minkernel
+nowrap
+PDBs
+Utils

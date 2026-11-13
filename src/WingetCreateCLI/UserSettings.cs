@@ -135,6 +135,20 @@ namespace Microsoft.WingetCreateCLI
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the pull request should be opened automatically in the browser on submission.
+        /// </summary>
+        public static bool OpenPRInBrowser
+        {
+            get => Settings.PullRequest.OpenInBrowser;
+
+            set
+            {
+                Settings.PullRequest.OpenInBrowser = value;
+                SaveSettings();
+            }
+        }
+
         private static SettingsManifest Settings { get; set; }
 
         /// <summary>
@@ -232,7 +246,7 @@ namespace Microsoft.WingetCreateCLI
             }
             else
             {
-                // If either of these files exist, then this indicates that a parsing error has occured and we can display warnings.
+                // If either of these files exist, then this indicates that a parsing error has occurred and we can display warnings.
                 if (File.Exists(SettingsJsonPath) || File.Exists(SettingsBackupJsonPath))
                 {
                     Logger.WarnLocalized(nameof(Resources.UnexpectedErrorLoadSettings_Message));

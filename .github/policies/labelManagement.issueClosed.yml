@@ -1,0 +1,28 @@
+id: labelManagement.issueClosed
+name: GitOps.PullRequestIssueManagement
+description: Handlers when an issue or pull request gets closed
+owner:
+resource: repository
+disabled: false
+where:
+configuration:
+  resourceManagementConfiguration:
+    eventResponderTasks:
+      - description: Remove labels when an issue or pull request is closed
+        if:
+          - or:
+              - payloadType: Issues
+              - payloadType: Pull_Request
+          - isAction:
+              action: Closed
+        then:
+          - removeLabel:
+              label: Needs-Triage
+          - removeLabel:
+              label: Needs-Attention
+          - removeLabel:
+              label: Needs-Author-Feedback
+          - removeLabel:
+              label: Help-Wanted
+onFailure:
+onSuccess:

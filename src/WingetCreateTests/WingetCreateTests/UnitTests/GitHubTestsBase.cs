@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 
 namespace Microsoft.WingetCreateUnitTests
@@ -69,7 +69,7 @@ namespace Microsoft.WingetCreateUnitTests
         /// <summary>
         /// Configures the tests to run in a pipeline.
         /// </summary>
-        /// <param name="gitHubAppPrivateKey">Github app private key.</param>
+        /// <param name="gitHubAppPrivateKey">GitHub app private key.</param>
         private async Task ConfigureForPipelineTestsAsync(string gitHubAppPrivateKey)
         {
             TestContext.Progress.WriteLine("Running in pipeline, using GitHubAppPrivateKey value for tests");
@@ -80,9 +80,9 @@ namespace Microsoft.WingetCreateUnitTests
         /// <summary>
         /// Configures the tests to run locally.
         /// </summary>
-        private async Task ConfigureForLocalTestsAsync()
+        private Task ConfigureForLocalTestsAsync()
         {
-            TestContext.Progress.WriteLine("Running locally, using Github token for tests");
+            TestContext.Progress.WriteLine("Running locally, using GitHub token for tests");
             if (TokenHelper.TryRead(out string token))
             {
                 this.GitHubApiKey = token;
@@ -94,6 +94,8 @@ namespace Microsoft.WingetCreateUnitTests
                     ">> Please run 'wingetcreate token -s'\n" +
                     ">> Or set the 'WINGET_CREATE_GITHUB_TOKEN' environment variable to a valid GitHub token.");
             }
+
+            return Task.CompletedTask;
         }
     }
 }

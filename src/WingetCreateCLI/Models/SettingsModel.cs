@@ -98,6 +98,21 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
 
     }
 
+    /// <summary>
+    /// Pull request settings
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
+    public partial class PullRequest
+    {
+        /// <summary>
+        /// Controls whether the pull request is opened in the browser on submission
+        /// </summary>
+        [Newtonsoft.Json.JsonProperty("openInBrowser", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public bool OpenInBrowser { get; set; } = true;
+
+
+    }
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "11.0.0.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class SettingsManifest
     {
@@ -126,6 +141,10 @@ namespace Microsoft.WingetCreateCLI.Models.Settings
         [Newtonsoft.Json.JsonProperty("Visual", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Required]
         public Visual Visual { get; set; } = new Visual();
+
+        [Newtonsoft.Json.JsonProperty("PullRequest", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public PullRequest PullRequest { get; set; } = new PullRequest();
 
 
     }

@@ -1,0 +1,157 @@
+﻿{
+  "PackageIdentifier": "TestPublisher.FullYamlSingleton1_12",
+  "PackageVersion": "0.1.2.3",
+  "PackageLocale": "en-US",
+  "DefaultLocale": "en-US",
+  "Publisher": "TestPublisher",
+  "PublisherUrl": "https://fakeTestUrl.com",
+  "PublisherSupportUrl": "https://fakeTestUrl.com",
+  "PrivacyUrl": "https://fakeTestUrl.com",
+  "Author": "fakeAuthor",
+  "PackageName": "Full Singleton 1.12 Test",
+  "PackageUrl": "https://fakeTestUrl.com",
+  "License": "MIT",
+  "LicenseUrl": "https://fakeTestUrl.com",
+  "Copyright": "fakeCopyright",
+  "CopyrightUrl": "https://fakeTestUrl.com",
+  "ShortDescription": "A manifest used to verify that all fields from a full 1.12 singleton manifest can be deserialized and updated.",
+  "Description": "A manifest used to verify that all fields from a full 1.12 singleton manifest can be deserialized and updated.",
+  "Moniker": "testMoniker",
+  "Tags": [
+    "testSingleton"
+  ],
+  "Agreements": [
+    {
+      "AgreementLabel": "fakeAgreementLabel",
+      "AgreementUrl": "https://fakeTestUrl.com",
+      "Agreement": "fakeAgreementContent"
+    }
+  ],
+  "ReleaseNotes": "fakeReleaseNotes",
+  "ReleaseNotesUrl": "https://fakeTestUrl.com",
+  "PurchaseUrl": "https://fakeTestUrl.com",
+  "InstallationNotes": "fakeInstallationNotes",
+  "Documentations": [
+    {
+      "DocumentLabel": "fakeDocumentLabel"
+    },
+    {
+      "DocumentUrl": "fakeDocumentUrl"
+    }
+  ],
+  "Icons": [
+    {
+      "IconUrl": "https://fakeTestIcon",
+      "IconFileType": "png",
+      "IconResolution": "32x32",
+      "IconTheme": "light",
+      "IconSha256": "69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8321"
+    }
+  ],
+  "Installers": [
+    {
+      "MinimumOSVersion": "10.0.0.0",
+      "Architecture": "x64",
+      "InstallerUrl": "https://fakedomain.com/WingetCreateTestExeInstaller.exe",
+      "InstallerType": "exe",
+      "InstallerSha256": "A7803233EEDB6A4B59B3024CCF9292A6FFFB94507DC998AA67C5B745D197A5DC",
+      "ProductCode": "FakeProductCode",
+      "PackageFamilyName": "FakePackageFamilyName",
+      "InstallModes": [
+        "silent"
+      ],
+      "InstallerSwitches": {
+        "Silent": "/s",
+        "Upgrade": "/u",
+        "Repair": "/r"
+      },
+      "InstallerSuccessCodes": [
+        1
+      ],
+      "ExpectedReturnCodes": [
+        {
+          "InstallerReturnCode": 123,
+          "ReturnResponse": "alreadyInstalled",
+          "ReturnResponseUrl": "https://fakeTestUrl.com"
+        }
+      ],
+      "UpgradeBehavior": "install",
+      "Commands": [
+        "fakeCommand"
+      ],
+      "Protocols": [
+        "fakeProtocol"
+      ],
+      "FileExtensions": [
+        ".exe"
+      ],
+      "Dependencies": {
+        "WindowsFeatures": [
+          "fakeValue"
+        ],
+        "WindowsLibraries": [
+          "fakeValue"
+        ],
+        "PackageDependencies": [
+          {
+            "MinimumVersion": "10.0.0.0"
+          }
+        ],
+        "ExternalDependencies": [
+          "fakeValue"
+        ]
+      },
+      "Markets": {
+        "AllowedMarkets": [
+          "fakeAllowedMarket"
+        ],
+        "ExcludedMarkets": [
+          "fakeExcludedMarket"
+        ]
+      },
+      "InstallerAbortsTerminal": true,
+      "InstallLocationRequired": true,
+      "RequireExplicitUpgrade": true,
+      "UnsupportedOSArchitectures": [
+        "arm64"
+      ],
+      "AppsAndFeaturesEntries": [
+        {
+          "DisplayName": "testName",
+          "Publisher": "testPublisher",
+          "DisplayVersion": "testVersion",
+          "UpgradeCode": "fakeProductCode"
+        }
+      ],
+      "ElevationRequirement": "elevationRequired",
+      "ReleaseDate": "2022-01-01",
+      "DisplayInstallWarnings": true,
+      "UnsupportedArguments": [
+        "log",
+        "location"
+      ],
+      "NestedInstallerFiles": [
+        {
+          "RelativeFilePath": "RelativeFilePath",
+          "PortableCommandAlias": "PortableCommandAlias"
+        }
+      ],
+      "InstallationMetadata": {
+        "DefaultInstallLocation": "%ProgramFiles%\\TestApp",
+        "Files": [
+          {
+            "RelativeFilePath": "main.exe",
+            "FileSha256": "69D84CA8899800A5575CE31798293CD4FEBAB1D734A07C2E51E56A28E0DF8C82",
+            "FileType": "launch",
+            "InvocationParameter": "/arg"
+          }
+        ]
+      },
+      "DownloadCommandProhibited": true,
+      "RepairBehavior": "modify",
+      "ArchiveBinariesDependOnPath": true
+    }
+  ],
+  "ManifestType": "singleton",
+  "ManifestVersion": "1.12.0"
+}

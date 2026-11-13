@@ -15,7 +15,6 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Threading.Tasks;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
-    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
@@ -30,6 +29,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Octokit;
     using RestSharp;
     using Sharprompt;
+    using Resources = Microsoft.WingetCreateCLI.Properties.Resources;
 
     /// <summary>
     /// Abstract base command class that all commands inherit from.
@@ -104,7 +104,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Gets or sets a value indicating whether or not to automatically open the PR webpage in the browser after creation.
         /// </summary>
-        public bool OpenPRInBrowser { get; set; } = true;
+        public bool OpenPRInBrowser { get; set; } = UserSettings.OpenPRInBrowser;
 
         /// <summary>
         /// Gets the GitHubClient instance to use for interacting with GitHub from the CLI.
@@ -166,10 +166,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Creates a formatted directory of manifest files from the manifest object models and saves the directory to a local path.
         /// </summary>
         /// <param name="manifests">Wrapper object for manifest object models.</param>
+        /// <param name="manifestRoot">Manifest root name.</param>
         /// <param name="outputDir">Output directory where the manifests are saved locally.</param>
         /// <returns>Path to manifest directory.</returns>
         protected static string SaveManifestDirToLocalPath(
             Manifests manifests,
+            string manifestRoot,
             string outputDir)
         {
             VersionManifest versionManifest = manifests.VersionManifest;
@@ -180,7 +182,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             outputDir = Environment.ExpandEnvironmentVariables(outputDir);
             string version = versionManifest.PackageVersion;
             string packageId = versionManifest.PackageIdentifier;
-            string manifestDir = Utils.GetAppManifestDirPath(packageId, version);
+            string manifestDir = Utils.GetAppManifestDirPath(packageId, version, manifestRoot);
             string fullDirPath = Path.GetFullPath(Path.Combine(outputDir, manifestDir));
 
             try
@@ -308,9 +310,10 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <summary>
         /// Downloads the package file from the provided installer url.
         /// </summary>
-        /// /// <param name="installerUrl"> Installer Url to be downloaded. </param>
+        /// <param name="installerUrl">Installer Url to be downloaded. </param>
+        /// <param name="allowHttp">The flag indicating whether to allow HTTP downloads.</param>
         /// <returns>Package file.</returns>
-        protected static async Task<string> DownloadPackageFile(string installerUrl)
+        protected static async Task<string> DownloadPackageFile(string installerUrl, bool allowHttp)
         {
             Logger.InfoLocalized(nameof(Resources.DownloadInstaller_Message), installerUrl);
 
@@ -332,7 +335,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                string packageFilePath = await PackageParser.DownloadFileAsync(installerUrl);
+                string packageFilePath = await PackageParser.DownloadFileAsync(installerUrl, allowHttp);
                 TelemetryManager.Log.WriteEvent(new DownloadInstallerEvent { IsSuccessful = true });
                 DownloadedInstallers.Add(installerUrl, packageFilePath);
                 return packageFilePath;
@@ -375,6 +378,16 @@ namespace Microsoft.WingetCreateCLI.Commands
                 else if (e is TaskCanceledException)
                 {
                     Logger.ErrorLocalized(nameof(Resources.DownloadConnectionTimeout_Error));
+                    return null;
+                }
+                else if (e is NotSupportedException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadProtocolNotSupported_Error));
+                    return null;
+                }
+                else if (e is DownloadHttpsOnlyException)
+                {
+                    Logger.ErrorLocalized(nameof(Resources.DownloadHttpsOnly_Error));
                     return null;
                 }
                 else
@@ -648,7 +661,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             if (string.IsNullOrEmpty(this.GitHubToken))
             {
-                // User must've cancelled OAuth flow, we can't proceed successfully
+                // User must have cancelled OAuth flow, we can't proceed successfully
                 Logger.WarnLocalized(nameof(Resources.NoTokenResponse_Message));
                 return false;
             }
@@ -731,8 +744,9 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// <param name="prTitle">Optional parameter specifying the title for the pull request.</param>
         /// <param name="shouldReplace">Optional parameter specifying whether the new submission should replace an existing manifest.</param>
         /// <param name="replaceVersion">Optional parameter specifying the version of the manifest to be replaced.</param>
+        /// <param name="manifestRoot">Manifest root name.</param>
         /// <returns>A <see cref="Task"/> representing the success of the asynchronous operation.</returns>
-        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null)
+        protected async Task<bool> GitHubSubmitManifests(Manifests manifests, string prTitle = null, bool shouldReplace = false, string replaceVersion = null, string manifestRoot = Constants.WingetManifestRoot)
         {
             // Community repo only supports yaml submissions.
             if (this.WingetRepo == DefaultWingetRepo &&
@@ -754,7 +768,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             try
             {
-                PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion);
+                Octokit.PullRequest pullRequest = await this.GitHubClient.SubmitPullRequestAsync(manifests, this.SubmitPRToFork, prTitle, shouldReplace, replaceVersion, manifestRoot);
                 this.PullRequestNumber = pullRequest.Number;
                 PullRequestEvent pullRequestEvent = new PullRequestEvent { IsSuccessful = true, PullRequestNumber = pullRequest.Number };
                 TelemetryManager.Log.WriteEvent(pullRequestEvent);
@@ -826,7 +840,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// Returns the title to be used for the pull request.
         /// </summary>
         /// <param name="currentManifest">Manifest object containing metadata of new manifest to be submitted.</param>
-        /// <param name="repositoryManifest">Manifest object representing an already exisitng manifest in the repository.</param>
+        /// <param name="repositoryManifest">Manifest object representing an already existing manifest in the repository.</param>
         /// <returns>A string representing the pull request title.</returns>
         protected string GetPRTitle(Manifests currentManifest, Manifests repositoryManifest = null)
         {

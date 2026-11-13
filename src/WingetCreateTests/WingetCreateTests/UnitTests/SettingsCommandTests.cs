@@ -98,6 +98,7 @@ namespace Microsoft.WingetCreateUnitTests
             bool isTelemetryDisabled = UserSettings.TelemetryDisabled;
             bool isCleanUpDisabled = UserSettings.CleanUpDisabled;
             bool arePathsAnonymized = UserSettings.AnonymizePaths;
+            bool shouldPROpenInBrowser = UserSettings.OpenPRInBrowser;
             int cleanUpDays = 30;
             string testRepoOwner = "testRepoOwner";
             string testRepoName = "testRepoName";
@@ -105,6 +106,7 @@ namespace Microsoft.WingetCreateUnitTests
             UserSettings.TelemetryDisabled = !isTelemetryDisabled;
             UserSettings.CleanUpDisabled = !isCleanUpDisabled;
             UserSettings.AnonymizePaths = !arePathsAnonymized;
+            UserSettings.OpenPRInBrowser = !shouldPROpenInBrowser;
             UserSettings.CleanUpDays = cleanUpDays;
             UserSettings.WindowsPackageManagerRepositoryOwner = testRepoOwner;
             UserSettings.WindowsPackageManagerRepositoryName = testRepoName;
@@ -113,6 +115,7 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.IsTrue(manifest.Telemetry.Disable == !isTelemetryDisabled, "Changed Telemetry setting was not reflected in the settings file.");
             ClassicAssert.IsTrue(manifest.CleanUp.Disable == !isCleanUpDisabled, "Changed CleanUp.Disable setting was not reflected in the settings file.");
             ClassicAssert.IsTrue(manifest.Visual.AnonymizePaths == !arePathsAnonymized, "Changed Visual.AnonymizePaths setting was not reflected in the settings file.");
+            ClassicAssert.IsTrue(manifest.PullRequest.OpenInBrowser == !shouldPROpenInBrowser, "Changed PullRequest.OpenPRInBrowser setting was not reflected in the settings file.");
             ClassicAssert.IsTrue(manifest.CleanUp.IntervalInDays == cleanUpDays, "Changed CleanUp.IntervalInDays setting was not reflected in the settings file.");
             ClassicAssert.IsTrue(manifest.WindowsPackageManagerRepository.Owner == testRepoOwner, "Changed WindowsPackageManagerRepository.Owner setting was not reflected in the settings file.");
             ClassicAssert.IsTrue(manifest.WindowsPackageManagerRepository.Name == testRepoName, "Changed WindowsPackageManagerRepository.Name setting was not reflected in the settings file.");

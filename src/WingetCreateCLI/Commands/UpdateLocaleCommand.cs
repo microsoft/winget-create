@@ -79,6 +79,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the PR should be opened automatically in the browser.
+        /// </summary>
+        [Option('n', "no-open", Required = false, HelpText = "NoOpenPRInBrowser_HelpText", ResourceType = typeof(Resources))]
+        public bool NoOpenPRInBrowser { get => !this.OpenPRInBrowser; set => this.OpenPRInBrowser = !value; }
+
+        /// <summary>
         /// Executes the update-locale command flow.
         /// </summary>
         /// <returns>Boolean representing success or fail of the command.</returns>
@@ -170,7 +176,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     this.OutputDir = Directory.GetCurrentDirectory();
                 }
 
-                string manifestDirectoryPath = SaveManifestDirToLocalPath(originalManifests, this.OutputDir);
+                // TODO: Font root support.
+                // See issue: See issue https://github.com/microsoft/winget-create/issues/647
+                string manifestDirectoryPath = SaveManifestDirToLocalPath(originalManifests, WingetCreateCore.Common.Constants.WingetManifestRoot, this.OutputDir);
 
                 if (ValidateManifest(manifestDirectoryPath, this.Format))
                 {

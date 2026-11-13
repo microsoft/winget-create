@@ -9,13 +9,14 @@ namespace Microsoft.WingetCreateCLI.Commands
     using System.Threading.Tasks;
     using CommandLine;
     using CommandLine.Text;
+    using Microsoft.VisualBasic;
     using Microsoft.WingetCreateCLI.Logging;
-    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Models;
     using Microsoft.WingetCreateCore.Models.Singleton;
+    using Resources = Microsoft.WingetCreateCLI.Properties.Resources;
 
     /// <summary>
     /// Command to validate and submit a manifest to the GitHub Windows Package Manager repository.
@@ -66,6 +67,12 @@ namespace Microsoft.WingetCreateCLI.Commands
         /// </summary>
         [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
         public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the PR should be opened automatically in the browser.
+        /// </summary>
+        [Option('n', "no-open", Required = false, HelpText = "NoOpenPRInBrowser_HelpText", ResourceType = typeof(Resources))]
+        public bool NoOpenPRInBrowser { get => !this.OpenPRInBrowser; set => this.OpenPRInBrowser = !value; }
 
         /// <summary>
         /// Gets or sets the unbound arguments that exist after the first positional parameter.
@@ -122,7 +129,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
+                // TODO: Add Font Root Support
+                // See issue: See issue https://github.com/microsoft/winget-create/issues/647
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion, WingetCreateCore.Common.Constants.WingetManifestRoot);
             }
             else if (Directory.Exists(expandedPath) && ValidateManifest(expandedPath, this.Format))
             {
@@ -134,7 +143,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion);
+                // TODO: Add Font Root Support
+                // See issue: See issue https://github.com/microsoft/winget-create/issues/647
+                return await this.GitHubSubmitManifests(manifests, this.PRTitle, this.Replace, this.ReplaceVersion, WingetCreateCore.Common.Constants.WingetManifestRoot);
             }
             else
             {

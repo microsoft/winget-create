@@ -25,7 +25,6 @@ namespace Microsoft.WingetCreateCLI
         private static async Task<int> Main(string[] args)
         {
             Logger.Initialize();
-            UserSettings.FirstRunTelemetryConsent();
             TelemetryEventListener.EventListener.IsTelemetryEnabled();
             SentenceBuilder.Factory = () => new LocalizableSentenceBuilder();
             Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -57,12 +56,18 @@ namespace Microsoft.WingetCreateCLI
             var parserResult = myParser.ParseArguments(args, types);
 
             BaseCommand command = parserResult.MapResult(c => c as BaseCommand, err => null);
-
             if (command == null)
             {
                 DisplayHelp(parserResult as NotParsed<object>);
                 DisplayParsingErrors(parserResult as NotParsed<object>);
                 return args.Any() ? 1 : 0;
+            }
+
+            if (command is not DscCommand)
+            {
+                // For DSC commands, we do not want to display the header to
+                // ensure the output is a valid JSON.
+                UserSettings.FirstRunTelemetryConsent();
             }
 
             // If the user has provided a token via the command line, warn them that it may be logged

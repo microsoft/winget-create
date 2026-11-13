@@ -232,6 +232,146 @@ namespace Microsoft.WingetCreateCore.Models.Installer
     }
 
     /// <summary>
+    /// Partial class that implements helper methods for the Authentication class.
+    /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
+    public partial class Authentication
+#pragma warning restore SA1402 // File may only contain a single type
+    {
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Authentication other = (Authentication)obj;
+            return this.AuthenticationType == other.AuthenticationType && Equals(this.MicrosoftEntraIdAuthenticationInfo, other.MicrosoftEntraIdAuthenticationInfo);
+        }
+    }
+
+    /// <summary>
+    /// Partial class that implements helper methods for the MicrosoftEntraIdAuthenticationInfo class.
+    /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
+    public partial class MicrosoftEntraIdAuthenticationInfo
+#pragma warning restore SA1402 // File may only contain a single type
+    {
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            MicrosoftEntraIdAuthenticationInfo other = (MicrosoftEntraIdAuthenticationInfo)obj;
+            return this.Resource == other.Resource && this.Scope == other.Scope;
+        }
+    }
+
+    /// <summary>
+    /// Partial class that implements helper methods for the DesiredStateConfiguration class.
+    /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
+    public partial class DesiredStateConfiguration
+#pragma warning restore SA1402 // File may only contain a single type
+    {
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            DesiredStateConfiguration other = (DesiredStateConfiguration)obj;
+            return (this.PowerShell == null ? other.PowerShell == null : other.PowerShell != null && this.PowerShell.SequenceEqual(other.PowerShell)) && Equals(this.DSCv3, other.DSCv3);
+        }
+    }
+
+    /// <summary>
+    /// Partial class that implements helper methods for the PowerShell class.
+    /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
+    public partial class PowerShell
+#pragma warning restore SA1402 // File may only contain a single type
+    {
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            PowerShell other = (PowerShell)obj;
+            return this.RepositoryUrl == other.RepositoryUrl && this.ModuleName == other.ModuleName && (this.Resources == null ? other.Resources == null : other.Resources != null && this.Resources.SequenceEqual(other.Resources));
+        }
+    }
+
+    /// <summary>
+    /// Partial class that implements helper methods for the DSCv3 class.
+    /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
+    public partial class DSCv3
+#pragma warning restore SA1402 // File may only contain a single type
+    {
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            DSCv3 other = (DSCv3)obj;
+            return this.Resources == null ? other.Resources == null : other.Resources != null && this.Resources.SequenceEqual(other.Resources);
+        }
+    }
+
+    /// <summary>
+    /// Partial class that implements helper methods for the Resources class.
+    /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
+    public partial class Resources
+#pragma warning restore SA1402 // File may only contain a single type
+    {
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Resources other = (Resources)obj;
+            return this.Name == other.Name;
+        }
+    }
+
+    /// <summary>
+    /// Partial class that implements helper methods for the Resources2 class.
+    /// </summary>
+#pragma warning disable SA1402 // File may only contain a single type
+    public partial class Resources2
+#pragma warning restore SA1402 // File may only contain a single type
+    {
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            if (obj == null || this.GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Resources2 other = (Resources2)obj;
+            return this.Type == other.Type;
+        }
+    }
+
+    /// <summary>
     /// Partial InstallerManifest class for defining a string type ReleaseDateTimeField.
     /// Workaround for issue with model generating ReleaseDate with DateTimeOffset type.
     /// </summary>

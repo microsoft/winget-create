@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license.
 
 namespace Microsoft.WingetCreateCLI.Commands
@@ -12,9 +12,9 @@ namespace Microsoft.WingetCreateCLI.Commands
     using AutoMapper;
     using CommandLine;
     using CommandLine.Text;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.WingetCreateCLI.Logging;
     using Microsoft.WingetCreateCLI.Models.Settings;
-    using Microsoft.WingetCreateCLI.Properties;
     using Microsoft.WingetCreateCLI.Telemetry;
     using Microsoft.WingetCreateCLI.Telemetry.Events;
     using Microsoft.WingetCreateCore;
@@ -26,6 +26,7 @@ namespace Microsoft.WingetCreateCLI.Commands
     using Microsoft.WingetCreateCore.Models.Locale;
     using Microsoft.WingetCreateCore.Models.Version;
     using Sharprompt;
+    using Resources = Microsoft.WingetCreateCLI.Properties.Resources;
 
     /// <summary>
     /// Command for updating the elements of an existing or local manifest.
@@ -98,7 +99,7 @@ namespace Microsoft.WingetCreateCLI.Commands
         public override string PRTitle { get => base.PRTitle; set => base.PRTitle = value; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether or not the updated manifest should be submitted to Github.
+        /// Gets or sets a value indicating whether or not the updated manifest should be submitted to GitHub.
         /// </summary>
         [Option('s', "submit", Required = false, HelpText = "SubmitToWinget_HelpText", ResourceType = typeof(Resources))]
         public bool SubmitToGitHub { get; set; }
@@ -122,10 +123,22 @@ namespace Microsoft.WingetCreateCLI.Commands
         public override ManifestFormat Format { get => base.Format; set => base.Format = value; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to allow unsecure downloads.
+        /// </summary>
+        [Option("allow-unsecure-downloads", Required = false, HelpText = "AllowUnsecureDownloads_HelpText", ResourceType = typeof(Resources))]
+        public bool AllowUnsecureDownloads { get; set; }
+
+        /// <summary>
         /// Gets or sets the GitHub token used to submit a pull request on behalf of the user.
         /// </summary>
         [Option('t', "token", Required = false, HelpText = "GitHubToken_HelpText", ResourceType = typeof(Resources))]
         public override string GitHubToken { get => base.GitHubToken; set => base.GitHubToken = value; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the PR should be opened automatically in the browser.
+        /// </summary>
+        [Option('n', "no-open", Required = false, HelpText = "NoOpenPRInBrowser_HelpText", ResourceType = typeof(Resources))]
+        public bool NoOpenPRInBrowser { get => !this.OpenPRInBrowser; set => this.OpenPRInBrowser = !value; }
 
         /// <summary>
         /// Gets or sets the new value(s) used to update the manifest installer elements.
@@ -163,7 +176,10 @@ namespace Microsoft.WingetCreateCLI.Commands
                     return false;
                 }
 
-                bool submitFlagMissing = !this.SubmitToGitHub && (!string.IsNullOrEmpty(this.PRTitle) || this.Replace);
+                bool submitFlagMissing = !this.SubmitToGitHub && (
+                    !string.IsNullOrEmpty(this.PRTitle) ||
+                    this.Replace ||
+                    this.NoOpenPRInBrowser);
 
                 if (!string.IsNullOrEmpty(this.ReleaseNotesUrl))
                 {
@@ -272,7 +288,9 @@ namespace Microsoft.WingetCreateCLI.Commands
                 this.OutputDir = Directory.GetCurrentDirectory();
             }
 
-            string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, this.OutputDir);
+            // TODO: Font root support.
+            // See issue: See issue https://github.com/microsoft/winget-create/issues/647
+            string manifestDirectoryPath = SaveManifestDirToLocalPath(updatedManifests, Constants.WingetManifestRoot, this.OutputDir);
 
             if (ValidateManifest(manifestDirectoryPath, this.Format))
             {
@@ -299,12 +317,15 @@ namespace Microsoft.WingetCreateCLI.Commands
                         }
                     }
 
+                    // TODO: Font root support.
+                    // See issue: See issue https://github.com/microsoft/winget-create/issues/647
                     return await this.LoadGitHubClient(true)
                         ? (commandEvent.IsSuccessful = await this.GitHubSubmitManifests(
                             updatedManifests,
                             this.GetPRTitle(updatedManifests, originalManifests),
                             this.Replace,
-                            this.ReplaceVersion))
+                            this.ReplaceVersion,
+                            Constants.WingetManifestRoot))
                         : false;
                 }
 
@@ -406,7 +427,7 @@ namespace Microsoft.WingetCreateCLI.Commands
 
             foreach (var installerUpdate in installerMetadataList)
             {
-                string packageFile = await DownloadPackageFile(installerUpdate.InstallerUrl);
+                string packageFile = await DownloadPackageFile(installerUpdate.InstallerUrl, this.AllowUnsecureDownloads);
                 if (string.IsNullOrEmpty(packageFile))
                 {
                     return null;
@@ -490,7 +511,7 @@ namespace Microsoft.WingetCreateCLI.Commands
                 Logger.ErrorLocalized(nameof(Resources.InstallerCountMustMatch_Error));
                 return null;
             }
-            catch (IOException iOException) when (iOException.HResult == -2147024671)
+            catch (IOException ioException) when (ioException.HResult == -2147024671)
             {
                 Logger.ErrorLocalized(nameof(Resources.DefenderVirus_ErrorMessage));
                 return null;
@@ -594,31 +615,39 @@ namespace Microsoft.WingetCreateCLI.Commands
         private static Manifests ConvertSingletonToMultifileManifest(WingetCreateCore.Models.Singleton.SingletonManifest singletonManifest)
         {
             // Create automapping configuration
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AllowNullCollections = true;
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, VersionManifest>()
-                    .ForMember(dest => dest.DefaultLocale, opt => opt.MapFrom(src => src.PackageLocale))
-                    .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, DefaultLocaleManifest>().ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, InstallerManifest>()
-                    .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.AppsAndFeaturesEntry, WingetCreateCore.Models.Installer.AppsAndFeaturesEntry>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.ExpectedReturnCode, WingetCreateCore.Models.Installer.ExpectedReturnCode>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.PackageDependencies, WingetCreateCore.Models.Installer.PackageDependencies>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets, WingetCreateCore.Models.Installer.Markets>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets2, WingetCreateCore.Models.Installer.Markets2>(); // Markets2 is not used, but is required to satisfy mapping configuration.
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Agreement, WingetCreateCore.Models.DefaultLocale.Agreement>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Documentation, WingetCreateCore.Models.DefaultLocale.Documentation>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Files, WingetCreateCore.Models.Installer.Files>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallationMetadata, WingetCreateCore.Models.Installer.InstallationMetadata>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Icon, WingetCreateCore.Models.DefaultLocale.Icon>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Authentication, WingetCreateCore.Models.Installer.Authentication>();
-            });
+            var config = new MapperConfiguration(
+                cfg =>
+                {
+                    cfg.AllowNullCollections = true;
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, VersionManifest>()
+                        .ForMember(dest => dest.DefaultLocale, opt => opt.MapFrom(src => src.PackageLocale))
+                        .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, DefaultLocaleManifest>().ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.SingletonManifest, InstallerManifest>()
+                        .ForMember(dest => dest.ManifestVersion, opt => opt.Ignore());
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.AppsAndFeaturesEntry, WingetCreateCore.Models.Installer.AppsAndFeaturesEntry>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.ExpectedReturnCode, WingetCreateCore.Models.Installer.ExpectedReturnCode>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.PackageDependencies, WingetCreateCore.Models.Installer.PackageDependencies>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets, WingetCreateCore.Models.Installer.Markets>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Markets2, WingetCreateCore.Models.Installer.Markets2>(); // Markets2 is not used, but is required to satisfy mapping configuration.
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Agreement, WingetCreateCore.Models.DefaultLocale.Agreement>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Documentation, WingetCreateCore.Models.DefaultLocale.Documentation>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Files, WingetCreateCore.Models.Installer.Files>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallationMetadata, WingetCreateCore.Models.Installer.InstallationMetadata>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Icon, WingetCreateCore.Models.DefaultLocale.Icon>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Authentication, WingetCreateCore.Models.Installer.Authentication>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.MicrosoftEntraIdAuthenticationInfo, WingetCreateCore.Models.Installer.MicrosoftEntraIdAuthenticationInfo>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.DesiredStateConfiguration, WingetCreateCore.Models.Installer.DesiredStateConfiguration>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.PowerShell, WingetCreateCore.Models.Installer.PowerShell>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.DSCv3, WingetCreateCore.Models.Installer.DSCv3>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Resources, WingetCreateCore.Models.Installer.Resources>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Resources2, WingetCreateCore.Models.Installer.Resources2>();
+                },
+                NullLoggerFactory.Instance);
             var mapper = config.CreateMapper();
 
             Manifests manifests = new Manifests();
@@ -1005,7 +1034,7 @@ namespace Microsoft.WingetCreateCLI.Commands
             {
                 string url = Prompt.Input<string>(Resources.NewInstallerUrl_Message, null, null, new[] { FieldValidation.ValidateProperty(newInstaller, nameof(Installer.InstallerUrl)) });
 
-                string packageFile = await DownloadPackageFile(url);
+                string packageFile = await DownloadPackageFile(url, this.AllowUnsecureDownloads);
                 string archivePath = null;
 
                 if (string.IsNullOrEmpty(packageFile))

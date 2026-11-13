@@ -1,0 +1,11 @@
+{
+    "instanceUrl": "https://microsoft.visualstudio.com",
+    "projectName": "OS",
+    "areaPath": "OS\\Windows Client and Services\\WinPD\\DFX-Developer Fundamentals and Experiences\\DEFT\\InstaDev",
+    "iterationPath": "OS\\Future",
+    "notificationAliases": [
+        "instadev@microsoft.com"
+    ],
+    "ignoreBranchName": true,
+    "repositoryName": "winget-create"
+}

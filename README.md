@@ -79,10 +79,12 @@ You can use WingetCreate to update an existing WinGet manifest as part of your C
 
 You can view the [GitHub action](.github/workflows/publish.yml) utilized by this repository to publish the latest release of WinGet-Create to the Windows Package Manager Community repository. For reference, you may also see the following GitHub repositories that utilize a similar approach to update their manifests:
 
-- [JanDeDobbeleer/Oh-My-Posh](https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/.github/workflows/winget.yml)
-- [microsoft/edit](https://github.com/microsoft/edit/blob/main/.github/workflows/winget.yml)
-- [microsoft/PowerToys](https://github.com/microsoft/PowerToys/blob/main/.github/workflows/package-submissions.yml)
-- [microsoft/Terminal](https://github.com/microsoft/terminal/blob/main/.github/workflows/winget.yml)
+- [Copilot CLI](https://github.com/github/copilot-cli/blob/v0.0.368-2/.github/workflows/winget.yml)
+- [Edit](https://github.com/microsoft/edit/blob/main/.github/workflows/winget.yml)
+- [Oh-My-Posh](https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/.github/workflows/release.yml#L139)
+- [PowerToys](https://github.com/microsoft/PowerToys/blob/main/.github/workflows/package-submissions.yml)
+- [Terminal](https://github.com/microsoft/terminal/blob/main/.github/workflows/winget.yml)
+- [WinGet Studio](https://github.com/microsoft/winget-studio/blob/main/.github/workflows/winget.yml)
 
 You can also check out this [episode of Open at Microsoft](https://learn.microsoft.com/en-us/shows/open-at-microsoft/wingetcreate-keeping-winget-packages-up-to-date) where we cover the same topic.
 
@@ -132,13 +134,7 @@ Windows Server 2022 now supports App Execution Aliases, which means the alias `w
 
 ## GitHub Personal Access Token (classic) Permissions
 
-When [creating your own GitHub Personal Access Token (PAT)](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) to be used with WingetCreate, make sure the following permissions are selected.
-
-- Select the **public_repo** scope to allow access to public repositories
-
-![public_repo scope](./doc/images/tokenscope-publicrepo.png)
-
-- (Optional) Select the **delete_repo** scope permission if you want WingetCreate to automatically delete the forked repo that it created if the PR submission fails.
+Please see the steps in [token.md](./doc/token.md)
 
 > [!IMPORTANT]
 > We currently do not support fine-grained GitHub tokens as we do not have the support for it yet from the GitHub APIs. See <https://github.com/microsoft/winget-create/issues/595> for more details.
@@ -170,7 +166,7 @@ You can install the prerequisites in one of two ways:
 - The following workloads:
   - .NET Desktop Development
   - Universal Windows Platform Development
-- Windows 11 SDK (10.0.22000.0) (Tools -> Get Tools and Features -> Individual Components)
+- Windows 11 SDK (10.0.26100.0) (Tools -> Get Tools and Features -> Individual Components)
 
 ### Building
 
@@ -193,7 +189,7 @@ Running unit and E2E tests are a great way to ensure that functionality is prese
   - Go to `Test` menu > `Configure Run Settings` -> `Select Solution Wide runsettings File` -> Choose your configured runsettings file
 
 - Set up your github token:
-  - **[Recommended]** Run `wingetcreate token -s` to go through the Github authentication flow
+  - **[Recommended]** Run `wingetcreate token -s` to go through the GitHub authentication flow
   - Or create a personal access token with the `repo` permission and set it as an environment variable `WINGET_CREATE_GITHUB_TOKEN`. _(This option is more convenient for CI/CD pipelines.)_
 
 ## Contributing

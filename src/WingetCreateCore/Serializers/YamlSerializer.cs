@@ -125,7 +125,7 @@ namespace Microsoft.WingetCreateCore.Serializers
         }
 
         /// <summary>
-        /// Custom TypeInspector to priorize properties that have a defined YamlMemberAttribute for custom override.
+        /// Custom TypeInspector to prioritize properties that have a defined YamlMemberAttribute for custom override.
         /// </summary>
         private class AliasTypeInspector : TypeInspectorSkeleton
         {
@@ -134,6 +134,16 @@ namespace Microsoft.WingetCreateCore.Serializers
             public AliasTypeInspector(ITypeInspector innerTypeDescriptor)
             {
                 this.innerTypeDescriptor = innerTypeDescriptor;
+            }
+
+            public override string GetEnumName(Type enumType, string value)
+            {
+                return this.innerTypeDescriptor.GetEnumName(enumType, value);
+            }
+
+            public override string GetEnumValue(object enumValue)
+            {
+                return this.innerTypeDescriptor.GetEnumValue(enumValue);
             }
 
             /// <summary>
@@ -182,7 +192,7 @@ namespace Microsoft.WingetCreateCore.Serializers
                 return type.IsEnum || ((u != null) && u.IsEnum);
             }
 
-            public object ReadYaml(IParser parser, Type type)
+            public object ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
             {
                 Type u = Nullable.GetUnderlyingType(type);
                 if (u != null)
@@ -202,7 +212,7 @@ namespace Microsoft.WingetCreateCore.Serializers
                 return Enum.Parse(type, serializableValues[parsedEnum.Value].Name);
             }
 
-            public void WriteYaml(IEmitter emitter, object value, Type type)
+            public void WriteYaml(IEmitter emitter, object value, Type type, ObjectSerializer serializer)
             {
                 var enumMember = type.GetMember(value.ToString()).FirstOrDefault();
                 var yamlValue = enumMember?.GetCustomAttributes<EnumMemberAttribute>(true).Select(ema => ema.Value).FirstOrDefault() ?? value.ToString();
@@ -217,19 +227,19 @@ namespace Microsoft.WingetCreateCore.Serializers
             {
             }
 
-            public override bool EnterMapping(IPropertyDescriptor key, IObjectDescriptor value, IEmitter context)
+            public override bool EnterMapping(IPropertyDescriptor key, IObjectDescriptor value, IEmitter context, ObjectSerializer serializer)
             {
                 if (key.Name == "AdditionalProperties")
                 {
                     return false;
                 }
 
-                return base.EnterMapping(key, value, context);
+                return base.EnterMapping(key, value, context, serializer);
             }
         }
 
         /// <summary>
-        /// A custom emitter for YamlDotNet which ensures all multiline fields use a <see cref="ScalarStyle.Literal"/>.
+        /// A custom emitter for YamlDotNet which ensures all multi-line fields use a <see cref="ScalarStyle.Literal"/>.
         /// </summary>
         private class MultilineScalarFlowStyleEmitter : ChainedEventEmitter
         {

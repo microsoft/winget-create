@@ -659,7 +659,7 @@ Warning: Using this argument may result in the token being logged. Consider an a
     <value>Warning: Using the --token argument may result in the token being logged. Consider an alternative approach https://aka.ms/winget-create-token.</value>
   </data>
   <data name="RateLimitExceeded_Message" xml:space="preserve">
-    <value>GitHub api rate limit exceeded. To extend your rate limit, provide your GitHub token with the '-t' flag or store one using the 'token --store' command.</value>
+    <value>GitHub API rate limit exceeded. To extend your rate limit, provide your GitHub token with the '-t' flag or store one using the 'token --store' command.</value>
     <comment>'-t' refers to a command line switch argument
 'token --store' refers to a command line argument</comment>
   </data>
@@ -1470,5 +1470,41 @@ Warning: Using this argument may result in the token being logged. Consider an a
   </data>
   <data name="MicrosoftEntraIdAuthenticationInfo_Scope_KeywordDescription" xml:space="preserve">
     <value>The scope value for Microsoft Entra Id authentication</value>
+  </data>
+  <data name="DownloadProtocolNotSupported_Error" xml:space="preserve">
+    <value>Only HTTPS URLs are supported for downloads. Use the "--allow-unsecure-downloads" option to allow HTTP URLs.</value>
+  </data>
+  <data name="DownloadHttpsOnly_Error" xml:space="preserve">
+    <value>Only HTTPS URLs are supported without "--allow-unsecure-downloads".</value>
+  </data>
+  <data name="AllowUnsecureDownloads_HelpText" xml:space="preserve">
+    <value>Allow unsecure downloads (HTTP) for this operation.</value>
+  </data>
+  <data name="NoOpenPRInBrowser_HelpText" xml:space="preserve">
+    <value>Boolean value that controls whether the pull request should not be open in the browser on submission. Default is false.</value>
+  </data>
+  <data name="MixedInstallerRootTypes_ErrorMessage" xml:space="preserve">
+    <value>Found mixed font and non-font installer types in the manifest. This is not a supported configuration and the manifest should be edited to contain only font or non-font installers before submission.</value>
+  </data>
+  <data name="DesiredStateConfiguration_KeywordDescription" xml:space="preserve">
+    <value>Desired state configuration (DSC) resources related to the package</value>
+  </data>
+  <data name="PowerShell_KeywordDescription" xml:space="preserve">
+    <value>DSC resources contained in PowerShell modules</value>
+  </data>
+  <data name="RepositoryUrl_KeywordDescription" xml:space="preserve">
+    <value>The URL of the repository containing the PowerShell module</value>
+  </data>
+  <data name="ModuleName_KeywordDescription" xml:space="preserve">
+    <value>The name of the PowerShell module containing DSC resources</value>
+  </data>
+  <data name="Resources_KeywordDescription" xml:space="preserve">
+    <value>The DSC resources contained in the module or package</value>
+  </data>
+  <data name="DSCv3_KeywordDescription" xml:space="preserve">
+    <value>DSC resources contained in the package using the DSC v3 specification</value>
+  </data>
+  <data name="Type_KeywordDescription" xml:space="preserve">
+    <value>The fully qualified type of the DSC resource</value>
   </data>
 </root>

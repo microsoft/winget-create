@@ -9,6 +9,7 @@ namespace Microsoft.WingetCreateUnitTests
     using System.IO.Compression;
     using System.Linq;
     using AutoMapper;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.WingetCreateCore;
     using Microsoft.WingetCreateCore.Common;
     using Microsoft.WingetCreateCore.Models;
@@ -63,6 +64,37 @@ namespace Microsoft.WingetCreateUnitTests
             ClassicAssert.AreEqual("MicrosoftCorporation.WingetCreateTestExeInstaller", manifests.VersionManifest.PackageIdentifier);
             ClassicAssert.AreEqual("Microsoft Copyright", manifests.DefaultLocaleManifest.Copyright);
             ClassicAssert.AreEqual(InstallerType.Exe, manifests.InstallerManifest.Installers.First().InstallerType);
+        }
+
+        /// <summary>
+        /// Verifies that a server-supplied Content-Disposition filename containing directory
+        /// traversal sequences cannot cause the installer to be written outside the intended download
+        /// directory.
+        /// </summary>
+        [Test]
+        public void DownloadFileDispositionStaysInDownloadDirectory()
+        {
+            string downloadedPath = null;
+            try
+            {
+                string url = $"https://fakedomain.com/{TestConstants.TestExeInstaller}";
+                string invalidFileName = @"..\..\..\..\example.exe";
+                TestUtils.SetMockHttpResponseContent(TestConstants.TestExeInstaller, invalidFileName);
+
+                downloadedPath = PackageParser.DownloadFileAsync(url, false).Result;
+
+                string downloadRoot = Path.GetFullPath(PackageParser.InstallerDownloadPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                string fullDownloadedPath = Path.GetFullPath(downloadedPath);
+                Assert.That(fullDownloadedPath, Does.StartWith(downloadRoot + Path.DirectorySeparatorChar), "Downloaded file escaped the installer download directory.");
+                ClassicAssert.AreEqual("example.exe", Path.GetFileName(downloadedPath));
+            }
+            finally
+            {
+                if (downloadedPath != null && File.Exists(downloadedPath))
+                {
+                    File.Delete(downloadedPath);
+                }
+            }
         }
 
         /// <summary>
@@ -207,14 +239,16 @@ namespace Microsoft.WingetCreateUnitTests
         /// <returns>Installer Manifest Installer object model.</returns>
         private static Installer ConvertSingletonInstaller(WingetCreateCore.Models.Singleton.Installer installer)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AllowNullCollections = true;
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
-                cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
-            });
+            var config = new MapperConfiguration(
+                cfg =>
+                {
+                    cfg.AllowNullCollections = true;
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Dependencies, WingetCreateCore.Models.Installer.Dependencies>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.NestedInstallerFile, WingetCreateCore.Models.Installer.NestedInstallerFile>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.Installer, WingetCreateCore.Models.Installer.Installer>();
+                    cfg.CreateMap<WingetCreateCore.Models.Singleton.InstallerSwitches, WingetCreateCore.Models.Installer.InstallerSwitches>();
+                },
+                NullLoggerFactory.Instance);
             var mapper = config.CreateMapper();
 
             return mapper.Map<Installer>(installer);

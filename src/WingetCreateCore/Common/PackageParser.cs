@@ -11,6 +11,7 @@ namespace Microsoft.WingetCreateCore
     using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Security.Cryptography;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -46,7 +47,43 @@ namespace Microsoft.WingetCreateCore
             "nullsoft",
         };
 
-        private static HttpClient httpClient = new HttpClient();
+        private static readonly string[] FontInstallerExtensions =
+        [
+            ".otf",         // OpenType Font
+            ".ttf",         // TrueType Font
+            ".fnt",         // Font
+            ".ttc",         // TrueType Font Collection
+            ".otc",         // OpenType Font Collection
+        ];
+
+        private static HttpClient httpClient = new()
+        {
+            DefaultRequestHeaders =
+            {
+                UserAgent = { new ProductInfoHeaderValue("WinGetCreate", Utils.GetEntryAssemblyVersion()) },
+            },
+        };
+
+        /// <summary>
+        /// Manifest Root Type Enum.
+        /// </summary>
+        public enum ManifestRootType
+        {
+            /// <summary>
+            /// Unknown root type.
+            /// </summary>
+            Unknown,
+
+            /// <summary>
+            /// Manifests root.
+            /// </summary>
+            Manifests,
+
+            /// <summary>
+            /// Fonts root.
+            /// </summary>
+            Fonts,
+        }
 
         private enum MachineType
         {
@@ -110,16 +147,19 @@ namespace Microsoft.WingetCreateCore
         /// Download file at specified URL to temp directory, unless it's already present.
         /// </summary>
         /// <param name="url">The URL of the file to be downloaded.</param>
+        /// <param name="allowHttp">Whether to allow HTTP downloads.</param>
         /// <param name="maxDownloadSize">The maximum file size in bytes to download.</param>
         /// <returns>Path of downloaded, or previously downloaded, file.</returns>
-        public static async Task<string> DownloadFileAsync(string url, long? maxDownloadSize = null)
+        public static async Task<string> DownloadFileAsync(string url, bool allowHttp, long? maxDownloadSize = null)
         {
+            ValidateUrl(url, allowHttp);
             var response = await httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
 
             int redirectCount = 0;
             while (response.StatusCode == System.Net.HttpStatusCode.Redirect && redirectCount < 2)
             {
                 var redirectUri = response.Headers.Location;
+                ValidateUrl(redirectUri, allowHttp);
                 response = await httpClient.GetAsync(redirectUri, HttpCompletionOption.ResponseHeadersRead);
                 redirectCount++;
             }
@@ -138,7 +178,7 @@ namespace Microsoft.WingetCreateCore
             }
 
             string urlFile = Path.GetFileName(url.Split('?').Last());
-            string contentDispositionFile = response.Content.Headers.ContentDisposition?.FileName?.Trim('"');
+            string contentDispositionFile = Path.GetFileName(response.Content.Headers.ContentDisposition?.FileName?.Trim('"'));
             string requestUrlFileName = Path.GetFileName(response.RequestMessage?.RequestUri?.ToString());
 
             if (!Directory.Exists(InstallerDownloadPath))
@@ -146,9 +186,18 @@ namespace Microsoft.WingetCreateCore
                 Directory.CreateDirectory(InstallerDownloadPath);
             }
 
-            // If no relevant filename can be obtained for the installer download, use a temporary filename as last option.
-            string targetFileName = contentDispositionFile.NullIfEmpty() ?? urlFile.NullIfEmpty() ?? requestUrlFileName.NullIfEmpty() ?? Path.GetTempFileName();
+            // If no relevant filename can be obtained for the installer download, use a random filename as last option.
+            string targetFileName = contentDispositionFile.NullIfEmpty() ?? urlFile.NullIfEmpty() ?? requestUrlFileName.NullIfEmpty() ?? Path.GetRandomFileName();
             string targetFile = GetNumericFilename(Path.Combine(InstallerDownloadPath, targetFileName));
+
+            // Defense in depth: ensure the resolved path stays under the installer download directory.
+            string downloadRoot = Path.GetFullPath(InstallerDownloadPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            string fullTargetFile = Path.GetFullPath(targetFile);
+            if (!fullTargetFile.StartsWith(downloadRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Resolved download path escapes the installer download directory.");
+            }
+
             using var targetFileStream = File.OpenWrite(targetFile);
             var contentStream = await response.Content.ReadAsStreamAsync();
 
@@ -315,7 +364,7 @@ namespace Microsoft.WingetCreateCore
         }
 
         /// <summary>
-        /// Parses the package for relevant metadata and and updates the metadata of the provided installer node.
+        /// Parses the package for relevant metadata and updates the metadata of the provided installer node.
         /// </summary>
         /// <param name="installer">Installer node.</param>
         /// <param name="filePath">Path to package file.</param>
@@ -368,6 +417,43 @@ namespace Microsoft.WingetCreateCore
         {
             string json = JsonConvert.SerializeObject(installer);
             return JsonConvert.DeserializeObject<Installer>(json);
+        }
+
+        /// <summary>
+        /// Determines if a given installer path is a Font installer.
+        /// </summary>
+        /// <param name="installerPath">Installer path or filename.</param>
+        /// <returns>True if the installerPath is considered a font type.</returns>
+        public static bool IsFontInstaller(string installerPath) => FontInstallerExtensions.Any(s => installerPath.Contains(s, StringComparison.InvariantCultureIgnoreCase));
+
+        /// <summary>
+        /// Determines if a given installer path is a Font installer.
+        /// </summary>
+        /// <param name="installerPaths">List of installer paths.</param>
+        /// <returns>True if the installerPath is considered a font type.</returns>
+        public static bool IsFontPackage(List<string> installerPaths) => installerPaths.All(i => IsFontInstaller(i));
+
+        /// <summary>
+        /// Determines the root type of the given installer paths.
+        /// </summary>
+        /// <param name="installerPaths">List of installer paths.</param>
+        /// <returns>ManifestRootType for that installer path.</returns>
+        public static ManifestRootType GetManifestRootTypeForInstallerPaths(List<string> installerPaths)
+        {
+            // If all installer paths are font it is a font package.
+            if (IsFontPackage(installerPaths))
+            {
+                return ManifestRootType.Fonts;
+            }
+
+            // If any installer paths are font, but we aren't a font package, then this is a mixed type.
+            if (installerPaths.Any(i => IsFontInstaller(i)))
+            {
+                return ManifestRootType.Unknown;
+            }
+
+            // No font installer paths, this is a Manifests root.
+            return ManifestRootType.Manifests;
         }
 
         /// <summary>
@@ -584,6 +670,22 @@ namespace Microsoft.WingetCreateCore
 
                 foreach (NestedInstallerFile nestedInstallerFile in installerMetadata.NestedInstallerFiles)
                 {
+                    if (IsFontInstaller(nestedInstallerFile.RelativeFilePath))
+                    {
+                        // Skip adding duplicate NestedInstallerFile object.
+                        if (baseInstaller.NestedInstallerFiles.Any(i => i.RelativeFilePath == nestedInstallerFile.RelativeFilePath))
+                        {
+                            continue;
+                        }
+
+                        baseInstaller.NestedInstallerFiles.Add(new NestedInstallerFile
+                        {
+                            RelativeFilePath = nestedInstallerFile.RelativeFilePath,
+                        });
+
+                        continue;
+                    }
+
                     // Skip adding duplicate NestedInstallerFile object.
                     if (baseInstaller.NestedInstallerFiles.Any(i =>
                         i.RelativeFilePath == nestedInstallerFile.RelativeFilePath &&
@@ -608,6 +710,14 @@ namespace Microsoft.WingetCreateCore
             else
             {
                 installerPaths.Add(packageFile);
+            }
+
+            // If every installer path is a font this is a font package.
+            var isFontPackage = IsFontPackage(installerPaths);
+            if (isFontPackage)
+            {
+                SetFontInstallerType(baseInstaller, newInstallers);
+                return true;
             }
 
             Architecture? nestedArchitecture = null;
@@ -875,6 +985,13 @@ namespace Microsoft.WingetCreateCore
             }
         }
 
+        private static void SetFontInstallerType(Installer baseInstaller, List<Installer> newInstallers)
+        {
+            SetInstallerType(baseInstaller, InstallerType.Font);
+            baseInstaller.Architecture = Architecture.Neutral;
+            newInstallers.Add(baseInstaller);
+        }
+
         /// <summary>
         /// Checks if a MSI Installer database was generated by WiX, based on common characteristics.
         /// </summary>
@@ -1108,6 +1225,29 @@ namespace Microsoft.WingetCreateCore
         private static string RemoveInvalidCharsFromString(string value)
         {
             return Regex.Replace(value, InvalidCharacters, string.Empty);
+        }
+
+        private static void ValidateUrl(string url, bool allowHttp)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri downloadUrl))
+            {
+                throw new InvalidOperationException();
+            }
+
+            ValidateUrl(downloadUrl, allowHttp);
+        }
+
+        private static void ValidateUrl(Uri url, bool allowHttp)
+        {
+            if (url.Scheme != Uri.UriSchemeHttp && url.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (!allowHttp && url.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new DownloadHttpsOnlyException();
+            }
         }
     }
 }
