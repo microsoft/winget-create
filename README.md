@@ -50,7 +50,7 @@ choco install wingetcreate
 
 ## Build status
 
-[![Build Status](https://microsoft.visualstudio.com/Apps/_apis/build/status%2FADEX%2Fwinget-create%20Release?repoName=microsoft%2Fwinget-create&branchName=main)](https://microsoft.visualstudio.com/Apps/_build/latest?definitionId=64953&repoName=microsoft%2Fwinget-create&branchName=main)
+[![Build Status](https://dev.azure.com/shine-oss/winget-create/_apis/build/status/winget-create?branchName=main)](https://dev.azure.com/shine-oss/winget-create/_build/latest?definitionId=17&branchName=main)
 
 ## Using Windows Package Manager Manifest Creator
 
